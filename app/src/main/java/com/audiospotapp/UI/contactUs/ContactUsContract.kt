@@ -1,9 +1,6 @@
 package com.audiospotapp.UI.contactUs
 
 import android.content.Context
-import com.audiospot.DataLayer.Model.BookDetailsData
-import com.audiospot.DataLayer.Model.BookDetailsResponse
-import com.audiospotapp.DataLayer.Model.Review
 
 interface ContactUsContract {
 

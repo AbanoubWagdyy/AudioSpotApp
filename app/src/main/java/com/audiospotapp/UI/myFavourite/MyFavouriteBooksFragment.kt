@@ -1,5 +1,6 @@
 package com.audiospotapp.UI.myFavourite
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -14,17 +15,34 @@ import com.audiospotapp.R
 import com.audiospotapp.UI.bookDetails.BookDetailsActivity
 import com.audiospotapp.UI.books.Interface.onBookItemClickListener
 import com.audiospotapp.UI.books.adapter.BooksAdapter
+import com.audiospotapp.UI.onItemPlayClickListener
+import com.audiospotapp.utils.BookMediaDataConversion
 import com.audiospotapp.utils.DialogUtils
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.fragment_my_favourite_books.*
 
-class MyFavouriteBooksFragment : Fragment(), myFavouriteBooksContract.View, onBookItemClickListener {
+class MyFavouriteBooksFragment : Fragment(), myFavouriteBooksContract.View, onBookItemClickListener,
+    onBookItemClickListener.onCartBookDeleteClickListener {
+
+    override fun showMessage(message: String) {
+        Snackbar.make(
+            activity!!.findViewById(android.R.id.content),
+            message,
+            Snackbar.LENGTH_SHORT
+        ).show()
+    }
+
+    override fun onItemDeleted(book: Book) {
+        mPresenter.removeFromFavorites(book)
+    }
 
     override fun onItemClicked(book: Book) {
         mPresenter.saveBook(book)
     }
 
     override fun onPlayClicked(book: Book) {
+        var mediaData = BookMediaDataConversion.convertBookToMediaMetaData(book)
+        mPlayCallback.OnItemPlayed(mediaData)
     }
 
     override fun getAppContext(): Context? {
@@ -51,7 +69,8 @@ class MyFavouriteBooksFragment : Fragment(), myFavouriteBooksContract.View, onBo
         recyclerBooks.layoutManager = LinearLayoutManager(context)
         recyclerBooks.setHasFixedSize(true)
         recyclerBooks.isNestedScrollingEnabled = false
-        recyclerBooks.adapter = BooksAdapter(listMyBooks, this)
+        adapter = BooksAdapter(listMyBooks, this,this)
+        recyclerBooks.adapter = adapter
     }
 
     override fun showBookDetailsScreen() {
@@ -70,15 +89,30 @@ class MyFavouriteBooksFragment : Fragment(), myFavouriteBooksContract.View, onBo
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        mPresenter = myFavouriteBooksPresenter(this)
+        mPresenter = myFavoriteBooksPresenter(this)
+        mPresenter.start()
     }
 
     companion object {
-
         @JvmStatic
         fun newInstance() =
             MyFavouriteBooksFragment()
     }
 
-    lateinit var mPresenter : myFavouriteBooksContract.Presenter
+    override fun onAttach(activity: Activity) {
+        super.onAttach(activity)
+        try {
+            mPlayCallback = activity as onItemPlayClickListener
+        } catch (e: ClassCastException) {
+            throw ClassCastException(activity.toString() + " must implement MyInterface ")
+        }
+    }
+
+    fun onEditCartClicked() {
+        adapter.showDeleteIcon()
+    }
+
+    private lateinit var adapter: BooksAdapter
+    private lateinit var mPlayCallback: onItemPlayClickListener
+    lateinit var mPresenter: myFavouriteBooksContract.Presenter
 }

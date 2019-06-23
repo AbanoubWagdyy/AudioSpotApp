@@ -26,7 +26,7 @@ class HomePresenter(val mView: HomeContract.View) :
             override fun onSuccess(result: HomepageRepsonse?) {
                 mView.hideDialog()
                 val status = RetrofitResponseHandler.validateAuthResponseStatus(result)
-                if (status == RetrofitResponseHandler.Status.VALID) {
+                if (status == RetrofitResponseHandler.Companion.Status.VALID) {
                     mView.setHomeResponse(result)
                 } else {
                     mView!!.showErrorMessage(result!!.message)

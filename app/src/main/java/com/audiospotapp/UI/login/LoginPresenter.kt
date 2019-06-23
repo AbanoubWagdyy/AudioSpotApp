@@ -33,7 +33,7 @@ class LoginPresenter(var mView: LoginContract.View?) : LoginContract.Presenter {
                                 result.data.email = email
                             }
                             val status = RetrofitResponseHandler.validateAuthResponseStatus(result)
-                            if (status == RetrofitResponseHandler.Status.VALID) {
+                            if (status == RetrofitResponseHandler.Companion.Status.VALID) {
                                 mView!!.viewHomepageScreen()
                             } else {
                                 mView!!.showErrorMessage(result!!.message)
@@ -71,7 +71,7 @@ class LoginPresenter(var mView: LoginContract.View?) : LoginContract.Presenter {
                 override fun onSuccess(result: AuthResponse?) {
                     mView!!.hideProgressDialog()
                     val status = RetrofitResponseHandler.validateAuthResponseStatus(result)
-                    if (status == RetrofitResponseHandler.Status.VALID) {
+                    if (status == RetrofitResponseHandler.Companion.Status.VALID) {
                         mView!!.viewHomepageScreen()
                     } else {
                         mView!!.showErrorMessage(result!!.message)

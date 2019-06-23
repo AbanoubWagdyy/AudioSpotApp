@@ -30,7 +30,7 @@
                     android:layout_alignParentStart="true"
                     android:lineSpacingExtra="83.8sp"
                     android:gravity="center_horizontal"
-                    android:text="Progress time (HH:MM:SS)"/>
+                    android:text="00:00:00"/>
 
             <TextView
                     android:id="@+id/slidepanel_time_total"
@@ -42,7 +42,7 @@
                     android:layout_alignParentEnd="true"
                     android:lineSpacingExtra="83.8sp"
                     android:gravity="center_horizontal"
-                    android:text="Track Duration (HH:MM:SS)"/>
+                    android:text="00:00:00"/>
 
         </RelativeLayout>
 
@@ -57,14 +57,16 @@
 
         <TextView
                 android:id="@+id/paragraphTitle"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textSize="10.5sp"
                 android:textColor="@color/white"
                 android:layout_gravity="start"
+                android:layout_marginTop="5dp"
+                android:paddingStart="10dp"
                 android:letterSpacing="0.07"
                 android:lineSpacingExtra="83.8sp"
-                android:text="Paragraph title"/>
+                android:text=""/>
 
     </LinearLayout>
 
@@ -106,29 +108,14 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent">
 
-                <dm.audiostreamerdemo.widgets.PlayPauseView
+                <ImageView
                         android:id="@+id/btn_play"
                         android:layout_width="50dp"
                         android:layout_height="50dp"
                         android:layout_centerInParent="true"
-                        android:clickable="true"
-                        android:stateListAnimator="@drawable/button_elevation"
-                        playpauseview:isCircleDraw="true"/>
+                        android:background="@drawable/pause_bottom"
+                        android:clickable="true"/>
 
-            </RelativeLayout>
-
-            <RelativeLayout
-                    android:id="@+id/pgPlayPauseLayout"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:clickable="true"
-                    android:visibility="invisible">
-
-                <ProgressBar
-                        android:id="@+id/pgPlayPause"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_centerInParent="true"/>
             </RelativeLayout>
 
         </RelativeLayout>
@@ -159,7 +146,7 @@
     <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingTop="10dp"
+            android:paddingTop="15dp"
             android:paddingBottom="15dp"
             android:orientation="horizontal">
 
@@ -169,6 +156,7 @@
                 android:layout_weight="1">
 
             <ImageView
+                    android:id="@+id/share"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:src="@mipmap/player_share"
@@ -182,6 +170,7 @@
                 android:layout_weight="1">
 
             <ImageView
+                    android:id="@+id/bookmark"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:src="@mipmap/player_bookmark"
@@ -195,6 +184,7 @@
                 android:layout_weight="1">
 
             <ImageView
+                    android:id="@+id/download"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:src="@mipmap/player_download"
@@ -208,6 +198,7 @@
                 android:layout_weight="1">
 
             <ImageView
+                    android:id="@+id/timer"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:src="@mipmap/player_time"
@@ -221,6 +212,7 @@
                 android:layout_weight="1">
 
             <ImageView
+                    android:id="@+id/speed"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:src="@mipmap/player_indicator"

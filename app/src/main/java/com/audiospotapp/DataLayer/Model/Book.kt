@@ -24,5 +24,6 @@ data class Book(
     val sample: String,
     val title: String,
     val total_time: String,
+    val total_time_trt: String,
     var isToShowDelete: Boolean = false
 )

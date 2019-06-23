@@ -1,11 +1,13 @@
 package com.audiospotapp.utils
 
 import com.audiospot.DataLayer.Model.Book
+import com.audiospotapp.DataLayer.Model.ChaptersData
 import dm.audiostreamer.MediaMetaData
 
 class BookMediaDataConversion {
 
     companion object {
+
         fun convertBookToMediaMetaData(book: Book): MediaMetaData {
 
             var mediaMetaData = MediaMetaData()
@@ -18,6 +20,16 @@ class BookMediaDataConversion {
             mediaMetaData.mediaArt = book.cover
             mediaMetaData.mediaComposer = ""
             mediaMetaData.mediaArtist = ""
+
+            return mediaMetaData
+        }
+
+        fun convertBookToMediaMetaData(book: ChaptersData): MediaMetaData {
+            var mediaMetaData = MediaMetaData()
+            mediaMetaData.mediaId = book.id.toString()
+            mediaMetaData.mediaTitle = book.title
+            mediaMetaData.mediaUrl = book.sound_file
+            mediaMetaData.mediaDuration = book.duration.toString()
 
             return mediaMetaData
         }

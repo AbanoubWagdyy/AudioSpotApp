@@ -1,5 +1,6 @@
 package com.audiospotapp.UI
 
+import android.app.PendingIntent
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -13,8 +14,11 @@ import com.audiospotapp.DataLayer.Retrofit.RetrofitCallbacks
 import com.audiospotapp.R
 import com.audiospotapp.UI.giveAgift.GiveGiftActivity
 import com.audiospotapp.UI.profile.ProfileActivity
+import com.audiospotapp.UI.splash.SplashActivity
 import com.audiospotapp.UI.updateProfile.UpdateProfileActivity
 import com.visionvalley.letuno.DataLayer.RepositorySource
+import dm.audiostreamer.AudioStreamingManager
+import dm.audiostreamer.MediaMetaData
 import kotlinx.android.synthetic.main.activity_base.*
 import kotlinx.android.synthetic.main.back_header.*
 import kotlinx.android.synthetic.main.header.*
@@ -24,13 +28,16 @@ abstract class BaseActivity : AppCompatActivity() {
 
     lateinit var ivArrow: ImageView
     lateinit var mRepositorySource: RepositorySource
-
+    private var streamingManager: AudioStreamingManager? = null
+    private var listOfSongs: MutableList<MediaMetaData> = ArrayList()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_base)
 
         mRepositorySource = DataRepository.getInstance(applicationContext)
+
+        configAudioStreamer()
 
         tvTitle.text = getHeaderTitle()
         ivArrow = findViewById(R.id.ivArrow)
@@ -94,6 +101,35 @@ abstract class BaseActivity : AppCompatActivity() {
             }
         })
         super.onResume()
+    }
+
+    private fun configAudioStreamer() {
+        streamingManager = AudioStreamingManager.getInstance(applicationContext)
+        //Set PlayMultiple 'true' if want to playing sequentially one by one songs
+        // and provide the list of songs else set it 'false'
+        streamingManager!!.isPlayMultiple = mRepositorySource.getAuthResponse() != null
+
+        streamingManager!!.setMediaList(listOfSongs)
+
+        //If you want to show the Player Notification then set ShowPlayerNotification as true
+        //and provide the pending intent so that after click on notification it will redirect to an activity
+
+        streamingManager!!.setShowPlayerNotification(true)
+        streamingManager!!.setPendingIntentAct(getNotificationPendingIntent())
+    }
+
+    private fun getNotificationPendingIntent(): PendingIntent {
+        val intent = Intent(applicationContext, SplashActivity::class.java)
+        intent.setAction("openplayer")
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
+        return PendingIntent.getActivity(applicationContext, 0, intent, 0)
+    }
+
+
+    protected fun playSong(media: MediaMetaData) {
+        if (streamingManager != null) {
+            streamingManager!!.onPlay(media)
+        }
     }
 
     abstract fun getHeaderTitle(): String

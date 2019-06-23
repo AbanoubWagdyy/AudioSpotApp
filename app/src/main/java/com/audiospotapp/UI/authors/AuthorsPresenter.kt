@@ -24,7 +24,7 @@ class AuthorsPresenter(val mView: AuthorsContract.View) : AuthorsContract.Presen
             override fun onSuccess(result: AuthorsResponse?) {
                 mView.dismissLoading()
                 val status = RetrofitResponseHandler.validateAuthResponseStatus(result)
-                if (status == RetrofitResponseHandler.Status.VALID) {
+                if (status == RetrofitResponseHandler.Companion.Status.VALID) {
                     mView.setAuthorsList(result)
                 } else {
                     mView!!.showErrorMessage(result!!.message)

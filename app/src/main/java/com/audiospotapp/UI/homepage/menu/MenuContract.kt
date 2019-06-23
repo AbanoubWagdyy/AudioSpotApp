@@ -30,5 +30,6 @@ interface MenuContract {
         fun dismissLoading()
         fun showContactUsScreen()
         fun showSettingsScreen()
+        fun showMyBookmarksScreen()
     }
 }

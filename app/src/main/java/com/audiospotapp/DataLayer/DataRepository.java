@@ -38,6 +38,8 @@ public class DataRepository implements RepositorySource {
     private BookItemInterceptor mBookItemInterceptor;
     private AuthResponse authResponse;
     private List<Book> myBooks;
+    private BookmarkBody bookmarkBody;
+    private Bookmark bookmark;
     //endregion
 
     private DataRepository(Context context) {
@@ -350,6 +352,9 @@ public class DataRepository implements RepositorySource {
                 first_name, last_name, email, mobile_phone, new RetrofitCallbacks.AuthResponseCallback() {
                     @Override
                     public void onSuccess(AuthResponse result) {
+                        if (result.getData() != null && result.getStatus() == 1) {
+                            authResponse = result;
+                        }
                         authResponseCallback.onSuccess(result);
                     }
 
@@ -385,6 +390,24 @@ public class DataRepository implements RepositorySource {
         mRetrofitService.getBookDetails(GlobalKeys.API_KEY, lang,
                 mCacheDataSource.getStringFromCache(GlobalKeys.StoreData.TOKEN, null),
                 mBookItemInterceptor.getSavedBook().getId(),
+                new RetrofitCallbacks.BookDetailsResponseCallback() {
+                    @Override
+                    public void onSuccess(BookDetailsResponse result) {
+                        callback.onSuccess(result);
+                    }
+
+                    @Override
+                    public void onFailure(Call<BookDetailsResponse> call, Throwable t) {
+                        callback.onFailure(call, t);
+                    }
+                });
+    }
+
+    @Override
+    public void getBookDetailsWithId(int bookId, @NotNull RetrofitCallbacks.BookDetailsResponseCallback callback) {
+        mRetrofitService.getBookDetails(GlobalKeys.API_KEY, lang,
+                mCacheDataSource.getStringFromCache(GlobalKeys.StoreData.TOKEN, null),
+                bookId,
                 new RetrofitCallbacks.BookDetailsResponseCallback() {
                     @Override
                     public void onSuccess(BookDetailsResponse result) {
@@ -469,17 +492,6 @@ public class DataRepository implements RepositorySource {
                         }
                     });
         }
-    }
-
-    @Override
-    public void saveBookDetails(@NotNull BookDetailsData bookDetails) {
-        mBookItemInterceptor.saveDetails(bookDetails);
-    }
-
-    @NotNull
-    @Override
-    public BookDetailsData getBookDetails() {
-        return mBookItemInterceptor.getDetails();
     }
 
     @Override
@@ -611,6 +623,28 @@ public class DataRepository implements RepositorySource {
     }
 
     @Override
+    public void removeBookFromFavorites(int book_id, @NotNull RetrofitCallbacks.ResponseCallback callback) {
+        mRetrofitService.removeBookFromFavorites(authResponse.getData().getToken(), GlobalKeys.API_KEY, lang,
+                mCacheDataSource.getStringFromCache(GlobalKeys.StoreData.TOKEN, null),
+                book_id, new RetrofitCallbacks.ResponseCallback() {
+                    @Override
+                    public void onSuccess(Response result) {
+                        callback.onSuccess(result);
+                    }
+
+                    @Override
+                    public void onFailure(Call<Response> call, Throwable t) {
+                        callback.onFailure(call, t);
+                    }
+
+                    @Override
+                    public void onAuthFailure() {
+
+                    }
+                });
+    }
+
+    @Override
     public void getBookChapters(@NotNull RetrofitCallbacks.ChaptersResponseCallback callback) {
         mRetrofitService.getBookChapters(authResponse.getData().getToken(), GlobalKeys.API_KEY, lang,
                 mCacheDataSource.getStringFromCache(GlobalKeys.StoreData.TOKEN, null),
@@ -625,5 +659,68 @@ public class DataRepository implements RepositorySource {
                         callback.onFailure(call, t);
                     }
                 });
+    }
+
+    @Override
+    public void setBookmarkData(@NotNull BookmarkBody bookmarkBody) {
+        this.bookmarkBody = bookmarkBody;
+    }
+
+    @NotNull
+    @Override
+    public BookmarkBody getBookmarkData() {
+        return this.bookmarkBody;
+    }
+
+    @Override
+    public void addBookmark(@NotNull BookmarkBody bookmarkData, RetrofitCallbacks.ResponseCallback callback) {
+        mRetrofitService.addBookmark(authResponse.getData().getToken(), GlobalKeys.API_KEY, lang,
+                mCacheDataSource.getStringFromCache(GlobalKeys.StoreData.TOKEN, null),
+                bookmarkData.getBookId(),
+                bookmarkData.getChapter_id(),
+                bookmarkData.getBookmarkTime(),
+                bookmarkData.getComment(),
+                new RetrofitCallbacks.ResponseCallback() {
+                    @Override
+                    public void onSuccess(Response result) {
+                        callback.onSuccess(result);
+                    }
+
+                    @Override
+                    public void onFailure(Call<Response> call, Throwable t) {
+                        callback.onFailure(call, t);
+                    }
+
+                    @Override
+                    public void onAuthFailure() {
+
+                    }
+                });
+    }
+
+    @Override
+    public void myBookmarks(@NotNull RetrofitCallbacks.MyBookmarkResponseCallback callback) {
+        mRetrofitService.myBookmarks(authResponse.getData().getToken(), GlobalKeys.API_KEY, lang,
+                mCacheDataSource.getStringFromCache(GlobalKeys.StoreData.TOKEN, null), new RetrofitCallbacks.MyBookmarkResponseCallback() {
+                    @Override
+                    public void onSuccess(MyBookmarksResponse result) {
+                        callback.onSuccess(result);
+                    }
+
+                    @Override
+                    public void onFailure(Call<MyBookmarksResponse> call, Throwable t) {
+                        callback.onFailure(call, t);
+                    }
+                });
+    }
+
+    @Override
+    public void saveBookmark(Bookmark bookmark) {
+        this.bookmark = bookmark;
+    }
+
+    @Override
+    public Bookmark getBookmark() {
+        return this.bookmark;
     }
 }

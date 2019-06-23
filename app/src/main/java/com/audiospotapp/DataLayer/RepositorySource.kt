@@ -2,12 +2,9 @@ package com.visionvalley.letuno.DataLayer
 
 import com.audiospot.DataLayer.Model.AuthResponse
 import com.audiospot.DataLayer.Model.Book
-import com.audiospot.DataLayer.Model.BookDetailsData
 import com.audiospot.DataLayer.Model.CategoriesListData
 import com.audiospotapp.DataLayer.Cache.CacheDataSource
-import com.audiospotapp.DataLayer.Model.AuthorsData
-import com.audiospotapp.DataLayer.Model.PublishersResponseData
-import com.audiospotapp.DataLayer.Model.Review
+import com.audiospotapp.DataLayer.Model.*
 import com.audiospotapp.DataLayer.Retrofit.RetrofitCallbacks
 
 interface RepositorySource : CacheDataSource {
@@ -100,6 +97,8 @@ interface RepositorySource : CacheDataSource {
 
     fun getBookDetails(callback: RetrofitCallbacks.BookDetailsResponseCallback)
 
+    fun getBookDetailsWithId(bookId: Int, callback: RetrofitCallbacks.BookDetailsResponseCallback)
+
     fun getMyBooks(callback: RetrofitCallbacks.BookListCallback)
 
     fun getMyCart(callback: RetrofitCallbacks.BookListCallback)
@@ -114,10 +113,6 @@ interface RepositorySource : CacheDataSource {
 
     fun addBookToFavorites(callback: RetrofitCallbacks.ResponseCallback)
 
-    fun saveBookDetails(bookDetails: BookDetailsData)
-
-    fun getBookDetails(): BookDetailsData
-
     fun isBookMine(): Boolean
 
     fun getMyBooks(): List<Book>
@@ -126,5 +121,19 @@ interface RepositorySource : CacheDataSource {
 
     fun removeBookFromCart(book_id: Int, callback: RetrofitCallbacks.ResponseCallback)
 
+    fun removeBookFromFavorites(book_id: Int, callback: RetrofitCallbacks.ResponseCallback)
+
     fun getBookChapters(callback: RetrofitCallbacks.ChaptersResponseCallback)
+
+    fun setBookmarkData(bookmarkBody: BookmarkBody)
+
+    fun getBookmarkData(): BookmarkBody
+
+    fun addBookmark(bookmarkData: BookmarkBody, callback: RetrofitCallbacks.ResponseCallback)
+
+    fun myBookmarks(callback: RetrofitCallbacks.MyBookmarkResponseCallback)
+
+    fun saveBookmark(bookmark: Bookmark?)
+
+    fun getBookmark(): Bookmark?
 }

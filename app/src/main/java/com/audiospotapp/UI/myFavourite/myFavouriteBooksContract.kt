@@ -8,6 +8,7 @@ interface myFavouriteBooksContract {
     interface Presenter {
         fun start()
         fun saveBook(book: Book)
+        fun removeFromFavorites(book: Book)
     }
 
     interface View {
@@ -17,5 +18,6 @@ interface myFavouriteBooksContract {
         fun dismissLoading()
         fun setBookList(listMyBooks: List<Book>)
         fun showBookDetailsScreen()
+        fun showMessage(message: String)
     }
 }

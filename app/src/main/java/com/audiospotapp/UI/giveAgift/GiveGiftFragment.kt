@@ -8,7 +8,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.audiospot.DataLayer.Model.BookDetailsData
+import com.audiospot.DataLayer.Model.Book
 
 import com.audiospotapp.R
 import com.audiospotapp.utils.DialogUtils
@@ -44,7 +44,7 @@ class GiveGiftFragment : Fragment(), GiveGiftContract.View {
         DialogUtils.dismissProgressDialog()
     }
 
-    override fun bindResponse(result: BookDetailsData?) {
+    override fun bindResponse(result: Book?) {
         ratingBar.rating = result!!.rate.toFloat()
         tvBookTitle.text = result!!.title
         tvNumberOfReviews.text = result!!.reviews.toString()

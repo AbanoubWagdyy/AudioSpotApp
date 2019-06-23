@@ -5,11 +5,18 @@ import android.view.View
 import android.widget.ImageView
 import androidx.fragment.app.Fragment
 import com.audiospotapp.UI.BaseActivity
+import com.audiospotapp.UI.onItemPlayClickListener
+import dm.audiostreamer.MediaMetaData
+import kotlinx.android.synthetic.main.back_header.*
 
-class MyFavouriteBooksActivity : BaseActivity() {
+class MyFavouriteBooksActivity : BaseActivity(), onItemPlayClickListener {
+
+    override fun OnItemPlayed(mediaData: MediaMetaData) {
+        playSong(mediaData)
+    }
 
     override fun getHeaderTitle(): String {
-        return "Books"
+        return "My Favorites"
     }
 
     override fun getArrowHeaderVisibility(): Int {
@@ -17,14 +24,19 @@ class MyFavouriteBooksActivity : BaseActivity() {
     }
 
     override fun getFragment(ivArrow: ImageView): Fragment {
-        return MyFavouriteBooksFragment.newInstance()
+        return fragment
     }
 
     override fun getActiveTab(): ActiveTab {
         return ActiveTab.MENU
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+    override fun manageEditVisibility() {
+        ivEdit.visibility = View.VISIBLE
+        ivEdit.setOnClickListener {
+            fragment.onEditCartClicked()
+        }
     }
+
+    var fragment = MyFavouriteBooksFragment.newInstance()
 }

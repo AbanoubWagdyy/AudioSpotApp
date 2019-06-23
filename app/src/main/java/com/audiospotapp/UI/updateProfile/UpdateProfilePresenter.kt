@@ -34,7 +34,7 @@ class UpdateProfilePresenter(val mView: UpdateProfileContract.View) : UpdateProf
                         override fun onSuccess(result: AuthResponse?) {
                             mView.dismissLoading()
                             val status = RetrofitResponseHandler.validateAuthResponseStatus(result)
-                            if (status == RetrofitResponseHandler.Status.VALID) {
+                            if (status == RetrofitResponseHandler.Companion.Status.VALID) {
                                 mView!!.finalizeView()
                             } else {
                                 mView!!.showErrorMessage(result!!.message)
@@ -45,7 +45,6 @@ class UpdateProfilePresenter(val mView: UpdateProfileContract.View) : UpdateProf
                             mView.dismissLoading()
                             mView!!.showErrorMessage("Please Check your internet connection")
                         }
-
                     })
             } else {
                 mView.showInvalidEmailMessage("Please Enter Valid Email Address")

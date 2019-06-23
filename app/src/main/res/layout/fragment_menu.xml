@@ -4,8 +4,7 @@
              android:layout_width="match_parent"
              android:layout_height="match_parent"
              android:padding="15dp"
-             android:background="@color/black"
-             tools:context=".UI.homepage.menu.MyBooksFragment">
+             android:background="@color/black">
 
     <ScrollView android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -86,7 +85,7 @@
                         android:layout_gravity="center_vertical"
                         android:letterSpacing="0.07"
                         android:lineSpacingExtra="17.2sp"
-                        android:text="My Bookmarks"/>
+                        android:text="My bookmarks"/>
 
             </LinearLayout>
 
@@ -115,6 +114,7 @@
 
             <LinearLayout android:id="@+id/linearNotifications"
                           android:layout_marginTop="10dp"
+                          android:visibility="gone"
                           android:layout_width="match_parent"
                           android:layout_height="40dp">
 

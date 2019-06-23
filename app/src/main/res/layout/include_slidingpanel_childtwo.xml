@@ -13,6 +13,7 @@
                 android:id="@+id/relative"
                 android:layout_width="match_parent"
                 android:padding="15dp"
+                android:layout_marginTop="15dp"
                 android:layout_height="wrap_content">
 
             <ImageView
@@ -24,6 +25,7 @@
                     android:src="@mipmap/location"/>
 
             <ImageView
+                    android:id="@+id/ivParagraphs"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
@@ -68,7 +70,7 @@
                     android:letterSpacing="0.07"
                     android:lineSpacingExtra="81.8sp"
                     android:gravity="center_horizontal"
-                    android:text="Chapter no#"/>
+                    android:text=""/>
 
             <TextView
                     android:id="@+id/text_songName"
@@ -80,7 +82,7 @@
                     android:lineSpacingExtra="75.3sp"
                     android:textStyle="bold"
                     android:gravity="center_horizontal"
-                    android:text="Chapter name"/>
+                    android:text=""/>
         </LinearLayout>
 
         <include

@@ -1,15 +1,23 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android" xmlns:tools="http://schemas.android.com/tools"
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+          xmlns:tools="http://schemas.android.com/tools"
           package="com.audiospotapp">
 
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE"/>
-    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
+    <uses-permission android:name="android.permission.GET_ACCOUNTS"/>
 
-    <application android:name=".AudioSpotApp" android:allowBackup="true"
-                 android:label="@string/app_name"
-                 android:icon="@mipmap/start"
-                 android:supportsRtl="true"
-                 android:theme="@style/AppTheme">
+    <application
+            android:name=".AudioSpotApp"
+            android:allowBackup="true"
+            android:icon="@mipmap/start"
+            android:label="@string/app_name"
+            android:supportsRtl="true"
+            android:theme="@style/AppTheme">
+        <activity android:name=".UI.myBookmarks.MyBookmarksActivity">
+        </activity>
+        <activity android:name=".UI.addBookmark.AddBookmarkActivity">
+        </activity>
 
         <meta-data
                 android:name="com.facebook.sdk.ApplicationId"
@@ -23,18 +31,16 @@
         <meta-data
                 android:name="com.google.firebase.messaging.default_notification_channel_id"
                 android:value="@string/default_notification_channel_id"/>
-
         <meta-data
                 android:name="com.google.android.gms.version"
-                android:value="@integer/google_play_services_version" />
+                android:value="@integer/google_play_services_version"/>
 
         <activity
                 android:name="com.facebook.FacebookActivity"
                 android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
                 android:label="@string/app_name"
-                tools:replace="android:theme"
-                android:theme="@android:style/Theme.Translucent.NoTitleBar" />
-
+                android:theme="@android:style/Theme.Translucent.NoTitleBar"
+                tools:replace="android:theme"/>
         <activity
                 android:name=".UI.splash.SplashActivity"
                 android:label="@string/app_name">
@@ -96,23 +102,22 @@
                 <action android:name="com.google.firebase.MESSAGING_EVENT"/>
             </intent-filter>
         </service>
-
         <service
                 android:name="dm.audiostreamer.AudioStreamingService"
                 android:enabled="true"
-                android:exported="true" />
+                android:exported="true"/>
 
         <receiver android:name="dm.audiostreamer.AudioStreamingReceiver">
             <intent-filter>
-                <action android:name="dm.audiostreamer.close" />
-                <action android:name="dm.audiostreamer.pause" />
-                <action android:name="dm.audiostreamer.next" />
-                <action android:name="dm.audiostreamer.play" />
-                <action android:name="dm.audiostreamer.previous" />
-                <action android:name="android.intent.action.MEDIA_BUTTON" />
-                <action android:name="android.media.AUDIO_BECOMING_NOISY" />
+                <action android:name="dm.audiostreamer.close"/>
+                <action android:name="dm.audiostreamer.pause"/>
+                <action android:name="dm.audiostreamer.next"/>
+                <action android:name="dm.audiostreamer.play"/>
+                <action android:name="dm.audiostreamer.previous"/>
+                <action android:name="android.intent.action.MEDIA_BUTTON"/>
+                <action android:name="android.media.AUDIO_BECOMING_NOISY"/>
             </intent-filter>
         </receiver>
-
     </application>
+
 </manifest>

@@ -7,12 +7,7 @@ import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
-import android.support.v4.media.session.PlaybackStateCompat
-import android.text.format.DateUtils
 import android.util.Log
-import android.view.View
-import android.widget.*
-import androidx.constraintlayout.widget.ConstraintLayout
 import com.audiospotapp.DataLayer.DataRepository
 import com.audiospotapp.DataLayer.Model.BookListResponse
 import com.audiospotapp.DataLayer.Retrofit.RetrofitCallbacks
@@ -33,8 +28,8 @@ import kotlinx.android.synthetic.main.activity_homepage3.*
 import kotlinx.android.synthetic.main.header.*
 import retrofit2.Call
 
-class HomepageActivity : AppCompatActivity(),
-    Slider.OnValueChangedListener, HomeFragment.onItemPlayClickListener {
+class HomepageActivity : AppCompatActivity(), HomeFragment.onItemPlayClickListener,
+    MyBooksFragment.onItemPlayClickListener {
 
     private var listOfSongs: MutableList<MediaMetaData> = ArrayList()
 
@@ -44,7 +39,6 @@ class HomepageActivity : AppCompatActivity(),
         listOfSongs.add(mediaData)
 
         configAudioStreamer()
-
         playSong(mediaData)
     }
 
@@ -90,7 +84,6 @@ class HomepageActivity : AppCompatActivity(),
             showHomePageContent()
         }
     }
-
 
     private fun configAudioStreamer() {
         streamingManager = AudioStreamingManager.getInstance(applicationContext)
@@ -221,11 +214,6 @@ class HomepageActivity : AppCompatActivity(),
         if (streamingManager != null) {
             streamingManager!!.onPlay(media)
         }
-    }
-
-    override fun onValueChanged(value: Int) {
-        streamingManager!!.onSeekTo(value.toLong())
-        streamingManager!!.scheduleSeekBarUpdate()
     }
 
     private fun getNotificationPendingIntent(): PendingIntent {

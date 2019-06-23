@@ -55,7 +55,7 @@ class BooksPresenter(val mView: BooksContract.View) : BooksContract.Presenter {
                 override fun onSuccess(result: BookListResponse?) {
                     mView.dismissLoadingDialog()
                     val status = RetrofitResponseHandler.validateAuthResponseStatus(result)
-                    if (status == RetrofitResponseHandler.Status.VALID) {
+                    if (status == RetrofitResponseHandler.Companion.Status.VALID) {
                         mView.setBooksList(result)
                     } else {
                         mView!!.showErrorMessage(result!!.message)

@@ -32,7 +32,7 @@ class PublisherDetailsPresenter(val mView: PublisherDetailsContract.View) : Publ
                 override fun onSuccess(result: BookListResponse?) {
                     mView.dismissLoading()
                     val status = RetrofitResponseHandler.validateAuthResponseStatus(result)
-                    if (status == RetrofitResponseHandler.Status.VALID) {
+                    if (status == RetrofitResponseHandler.Companion.Status.VALID) {
                         mView.setBookList(result)
                     } else {
                         mView!!.showErrorMessage(result!!.message)

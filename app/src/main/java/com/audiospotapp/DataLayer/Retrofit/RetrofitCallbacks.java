@@ -84,4 +84,9 @@ public interface RetrofitCallbacks {
         void onFailure(Call<ChaptersResponse> call, Throwable t);
     }
 
+    interface MyBookmarkResponseCallback {
+        void onSuccess(MyBookmarksResponse result);
+
+        void onFailure(Call<MyBookmarksResponse> call, Throwable t);
+    }
 }

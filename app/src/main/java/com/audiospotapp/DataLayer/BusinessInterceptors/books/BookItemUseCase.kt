@@ -1,7 +1,6 @@
 package com.audiospotapp.DataLayer.BusinessInterceptors.books
 
 import com.audiospot.DataLayer.Model.Book
-import com.audiospot.DataLayer.Model.BookDetailsData
 import com.audiospotapp.DataLayer.Model.Review
 
 class BookItemUseCase : BookItemInterceptor {
@@ -17,7 +16,6 @@ class BookItemUseCase : BookItemInterceptor {
     private lateinit var reviews: List<Review>
 
     var data: Book? = null
-    var bookDetails: BookDetailsData? = null
 
     override fun saveBook(book: Book) {
         this.data = book
@@ -29,13 +27,5 @@ class BookItemUseCase : BookItemInterceptor {
 
     override fun clearSavedBook() {
         data = null
-    }
-
-    override fun saveDetails(bookDetails: BookDetailsData) {
-        this.bookDetails = bookDetails
-    }
-
-    override fun getDetails(): BookDetailsData {
-        return this.bookDetails!!
     }
 }

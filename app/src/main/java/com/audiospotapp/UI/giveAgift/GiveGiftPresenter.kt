@@ -1,10 +1,8 @@
 package com.audiospotapp.UI.giveAgift
 
-import com.audiospot.DataLayer.Model.BookDetailsData
-import com.audiospot.DataLayer.Model.BookDetailsResponse
+import com.audiospot.DataLayer.Model.Book
 import com.audiospotapp.DataLayer.DataRepository
 import com.audiospotapp.DataLayer.Model.Response
-import com.audiospotapp.DataLayer.Model.ReviewListResponse
 import com.audiospotapp.DataLayer.Retrofit.RetrofitCallbacks
 import com.audiospotapp.DataLayer.Retrofit.RetrofitResponseHandler
 import com.audiospotapp.utils.EmailUtils
@@ -22,7 +20,7 @@ class GiveGiftPresenter(val mView: GiveGiftContract.View) : GiveGiftContract.Pre
                     mView.dismissLoading()
                     mView.showMessage(result!!.message)
                     val status = RetrofitResponseHandler.validateAuthResponseStatus(result)
-                    if (status == RetrofitResponseHandler.Status.VALID) {
+                    if (status == RetrofitResponseHandler.Companion.Status.VALID) {
                        mView.finalizeView()
                     }
                 }
@@ -44,10 +42,10 @@ class GiveGiftPresenter(val mView: GiveGiftContract.View) : GiveGiftContract.Pre
 
     override fun start() {
         mRepositorySource = DataRepository.getInstance(mView.getAppContext())
-        var bookDetailsData = mRepositorySource.getBookDetails()
+        var bookDetailsData = mRepositorySource.getSavedBook()
         mView.bindResponse(bookDetailsData!!)
     }
 
     lateinit var mRepositorySource: RepositorySource
-    lateinit var bookDetails: BookDetailsData
+    lateinit var bookDetails: Book
 }

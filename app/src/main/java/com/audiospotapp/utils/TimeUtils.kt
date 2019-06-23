@@ -1,25 +1,14 @@
 package com.audiospotapp.utils
 
 import com.audiospot.DataLayer.Model.Book
-import com.audiospot.DataLayer.Model.BookDetailsData
 import com.audiospotapp.DataLayer.Model.ChaptersData
+import java.text.SimpleDateFormat
+import java.util.*
+
 
 class TimeUtils {
 
     companion object {
-
-        fun toHours(book: BookDetailsData): String {
-
-            var text = ""
-
-            if (book.total_time != null && !book.total_time.equals("")) {
-                text = String.format("%.2f Hours", book.total_time.toFloat() / (1000 * 60 * 60) % 24)
-            } else {
-                text = "0 Hours"
-            }
-
-            return text
-        }
 
         fun toHours(book: Book): String {
             var text = ""
@@ -42,6 +31,15 @@ class TimeUtils {
                 text = "0 Hours"
             }
             return text
+        }
+
+        fun toTimeFormat(seconds: Int): String {
+            val d = Date(seconds * 1000L)
+            val df = SimpleDateFormat("HH:mm:ss") // HH for 0-23
+            df.setTimeZone(TimeZone.getTimeZone("GMT"))
+            val timeString = df.format(d)
+
+            return timeString
         }
     }
 }

@@ -6,10 +6,59 @@
              android:background="@color/black"
              tools:context=".UI.cart.CartFragment">
 
-
-    <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recyclerCartBooks"
+    <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+            android:layout_height="match_parent">
 
+        <LinearLayout
+                android:id="@+id/linear"
+                android:layout_width="match_parent"
+                android:paddingBottom="15dp"
+                android:layout_height="50dp"
+                android:layout_alignParentBottom="true">
+
+            <Button
+                    android:id="@+id/promoCode"
+                    android:layout_marginStart="10dp"
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    android:layout_weight="1"
+                    android:drawableStart="@mipmap/percentage"
+                    android:drawablePadding="10dp"
+                    android:textSize="15.7sp"
+                    android:textColor="@color/white"
+                    android:letterSpacing="0.07"
+                    android:lineSpacingExtra="7.7sp"
+                    android:gravity="center"
+                    android:layout_gravity="center"
+                    android:text="Promo code"
+                    android:layout_marginEnd="10dp"
+                    android:background="@mipmap/reset_pass_back"/>
+
+            <Button
+                    android:id="@+id/payNow"
+                    android:layout_width="fill_parent"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginEnd="10dp"
+                    android:layout_height="fill_parent"
+                    android:layout_weight="1"
+                    android:drawableStart="@mipmap/pay_now_image"
+                    android:textSize="15.5sp"
+                    android:textColor="#fcfcfc"
+                    android:letterSpacing="0.07"
+                    android:lineSpacingExtra="7.8sp"
+                    android:gravity="center"
+                    android:text="Pay Now"
+                    android:background="@mipmap/green_back"/>
+
+        </LinearLayout>
+
+        <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerCartBooks"
+                android:layout_width="match_parent"
+                android:layout_marginBottom="10dp"
+                android:layout_above="@+id/linear"
+                android:layout_height="match_parent"/>
+
+    </RelativeLayout>
 </FrameLayout>

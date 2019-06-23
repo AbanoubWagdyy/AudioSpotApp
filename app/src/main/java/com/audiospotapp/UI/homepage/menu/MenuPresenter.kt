@@ -62,7 +62,7 @@ class MenuPresenter(val mView: MenuContract.View) : MenuContract.Presenter {
     }
 
     override fun handleMyBookmarksClicked() {
-
+        mView.showMyBookmarksScreen()
     }
 
     override fun handleSignoutPressed() {
@@ -75,7 +75,7 @@ class MenuPresenter(val mView: MenuContract.View) : MenuContract.Presenter {
                 override fun onSuccess(result: LogoutAuthResponse?) {
                     mView.dismissLoading()
                     val status = RetrofitResponseHandler.validateAuthResponseStatus(result)
-                    if (status == RetrofitResponseHandler.Status.VALID) {
+                    if (status == RetrofitResponseHandler.Companion.Status.VALID) {
                         mView.showLoginScreen()
                     } else {
                         mView!!.showErrorMessage()
@@ -93,7 +93,6 @@ class MenuPresenter(val mView: MenuContract.View) : MenuContract.Presenter {
         if (mRepositorySource.getAuthResponse() == null) {
             mView.showShouldBeLoggedInMessage()
         } else {
-
         }
     }
 }

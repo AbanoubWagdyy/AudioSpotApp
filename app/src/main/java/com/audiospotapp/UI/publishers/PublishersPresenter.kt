@@ -26,7 +26,7 @@ class PublishersPresenter(val mView: PublishersContract.View) : PublishersContra
             override fun onSuccess(result: PublishersResponse?) {
                 mView.dismissLoading()
                 val status = RetrofitResponseHandler.validateAuthResponseStatus(result)
-                if (status == RetrofitResponseHandler.Status.VALID) {
+                if (status == RetrofitResponseHandler.Companion.Status.VALID) {
                     mView.setPublishersList(result)
                 } else {
                     mView!!.showErrorMessage(result!!.message)

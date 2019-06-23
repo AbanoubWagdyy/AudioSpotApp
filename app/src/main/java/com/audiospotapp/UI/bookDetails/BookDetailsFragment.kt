@@ -135,7 +135,7 @@ class BookDetailsFragment : Fragment(), BookDetailsContract.View {
         tvPublisher.text = result!!.data.publisher
         tvAbout.text = result!!.data.about_book
 
-        tvLength.text = TimeUtils.toHours(book = result!!.data)
+        tvLength.text = result!!.data.total_time_trt + " Hours"
 
         tvPrice.text = result!!.data.price.toString() + " EGP."
         ImageUtils.setImageFromUrlIntoImageViewUsingPicasso(result.data.cover, activity!!.applicationContext, ivBook)

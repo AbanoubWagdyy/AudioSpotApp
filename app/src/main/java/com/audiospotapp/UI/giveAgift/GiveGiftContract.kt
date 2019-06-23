@@ -1,9 +1,7 @@
 package com.audiospotapp.UI.giveAgift
 
 import android.content.Context
-import com.audiospot.DataLayer.Model.BookDetailsData
-import com.audiospot.DataLayer.Model.BookDetailsResponse
-import com.audiospotapp.DataLayer.Model.Review
+import com.audiospot.DataLayer.Model.Book
 
 interface GiveGiftContract {
 
@@ -16,7 +14,7 @@ interface GiveGiftContract {
         fun getAppContext(): Context?
         fun showLoadingDialog()
         fun dismissLoading()
-        fun bindResponse(result: BookDetailsData?)
+        fun bindResponse(result: Book?)
         fun showInvalidEmailMessage(message: String)
         fun showMessage(message: String)
         fun finalizeView()

@@ -1,5 +1,6 @@
 package com.audiospotapp.UI.homepage.myBooks
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -14,8 +15,11 @@ import com.audiospotapp.R
 import com.audiospotapp.UI.bookDetails.BookDetailsActivity
 import com.audiospotapp.UI.books.Interface.onBookItemClickListener
 import com.audiospotapp.UI.books.adapter.BooksAdapter
+import com.audiospotapp.UI.homepage.home.HomeFragment
+import com.audiospotapp.utils.BookMediaDataConversion
 import com.audiospotapp.utils.DialogUtils
 import com.google.android.material.snackbar.Snackbar
+import dm.audiostreamer.MediaMetaData
 import kotlinx.android.synthetic.main.fragment_my_books.*
 
 class MyBooksFragment : Fragment(), MyBooksContract.View, onBookItemClickListener {
@@ -30,6 +34,8 @@ class MyBooksFragment : Fragment(), MyBooksContract.View, onBookItemClickListene
     }
 
     override fun onPlayClicked(book: Book) {
+        var mediaData = BookMediaDataConversion.convertBookToMediaMetaData(book)
+        mPlayCallback.OnItemPlayed(mediaData)
     }
 
     override fun getAppContext(): Context? {
@@ -68,7 +74,6 @@ class MyBooksFragment : Fragment(), MyBooksContract.View, onBookItemClickListene
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         mPresenter = MyBooksPresenter(this)
         mPresenter.start()
     }
@@ -79,5 +84,19 @@ class MyBooksFragment : Fragment(), MyBooksContract.View, onBookItemClickListene
             MyBooksFragment()
     }
 
+    override fun onAttach(activity: Activity) {
+        super.onAttach(activity)
+        try {
+            mPlayCallback = activity as onItemPlayClickListener
+        } catch (e: ClassCastException) {
+            throw ClassCastException(activity.toString() + " must implement MyInterface ")
+        }
+    }
+
+    interface onItemPlayClickListener {
+        fun OnItemPlayed(mediaData: MediaMetaData)
+    }
+
     lateinit var mPresenter: MyBooksContract.Presenter
+    private lateinit var mPlayCallback: onItemPlayClickListener
 }

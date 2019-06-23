@@ -114,8 +114,8 @@ public interface RetrofitService {
             "Content-type: application/json"
     })
     @GET("profile/book-favorites-remove/{bookId}")
-    Call<AuthResponse> removeFavouriteBook(
-            @Path("bookId") String bookId);
+    Call<Response> removeFavouriteBook(
+            @Path("bookId") int bookId);
 
     @Headers({
             "Accept: application/json",
@@ -217,6 +217,26 @@ public interface RetrofitService {
     @POST("add-promo-code")
     Call<BookDetailsResponse> addPromoCode(
             @Query("promo_code") String promo_code);
+
+
+    @Headers({
+            "Accept: application/json",
+            "Content-type: application/json"
+    })
+    @GET("profile/my-bookmarks")
+    Call<MyBookmarksResponse> myBookmarks();
+
+    @Headers({
+            "Accept: application/json",
+            "Content-type: application/json"
+    })
+    @POST("add-bookmark/{bookId}")
+    Call<Response> addBookmark(
+            @Path("bookId") int bookId,
+            @Query("chapter_id") int chapter_id,
+            @Query("time") String time,
+            @Query("comment") String comment
+    );
 
     @Headers({
             "Accept: application/json",

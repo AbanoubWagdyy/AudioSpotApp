@@ -26,7 +26,6 @@ import dm.audiostreamer.MediaMetaData
 class HomeFragment : Fragment(), HomeContract.View, onBookItemClickListener {
 
     override fun setCartNumber(size: Int) {
-
     }
 
     override fun showBookDetailsScreen() {

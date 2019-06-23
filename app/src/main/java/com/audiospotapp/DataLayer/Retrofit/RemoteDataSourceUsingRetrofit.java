@@ -431,4 +431,59 @@ public class RemoteDataSourceUsingRetrofit {
                     }
                 });
     }
+
+    public void removeBookFromFavorites(String token, String apiKey, String lang, String deviceToken, Integer book_id, RetrofitCallbacks.ResponseCallback callback) {
+        RestClient.getRetrofitService(token, apiKey, lang, deviceToken)
+                .removeFavouriteBook(book_id)
+                .enqueue(new Callback<com.audiospotapp.DataLayer.Model.Response>() {
+                    @Override
+                    public void onResponse(Call<com.audiospotapp.DataLayer.Model.Response> call, Response<com.audiospotapp.DataLayer.Model.Response> response) {
+                        callback.onSuccess(response.body());
+                    }
+
+                    @Override
+                    public void onFailure(Call<com.audiospotapp.DataLayer.Model.Response> call, Throwable t) {
+                        callback.onFailure(call, t);
+                    }
+                });
+    }
+
+    public void addBookmark(String token, String apiKey, String lang, String deviceToken, Integer book_id,
+                            int chapter_id,
+                            String time,
+                            String comment,
+                            RetrofitCallbacks.ResponseCallback callback) {
+
+        RestClient.getRetrofitService(token, apiKey, lang, deviceToken)
+                .addBookmark(book_id, chapter_id, time, comment)
+                .enqueue(new Callback<com.audiospotapp.DataLayer.Model.Response>() {
+                    @Override
+                    public void onResponse(Call<com.audiospotapp.DataLayer.Model.Response> call, Response<com.audiospotapp.DataLayer.Model.Response> response) {
+                        callback.onSuccess(response.body());
+                    }
+
+                    @Override
+                    public void onFailure(Call<com.audiospotapp.DataLayer.Model.Response> call, Throwable t) {
+                        callback.onFailure(call, t);
+                    }
+                });
+    }
+
+    public void myBookmarks(String token, String apiKey, String lang, String deviceToken,
+                            RetrofitCallbacks.MyBookmarkResponseCallback callback) {
+
+        RestClient.getRetrofitService(token, apiKey, lang, deviceToken)
+                .myBookmarks()
+                .enqueue(new Callback<MyBookmarksResponse>() {
+                    @Override
+                    public void onResponse(Call<MyBookmarksResponse> call, Response<MyBookmarksResponse> response) {
+                        callback.onSuccess(response.body());
+                    }
+
+                    @Override
+                    public void onFailure(Call<MyBookmarksResponse> call, Throwable t) {
+                        callback.onFailure(call, t);
+                    }
+                });
+    }
 }

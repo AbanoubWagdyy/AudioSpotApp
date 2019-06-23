@@ -12,6 +12,7 @@ import android.view.ViewGroup
 import com.audiospotapp.R
 import com.audiospotapp.UI.contactUs.ContactUsActivity
 import com.audiospotapp.UI.login.LoginActivity
+import com.audiospotapp.UI.myBookmarks.MyBookmarksActivity
 import com.audiospotapp.UI.myFavourite.MyFavouriteBooksActivity
 import com.audiospotapp.UI.profile.ProfileActivity
 import com.audiospotapp.UI.settings.SettingsActivity
@@ -21,6 +22,11 @@ import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.fragment_menu.*
 
 class MenuFragment : Fragment(), MenuContract.View {
+
+    override fun showMyBookmarksScreen() {
+        val intent = Intent(activity!!, MyBookmarksActivity::class.java)
+        startActivity(intent)
+    }
 
     override fun showSettingsScreen() {
         val intent = Intent(activity!!, SettingsActivity::class.java)
@@ -93,6 +99,7 @@ class MenuFragment : Fragment(), MenuContract.View {
         super.onViewCreated(view, savedInstanceState)
         mPresenter = MenuPresenter(this)
         mPresenter.start()
+
         linearProfile.setOnClickListener {
             mPresenter.handleProfilePressed()
         }

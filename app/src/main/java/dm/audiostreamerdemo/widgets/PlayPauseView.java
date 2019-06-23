@@ -47,11 +47,8 @@ public class PlayPauseView extends AppCompatImageView {
 
     private final PlayPauseDrawable mDrawable;
     private final Paint mPaint = new Paint();
-    private final int mPauseBackgroundColor;
-    private final int mPlayBackgroundColor;
     public boolean isDrawCircle = true;
 
-    private AnimatorSet mAnimatorSet;
     private int mBackgroundColor;
     private int mWidth;
     private int mHeight;
@@ -68,9 +65,6 @@ public class PlayPauseView extends AppCompatImageView {
         mPaint.setStyle(Paint.Style.FILL);
         mDrawable = new PlayPauseDrawable(context);
         mDrawable.setCallback(this);
-
-        mPauseBackgroundColor = Color.parseColor("#DE9610");//colorTheme.data;
-        mPlayBackgroundColor = Color.parseColor("#DE9610");//colorTheme.data;
 
         TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.PlayPause);
         isDrawCircle = a.getBoolean(R.styleable.PlayPause_isCircleDraw, isDrawCircle);
@@ -151,36 +145,37 @@ public class PlayPauseView extends AppCompatImageView {
     // }
 
     public void Play() {
-        if (mAnimatorSet != null) {
-            mAnimatorSet.cancel();
-        }
-        mAnimatorSet = new AnimatorSet();
-        final ObjectAnimator colorAnim = ObjectAnimator.ofInt(this, COLOR, mPlayBackgroundColor);
+//        if (mAnimatorSet != null) {
+//            mAnimatorSet.cancel();
+//        }
+//        mAnimatorSet = new AnimatorSet();
+//        final ObjectAnimator colorAnim = ObjectAnimator.ofInt(this, COLOR, mPlayBackgroundColor);
         mIsPlay = true;
-        colorAnim.setEvaluator(new ArgbEvaluator());
-        mDrawable.setmIsPlay(mIsPlay);
-        final Animator pausePlayAnim = mDrawable.getPausePlayAnimator();
-        mAnimatorSet.setInterpolator(new DecelerateInterpolator());
-        mAnimatorSet.setDuration(PLAY_PAUSE_ANIMATION_DURATION);
-        mAnimatorSet.playTogether(colorAnim, pausePlayAnim);
-        mAnimatorSet.start();
+//        colorAnim.setEvaluator(new ArgbEvaluator());
+//        mDrawable.setmIsPlay(mIsPlay);
+//        final Animator pausePlayAnim = mDrawable.getPausePlayAnimator();
+//        mAnimatorSet.setInterpolator(new DecelerateInterpolator());
+//        mAnimatorSet.setDuration(PLAY_PAUSE_ANIMATION_DURATION);
+//        mAnimatorSet.playTogether(colorAnim, pausePlayAnim);
+//        mAnimatorSet.start();
+        setBackgroundDrawable(getContext().getDrawable(R.drawable.play_bottom));
     }
 
     public void Pause() {
-        if (mAnimatorSet != null) {
-            mAnimatorSet.cancel();
-        }
-
-        mAnimatorSet = new AnimatorSet();
-        final ObjectAnimator colorAnim = ObjectAnimator.ofInt(this, COLOR, mPauseBackgroundColor);
+//        if (mAnimatorSet != null) {
+//            mAnimatorSet.cancel();
+//        }
+//
+//        mAnimatorSet = new AnimatorSet();
+//        final ObjectAnimator colorAnim = ObjectAnimator.ofInt(this, COLOR, mPauseBackgroundColor);
         mIsPlay = false;
-        colorAnim.setEvaluator(new ArgbEvaluator());
-        mDrawable.setmIsPlay(mIsPlay);
-        final Animator pausePlayAnim = mDrawable.getPausePlayAnimator();
-        mAnimatorSet.setInterpolator(new DecelerateInterpolator());
-        mAnimatorSet.setDuration(PLAY_PAUSE_ANIMATION_DURATION);
-        mAnimatorSet.playTogether(colorAnim, pausePlayAnim);
-        mAnimatorSet.start();
+//        colorAnim.setEvaluator(new ArgbEvaluator());
+//        mDrawable.setmIsPlay(mIsPlay);
+//        final Animator pausePlayAnim = mDrawable.getPausePlayAnimator();
+//        mAnimatorSet.setInterpolator(new DecelerateInterpolator());
+//        mAnimatorSet.setDuration(PLAY_PAUSE_ANIMATION_DURATION);
+//        mAnimatorSet.playTogether(colorAnim, pausePlayAnim);
+//        mAnimatorSet.start();
+        setBackgroundDrawable(getContext().getDrawable(R.drawable.pause_bottom));
     }
-
 }

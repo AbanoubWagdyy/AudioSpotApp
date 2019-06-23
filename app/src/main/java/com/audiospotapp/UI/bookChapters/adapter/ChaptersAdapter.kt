@@ -32,7 +32,7 @@ class ChaptersAdapter(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         var chapterData = data[position]
         holder.chapterName.text = chapterData.title
-        holder.chapterDuration.text = TimeUtils.toHours(chapterData)
+        holder.chapterDuration.text = TimeUtils.toTimeFormat(chapterData.duration.toInt())
     }
 
     inner class ViewHolder(val mView: View) : RecyclerView.ViewHolder(mView), View.OnClickListener {

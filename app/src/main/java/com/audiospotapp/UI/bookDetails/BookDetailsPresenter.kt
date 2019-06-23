@@ -1,9 +1,10 @@
 package com.audiospotapp.UI.bookDetails
 
-import com.audiospot.DataLayer.Model.BookDetailsData
+import com.audiospot.DataLayer.Model.Book
 import com.audiospot.DataLayer.Model.BookDetailsResponse
 import com.audiospotapp.DataLayer.DataRepository
 import com.audiospotapp.DataLayer.Model.Response
+import com.audiospotapp.DataLayer.Model.Review
 import com.audiospotapp.DataLayer.Model.ReviewListResponse
 import com.audiospotapp.DataLayer.Retrofit.RetrofitCallbacks
 import com.audiospotapp.DataLayer.Retrofit.RetrofitResponseHandler
@@ -17,7 +18,11 @@ class BookDetailsPresenter(val mView: BookDetailsContract.View) : BookDetailsCon
         if (authResponse == null) {
             mView.showLoginMessage("You have to be Logged In First !.")
         } else {
-            mView.viewAllReviewsScreen()
+            if (reviews != null && reviews.isNotEmpty()) {
+                mView.viewAllReviewsScreen()
+            } else {
+                mView.showMessage("No Reviews detected !.")
+            }
         }
     }
 
@@ -26,7 +31,12 @@ class BookDetailsPresenter(val mView: BookDetailsContract.View) : BookDetailsCon
         if (authResponse == null) {
             mView.showLoginMessage("You have to be Logged In First !.")
         } else {
-           mView.viewBookChaptersScreen()
+            if (mRepositorySource.isBookMine()) {
+                mRepositorySource.saveBook(bookDetails)
+                mView.viewBookChaptersScreen()
+            } else {
+                mView.showMessage("You Should own this book to view all chapters !.")
+            }
         }
     }
 
@@ -36,7 +46,7 @@ class BookDetailsPresenter(val mView: BookDetailsContract.View) : BookDetailsCon
             mView.showLoginMessage("You have to be Logged In First !.")
         } else {
             if (mRepositorySource.isBookMine()) {
-                mRepositorySource.saveBookDetails(bookDetails)
+                mRepositorySource.saveBook(bookDetails)
                 mView.showGiveGiftScreen()
             } else {
                 mView.showMessage("You Should own this book to give this book as a gift !.")
@@ -86,7 +96,7 @@ class BookDetailsPresenter(val mView: BookDetailsContract.View) : BookDetailsCon
     }
 
     lateinit var mRepositorySource: RepositorySource
-    lateinit var bookDetails: BookDetailsData
+    lateinit var bookDetails: Book
 
     override fun start() {
         mRepositorySource = DataRepository.getInstance(mView.getAppContext())
@@ -96,7 +106,7 @@ class BookDetailsPresenter(val mView: BookDetailsContract.View) : BookDetailsCon
                 mView.dismissLoading()
                 if (result1 != null) {
                     var status = RetrofitResponseHandler.validateAuthResponseStatus(result1)
-                    if (status == RetrofitResponseHandler.Status.VALID) {
+                    if (status == RetrofitResponseHandler.Companion.Status.VALID) {
                         bookDetails = result1.data
                         mView.bindResponse(result1)
                     } else {
@@ -118,7 +128,8 @@ class BookDetailsPresenter(val mView: BookDetailsContract.View) : BookDetailsCon
             override fun onSuccess(result: ReviewListResponse?) {
                 if (result != null) {
                     val status = RetrofitResponseHandler.validateAuthResponseStatus(result)
-                    if (status == RetrofitResponseHandler.Status.VALID) {
+                    if (status == RetrofitResponseHandler.Companion.Status.VALID) {
+                        reviews = result!!.data
                         mView.setBookReviews(result!!.data)
                     } else {
                         mView.showMessage(result.message)
@@ -132,4 +143,6 @@ class BookDetailsPresenter(val mView: BookDetailsContract.View) : BookDetailsCon
             }
         })
     }
+
+    lateinit var reviews: List<Review>
 }

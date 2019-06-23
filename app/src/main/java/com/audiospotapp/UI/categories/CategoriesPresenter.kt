@@ -24,7 +24,7 @@ class CategoriesPresenter(val mView: CategoriesContract.View) : CategoriesContra
             override fun onSuccess(result: CategoriesListResponse?) {
                 mView.dismissLoadingDialog()
                 val status = RetrofitResponseHandler.validateAuthResponseStatus(result)
-                if (status == RetrofitResponseHandler.Status.VALID) {
+                if (status == RetrofitResponseHandler.Companion.Status.VALID) {
                     mView.setCategoriesList(result)
                 } else {
                     mView!!.showErrorMessage(result!!.message)

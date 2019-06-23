@@ -23,7 +23,7 @@ class ForgetPasswordPresenter(val mView: ForgetPasswordContract.View) : ForgetPa
             mRepositorySource.resetPassword(email,object : RetrofitCallbacks.AuthResponseCallback{
                 override fun onSuccess(result: AuthResponse?) {
                     val status = RetrofitResponseHandler.validateAuthResponseStatus(result)
-                    if (status == RetrofitResponseHandler.Status.VALID) {
+                    if (status == RetrofitResponseHandler.Companion.Status.VALID) {
                         mView!!.viewLoginScreen()
                     } else {
                         mView!!.showErrorMessage(result!!.message)
