@@ -1,5 +1,6 @@
 package com.audiospotapp.UI.cart
 
+import com.audiospot.DataLayer.Model.AuthResponse
 import com.audiospot.DataLayer.Model.Book
 import com.audiospotapp.DataLayer.DataRepository
 import com.audiospotapp.DataLayer.Model.BookListResponse
@@ -10,6 +11,10 @@ import com.visionvalley.letuno.DataLayer.RepositorySource
 import retrofit2.Call
 
 class CartPresenter(val mView: CartContract.View) : CartContract.Presenter {
+
+    override fun getAuthResponse(): AuthResponse? {
+        return mRepositorySource.getAuthResponse()
+    }
 
     override fun deleteBookFromCart(book: Book) {
         mView.showLoading()

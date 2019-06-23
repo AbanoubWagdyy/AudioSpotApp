@@ -9,7 +9,7 @@ interface CartContract {
     interface Presenter {
         fun start()
         fun deleteBookFromCart(book: Book)
-        fun getAuthResponse(): AuthResponse
+        fun getAuthResponse(): AuthResponse?
     }
 
     interface View {
