@@ -120,7 +120,16 @@ class BookDetailsFragment : Fragment(), BookDetailsContract.View {
     }
 
     override fun bindResponse(result: BookDetailsResponse?) {
+
         ratingBar.rating = result!!.data.rate.toFloat()
+
+        ratingBar.setOnRatingChangeListener(null)
+        ratingBar.setOnTouchListener { p0, p1 -> true }
+
+        ratingBar.setOnRatingChangeListener { ratingBar, rating, fromUser ->
+            ratingBar.rating = result.data.rate.toFloat()
+        }
+
         tvBookTitle.text = result!!.data.title
         tvNumberOfReviews.text = "(" + result!!.data.reviews.toString() + " reviews" + ")"
         tvAuthor.text = result!!.data.author

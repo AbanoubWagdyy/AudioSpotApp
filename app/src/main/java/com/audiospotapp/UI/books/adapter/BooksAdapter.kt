@@ -71,9 +71,15 @@ class BooksAdapter() : RecyclerView.Adapter<BooksAdapter.ViewHolder>() {
         holder.tvLength.text =  TimeUtils.toHours(book)
         holder.tvLanguage.text = book.language
         holder.tvPrice.text = book.price.toString() + " EGP."
-        holder.ratingBar.isClickable = false
-        holder.ratingBar.isScrollable = true
+
         holder.ratingBar.rating = book.rate.toFloat()
+
+        holder.ratingBar.setOnRatingChangeListener(null)
+        holder.ratingBar.setOnTouchListener { p0, p1 -> true }
+
+        holder.ratingBar.setOnRatingChangeListener { ratingBar, rating, fromUser ->
+            holder.ratingBar.rating = book.rate.toFloat()
+        }
 
         if (book.isToShowDelete) {
             holder.delete.visibility = View.VISIBLE

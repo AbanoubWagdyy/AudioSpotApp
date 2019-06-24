@@ -487,7 +487,8 @@ public class RemoteDataSourceUsingRetrofit {
                 });
     }
 
-    public void contactUs(String token, String apiKey, String lang, String deviceToken, String message, RetrofitCallbacks.ContactUsResponseCallback callback) {
+    public void contactUs(String token, String apiKey, String lang, String deviceToken, String message,
+                          RetrofitCallbacks.ContactUsResponseCallback callback) {
 
         RestClient.getRetrofitService(token, apiKey, lang, deviceToken)
                 .contactUs(message)
