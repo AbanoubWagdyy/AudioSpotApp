@@ -152,6 +152,17 @@ class RetrofitResponseHandler {
             }
         }
 
+        fun validateAuthResponseStatus(result: PromoCodeResponse?): Status {
+            return when (result!!.status) {
+                1 -> {
+                    Status.VALID
+                }
+                else -> {
+                    Status.INVALID
+                }
+            }
+        }
+
         enum class Status {
             VALID, INVALID
         }

@@ -13,6 +13,7 @@ import com.audiospotapp.R
 import com.audiospotapp.utils.DialogUtils
 import com.audiospotapp.utils.ImageUtils
 import com.google.android.material.snackbar.Snackbar
+import com.willy.ratingbar.BaseRatingBar
 import kotlinx.android.synthetic.main.fragment_rate_book.*
 
 
@@ -25,7 +26,8 @@ class RateBookFragment : Fragment(), RateBookContract.View {
     override fun bindResponse(bookDetailsData: Book) {
         ratingBar.rating = bookDetailsData!!.rate.toFloat()
         tvBookTitle.text = bookDetailsData!!.title
-        tvNumberOfReviews.text = bookDetailsData!!.reviews.toString()
+        var reviews = bookDetailsData!!.reviews.toString()
+        tvNumberOfReviews.text = "($reviews Reviews)"
         tvAuthor.text = bookDetailsData!!.author
         if (bookDetailsData.narators.isNotEmpty()) {
             val builder = StringBuilder()
@@ -67,8 +69,14 @@ class RateBookFragment : Fragment(), RateBookContract.View {
 
         mPresenter.start()
 
+        ratingBarUser.setOnRatingChangeListener(object : BaseRatingBar.OnRatingChangeListener{
+            override fun onRatingChange(ratingBar: BaseRatingBar?, rating: Float, fromUser: Boolean) {
+                this@RateBookFragment.rating = ratingBar!!.rating
+            }
+        })
+
         btnSubmit.setOnClickListener {
-            mPresenter.rateBook(ratingBarUser.rating, message.text.toString())
+            mPresenter.rateBook(rating, message.text.toString())
         }
     }
 
@@ -79,4 +87,5 @@ class RateBookFragment : Fragment(), RateBookContract.View {
     }
 
     lateinit var mPresenter: RateBookContract.Presenter
+    var rating : Float = 0.0f
 }

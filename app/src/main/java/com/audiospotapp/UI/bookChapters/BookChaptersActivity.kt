@@ -162,12 +162,19 @@ class BookChaptersActivity : AppCompatActivity(), CurrentSessionCallback, View.O
     }
 
     override fun onChapterClicked(data: ChaptersData) {
-        configAudioStreamer()
-        slidepanel_time_total.text = data.duration_str
-        paragraphs = data.paragraphs
-        chapterData = data
-        var mediaData = BookMediaDataConversion.convertBookToMediaMetaData(data)
-        playSong(mediaData)
+        if (mPresenter.isBookMine()) {
+            configAudioStreamer()
+            slidepanel_time_total.text = data.duration_str
+            paragraphs = data.paragraphs
+            chapterData = data
+            var mediaData = BookMediaDataConversion.convertBookToMediaMetaData(data)
+            playSong(mediaData)
+        } else {
+            Snackbar.make(
+               findViewById(android.R.id.content),
+                applicationContext.getString(R.string.you_should_own), Snackbar.LENGTH_SHORT
+            ).show()
+        }
     }
 
     override fun setChapters(data: List<ChaptersData>) {

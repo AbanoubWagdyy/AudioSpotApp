@@ -68,7 +68,7 @@ class BooksAdapter() : RecyclerView.Adapter<BooksAdapter.ViewHolder>() {
             holder.tvNarrator.text = builder.toString().substring(0, builder.toString().length - 1)
         }
 
-        holder.tvLength.text =  TimeUtils.toHours(book)
+        holder.tvLength.text =  TimeUtils.toTimeFormat(book.total_time.toInt()) + " Hours"
         holder.tvLanguage.text = book.language
         holder.tvPrice.text = book.price.toString() + " EGP."
 

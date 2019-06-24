@@ -20,8 +20,10 @@ import com.audiospotapp.DataLayer.Model.Review
 import com.audiospotapp.UI.bookChapters.BookChaptersActivity
 import com.audiospotapp.UI.bookDetails.adapter.ReviewListAdapter
 import com.audiospotapp.UI.bookReviews.BookReviewsActivity
+import com.audiospotapp.UI.giftSelection.GiftSelectionActivity
 import com.audiospotapp.UI.giveAgift.GiveGiftActivity
 import com.audiospotapp.UI.login.LoginActivity
+import com.audiospotapp.UI.rateBook.RateBookActivity
 import com.audiospotapp.utils.DialogUtils
 import com.audiospotapp.utils.ImageUtils
 import com.audiospotapp.utils.TimeUtils
@@ -30,7 +32,8 @@ import com.google.android.material.snackbar.Snackbar
 class BookDetailsFragment : Fragment(), BookDetailsContract.View {
 
     override fun viewRateBookScreen() {
-
+        val intent = Intent(activity!!, RateBookActivity::class.java)
+        startActivity(intent)
     }
 
     override fun hideAddFavoritesButton() {
@@ -52,7 +55,7 @@ class BookDetailsFragment : Fragment(), BookDetailsContract.View {
     }
 
     override fun showGiveGiftScreen() {
-        val intent = Intent(activity!!, GiveGiftActivity::class.java)
+        val intent = Intent(activity!!, GiftSelectionActivity::class.java)
         startActivity(intent)
     }
 

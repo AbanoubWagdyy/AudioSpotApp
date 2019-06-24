@@ -15,6 +15,7 @@ import com.audiospotapp.R
 import com.audiospotapp.UI.books.Interface.onBookItemClickListener
 import com.audiospotapp.UI.books.adapter.BooksAdapter
 import com.audiospotapp.UI.homepage.HomepageActivity
+import com.audiospotapp.UI.payment.PaymentActivity
 import com.audiospotapp.utils.BookMediaDataConversion
 import com.audiospotapp.utils.DialogUtils
 import com.google.android.material.snackbar.Snackbar
@@ -98,6 +99,7 @@ class CartFragment : Fragment(), CartContract.View, onBookItemClickListener,
         if (listMyBooks.isEmpty()) {
             promoCode.visibility = View.GONE
             payNow.visibility = View.GONE
+            recyclerCartBooks.visibility = View.GONE
         } else {
             recyclerCartBooks.layoutManager = LinearLayoutManager(context)
             recyclerCartBooks.setHasFixedSize(true)
@@ -105,6 +107,13 @@ class CartFragment : Fragment(), CartContract.View, onBookItemClickListener,
             adapter = BooksAdapter(listMyBooks, this, this)
             recyclerCartBooks.adapter = adapter
         }
+
+        var priceTotal = 0
+        for (book in listMyBooks) {
+            priceTotal += book.price
+        }
+
+        totalPayment.text = "Total payment: $priceTotal LE"
     }
 
     override fun onCreateView(
@@ -122,7 +131,9 @@ class CartFragment : Fragment(), CartContract.View, onBookItemClickListener,
         }
 
         payNow.setOnClickListener {
-
+            val intent = Intent(activity!!, PaymentActivity::class.java)
+            startActivity(intent)
+            activity!!.finish()
         }
 
         mPresenter = CartPresenter(this)

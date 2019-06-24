@@ -9,6 +9,8 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import java.util.List;
+
 public class RemoteDataSourceUsingRetrofit {
 
     private static RemoteDataSourceUsingRetrofit INSTANCE;
@@ -285,6 +287,22 @@ public class RemoteDataSourceUsingRetrofit {
                 });
     }
 
+    public void receiveBook(String token, String apiKey, String lang, String device_key, String voucher, RetrofitCallbacks.BookDetailsResponseCallback callback) {
+        RestClient.getRetrofitService(token, apiKey, lang, device_key)
+                .receiveBook(voucher)
+                .enqueue(new Callback<BookDetailsResponse>() {
+                    @Override
+                    public void onResponse(Call<BookDetailsResponse> call, Response<BookDetailsResponse> response) {
+                        callback.onSuccess(response.body());
+                    }
+
+                    @Override
+                    public void onFailure(Call<BookDetailsResponse> call, Throwable t) {
+                        callback.onFailure(call, t);
+                    }
+                });
+    }
+
     public void getBookReviews(String apiKey, String lang, String device_key, Integer bookId,
                                RetrofitCallbacks.ReviewListResponseCallback callback) {
         RestClient.getRetrofitService(apiKey, lang, device_key)
@@ -351,9 +369,20 @@ public class RemoteDataSourceUsingRetrofit {
                 });
     }
 
-    public void sendGift(String token, String apiKey, String lang, String deviceToken, String email, int id, RetrofitCallbacks.ResponseCallback responseCallback) {
+    public void sendAsGift(String token, String apiKey, String lang, String deviceToken,
+                           String email1,
+                           String email2,
+                           String email3,
+                           String email4,
+                           String email5,
+                           int id, RetrofitCallbacks.ResponseCallback responseCallback) {
         RestClient.getRetrofitService(token, apiKey, lang, deviceToken)
-                .sendGift(id, email)
+                .sendAsGift(id,
+                        email1,
+                        email2,
+                        email3,
+                        email4,
+                        email5)
                 .enqueue(new Callback<com.audiospotapp.DataLayer.Model.Response>() {
                     @Override
                     public void onResponse(Call<com.audiospotapp.DataLayer.Model.Response> call, Response<com.audiospotapp.DataLayer.Model.Response> response) {
@@ -362,6 +391,40 @@ public class RemoteDataSourceUsingRetrofit {
 
                     @Override
                     public void onFailure(Call<com.audiospotapp.DataLayer.Model.Response> call, Throwable t) {
+                        responseCallback.onFailure(call, t);
+                    }
+                });
+    }
+
+    public void sendAsVoucher(String token, String apiKey, String lang, String deviceToken,
+                              String email, int id, RetrofitCallbacks.ResponseCallback responseCallback) {
+        RestClient.getRetrofitService(token, apiKey, lang, deviceToken)
+                .sendAsVoucher(id, email)
+                .enqueue(new Callback<com.audiospotapp.DataLayer.Model.Response>() {
+                    @Override
+                    public void onResponse(Call<com.audiospotapp.DataLayer.Model.Response> call, Response<com.audiospotapp.DataLayer.Model.Response> response) {
+                        responseCallback.onSuccess(response.body());
+                    }
+
+                    @Override
+                    public void onFailure(Call<com.audiospotapp.DataLayer.Model.Response> call, Throwable t) {
+                        responseCallback.onFailure(call, t);
+                    }
+                });
+    }
+
+    public void addPromoCode(String token, String apiKey, String lang, String deviceToken,
+                             String promoCode, RetrofitCallbacks.PromoCodeResponseCallback responseCallback) {
+        RestClient.getRetrofitService(token, apiKey, lang, deviceToken)
+                .addPromoCode(promoCode)
+                .enqueue(new Callback<PromoCodeResponse>() {
+                    @Override
+                    public void onResponse(Call<PromoCodeResponse> call, Response<PromoCodeResponse> response) {
+                        responseCallback.onSuccess(response.body());
+                    }
+
+                    @Override
+                    public void onFailure(Call<PromoCodeResponse> call, Throwable t) {
                         responseCallback.onFailure(call, t);
                     }
                 });

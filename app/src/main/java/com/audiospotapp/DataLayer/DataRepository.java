@@ -18,11 +18,12 @@ import com.audiospotapp.DataLayer.Model.*;
 import com.audiospotapp.DataLayer.Retrofit.GlobalKeys;
 import com.audiospotapp.DataLayer.Retrofit.RemoteDataSourceUsingRetrofit;
 import com.audiospotapp.DataLayer.Retrofit.RetrofitCallbacks;
+import com.audiospotapp.UI.giftSelection.GiftSelection;
 import com.visionvalley.letuno.DataLayer.RepositorySource;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import retrofit2.Call;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class DataRepository implements RepositorySource {
@@ -40,6 +41,8 @@ public class DataRepository implements RepositorySource {
     private List<Book> myBooks;
     private BookmarkBody bookmarkBody;
     private Bookmark bookmark;
+    private String promoCode = "";
+    private Book voucherBook;
     //endregion
 
     private DataRepository(Context context) {
@@ -495,30 +498,6 @@ public class DataRepository implements RepositorySource {
     }
 
     @Override
-    public void sendGift(@NotNull String email, @NotNull RetrofitCallbacks.ResponseCallback responseCallback) {
-        mRetrofitService.sendGift(authResponse.getData().getToken(), GlobalKeys.API_KEY, lang,
-                mCacheDataSource.getStringFromCache(GlobalKeys.StoreData.TOKEN, null),
-                email,
-                mBookItemInterceptor.getSavedBook().getId(),
-                new RetrofitCallbacks.ResponseCallback() {
-                    @Override
-                    public void onSuccess(Response result) {
-                        responseCallback.onSuccess(result);
-                    }
-
-                    @Override
-                    public void onFailure(Call<Response> call, Throwable t) {
-                        responseCallback.onFailure(call, t);
-                    }
-
-                    @Override
-                    public void onAuthFailure() {
-
-                    }
-                });
-    }
-
-    @Override
     public void getMyBooks(@NotNull RetrofitCallbacks.BookListCallback callback) {
         if (authResponse != null)
             mRetrofitService.getMyBooks(authResponse.getData().getToken(), GlobalKeys.API_KEY, lang,
@@ -735,5 +714,92 @@ public class DataRepository implements RepositorySource {
         mRetrofitService.rateBook(authResponse.getData().getToken(), GlobalKeys.API_KEY, lang,
                 mCacheDataSource.getStringFromCache(GlobalKeys.StoreData.TOKEN, null),
                 mBookItemInterceptor.getSavedBook().getId(), rate, comment, responseCallback);
+    }
+
+    @Override
+    public void submitGiftProperities(@NotNull GiftSelection giftSelection, int quantity) {
+        this.giftSelection = giftSelection;
+        this.quantity = quantity;
+    }
+
+    @NotNull
+    GiftSelection giftSelection;
+    int quantity = 0;
+
+    @Override
+    public void sendAsVoucher(@NotNull String email, @NotNull RetrofitCallbacks.ResponseCallback responseCallback) {
+        mRetrofitService.sendAsVoucher(authResponse.getData().getToken(), GlobalKeys.API_KEY, lang,
+                mCacheDataSource.getStringFromCache(GlobalKeys.StoreData.TOKEN, null), email,
+                mBookItemInterceptor.getSavedBook().getId(),
+                responseCallback);
+    }
+
+    @Override
+    public void sendAsGift(
+            @NotNull String email1,
+            @NotNull String email2,
+            @NotNull String email3,
+            @NotNull String email4,
+            @NotNull String email5,
+            @NotNull RetrofitCallbacks.ResponseCallback responseCallback) {
+        mRetrofitService.sendAsGift(authResponse.getData().getToken(), GlobalKeys.API_KEY, lang,
+                mCacheDataSource.getStringFromCache(GlobalKeys.StoreData.TOKEN, null),
+                email1,
+                email2,
+                email3,
+                email4,
+                email5,
+                mBookItemInterceptor.getSavedBook().getId(),
+                responseCallback);
+    }
+
+    @NotNull
+    @Override
+    public String getDeviceToken() {
+        return mCacheDataSource.getStringFromCache(GlobalKeys.StoreData.TOKEN, null);
+    }
+
+    @Override
+    public int getVoucher() {
+        return quantity;
+    }
+
+    @Override
+    public void addPromoCode(@NotNull String promoCode, @NotNull RetrofitCallbacks.PromoCodeResponseCallback responseCallback) {
+        mRetrofitService.addPromoCode(authResponse.getData().getToken(), GlobalKeys.API_KEY, lang,
+                mCacheDataSource.getStringFromCache(GlobalKeys.StoreData.TOKEN, null), promoCode, new RetrofitCallbacks.PromoCodeResponseCallback() {
+                    @Override
+                    public void onSuccess(PromoCodeResponse result) {
+                        DataRepository.this.promoCode = promoCode;
+                    }
+
+                    @Override
+                    public void onFailure(Call<PromoCodeResponse> call, Throwable t) {
+
+                    }
+                });
+    }
+
+    @NotNull
+    @Override
+    public String getPromoCode() {
+        return promoCode;
+    }
+
+    @Override
+    public void receiveBook(@NotNull String voucher, @NotNull RetrofitCallbacks.BookDetailsResponseCallback callback) {
+        mRetrofitService.receiveBook(authResponse.getData().getToken(), GlobalKeys.API_KEY, lang,
+                mCacheDataSource.getStringFromCache(GlobalKeys.StoreData.TOKEN, null), voucher, callback);
+    }
+
+    @Override
+    public void saveVoucherBook(@Nullable Book data) {
+        this.voucherBook = data;
+    }
+
+    @NotNull
+    @Override
+    public Book getVoucherBook() {
+        return voucherBook;
     }
 }

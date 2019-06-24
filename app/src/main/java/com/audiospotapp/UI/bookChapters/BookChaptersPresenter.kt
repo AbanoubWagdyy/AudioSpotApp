@@ -10,6 +10,10 @@ import retrofit2.Call
 
 class BookChaptersPresenter(val mView: BookChaptersContract.View) : BookChaptersContract.Presenter {
 
+    override fun isBookMine(): Boolean {
+        return mRepoSource.isBookMine()
+    }
+
     override fun handleBookmarkClicked(timeString: String, id: Int, title: String) {
         var savedbook = mRepoSource.getSavedBook()
 

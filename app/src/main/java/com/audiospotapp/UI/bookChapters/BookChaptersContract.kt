@@ -9,6 +9,7 @@ interface BookChaptersContract {
     interface Presenter {
         fun start()
         fun handleBookmarkClicked(timeString: String, id: Int, title: String)
+        fun isBookMine(): Boolean
     }
 
     interface View {

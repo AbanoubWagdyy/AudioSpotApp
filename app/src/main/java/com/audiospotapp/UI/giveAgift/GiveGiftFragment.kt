@@ -1,7 +1,7 @@
 package com.audiospotapp.UI.giveAgift
 
-
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import androidx.fragment.app.Fragment
@@ -11,12 +11,18 @@ import android.view.ViewGroup
 import com.audiospot.DataLayer.Model.Book
 
 import com.audiospotapp.R
+import com.audiospotapp.UI.cart.CartActivity
 import com.audiospotapp.utils.DialogUtils
 import com.audiospotapp.utils.ImageUtils
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.fragment_give_agift.*
 
 class GiveGiftFragment : Fragment(), GiveGiftContract.View {
+
+    override fun showCartScreen() {
+        val intent = Intent(activity!!, CartActivity::class.java)
+        startActivity(intent)
+    }
 
     override fun showMessage(message: String) {
         Snackbar.make(activity!!.findViewById(android.R.id.content), message, Snackbar.LENGTH_LONG).show()
@@ -47,7 +53,8 @@ class GiveGiftFragment : Fragment(), GiveGiftContract.View {
     override fun bindResponse(result: Book?) {
         ratingBar.rating = result!!.rate.toFloat()
         tvBookTitle.text = result!!.title
-        tvNumberOfReviews.text = result!!.reviews.toString()
+        var numberOfReviews = result.reviews
+        tvNumberOfReviews.text = "($numberOfReviews Reviews)"
         tvAuthor.text = result!!.author
         if (result.narators.isNotEmpty()) {
             val builder = StringBuilder()
@@ -73,7 +80,13 @@ class GiveGiftFragment : Fragment(), GiveGiftContract.View {
         ivPlay.setOnClickListener {
         }
         relativeGiveAGift.setOnClickListener {
-            mPresenter.giveGift(email.text.toString())
+            mPresenter.giveGift(
+                email1.text.toString(),
+                email2.text.toString(),
+                email3.text.toString(),
+                email4.text.toString(),
+                email5.text.toString()
+            )
         }
     }
 

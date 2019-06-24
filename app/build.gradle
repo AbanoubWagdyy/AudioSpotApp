@@ -10,6 +10,7 @@ androidExtensions {
 }
 
 android {
+    useLibrary 'org.apache.http.legacy'
     compileSdkVersion 29
     defaultConfig {
         applicationId "com.audiospotapp"
@@ -108,5 +109,6 @@ dependencies {
     implementation "io.reactivex.rxjava2:rxjava:$rxjava_version"
 
     implementation 'me.rohanpeshkar.filterablelistdialog:filterablelistdialog:0.0.1'
+    implementation 'com.github.delight-im:Android-AdvancedWebView:v3.0.0'
 
 }

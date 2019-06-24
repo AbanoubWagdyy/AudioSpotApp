@@ -6,6 +6,7 @@ import com.audiospot.DataLayer.Model.CategoriesListData
 import com.audiospotapp.DataLayer.Cache.CacheDataSource
 import com.audiospotapp.DataLayer.Model.*
 import com.audiospotapp.DataLayer.Retrofit.RetrofitCallbacks
+import com.audiospotapp.UI.giftSelection.GiftSelection
 
 interface RepositorySource : CacheDataSource {
 
@@ -97,6 +98,8 @@ interface RepositorySource : CacheDataSource {
 
     fun getBookDetails(callback: RetrofitCallbacks.BookDetailsResponseCallback)
 
+    fun receiveBook(voucher: String, callback: RetrofitCallbacks.BookDetailsResponseCallback)
+
     fun getBookDetailsWithId(bookId: Int, callback: RetrofitCallbacks.BookDetailsResponseCallback)
 
     fun getMyBooks(callback: RetrofitCallbacks.BookListCallback)
@@ -105,7 +108,16 @@ interface RepositorySource : CacheDataSource {
 
     fun getMyFavouriteBooks(callback: RetrofitCallbacks.BookListCallback)
 
-    fun sendGift(email: String, responseCallback: RetrofitCallbacks.ResponseCallback)
+    fun sendAsGift(
+        email1: String,
+        email2: String,
+        email3: String,
+        email4: String,
+        email5: String,
+        responseCallback: RetrofitCallbacks.ResponseCallback
+    )
+
+    fun sendAsVoucher(email: String, responseCallback: RetrofitCallbacks.ResponseCallback)
 
     fun getBookReviews(callback: RetrofitCallbacks.ReviewListResponseCallback)
 
@@ -144,4 +156,17 @@ interface RepositorySource : CacheDataSource {
         comment: String,
         responseCallback: RetrofitCallbacks.ResponseCallback
     )
+
+    fun submitGiftProperities(giftSelection: GiftSelection, quantity: Int)
+
+    fun getDeviceToken(): String
+
+    fun getVoucher(): Int
+
+    fun getPromoCode(): String
+
+    fun addPromoCode(promoCode: String, responseCallback: RetrofitCallbacks.PromoCodeResponseCallback)
+
+    fun saveVoucherBook(data: Book?)
+    fun getVoucherBook(): Book
 }

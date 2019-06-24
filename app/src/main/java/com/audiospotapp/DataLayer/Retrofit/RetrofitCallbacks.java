@@ -95,4 +95,12 @@ public interface RetrofitCallbacks {
 
         void onFailure(Call<ContactUsResponse> call, Throwable t);
     }
+
+    interface PromoCodeResponseCallback {
+        void onSuccess(PromoCodeResponse result);
+
+        void onFailure(Call<PromoCodeResponse> call, Throwable t);
+    }
+
+
 }

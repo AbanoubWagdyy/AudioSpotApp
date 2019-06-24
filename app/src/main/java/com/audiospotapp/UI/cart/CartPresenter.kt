@@ -6,6 +6,7 @@ import com.audiospotapp.DataLayer.DataRepository
 import com.audiospotapp.DataLayer.Model.BookListResponse
 import com.audiospotapp.DataLayer.Model.Response
 import com.audiospotapp.DataLayer.Retrofit.RetrofitCallbacks
+import com.audiospotapp.DataLayer.Retrofit.RetrofitResponseHandler
 
 import com.visionvalley.letuno.DataLayer.RepositorySource
 import retrofit2.Call
@@ -20,8 +21,13 @@ class CartPresenter(val mView: CartContract.View) : CartContract.Presenter {
         mView.showLoading()
         mRepositorySource.removeBookFromCart(book.id, object : RetrofitCallbacks.ResponseCallback {
             override fun onSuccess(result: Response?) {
-                mView.dismissLoading()
-                mView.showMessage(result!!.message)
+                val status = RetrofitResponseHandler.validateAuthResponseStatus(result)
+                if (status == RetrofitResponseHandler.Companion.Status.VALID) {
+                    start()
+                } else {
+                    mView.dismissLoading()
+                    mView.showMessage(result!!.message)
+                }
             }
 
             override fun onFailure(call: Call<Response>?, t: Throwable?) {

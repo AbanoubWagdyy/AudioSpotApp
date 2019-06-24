@@ -7,7 +7,12 @@ interface GiveGiftContract {
 
     interface Presenter {
         fun start()
-        fun giveGift(email: String)
+        fun giveGift(
+            email1: String,
+            email2: String,
+            email3: String,
+            email4: String,
+            email5: String)
     }
 
     interface View {
@@ -18,5 +23,6 @@ interface GiveGiftContract {
         fun showInvalidEmailMessage(message: String)
         fun showMessage(message: String)
         fun finalizeView()
+        fun showCartScreen()
     }
 }

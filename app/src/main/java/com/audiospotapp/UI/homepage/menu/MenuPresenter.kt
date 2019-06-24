@@ -42,7 +42,7 @@ class MenuPresenter(val mView: MenuContract.View) : MenuContract.Presenter {
     }
 
     override fun handleReceviveGiftPressed() {
-
+        mView.showVoucherScreen()
     }
 
     override fun handleTermsAndConditionsPressed() {

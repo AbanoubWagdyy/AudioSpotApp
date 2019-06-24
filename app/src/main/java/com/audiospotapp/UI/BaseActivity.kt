@@ -12,11 +12,13 @@ import com.audiospotapp.DataLayer.DataRepository
 import com.audiospotapp.DataLayer.Model.BookListResponse
 import com.audiospotapp.DataLayer.Retrofit.RetrofitCallbacks
 import com.audiospotapp.R
+import com.audiospotapp.UI.giftSelection.GiftSelectionActivity
 import com.audiospotapp.UI.giveAgift.GiveGiftActivity
 import com.audiospotapp.UI.profile.ProfileActivity
 import com.audiospotapp.UI.rateBook.RateBookActivity
 import com.audiospotapp.UI.splash.SplashActivity
 import com.audiospotapp.UI.updateProfile.UpdateProfileActivity
+import com.audiospotapp.UI.voucher.VoucherActivity
 import com.visionvalley.letuno.DataLayer.RepositorySource
 import dm.audiostreamer.AudioStreamingManager
 import dm.audiostreamer.MediaMetaData
@@ -80,7 +82,10 @@ abstract class BaseActivity : AppCompatActivity() {
 
         manageEditVisibility()
 
-        if (this is GiveGiftActivity || this is RateBookActivity) {
+        if (this is GiveGiftActivity || this is RateBookActivity ||
+            this is GiftSelectionActivity ||
+            this is VoucherActivity
+        ) {
             bottom_navigation.visibility = View.GONE
         }
     }

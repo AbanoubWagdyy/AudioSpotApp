@@ -14,11 +14,17 @@
             android:label="@string/app_name"
             android:supportsRtl="true"
             android:theme="@style/AppTheme">
-        <activity android:name=".UI.rateBook.RateBookActivity">
+        <activity android:name=".UI.promoCodeCongratulations.CongratulationsActivity">
         </activity>
-        <activity android:name=".UI.myBookmarks.MyBookmarksActivity">
+        <activity android:name=".UI.voucher.VoucherActivity">
         </activity>
-        <activity android:name=".UI.addBookmark.AddBookmarkActivity">
+        <activity android:name=".UI.promoCode.PromoCodeActivity">
+        </activity>
+        <activity android:name=".UI.payment.PaymentActivity">
+        </activity>
+        <activity android:name=".UI.bookPayment.BookPaymentActivity">
+        </activity>
+        <activity android:name=".UI.giftSelection.GiftSelectionActivity">
         </activity>
 
         <meta-data
@@ -95,6 +101,12 @@
         <activity android:name=".UI.contactUs.ContactUsActivity">
         </activity>
         <activity android:name=".UI.myFavourite.MyFavouriteBooksActivity">
+        </activity>
+        <activity android:name=".UI.rateBook.RateBookActivity">
+        </activity>
+        <activity android:name=".UI.myBookmarks.MyBookmarksActivity">
+        </activity>
+        <activity android:name=".UI.addBookmark.AddBookmarkActivity">
         </activity>
 
         <service

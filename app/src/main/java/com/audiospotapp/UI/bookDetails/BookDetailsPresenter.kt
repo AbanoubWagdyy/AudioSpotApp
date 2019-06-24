@@ -27,37 +27,41 @@ class BookDetailsPresenter(val mView: BookDetailsContract.View) : BookDetailsCon
     }
 
     override fun handleViewBookChaptersClicked() {
-        var authResponse = mRepositorySource.getAuthResponse()
-        if (authResponse == null) {
-            mView.showLoginMessage("You have to be Logged In First !.")
-        } else {
-            if (mRepositorySource.isBookMine()) {
-                mRepositorySource.saveBook(bookDetails)
-                mView.viewBookChaptersScreen()
-            } else {
-                mView.showMessage("You Should own this book to view all chapters !.")
-            }
-        }
+//        var authResponse = mRepositorySource.getAuthResponse()
+//        if (authResponse == null) {
+//            mView.showLoginMessage("You have to be Logged In First !.")
+//        } else {
+//            if (mRepositorySource.isBookMine()) {
+//                mRepositorySource.saveBook(bookDetails)
+//                mView.viewBookChaptersScreen()
+//            } else {
+//                mView.showMessage("You Should own this book to view all chapters !.")
+//            }
+//        }
+
+        mView.viewBookChaptersScreen()
     }
 
     override fun handleGiveGiftClicked() {
-        var authResponse = mRepositorySource.getAuthResponse()
-        if (authResponse == null) {
-            mView.showLoginMessage("You have to be Logged In First !.")
-        } else {
-            if (mRepositorySource.isBookMine()) {
-                mRepositorySource.saveBook(bookDetails)
-                mView.showGiveGiftScreen()
-            } else {
-                mView.showMessage("You Should own this book to give this book as a gift !.")
-            }
-        }
+//        var authResponse = mRepositorySource.getAuthResponse()
+//        if (authResponse == null) {
+//            mView.showLoginMessage("You have to be Logged In First !.")
+//        } else {
+//            if (mRepositorySource.isBookMine()) {
+//                mRepositorySource.saveBook(bookDetails)
+//                mView.showGiveGiftScreen()
+//            } else {
+//                mView.showMessage("You Should own this book to give this book as a gift !.")
+//            }
+//        }
+
+        mView.showGiveGiftScreen()
     }
 
     override fun addToCart() {
-        if(mRepositorySource.isBookMine()){
+        if (mRepositorySource.isBookMine()) {
             mView.viewRateBookScreen()
-        }else{
+        } else {
             mView.showLoadingDialog()
             mRepositorySource.addBookToCart(object : RetrofitCallbacks.ResponseCallback {
 

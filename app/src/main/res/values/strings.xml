@@ -53,6 +53,8 @@
         <u>Change Password</u>
     </string>
     <string name="try_again">Please try again later !.</string>
+    <string name="you_should_own">You should own this book to listen to chapters</string>
+    <string name="voucher">Voucher</string>
 
     <string-array name="gender_entries">
         <item>Gender</item>

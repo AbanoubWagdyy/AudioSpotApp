@@ -108,7 +108,7 @@
                         android:layout_gravity="center_vertical"
                         android:letterSpacing="0.07"
                         android:lineSpacingExtra="17.2sp"
-                        android:text="Receive a gift"/>
+                        android:text="Receive a book"/>
 
             </LinearLayout>
 

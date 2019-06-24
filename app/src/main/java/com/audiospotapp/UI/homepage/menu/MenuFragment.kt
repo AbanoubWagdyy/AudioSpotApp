@@ -17,11 +17,17 @@ import com.audiospotapp.UI.myFavourite.MyFavouriteBooksActivity
 import com.audiospotapp.UI.profile.ProfileActivity
 import com.audiospotapp.UI.settings.SettingsActivity
 import com.audiospotapp.UI.splash.SplashActivity
+import com.audiospotapp.UI.voucher.VoucherActivity
 import com.audiospotapp.utils.DialogUtils
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.fragment_menu.*
 
 class MenuFragment : Fragment(), MenuContract.View {
+
+    override fun showVoucherScreen() {
+        val intent = Intent(activity!!, VoucherActivity::class.java)
+        startActivity(intent)
+    }
 
     override fun showMyBookmarksScreen() {
         val intent = Intent(activity!!, MyBookmarksActivity::class.java)

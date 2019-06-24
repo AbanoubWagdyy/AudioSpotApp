@@ -214,10 +214,17 @@ public interface RetrofitService {
             "Accept: application/json",
             "Content-type: application/json"
     })
-    @POST("add-promo-code")
-    Call<BookDetailsResponse> addPromoCode(
-            @Query("promo_code") String promo_code);
+    @GET("profile/receive-book/{voucher}")
+    Call<BookDetailsResponse> receiveBook(
+            @Path("voucher") String voucher);
 
+    @Headers({
+            "Accept: application/json",
+            "Content-type: application/json"
+    })
+    @POST("add-promo-code")
+    Call<PromoCodeResponse> addPromoCode(
+            @Query("promo_code") String promo_code);
 
     @Headers({
             "Accept: application/json",
@@ -242,9 +249,23 @@ public interface RetrofitService {
             "Accept: application/json",
             "Content-type: application/json"
     })
-    @POST("send-as-gift/{giftId}")
-    Call<Response> sendGift(
-            @Path("giftId") int giftId,
+    @POST("send-as-gift/{bookId}")
+    Call<Response> sendAsGift(
+            @Path("bookId") int bookId,
+            @Query("email[]") String email1,
+            @Query("email[]") String email2,
+            @Query("email[]") String email3,
+            @Query("email[]") String email4,
+            @Query("email[]") String email5
+    );
+
+    @Headers({
+            "Accept: application/json",
+            "Content-type: application/json"
+    })
+    @POST("send-as-voucher/{bookId}")
+    Call<Response> sendAsVoucher(
+            @Path("bookId") int bookId,
             @Query("email") String email);
 
     @Headers({
