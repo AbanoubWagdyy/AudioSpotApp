@@ -251,6 +251,14 @@ public interface RetrofitService {
             "Accept: application/json",
             "Content-type: application/json"
     })
+    @POST("contact-us")
+    Call<ContactUsResponse> contactUs(
+            @Query("content") String content);
+
+    @Headers({
+            "Accept: application/json",
+            "Content-type: application/json"
+    })
     @GET("languages")
     Call<BookDetailsResponse> getAllLanguages();
 

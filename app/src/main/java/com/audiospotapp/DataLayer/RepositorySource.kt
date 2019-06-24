@@ -133,6 +133,8 @@ interface RepositorySource : CacheDataSource {
 
     fun myBookmarks(callback: RetrofitCallbacks.MyBookmarkResponseCallback)
 
+    fun contactUs(message: String, callback: RetrofitCallbacks.ContactUsResponseCallback)
+
     fun saveBookmark(bookmark: Bookmark?)
 
     fun getBookmark(): Bookmark?

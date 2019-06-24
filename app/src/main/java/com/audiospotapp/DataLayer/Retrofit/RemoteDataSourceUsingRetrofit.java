@@ -486,4 +486,21 @@ public class RemoteDataSourceUsingRetrofit {
                     }
                 });
     }
+
+    public void contactUs(String token, String apiKey, String lang, String deviceToken, String message, RetrofitCallbacks.ContactUsResponseCallback callback) {
+
+        RestClient.getRetrofitService(token, apiKey, lang, deviceToken)
+                .contactUs(message)
+                .enqueue(new Callback<ContactUsResponse>() {
+                    @Override
+                    public void onResponse(Call<ContactUsResponse> call, Response<ContactUsResponse> response) {
+                        callback.onSuccess(response.body());
+                    }
+
+                    @Override
+                    public void onFailure(Call<ContactUsResponse> call, Throwable t) {
+                        callback.onFailure(call, t);
+                    }
+                });
+    }
 }

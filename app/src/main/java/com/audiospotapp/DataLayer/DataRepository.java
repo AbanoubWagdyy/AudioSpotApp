@@ -723,4 +723,10 @@ public class DataRepository implements RepositorySource {
     public Bookmark getBookmark() {
         return this.bookmark;
     }
+
+    @Override
+    public void contactUs(@NotNull String message, @NotNull RetrofitCallbacks.ContactUsResponseCallback callback) {
+        mRetrofitService.contactUs(authResponse.getData().getToken(), GlobalKeys.API_KEY, lang,
+                mCacheDataSource.getStringFromCache(GlobalKeys.StoreData.TOKEN, null), message, callback);
+    }
 }

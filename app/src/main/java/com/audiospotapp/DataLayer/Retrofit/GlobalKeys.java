@@ -21,4 +21,12 @@ public class GlobalKeys {
         public static final String LENGTH = "length";
         public static final String AVERAGE_REVIEW = "average-review";
     }
+
+    public static class Share {
+        public static final String WEBSITE = "https://www.audio-spot.com/";
+        public static final String FACEBOOK = "https://www.facebook.com/audiospotapp";
+        public static final String YOUTUBE = "https://www.youtube.com/channel/UCGUprQiFpH_lhyUx2YVDcCw?view_as=subscriber";
+        public static final String INSTAGRAM = "http://instagram.com/audiospotapp";
+    }
+
 }

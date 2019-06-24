@@ -6,7 +6,7 @@ interface ContactUsContract {
 
     interface Presenter {
         fun start()
-        fun contactUs(email: String, subject: String, message: String)
+        fun contactUs(message: String)
     }
 
     interface View {
@@ -14,5 +14,6 @@ interface ContactUsContract {
         fun showLoadingDialog()
         fun dismissLoading()
         fun finalizeView()
+        fun showMessage(message: String)
     }
 }

@@ -12,58 +12,60 @@
                   android:orientation="vertical">
 
         <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textSize="14.5sp"
                 android:textColor="@color/white"
                 android:textStyle="bold"
+                android:layout_marginTop="10dp"
+                android:layout_marginStart="10dp"
                 android:letterSpacing="0.07"
                 android:lineSpacingExtra="79.8sp"
-                android:gravity="center_horizontal"
-                tools:text="Send to us"/>
+                android:gravity="start"
+                android:text="Send to us"/>
 
-        <EditText
-                android:id="@+id/email"
-                android:layout_width="match_parent"
-                android:layout_height="30dp"
-                android:textSize="13.7sp"
-                android:layout_marginTop="15dp"
-                android:background="@drawable/edit_text_background"
-                android:textColor="@color/white"
-                android:letterSpacing="0.07"
-                android:lineSpacingExtra="16sp"
-                android:gravity="start|center_vertical"
-                android:layout_gravity="center_vertical"
-                android:paddingStart="15dp"
-                android:singleLine="true"
-                android:imeOptions="actionNext"
-                android:textColorHint="@color/white"
-                android:hint="Email"/>
+        <!--<EditText-->
+                <!--android:id="@+id/email"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="30dp"-->
+                <!--android:textSize="13.7sp"-->
+                <!--android:layout_marginTop="15dp"-->
+                <!--android:background="@drawable/edit_text_background"-->
+                <!--android:textColor="@color/white"-->
+                <!--android:letterSpacing="0.07"-->
+                <!--android:lineSpacingExtra="16sp"-->
+                <!--android:gravity="start|center_vertical"-->
+                <!--android:layout_gravity="center_vertical"-->
+                <!--android:paddingStart="15dp"-->
+                <!--android:singleLine="true"-->
+                <!--android:imeOptions="actionNext"-->
+                <!--android:textColorHint="@color/white"-->
+                <!--android:hint="Email"/>-->
 
-        <EditText
-                android:id="@+id/subject"
-                android:layout_width="match_parent"
-                android:layout_height="30dp"
-                android:textSize="13.7sp"
-                android:layout_marginTop="15dp"
-                android:background="@drawable/edit_text_background"
-                android:textColor="@color/white"
-                android:letterSpacing="0.07"
-                android:lineSpacingExtra="16sp"
-                android:textColorHint="@color/white"
-                android:gravity="start|center_vertical"
-                android:layout_gravity="center_vertical"
-                android:paddingStart="15dp"
-                android:singleLine="true"
-                android:imeOptions="actionNext"
-                android:hint="Message subject"/>
+        <!--<EditText-->
+                <!--android:id="@+id/subject"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="30dp"-->
+                <!--android:textSize="13.7sp"-->
+                <!--android:layout_marginTop="20dp"-->
+                <!--android:background="@drawable/edit_text_background"-->
+                <!--android:textColor="@color/white"-->
+                <!--android:letterSpacing="0.07"-->
+                <!--android:lineSpacingExtra="16sp"-->
+                <!--android:textColorHint="@color/white"-->
+                <!--android:gravity="start|center_vertical"-->
+                <!--android:layout_gravity="center_vertical"-->
+                <!--android:paddingStart="15dp"-->
+                <!--android:singleLine="true"-->
+                <!--android:imeOptions="actionNext"-->
+                <!--android:hint="Message subject"/>-->
 
         <EditText
                 android:id="@+id/message"
                 android:layout_width="match_parent"
                 android:layout_height="100dp"
                 android:textSize="13.7sp"
-                android:layout_marginTop="15dp"
+                android:layout_marginTop="20dp"
                 android:background="@drawable/rectangle_background"
                 android:textColor="@color/white"
                 android:letterSpacing="0.07"
@@ -102,6 +104,7 @@
                 android:lineSpacingExtra="79.8sp"
                 android:gravity="center_horizontal"
                 android:layout_marginTop="30dp"
+                android:layout_marginStart="15dp"
                 android:textStyle="bold"
                 android:text="Or find us here"/>
 
@@ -109,6 +112,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
+                android:layout_marginStart="15dp"
                 android:layout_marginTop="20dp">
 
             <ImageView android:id="@+id/website" android:layout_width="wrap_content"
@@ -117,17 +121,17 @@
 
             <ImageView android:id="@+id/facebook" android:layout_width="wrap_content"
                        android:layout_height="wrap_content"
-                       android:layout_marginStart="3dp"
+                       android:layout_marginStart="7dp"
                        android:src="@mipmap/contact_us_facebook"/>
 
             <ImageView android:id="@+id/instagram" android:layout_width="wrap_content"
                        android:layout_height="wrap_content"
-                       android:layout_marginStart="3dp"
+                       android:layout_marginStart="7dp"
                        android:src="@mipmap/contact_us_instagram"/>
 
             <ImageView android:id="@+id/youtube" android:layout_width="wrap_content"
                        android:layout_height="wrap_content"
-                       android:layout_marginStart="3dp"
+                       android:layout_marginStart="7dp"
                        android:src="@mipmap/contact_us_youtube"/>
 
         </LinearLayout>
