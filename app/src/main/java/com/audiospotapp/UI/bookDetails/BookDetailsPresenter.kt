@@ -55,24 +55,28 @@ class BookDetailsPresenter(val mView: BookDetailsContract.View) : BookDetailsCon
     }
 
     override fun addToCart() {
-        mView.showLoadingDialog()
-        mRepositorySource.addBookToCart(object : RetrofitCallbacks.ResponseCallback {
+        if(mRepositorySource.isBookMine()){
+            mView.viewRateBookScreen()
+        }else{
+            mView.showLoadingDialog()
+            mRepositorySource.addBookToCart(object : RetrofitCallbacks.ResponseCallback {
 
-            override fun onAuthFailure() {
-                mView.dismissLoading()
-                mView.showLoginMessage("You have to be Logged In First !.")
-            }
+                override fun onAuthFailure() {
+                    mView.dismissLoading()
+                    mView.showLoginMessage("You have to be Logged In First !.")
+                }
 
-            override fun onSuccess(result: Response?) {
-                mView.dismissLoading()
-                mView!!.showMessage(result!!.message)
-            }
+                override fun onSuccess(result: Response?) {
+                    mView.dismissLoading()
+                    mView!!.showMessage(result!!.message)
+                }
 
-            override fun onFailure(call: Call<Response>?, t: Throwable?) {
-                mView.dismissLoading()
-                mView!!.showMessage("Please try again later")
-            }
-        })
+                override fun onFailure(call: Call<Response>?, t: Throwable?) {
+                    mView.dismissLoading()
+                    mView!!.showMessage("Please try again later")
+                }
+            })
+        }
     }
 
     override fun addToFavorites() {
@@ -101,6 +105,12 @@ class BookDetailsPresenter(val mView: BookDetailsContract.View) : BookDetailsCon
     override fun start() {
         mRepositorySource = DataRepository.getInstance(mView.getAppContext())
         mView.showLoadingDialog()
+
+        if (mRepositorySource.isBookMine()) {
+            mView.hideAddFavoritesButton()
+            mView.setAdToCartText("Review the book")
+        }
+
         mRepositorySource.getBookDetails(object : RetrofitCallbacks.BookDetailsResponseCallback {
             override fun onSuccess(result1: BookDetailsResponse?) {
                 mView.dismissLoading()

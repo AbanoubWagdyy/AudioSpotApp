@@ -504,4 +504,21 @@ public class RemoteDataSourceUsingRetrofit {
                     }
                 });
     }
+
+
+    public void rateBook(String token, String apiKey, String lang, String deviceToken, int bookId, int rate, String comment, RetrofitCallbacks.ResponseCallback responseCallback) {
+        RestClient.getRetrofitService(token, apiKey, lang, deviceToken)
+                .rateBook(bookId, rate, comment)
+                .enqueue(new Callback<com.audiospotapp.DataLayer.Model.Response>() {
+                    @Override
+                    public void onResponse(Call<com.audiospotapp.DataLayer.Model.Response> call, Response<com.audiospotapp.DataLayer.Model.Response> response) {
+                        responseCallback.onSuccess(response.body());
+                    }
+
+                    @Override
+                    public void onFailure(Call<com.audiospotapp.DataLayer.Model.Response> call, Throwable t) {
+                        responseCallback.onFailure(call, t);
+                    }
+                });
+    }
 }

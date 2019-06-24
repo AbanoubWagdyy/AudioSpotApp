@@ -26,5 +26,8 @@ interface BookDetailsContract {
         fun showGiveGiftScreen()
         fun viewBookChaptersScreen()
         fun viewAllReviewsScreen()
+        fun hideAddFavoritesButton()
+        fun setAdToCartText(s: String)
+        fun viewRateBookScreen()
     }
 }

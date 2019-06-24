@@ -29,6 +29,18 @@ import com.google.android.material.snackbar.Snackbar
 
 class BookDetailsFragment : Fragment(), BookDetailsContract.View {
 
+    override fun viewRateBookScreen() {
+
+    }
+
+    override fun hideAddFavoritesButton() {
+        relativeAddToFavourites.visibility = View.GONE
+    }
+
+    override fun setAdToCartText(s: String) {
+        tvAddToCart.text = s
+    }
+
     override fun viewAllReviewsScreen() {
         val intent = Intent(activity!!, BookReviewsActivity::class.java)
         startActivity(intent)

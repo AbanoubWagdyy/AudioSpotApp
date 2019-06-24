@@ -138,4 +138,10 @@ interface RepositorySource : CacheDataSource {
     fun saveBookmark(bookmark: Bookmark?)
 
     fun getBookmark(): Bookmark?
+
+    fun rateBook(
+        rate: Int,
+        comment: String,
+        responseCallback: RetrofitCallbacks.ResponseCallback
+    )
 }

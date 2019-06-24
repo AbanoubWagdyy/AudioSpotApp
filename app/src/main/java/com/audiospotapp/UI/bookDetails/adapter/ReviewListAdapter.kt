@@ -26,10 +26,14 @@ class ReviewListAdapter(
     }
 
     override fun getItemCount(): Int {
-        return if (display == Display.SEMI) {
-            2
+        if (reviews.size < 2) {
+            return reviews.size
         } else {
-            reviews.size
+            return if (display == Display.SEMI) {
+                2
+            } else {
+                reviews.size
+            }
         }
     }
 

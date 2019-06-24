@@ -14,6 +14,7 @@ import com.audiospotapp.DataLayer.Retrofit.RetrofitCallbacks
 import com.audiospotapp.R
 import com.audiospotapp.UI.giveAgift.GiveGiftActivity
 import com.audiospotapp.UI.profile.ProfileActivity
+import com.audiospotapp.UI.rateBook.RateBookActivity
 import com.audiospotapp.UI.splash.SplashActivity
 import com.audiospotapp.UI.updateProfile.UpdateProfileActivity
 import com.visionvalley.letuno.DataLayer.RepositorySource
@@ -79,7 +80,7 @@ abstract class BaseActivity : AppCompatActivity() {
 
         manageEditVisibility()
 
-        if (this is GiveGiftActivity) {
+        if (this is GiveGiftActivity || this is RateBookActivity) {
             bottom_navigation.visibility = View.GONE
         }
     }

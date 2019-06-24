@@ -729,4 +729,11 @@ public class DataRepository implements RepositorySource {
         mRetrofitService.contactUs(authResponse.getData().getToken(), GlobalKeys.API_KEY, lang,
                 mCacheDataSource.getStringFromCache(GlobalKeys.StoreData.TOKEN, null), message, callback);
     }
+
+    @Override
+    public void rateBook(int rate, @NotNull String comment, @NotNull RetrofitCallbacks.ResponseCallback responseCallback) {
+        mRetrofitService.rateBook(authResponse.getData().getToken(), GlobalKeys.API_KEY, lang,
+                mCacheDataSource.getStringFromCache(GlobalKeys.StoreData.TOKEN, null),
+                mBookItemInterceptor.getSavedBook().getId(), rate, comment, responseCallback);
+    }
 }
