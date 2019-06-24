@@ -15,6 +15,7 @@ import com.audiospotapp.R
 import com.audiospotapp.UI.giftSelection.GiftSelectionActivity
 import com.audiospotapp.UI.giveAgift.GiveGiftActivity
 import com.audiospotapp.UI.profile.ProfileActivity
+import com.audiospotapp.UI.promoCodeCongratulations.CongratulationsActivity
 import com.audiospotapp.UI.rateBook.RateBookActivity
 import com.audiospotapp.UI.splash.SplashActivity
 import com.audiospotapp.UI.updateProfile.UpdateProfileActivity
@@ -84,7 +85,8 @@ abstract class BaseActivity : AppCompatActivity() {
 
         if (this is GiveGiftActivity || this is RateBookActivity ||
             this is GiftSelectionActivity ||
-            this is VoucherActivity
+            this is VoucherActivity||
+            this is CongratulationsActivity
         ) {
             bottom_navigation.visibility = View.GONE
         }

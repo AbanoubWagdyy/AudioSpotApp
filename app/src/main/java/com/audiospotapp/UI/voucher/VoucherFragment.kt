@@ -27,6 +27,7 @@ class VoucherFragment : Fragment(), VoucherContract.View {
     override fun showCongratulationScreen() {
         val intent = Intent(activity!!, CongratulationsActivity::class.java)
         startActivity(intent)
+        activity!!.finish()
     }
 
     override fun getAppContext(): Context? {

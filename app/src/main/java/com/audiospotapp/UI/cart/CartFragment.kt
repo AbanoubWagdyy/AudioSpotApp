@@ -16,6 +16,7 @@ import com.audiospotapp.UI.books.Interface.onBookItemClickListener
 import com.audiospotapp.UI.books.adapter.BooksAdapter
 import com.audiospotapp.UI.homepage.HomepageActivity
 import com.audiospotapp.UI.payment.PaymentActivity
+import com.audiospotapp.UI.promoCode.PromoCodeActivity
 import com.audiospotapp.utils.BookMediaDataConversion
 import com.audiospotapp.utils.DialogUtils
 import com.google.android.material.snackbar.Snackbar
@@ -127,7 +128,8 @@ class CartFragment : Fragment(), CartContract.View, onBookItemClickListener,
         super.onViewCreated(view, savedInstanceState)
 
         promoCode.setOnClickListener {
-
+            val intent = Intent(activity!!, PromoCodeActivity::class.java)
+            startActivity(intent)
         }
 
         payNow.setOnClickListener {

@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.audiospot.DataLayer.Model.Book
 import com.audiospot.DataLayer.Model.BookDetailsResponse
 import com.audiospotapp.DataLayer.DataRepository
 
@@ -27,30 +28,30 @@ class CongratulationsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         mRepositorySource = DataRepository.getInstance(activity!!.applicationContext)
-
+        bindResponse(mRepositorySource.getVoucherBook())
     }
 
-    fun bindResponse(result: BookDetailsResponse?) {
+    fun bindResponse(result: Book) {
 
-        ratingBar.rating = result!!.data.rate.toFloat()
+        ratingBar.rating = result!!.rate.toFloat()
         ratingBar.setOnRatingChangeListener(null)
         ratingBar.setOnTouchListener { p0, p1 -> true }
 
         ratingBar.setOnRatingChangeListener { ratingBar, rating, fromUser ->
-            ratingBar.rating = result.data.rate.toFloat()
+            ratingBar.rating = result.rate.toFloat()
         }
 
-        tvBookTitle.text = result!!.data.title
-        tvNumberOfReviews.text = "(" + result!!.data.reviews.toString() + " reviews" + ")"
-        tvAuthor.text = result!!.data.author
-        if (result.data.narators.isNotEmpty()) {
+        tvBookTitle.text = result!!.title
+        tvNumberOfReviews.text = "(" + result!!.reviews.toString() + " reviews" + ")"
+        tvAuthor.text = result!!.author
+        if (result.narators.isNotEmpty()) {
             val builder = StringBuilder()
-            for (narator in result.data.narators) {
+            for (narator in result.narators) {
                 builder.append(narator.name).append(",")
             }
             tvNarrator.text = builder.toString().substring(0, builder.toString().length - 1)
         }
-        ImageUtils.setImageFromUrlIntoImageViewUsingPicasso(result.data.cover, activity!!.applicationContext, ivBook)
+        ImageUtils.setImageFromUrlIntoImageViewUsingPicasso(result.cover, activity!!.applicationContext, ivBook)
     }
 
     lateinit var mRepositorySource: RepositorySource

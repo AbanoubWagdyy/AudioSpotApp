@@ -771,11 +771,12 @@ public class DataRepository implements RepositorySource {
                     @Override
                     public void onSuccess(PromoCodeResponse result) {
                         DataRepository.this.promoCode = promoCode;
+                        responseCallback.onSuccess(result);
                     }
 
                     @Override
                     public void onFailure(Call<PromoCodeResponse> call, Throwable t) {
-
+                        responseCallback.onFailure(call, t);
                     }
                 });
     }

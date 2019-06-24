@@ -16,19 +16,20 @@ import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.fragment_promo_code.*
 
 class PromoCodeFragment : Fragment(), PromoCodeContract.View {
+
     override fun setSubTotal(toString: String) {
         subTotal.visibility = View.VISIBLE
-        subTotal.text = toString
+        subTotal.text = "SubTotal: $toString"
     }
 
     override fun setDiscount(toString: String) {
         discount.visibility = View.VISIBLE
-        discount.text = toString
+        discount.text = "Discount: $toString"
     }
 
     override fun setTotal(toString: String) {
         total.visibility = View.VISIBLE
-        total.text = toString
+        total.text = "Total: $toString"
     }
 
     override fun showMessage(message: String) {
@@ -44,7 +45,7 @@ class PromoCodeFragment : Fragment(), PromoCodeContract.View {
     }
 
     override fun showLoadingDialog() {
-        DialogUtils.showProgressDialog(activity!!,"Loading ...")
+        DialogUtils.showProgressDialog(activity!!, "Loading ...")
     }
 
     override fun dismissLoading() {
@@ -71,12 +72,13 @@ class PromoCodeFragment : Fragment(), PromoCodeContract.View {
             mPresenter.applyPromoCode(etPromoCode.text.toString())
         }
         proceedToPayment.setOnClickListener {
-            val intent = Intent(activity!!,PaymentActivity::class.java)
+            val intent = Intent(activity!!, PaymentActivity::class.java)
             startActivity(intent)
+            activity!!.finish()
         }
     }
 
-    lateinit var mPresenter :PromoCodeContract.Presenter
+    lateinit var mPresenter: PromoCodeContract.Presenter
 
     companion object {
         @JvmStatic
