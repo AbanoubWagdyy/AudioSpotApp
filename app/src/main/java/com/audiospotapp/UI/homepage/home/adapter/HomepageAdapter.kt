@@ -11,22 +11,32 @@ import com.audiospot.DataLayer.Model.Book
 import com.audiospot.DataLayer.Model.HomepageRepsonse
 import com.audiospotapp.R
 import com.audiospotapp.UI.books.Interface.onBookItemClickListener
+import com.audiospotapp.utils.BookMediaDataConversion
+import dm.audiostreamer.MediaMetaData
 
 class HomepageAdapter(
     private var response: HomepageRepsonse?,
-    private var mOnItemClickListener: onBookItemClickListener
+    private var mOnItemClickListener: onBookItemClickListener,
+    currentSong: MediaMetaData?
 ) : RecyclerView.Adapter<HomepageAdapter.ViewHolder>(), onBookItemClickListener {
+
+
+    private var context: Context? = null
+    private var currentSong: MediaMetaData? = null
+
+    init {
+        this.currentSong = currentSong
+    }
 
     override fun onItemClicked(book: Book) {
         mOnItemClickListener.onItemClicked(book)
     }
 
     override fun onPlayClicked(book: Book) {
+        currentSong = BookMediaDataConversion.convertBookToMediaMetaData(book)
+        notifyDataSetChanged()
         mOnItemClickListener.onPlayClicked(book)
     }
-
-
-    private var context: Context? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context)
@@ -43,7 +53,7 @@ class HomepageAdapter(
         holder.recyclerBooks.layoutManager = layoutManager
         holder.recyclerBooks.setHasFixedSize(true)
         holder.recyclerBooks.isNestedScrollingEnabled = false
-        holder.recyclerBooks.adapter = HorizontalBooksAdapter(homepageData.books, this)
+        holder.recyclerBooks.adapter = HorizontalBooksAdapter(homepageData.books, this, currentSong)
     }
 
     override fun getItemCount(): Int {

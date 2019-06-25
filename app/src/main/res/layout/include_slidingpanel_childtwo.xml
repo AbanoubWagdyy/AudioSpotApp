@@ -38,13 +38,14 @@
         <RelativeLayout
                 android:id="@+id/relativeCircular"
                 android:layout_width="match_parent"
-                android:layout_height="180dp"
+                android:layout_height="wrap_content"
                 android:layout_below="@+id/relative"
                 android:layout_centerHorizontal="true">
 
             <ImageView android:id="@+id/image_songAlbumArt"
-                       android:layout_width="wrap_content"
-                       android:scaleType="centerCrop"
+                       android:layout_width="200dp"
+                       android:scaleType="fitXY"
+                       android:paddingBottom="10dp"
                        android:layout_centerInParent="true"
                        android:src="@mipmap/book_sample"
                        android:layout_height="wrap_content"/>
@@ -54,12 +55,10 @@
         <LinearLayout
                 android:id="@+id/layout_media_info"
                 android:layout_width="match_parent"
-                android:layout_marginTop="10dp"
                 android:layout_height="wrap_content"
                 android:gravity="center_horizontal"
                 android:orientation="vertical"
-                android:layout_below="@+id/relativeCircular"
-                android:padding="15dp">
+                android:layout_below="@+id/relativeCircular">
 
             <TextView
                     android:id="@+id/text_chapterNumber"

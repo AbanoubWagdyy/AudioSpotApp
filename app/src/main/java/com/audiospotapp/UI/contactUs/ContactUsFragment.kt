@@ -15,10 +15,18 @@ import kotlinx.android.synthetic.main.fragment_contact_us.*
 import android.content.Intent.ACTION_VIEW
 import android.net.Uri
 import com.audiospotapp.DataLayer.Retrofit.GlobalKeys
+import com.audiospotapp.UI.homepage.HomepageActivity
 import com.google.android.material.snackbar.Snackbar
 
 
 class ContactUsFragment : Fragment(), ContactUsContract.View {
+
+    override fun showHompageScreen() {
+        val intent = Intent(activity!!, HomepageActivity::class.java)
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
+        startActivity(intent)
+        activity!!.finish()
+    }
 
     override fun showMessage(message: String) {
         Snackbar.make(activity!!.findViewById(android.R.id.content), message, Snackbar.LENGTH_SHORT).show()

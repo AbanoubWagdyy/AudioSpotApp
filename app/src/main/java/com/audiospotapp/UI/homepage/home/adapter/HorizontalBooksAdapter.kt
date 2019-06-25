@@ -2,11 +2,9 @@ package com.audiospotapp.UI.homepage.home.adapter
 
 import android.content.Context
 import android.view.LayoutInflater
-import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
-import android.widget.RatingBar
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.audiospot.DataLayer.Model.Book
@@ -14,15 +12,21 @@ import com.audiospotapp.R
 import com.audiospotapp.UI.books.Interface.onBookItemClickListener
 import com.audiospotapp.utils.ImageUtils
 import com.willy.ratingbar.ScaleRatingBar
-import com.willy.ratingbar.BaseRatingBar
+import dm.audiostreamer.MediaMetaData
 
 
 class HorizontalBooksAdapter(
     private var books: List<Book>?,
-    private var mOnItemClickListener: onBookItemClickListener
+    private var mOnItemClickListener: onBookItemClickListener,
+    currentSong: MediaMetaData?
 ) : RecyclerView.Adapter<HorizontalBooksAdapter.ViewHolder>() {
 
     private var context: Context? = null
+    private var currentSong: MediaMetaData? = null
+
+    init {
+        this.currentSong = currentSong
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context)
@@ -36,16 +40,18 @@ class HorizontalBooksAdapter(
         holder.ivBook.setBackgroundResource(R.mipmap.start)
         ImageUtils.setImageFromUrlIntoImageViewUsingPicasso(book.cover, context, holder.ivBook)
         holder.tvBookName.text = book.title
-
         holder.rating.rating = book.rate.toFloat()
-
-//        holder.rating.isClickable = false
-//        holder.rating.isScrollable = false
-//        holder.rating.isEnabled = false
-//        holder.rating.isFocusable = false
 
         holder.rating.setOnRatingChangeListener(null)
         holder.rating.setOnTouchListener { p0, p1 -> true }
+
+        if (currentSong != null) {
+            if (book.id == currentSong!!.mediaId.toInt()) {
+                holder.ivPlay.setBackgroundResource(R.mipmap.homepage_play)
+            } else {
+                holder.ivPlay.setBackgroundResource(R.mipmap.play)
+            }
+        }
 
         holder.rating.setOnRatingChangeListener { ratingBar, rating, fromUser ->
             holder.rating.rating = book.rate.toFloat()

@@ -18,9 +18,4 @@ class GiveGiftActivity : BaseActivity() {
     override fun getFragment(ivArrow: ImageView): Fragment {
         return GiveGiftFragment.newInstance()
     }
-
-    override fun getActiveTab(): ActiveTab {
-        //useless :D
-        return ActiveTab.MENU
-    }
 }

@@ -11,7 +11,8 @@
     <LinearLayout
             android:id="@+id/bottom_navigation"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
+            android:layout_height="wrap_content"
+            android:paddingBottom="5dp"
             android:layout_alignParentBottom="true"
             android:orientation="horizontal">
 
@@ -23,9 +24,10 @@
                 android:layout_weight="1">
 
             <ImageView
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="4dp"
+                    android:layout_gravity="center_horizontal"
                     app:srcCompat="@mipmap/tab_home_inactive"
                     android:id="@+id/ivHome"/>
 
@@ -52,9 +54,10 @@
 
             <ImageView
                     android:id="@+id/ivLibrary"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="4dp"
+                    android:layout_gravity="center_horizontal"
                     app:srcCompat="@mipmap/tab_library_inactive"/>
 
             <TextView
@@ -80,9 +83,10 @@
 
             <ImageView
                     android:id="@+id/ivMyBooks"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="4dp"
+                    android:layout_gravity="center_horizontal"
                     app:srcCompat="@mipmap/tab_mybooks_inactive"/>
 
             <TextView
@@ -107,9 +111,10 @@
 
             <ImageView
                     android:id="@+id/ivMenu"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="4dp"
+                    android:layout_gravity="center_horizontal"
                     app:srcCompat="@mipmap/tab_menu_inactive"/>
 
             <TextView

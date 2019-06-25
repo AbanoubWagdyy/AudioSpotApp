@@ -2,8 +2,6 @@ package com.audiospotapp.UI.homepage
 
 import android.app.PendingIntent
 import android.content.Intent
-import android.graphics.Bitmap
-import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
@@ -12,6 +10,7 @@ import com.audiospotapp.DataLayer.DataRepository
 import com.audiospotapp.DataLayer.Model.BookListResponse
 import com.audiospotapp.DataLayer.Retrofit.RetrofitCallbacks
 import com.audiospotapp.R
+import com.audiospotapp.UI.ActiveTab
 import com.audiospotapp.UI.cart.CartActivity
 import com.audiospotapp.UI.homepage.home.HomeFragment
 import com.audiospotapp.UI.homepage.Library.LibraryFragment
@@ -26,23 +25,33 @@ import dm.audiostreamer.MediaMetaData
 import dm.audiostreamerdemo.widgets.Slider
 import kotlinx.android.synthetic.main.activity_homepage3.*
 import kotlinx.android.synthetic.main.header.*
+import kotlinx.android.synthetic.main.include_slidepanelchildtwo_bottomview.*
+import kotlinx.android.synthetic.main.include_slidepanelchildtwo_topviewtwo.*
 import retrofit2.Call
 
 class HomepageActivity : AppCompatActivity(), HomeFragment.onItemPlayClickListener,
     MyBooksFragment.onItemPlayClickListener {
 
+    private var currentSong: MediaMetaData? = null
     private var listOfSongs: MutableList<MediaMetaData> = ArrayList()
 
     override fun OnItemPlayed(mediaData: MediaMetaData) {
-
         listOfSongs = ArrayList()
         listOfSongs.add(mediaData)
-
         configAudioStreamer()
         playSong(mediaData)
     }
 
-    var tabShown = Tab.HOME
+    private fun checkAlreadyPlaying() {
+        if (streamingManager!!.isPlaying) {
+            currentSong = streamingManager!!.currentAudio
+            if (currentSong != null) {
+                currentSong!!.playState = streamingManager!!.mLastPlaybackState
+            }
+        }
+    }
+
+    var tabShown = ActiveTab.HOME
     lateinit var mRepositorySource: RepositorySource
 
     private var streamingManager: AudioStreamingManager? = null
@@ -54,6 +63,8 @@ class HomepageActivity : AppCompatActivity(), HomeFragment.onItemPlayClickListen
         mRepositorySource = DataRepository.getInstance(applicationContext)
 
         configAudioStreamer()
+
+        checkAlreadyPlaying()
 
         var authResponse = mRepositorySource.getAuthResponse()
 
@@ -102,8 +113,8 @@ class HomepageActivity : AppCompatActivity(), HomeFragment.onItemPlayClickListen
 
     private fun showHomePageContent() {
         linearHome.setOnClickListener {
-            if (tabShown != Tab.HOME) {
-                tabShown = Tab.HOME
+            if (tabShown != ActiveTab.HOME) {
+                tabShown = ActiveTab.HOME
                 supportFragmentManager.beginTransaction().add(R.id.container, HomeFragment.newInstance())
                     .commitAllowingStateLoss()
 
@@ -112,8 +123,8 @@ class HomepageActivity : AppCompatActivity(), HomeFragment.onItemPlayClickListen
         }
 
         linearMenu.setOnClickListener {
-            if (tabShown != Tab.MENU) {
-                tabShown = Tab.MENU
+            if (tabShown != ActiveTab.MENU) {
+                tabShown = ActiveTab.MENU
                 supportFragmentManager.beginTransaction().add(R.id.container, MenuFragment.newInstance())
                     .commitAllowingStateLoss()
                 validateTabColorVisibility(tabShown)
@@ -121,8 +132,8 @@ class HomepageActivity : AppCompatActivity(), HomeFragment.onItemPlayClickListen
         }
 
         linearMyBooks.setOnClickListener {
-            if (tabShown != Tab.MYBOOKS) {
-                tabShown = Tab.MYBOOKS
+            if (tabShown != ActiveTab.MYBOOKS) {
+                tabShown = ActiveTab.MYBOOKS
                 supportFragmentManager.beginTransaction().add(R.id.container, MyBooksFragment.newInstance())
                     .commitAllowingStateLoss()
 
@@ -131,8 +142,8 @@ class HomepageActivity : AppCompatActivity(), HomeFragment.onItemPlayClickListen
         }
 
         linearLibrary.setOnClickListener {
-            if (tabShown != Tab.LIBRARY) {
-                tabShown = Tab.LIBRARY
+            if (tabShown != ActiveTab.LIBRARY) {
+                tabShown = ActiveTab.LIBRARY
                 supportFragmentManager.beginTransaction().add(R.id.container, LibraryFragment.newInstance())
                     .commitAllowingStateLoss()
                 validateTabColorVisibility(tabShown)
@@ -158,13 +169,12 @@ class HomepageActivity : AppCompatActivity(), HomeFragment.onItemPlayClickListen
 
         supportFragmentManager.beginTransaction().add(R.id.container, HomeFragment.newInstance())
             .commitAllowingStateLoss()
-
         validateTabColorVisibility(tabShown)
     }
 
-    private fun validateTabColorVisibility(tabShown: Tab) {
+    private fun validateTabColorVisibility(tabShown: ActiveTab) {
         when (tabShown) {
-            Tab.HOME -> {
+            ActiveTab.HOME -> {
                 ivHome.setImageResource(R.mipmap.tab_home)
                 tvHome.setTextColor(resources.getColor(R.color.white))
                 ivMenu.setImageResource(R.mipmap.tab_menu_inactive)
@@ -173,9 +183,11 @@ class HomepageActivity : AppCompatActivity(), HomeFragment.onItemPlayClickListen
                 tvMyBooks.setTextColor(resources.getColor(R.color.grey))
                 ivLibrary.setImageResource(R.mipmap.tab_library_inactive)
                 tvLibrary.setTextColor(resources.getColor(R.color.grey))
+                mRepositorySource.setActiveTab(ActiveTab.HOME)
+                tvTitle.text = "Homepage"
             }
 
-            Tab.LIBRARY -> {
+            ActiveTab.LIBRARY -> {
                 ivHome.setImageResource(R.mipmap.tab_home_inactive)
                 tvHome.setTextColor(resources.getColor(R.color.grey))
                 ivMenu.setImageResource(R.mipmap.tab_menu_inactive)
@@ -184,9 +196,11 @@ class HomepageActivity : AppCompatActivity(), HomeFragment.onItemPlayClickListen
                 tvMyBooks.setTextColor(resources.getColor(R.color.grey))
                 ivLibrary.setImageResource(R.mipmap.tab_library)
                 tvLibrary.setTextColor(resources.getColor(R.color.white))
+                mRepositorySource.setActiveTab(ActiveTab.LIBRARY)
+                tvTitle.text = "Library"
             }
 
-            Tab.MYBOOKS -> {
+            ActiveTab.MYBOOKS -> {
                 ivHome.setImageResource(R.mipmap.tab_home_inactive)
                 tvHome.setTextColor(resources.getColor(R.color.grey))
                 ivMenu.setImageResource(R.mipmap.tab_menu_inactive)
@@ -195,9 +209,11 @@ class HomepageActivity : AppCompatActivity(), HomeFragment.onItemPlayClickListen
                 tvMyBooks.setTextColor(resources.getColor(R.color.white))
                 ivLibrary.setImageResource(R.mipmap.tab_library_inactive)
                 tvLibrary.setTextColor(resources.getColor(R.color.grey))
+                mRepositorySource.setActiveTab(ActiveTab.MYBOOKS)
+                tvTitle.text = "My Books"
             }
 
-            Tab.MENU -> {
+            ActiveTab.MENU -> {
                 ivHome.setImageResource(R.mipmap.tab_home_inactive)
                 tvHome.setTextColor(resources.getColor(R.color.grey))
                 ivMenu.setImageResource(R.mipmap.tab_menu)
@@ -206,6 +222,9 @@ class HomepageActivity : AppCompatActivity(), HomeFragment.onItemPlayClickListen
                 tvMyBooks.setTextColor(resources.getColor(R.color.grey))
                 ivLibrary.setImageResource(R.mipmap.tab_library_inactive)
                 tvLibrary.setTextColor(resources.getColor(R.color.grey))
+                mRepositorySource.setActiveTab(ActiveTab.MENU)
+
+                tvTitle.text = "Menu"
             }
         }
     }
@@ -221,9 +240,5 @@ class HomepageActivity : AppCompatActivity(), HomeFragment.onItemPlayClickListen
         intent.setAction("openplayer")
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
         return PendingIntent.getActivity(applicationContext, 0, intent, 0)
-    }
-
-    enum class Tab {
-        HOME, LIBRARY, MYBOOKS, MENU
     }
 }

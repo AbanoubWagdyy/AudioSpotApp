@@ -16,8 +16,4 @@ class GiftSelectionActivity : BaseActivity() {
     }
 
     override fun getFragment(ivArrow: ImageView): Fragment = GiftSelectionFragment.newInstance()
-
-    override fun getActiveTab(): ActiveTab {
-        return ActiveTab.MENU
-    }
 }

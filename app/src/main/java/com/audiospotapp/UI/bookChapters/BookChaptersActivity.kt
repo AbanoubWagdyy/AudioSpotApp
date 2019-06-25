@@ -82,7 +82,6 @@ class BookChaptersActivity : AppCompatActivity(), CurrentSessionCallback, View.O
         ivParagraphs.setOnClickListener(this)
         back.setOnClickListener(this)
         tvClose.setOnClickListener(this)
-        share.setOnClickListener(this)
         bookmark.setOnClickListener(this)
         download.setOnClickListener(this)
         timer.setOnClickListener(this)
@@ -419,10 +418,6 @@ class BookChaptersActivity : AppCompatActivity(), CurrentSessionCallback, View.O
             R.id.tvClose -> {
                 include_sliding_panel_childtwo.visibility = View.GONE
                 streamingManager.handleStopRequest(null)
-            }
-
-            R.id.share -> {
-
             }
 
             R.id.bookmark -> {

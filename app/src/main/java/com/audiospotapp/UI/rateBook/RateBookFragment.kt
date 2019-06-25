@@ -1,6 +1,7 @@
 package com.audiospotapp.UI.rateBook
 
 import android.content.Context
+import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -10,6 +11,7 @@ import android.view.ViewGroup
 import com.audiospot.DataLayer.Model.Book
 
 import com.audiospotapp.R
+import com.audiospotapp.UI.homepage.HomepageActivity
 import com.audiospotapp.utils.DialogUtils
 import com.audiospotapp.utils.ImageUtils
 import com.google.android.material.snackbar.Snackbar
@@ -18,6 +20,13 @@ import kotlinx.android.synthetic.main.fragment_rate_book.*
 
 
 class RateBookFragment : Fragment(), RateBookContract.View {
+
+    override fun showHompageScreen() {
+        val intent = Intent(activity!!, HomepageActivity::class.java)
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
+        startActivity(intent)
+        activity!!.finish()
+    }
 
     override fun showMessage(message: String) {
         Snackbar.make(activity!!.findViewById(android.R.id.content), message, Snackbar.LENGTH_LONG).show()

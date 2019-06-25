@@ -38,7 +38,6 @@
                 android:orientation="vertical"
                 android:layout_weight="1">
 
-
             <ImageView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -47,10 +46,10 @@
                     android:id="@+id/ivHome"/>
 
             <TextView
+                    android:id="@+id/tvHome"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textSize="12sp"
-                    android:textColor="@color/white"
                     android:layout_marginTop="10dp"
                     android:letterSpacing="0.07"
                     android:lineSpacingExtra="14.5sp"
@@ -75,10 +74,10 @@
                     app:srcCompat="@mipmap/tab_library_inactive"/>
 
             <TextView
+                    android:id="@+id/tvLibrary"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textSize="15sp"
-                    android:textColor="@color/white"
                     android:layout_marginTop="10dp"
                     android:letterSpacing="0.07"
                     android:lineSpacingExtra="14.5sp"
@@ -103,10 +102,10 @@
                     app:srcCompat="@mipmap/tab_mybooks_inactive"/>
 
             <TextView
+                    android:id="@+id/tvMyBooks"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textSize="12sp"
-                    android:textColor="@color/white"
                     android:layout_marginTop="12dp"
                     android:letterSpacing="0.07"
                     android:lineSpacingExtra="14.5sp"
@@ -130,10 +129,10 @@
                     app:srcCompat="@mipmap/tab_menu_inactive"/>
 
             <TextView
+                    android:id="@+id/tvMenu"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textSize="12sp"
-                    android:textColor="@color/white"
                     android:layout_marginTop="17dp"
                     android:letterSpacing="0.07"
                     android:lineSpacingExtra="14.5sp"

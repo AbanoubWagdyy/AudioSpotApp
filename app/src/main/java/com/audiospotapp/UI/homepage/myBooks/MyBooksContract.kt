@@ -17,5 +17,6 @@ interface MyBooksContract {
         fun dismissLoading()
         fun setBookList(listMyBooks: List<Book>)
         fun showBookDetailsScreen()
+        fun showEmptyBooksScreen(strEmptyListBooks: String)
     }
 }

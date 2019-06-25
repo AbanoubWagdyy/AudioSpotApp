@@ -97,7 +97,7 @@
                 android:gravity="center_vertical|right"
                 android:paddingBottom="15dp"
                 android:paddingTop="15dp"
-                android:src="@drawable/ic_rew_dark"/>
+                android:src="@mipmap/back_30"/>
 
         <RelativeLayout
                 android:layout_width="0dp"
@@ -129,7 +129,7 @@
                 android:gravity="center_vertical|right"
                 android:paddingBottom="15dp"
                 android:paddingTop="15dp"
-                android:src="@drawable/ic_fwd_dark"/>
+                android:src="@mipmap/forward_30"/>
 
         <!-- <ImageView
              android:id="@+id/btn_toggle"
@@ -149,20 +149,6 @@
             android:paddingTop="15dp"
             android:paddingBottom="15dp"
             android:orientation="horizontal">
-
-        <RelativeLayout
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:layout_weight="1">
-
-            <ImageView
-                    android:id="@+id/share"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@mipmap/player_share"
-                    android:layout_centerInParent="true"/>
-
-        </RelativeLayout>
 
         <RelativeLayout
                 android:layout_width="fill_parent"

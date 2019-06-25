@@ -1,8 +1,10 @@
 package com.audiospotapp.UI.bookDetails
 
 import android.content.Context
+import com.audiospot.DataLayer.Model.AuthResponse
 import com.audiospot.DataLayer.Model.BookDetailsResponse
 import com.audiospotapp.DataLayer.Model.Review
+import dm.audiostreamer.MediaMetaData
 
 interface BookDetailsContract {
 
@@ -13,6 +15,7 @@ interface BookDetailsContract {
         fun handleGiveGiftClicked()
         fun handleViewBookChaptersClicked()
         fun handleSeeAllReviewsClicked()
+        fun handlePlayClicked()
     }
 
     interface View {
@@ -29,5 +32,6 @@ interface BookDetailsContract {
         fun hideAddFavoritesButton()
         fun setAdToCartText(s: String)
         fun viewRateBookScreen()
+        fun playSong(mediaMetaData: MediaMetaData)
     }
 }

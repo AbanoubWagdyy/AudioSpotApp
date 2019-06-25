@@ -38,8 +38,8 @@ class MyBookmarksAdapter(
         holder.bookmarkTime.text = TimeUtils.toTimeFormat(bookmark.time)
 
         holder.comment.text = bookmark.comment
-        holder.bookName.text = ""
-        holder.chapterName.text = ""
+        holder.bookName.text = bookmark.book_name
+        holder.chapterName.text = bookmark.chapter_name
     }
 
     inner class ViewHolder(val mView: View) : RecyclerView.ViewHolder(mView), View.OnClickListener {

@@ -18,6 +18,7 @@ import com.audiospotapp.DataLayer.Model.*;
 import com.audiospotapp.DataLayer.Retrofit.GlobalKeys;
 import com.audiospotapp.DataLayer.Retrofit.RemoteDataSourceUsingRetrofit;
 import com.audiospotapp.DataLayer.Retrofit.RetrofitCallbacks;
+import com.audiospotapp.UI.ActiveTab;
 import com.audiospotapp.UI.giftSelection.GiftSelection;
 import com.visionvalley.letuno.DataLayer.RepositorySource;
 import org.jetbrains.annotations.NotNull;
@@ -43,6 +44,7 @@ public class DataRepository implements RepositorySource {
     private Bookmark bookmark;
     private String promoCode = "";
     private Book voucherBook;
+    private ActiveTab activeTab;
     //endregion
 
     private DataRepository(Context context) {
@@ -802,5 +804,16 @@ public class DataRepository implements RepositorySource {
     @Override
     public Book getVoucherBook() {
         return voucherBook;
+    }
+
+    @Override
+    public void setActiveTab(@NotNull ActiveTab tabActive) {
+        this.activeTab = tabActive;
+    }
+
+    @NotNull
+    @Override
+    public ActiveTab getActiveTab() {
+        return activeTab;
     }
 }

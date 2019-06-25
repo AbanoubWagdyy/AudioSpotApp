@@ -19,8 +19,4 @@ class PublishersActivity : BaseActivity() {
     override fun getFragment(ivArrow: ImageView): Fragment {
         return PublishersFragment.newInstance(ivArrow)
     }
-
-    override fun getActiveTab(): ActiveTab {
-        return ActiveTab.LIBRARY
-    }
 }

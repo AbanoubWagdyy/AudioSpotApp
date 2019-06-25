@@ -19,12 +19,4 @@ class AuthorsActivity : BaseActivity() {
     override fun getFragment(ivArrow: ImageView): Fragment {
         return AuthorsFragment.newInstance(ivArrow)
     }
-
-    override fun getActiveTab(): ActiveTab {
-        return ActiveTab.LIBRARY
-    }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
 }

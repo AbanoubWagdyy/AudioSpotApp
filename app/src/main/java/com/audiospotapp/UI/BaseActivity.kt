@@ -14,11 +14,13 @@ import com.audiospotapp.DataLayer.Retrofit.RetrofitCallbacks
 import com.audiospotapp.R
 import com.audiospotapp.UI.giftSelection.GiftSelectionActivity
 import com.audiospotapp.UI.giveAgift.GiveGiftActivity
-import com.audiospotapp.UI.profile.ProfileActivity
+import com.audiospotapp.UI.homepage.Library.LibraryFragment
+import com.audiospotapp.UI.homepage.home.HomeFragment
+import com.audiospotapp.UI.homepage.menu.MenuFragment
+import com.audiospotapp.UI.homepage.myBooks.MyBooksFragment
 import com.audiospotapp.UI.promoCodeCongratulations.CongratulationsActivity
 import com.audiospotapp.UI.rateBook.RateBookActivity
 import com.audiospotapp.UI.splash.SplashActivity
-import com.audiospotapp.UI.updateProfile.UpdateProfileActivity
 import com.audiospotapp.UI.voucher.VoucherActivity
 import com.visionvalley.letuno.DataLayer.RepositorySource
 import dm.audiostreamer.AudioStreamingManager
@@ -28,9 +30,12 @@ import kotlinx.android.synthetic.main.back_header.*
 import kotlinx.android.synthetic.main.header.*
 import retrofit2.Call
 
-abstract class BaseActivity : AppCompatActivity() {
+abstract class BaseActivity : AppCompatActivity(),
+    MyBooksFragment.onItemPlayClickListener,
+    HomeFragment.onItemPlayClickListener {
 
     lateinit var ivArrow: ImageView
+    lateinit var tabShown: ActiveTab
     lateinit var mRepositorySource: RepositorySource
     private var streamingManager: AudioStreamingManager? = null
     private var listOfSongs: MutableList<MediaMetaData> = ArrayList()
@@ -40,6 +45,7 @@ abstract class BaseActivity : AppCompatActivity() {
         setContentView(R.layout.activity_base)
 
         mRepositorySource = DataRepository.getInstance(applicationContext)
+        tabShown = mRepositorySource.getActiveTab()
 
         configAudioStreamer()
 
@@ -51,49 +57,92 @@ abstract class BaseActivity : AppCompatActivity() {
             finish()
         }
 
+        manageEditVisibility()
+
+        validateTabColorVisibility(mRepositorySource.getActiveTab())
+
         supportFragmentManager.beginTransaction()
             .replace(R.id.container, getFragment(ivArrow)).commitAllowingStateLoss()
 
-        when (getActiveTab()) {
-            ActiveTab.HOME -> {
-                ivHome.setImageResource(R.mipmap.tab_home)
-                ivMenu.setImageResource(R.mipmap.tab_menu_inactive)
-                ivMyBooks.setImageResource(R.mipmap.tab_mybooks_inactive)
-                ivLibrary.setImageResource(R.mipmap.tab_library_inactive)
-            }
-            ActiveTab.LIBRARY -> {
-                ivHome.setImageResource(R.mipmap.tab_home_inactive)
-                ivMenu.setImageResource(R.mipmap.tab_menu_inactive)
-                ivMyBooks.setImageResource(R.mipmap.tab_mybooks_inactive)
-                ivLibrary.setImageResource(R.mipmap.tab_library)
-            }
-            ActiveTab.MYBOOKS -> {
-                ivHome.setImageResource(R.mipmap.tab_home_inactive)
-                ivMenu.setImageResource(R.mipmap.tab_menu_inactive)
-                ivMyBooks.setImageResource(R.mipmap.tab_mybooks)
-                ivLibrary.setImageResource(R.mipmap.tab_library_inactive)
-            }
-            ActiveTab.MENU -> {
-                ivHome.setImageResource(R.mipmap.tab_home_inactive)
-                ivMenu.setImageResource(R.mipmap.tab_menu)
-                ivMyBooks.setImageResource(R.mipmap.tab_mybooks_inactive)
-                ivLibrary.setImageResource(R.mipmap.tab_library_inactive)
+        initListeners()
+    }
+
+    private fun initListeners() {
+        linearHome.setOnClickListener {
+            if (tabShown != ActiveTab.HOME) {
+                tabShown = ActiveTab.HOME
+                if (mRepositorySource.getActiveTab() != ActiveTab.HOME) {
+                    supportFragmentManager.beginTransaction()
+                        .replace(R.id.container, HomeFragment.newInstance()).commitAllowingStateLoss()
+                    ivArrow.visibility = View.GONE
+                } else {
+                    supportFragmentManager.beginTransaction()
+                        .replace(R.id.container, getFragment(ivArrow)).commitAllowingStateLoss()
+                    ivArrow.visibility = getArrowHeaderVisibility()
+                }
+                validateTabColorVisibility(tabShown)
+
             }
         }
 
-        manageEditVisibility()
+        linearLibrary.setOnClickListener {
+            if (tabShown != ActiveTab.LIBRARY) {
+                tabShown = ActiveTab.LIBRARY
+                if (mRepositorySource.getActiveTab() != ActiveTab.LIBRARY) {
+                    supportFragmentManager.beginTransaction()
+                        .replace(R.id.container, LibraryFragment.newInstance()).commitAllowingStateLoss()
+                    ivArrow.visibility = View.GONE
+                } else {
+                    supportFragmentManager.beginTransaction()
+                        .replace(R.id.container, getFragment(ivArrow)).commitAllowingStateLoss()
+                    ivArrow.visibility = getArrowHeaderVisibility()
+                }
+                validateTabColorVisibility(tabShown)
+            }
+        }
 
-        if (this is GiveGiftActivity || this is RateBookActivity ||
-            this is GiftSelectionActivity ||
-            this is VoucherActivity||
-            this is CongratulationsActivity
-        ) {
-            bottom_navigation.visibility = View.GONE
+        linearMyBooks.setOnClickListener {
+            if (tabShown != ActiveTab.MYBOOKS) {
+                tabShown = ActiveTab.MYBOOKS
+                if (mRepositorySource.getActiveTab() != ActiveTab.MYBOOKS) {
+                    supportFragmentManager.beginTransaction()
+                        .replace(R.id.container, MyBooksFragment.newInstance()).commitAllowingStateLoss()
+                    ivArrow.visibility = View.GONE
+                } else {
+                    supportFragmentManager.beginTransaction()
+                        .replace(R.id.container, getFragment(ivArrow)).commitAllowingStateLoss()
+                    ivArrow.visibility = getArrowHeaderVisibility()
+                }
+                validateTabColorVisibility(tabShown)
+            }
+        }
+
+        linearMenu.setOnClickListener {
+            if (tabShown != ActiveTab.MENU) {
+                tabShown = ActiveTab.MENU
+                if (mRepositorySource.getActiveTab() != ActiveTab.MENU) {
+                    supportFragmentManager.beginTransaction()
+                        .replace(R.id.container, MenuFragment.newInstance()).commitAllowingStateLoss()
+                    ivArrow.visibility = View.GONE
+                } else {
+                    supportFragmentManager.beginTransaction()
+                        .replace(R.id.container, getFragment(ivArrow)).commitAllowingStateLoss()
+                    ivArrow.visibility = getArrowHeaderVisibility()
+                }
+                validateTabColorVisibility(tabShown)
+            }
         }
     }
 
     open fun manageEditVisibility() {
         ivEdit.visibility = View.GONE
+        if (this is GiveGiftActivity || this is RateBookActivity ||
+            this is GiftSelectionActivity ||
+            this is VoucherActivity ||
+            this is CongratulationsActivity
+        ) {
+            bottom_navigation.visibility = View.GONE
+        }
     }
 
     override fun onResume() {
@@ -140,12 +189,67 @@ abstract class BaseActivity : AppCompatActivity() {
         }
     }
 
+    private fun validateTabColorVisibility(tabShown: ActiveTab) {
+        when (tabShown) {
+            ActiveTab.HOME -> {
+                ivHome.setImageResource(R.mipmap.tab_home)
+                tvHome.setTextColor(resources.getColor(R.color.white))
+                ivMenu.setImageResource(R.mipmap.tab_menu_inactive)
+                tvMenu.setTextColor(resources.getColor(R.color.grey))
+                ivMyBooks.setImageResource(R.mipmap.tab_mybooks_inactive)
+                tvMyBooks.setTextColor(resources.getColor(R.color.grey))
+                ivLibrary.setImageResource(R.mipmap.tab_library_inactive)
+                tvLibrary.setTextColor(resources.getColor(R.color.grey))
+            }
+
+            ActiveTab.LIBRARY -> {
+                ivHome.setImageResource(R.mipmap.tab_home_inactive)
+                tvHome.setTextColor(resources.getColor(R.color.grey))
+                ivMenu.setImageResource(R.mipmap.tab_menu_inactive)
+                tvMenu.setTextColor(resources.getColor(R.color.grey))
+                ivMyBooks.setImageResource(R.mipmap.tab_mybooks_inactive)
+                tvMyBooks.setTextColor(resources.getColor(R.color.grey))
+                ivLibrary.setImageResource(R.mipmap.tab_library)
+                tvLibrary.setTextColor(resources.getColor(R.color.white))
+            }
+
+            ActiveTab.MYBOOKS -> {
+                ivHome.setImageResource(R.mipmap.tab_home_inactive)
+                tvHome.setTextColor(resources.getColor(R.color.grey))
+                ivMenu.setImageResource(R.mipmap.tab_menu_inactive)
+                tvMenu.setTextColor(resources.getColor(R.color.grey))
+                ivMyBooks.setImageResource(R.mipmap.tab_mybooks)
+                tvMyBooks.setTextColor(resources.getColor(R.color.white))
+                ivLibrary.setImageResource(R.mipmap.tab_library_inactive)
+                tvLibrary.setTextColor(resources.getColor(R.color.grey))
+            }
+
+            ActiveTab.MENU -> {
+                ivHome.setImageResource(R.mipmap.tab_home_inactive)
+                tvHome.setTextColor(resources.getColor(R.color.grey))
+                ivMenu.setImageResource(R.mipmap.tab_menu)
+                tvMenu.setTextColor(resources.getColor(R.color.white))
+                ivMyBooks.setImageResource(R.mipmap.tab_mybooks_inactive)
+                tvMyBooks.setTextColor(resources.getColor(R.color.grey))
+                ivLibrary.setImageResource(R.mipmap.tab_library_inactive)
+                tvLibrary.setTextColor(resources.getColor(R.color.grey))
+            }
+        }
+    }
+
+    override fun OnItemPlayed(mediaData: MediaMetaData) {
+        listOfSongs = ArrayList()
+        listOfSongs.add(mediaData)
+        configAudioStreamer()
+        playSong(mediaData)
+    }
+
+    override fun onStop() {
+        mRepositorySource.setActiveTab(tabShown)
+        super.onStop()
+    }
+
     abstract fun getHeaderTitle(): String
     abstract fun getArrowHeaderVisibility(): Int
     abstract fun getFragment(ivArrow: ImageView): Fragment
-    abstract fun getActiveTab(): ActiveTab
-
-    enum class ActiveTab {
-        HOME, LIBRARY, MYBOOKS, MENU
-    }
 }

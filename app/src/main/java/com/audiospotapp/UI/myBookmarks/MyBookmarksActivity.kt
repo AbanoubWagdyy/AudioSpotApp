@@ -19,10 +19,6 @@ class MyBookmarksActivity : BaseActivity() {
 
     override fun getFragment(ivArrow: ImageView) = MyBookmarksFragment.newInstance()
 
-    override fun getActiveTab(): ActiveTab {
-        return ActiveTab.MENU
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
     }

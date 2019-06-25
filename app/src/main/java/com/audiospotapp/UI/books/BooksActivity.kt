@@ -18,8 +18,4 @@ class BooksActivity : BaseActivity() {
     override fun getFragment(ivArrow: ImageView): Fragment {
        return BooksFragment.newInstance(ivArrow)
     }
-
-    override fun getActiveTab(): ActiveTab {
-        return ActiveTab.LIBRARY
-    }
 }

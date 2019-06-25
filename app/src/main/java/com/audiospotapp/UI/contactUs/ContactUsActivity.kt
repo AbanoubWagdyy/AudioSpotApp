@@ -18,8 +18,6 @@ class ContactUsActivity : BaseActivity() {
 
     override fun getFragment(ivArrow: ImageView): Fragment = ContactUsFragment.newInstance()
 
-    override fun getActiveTab(): ActiveTab = ActiveTab.MENU
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
     }

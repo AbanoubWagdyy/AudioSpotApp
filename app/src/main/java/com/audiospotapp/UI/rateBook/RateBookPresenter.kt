@@ -18,6 +18,10 @@ class RateBookPresenter(val mView: RateBookContract.View) : RateBookContract.Pre
                 mView.dismissLoading()
                 if (result != null)
                     mView.showMessage(result.message)
+                val status = RetrofitResponseHandler.validateAuthResponseStatus(result)
+                if (status == RetrofitResponseHandler.Companion.Status.VALID) {
+                    mView.showHompageScreen()
+                }
             }
 
             override fun onFailure(call: Call<Response>?, t: Throwable?) {

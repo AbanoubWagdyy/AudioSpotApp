@@ -1,5 +1,6 @@
 package com.audiospotapp.UI.bookDetails
 
+import com.audiospot.DataLayer.Model.AuthResponse
 import com.audiospot.DataLayer.Model.Book
 import com.audiospot.DataLayer.Model.BookDetailsResponse
 import com.audiospotapp.DataLayer.DataRepository
@@ -8,10 +9,16 @@ import com.audiospotapp.DataLayer.Model.Review
 import com.audiospotapp.DataLayer.Model.ReviewListResponse
 import com.audiospotapp.DataLayer.Retrofit.RetrofitCallbacks
 import com.audiospotapp.DataLayer.Retrofit.RetrofitResponseHandler
+import com.audiospotapp.utils.BookMediaDataConversion
 import com.visionvalley.letuno.DataLayer.RepositorySource
 import retrofit2.Call
 
 class BookDetailsPresenter(val mView: BookDetailsContract.View) : BookDetailsContract.Presenter {
+
+    override fun handlePlayClicked() {
+        var mediaMetaData = BookMediaDataConversion.convertBookToMediaMetaData(mRepositorySource.getSavedBook())
+        mView.playSong(mediaMetaData)
+    }
 
     override fun handleSeeAllReviewsClicked() {
         var authResponse = mRepositorySource.getAuthResponse()

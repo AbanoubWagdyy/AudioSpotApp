@@ -16,8 +16,4 @@ class ChangePasswordActivity : BaseActivity() {
     }
 
     override fun getFragment(ivArrow: ImageView): Fragment = ChangePasswordFragment.newInstance()
-
-    override fun getActiveTab(): ActiveTab {
-        return ActiveTab.MENU
-    }
 }

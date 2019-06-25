@@ -15,7 +15,4 @@ class BookDetailsActivity : BaseActivity() {
 
     override fun getFragment(ivArrow: ImageView): Fragment =
         BookDetailsFragment.newInstance()
-
-    override fun getActiveTab(): ActiveTab =
-        ActiveTab.LIBRARY
 }

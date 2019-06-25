@@ -1,6 +1,7 @@
 package com.audiospotapp.UI.bookDetails
 
 
+import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -24,12 +25,40 @@ import com.audiospotapp.UI.giftSelection.GiftSelectionActivity
 import com.audiospotapp.UI.giveAgift.GiveGiftActivity
 import com.audiospotapp.UI.login.LoginActivity
 import com.audiospotapp.UI.rateBook.RateBookActivity
+import com.audiospotapp.UI.splash.SplashActivity
 import com.audiospotapp.utils.DialogUtils
 import com.audiospotapp.utils.ImageUtils
 import com.audiospotapp.utils.TimeUtils
 import com.google.android.material.snackbar.Snackbar
+import dm.audiostreamer.AudioStreamingManager
+import dm.audiostreamer.MediaMetaData
 
 class BookDetailsFragment : Fragment(), BookDetailsContract.View {
+
+    override fun playSong(mediaMetaData: MediaMetaData) {
+        streamingManager = AudioStreamingManager.getInstance(activity!!.applicationContext)
+
+        streamingManager!!.isPlayMultiple = false
+
+        var list = ArrayList<MediaMetaData>()
+        list.add(mediaMetaData)
+
+        streamingManager!!.setMediaList(list)
+
+        streamingManager!!.setShowPlayerNotification(true)
+        streamingManager!!.setPendingIntentAct(getNotificationPendingIntent())
+
+        if (streamingManager != null) {
+            streamingManager!!.onPlay(mediaMetaData)
+        }
+    }
+
+    private fun getNotificationPendingIntent(): PendingIntent {
+        val intent = Intent(activity!!.applicationContext, SplashActivity::class.java)
+        intent.setAction("openplayer")
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
+        return PendingIntent.getActivity(activity!!.applicationContext, 0, intent, 0)
+    }
 
     override fun viewRateBookScreen() {
         val intent = Intent(activity!!, RateBookActivity::class.java)
@@ -92,6 +121,7 @@ class BookDetailsFragment : Fragment(), BookDetailsContract.View {
         DialogUtils.dismissProgressDialog()
     }
 
+    private lateinit var streamingManager: AudioStreamingManager
     lateinit var mPresenter: BookDetailsContract.Presenter
 
     override fun onCreateView(
@@ -128,6 +158,10 @@ class BookDetailsFragment : Fragment(), BookDetailsContract.View {
 
         relativeGiveAGift.setOnClickListener {
             mPresenter.handleGiveGiftClicked()
+        }
+
+        ivPlay.setOnClickListener {
+            mPresenter.handlePlayClicked()
         }
 
         mPresenter = BookDetailsPresenter(this)

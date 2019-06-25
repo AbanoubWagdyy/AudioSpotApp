@@ -17,6 +17,12 @@ class MyBooksPresenter(val mView: MyBooksContract.View) : MyBooksContract.Presen
         var listMyBooks = mRepositorySource.getMyBooks()
         if (listMyBooks != null && listMyBooks.isNotEmpty()) {
             mView.setBookList(listMyBooks)
+        } else {
+            if (mRepositorySource.getAuthResponse() != null) {
+                mView.showEmptyBooksScreen("You have no books yet")
+            } else {
+                mView.showEmptyBooksScreen("You have to le be logged in")
+            }
         }
     }
 

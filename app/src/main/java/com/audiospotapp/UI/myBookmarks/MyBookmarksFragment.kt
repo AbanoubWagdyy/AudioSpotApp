@@ -31,10 +31,15 @@ class MyBookmarksFragment : Fragment(), MyBookmarksContract.View, OnBookmarkClic
     }
 
     override fun setBookmarks(data: List<Bookmark>) {
-        recyclerBookmarks.layoutManager = LinearLayoutManager(context)
-        recyclerBookmarks.setHasFixedSize(true)
-        recyclerBookmarks.isNestedScrollingEnabled = false
-        recyclerBookmarks.adapter = MyBookmarksAdapter(data, this)
+        if (data.isNotEmpty()) {
+            recyclerBookmarks.layoutManager = LinearLayoutManager(context)
+            recyclerBookmarks.setHasFixedSize(true)
+            recyclerBookmarks.isNestedScrollingEnabled = false
+            recyclerBookmarks.adapter = MyBookmarksAdapter(data, this)
+        } else {
+            relativeEmptyBookmarks.visibility = View.VISIBLE
+            emptyBookmarks.text = "You have no bookmarks yet !."
+        }
     }
 
     override fun getAppContext(): Context? {

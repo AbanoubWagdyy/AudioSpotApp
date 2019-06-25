@@ -20,8 +20,4 @@ class PromoCodeActivity : BaseActivity() {
     override fun getFragment(ivArrow: ImageView): Fragment {
         return PromoCodeFragment.newInstance()
     }
-
-    override fun getActiveTab(): ActiveTab {
-        return ActiveTab.MENU
-    }
 }

@@ -11,6 +11,7 @@ import kotlinx.android.synthetic.main.activity_forget_password.*
 import kotlinx.android.synthetic.main.activity_login.*
 import kotlinx.android.synthetic.main.activity_register.*
 import kotlinx.android.synthetic.main.activity_register.etPassword
+import com.audiospotapp.UI.ActiveTab
 
 class RegisterActivity : AppCompatActivity(), RegisterContract.View {
 

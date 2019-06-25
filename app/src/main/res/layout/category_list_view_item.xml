@@ -3,7 +3,8 @@
               android:orientation="vertical"
               android:layout_width="match_parent"
               android:background="@color/black"
-              android:layout_height="match_parent">
+              android:paddingBottom="10dp"
+              android:layout_height="wrap_content">
 
     <TextView
             android:id="@+id/tvCategory"
@@ -17,6 +18,8 @@
             android:gravity="start"
             android:text="Reflections"/>
 
-    <View android:layout_width="match_parent" android:layout_height="2dp" android:background="@color/white"/>
+    <View android:layout_width="match_parent"
+          android:layout_height="2dp"
+          android:background="@color/white"/>
 
 </LinearLayout>

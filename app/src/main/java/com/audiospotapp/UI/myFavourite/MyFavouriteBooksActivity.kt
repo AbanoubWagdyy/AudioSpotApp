@@ -27,10 +27,6 @@ class MyFavouriteBooksActivity : BaseActivity(), onItemPlayClickListener {
         return fragment
     }
 
-    override fun getActiveTab(): ActiveTab {
-        return ActiveTab.MENU
-    }
-
     override fun manageEditVisibility() {
         ivEdit.visibility = View.VISIBLE
         ivEdit.setOnClickListener {

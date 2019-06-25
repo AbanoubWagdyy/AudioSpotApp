@@ -19,8 +19,4 @@ class RateBookActivity : BaseActivity() {
     }
 
     override fun getFragment(ivArrow: ImageView): Fragment = RateBookFragment.newInstance()
-
-    override fun getActiveTab(): ActiveTab {
-        return ActiveTab.LIBRARY
-    }
 }

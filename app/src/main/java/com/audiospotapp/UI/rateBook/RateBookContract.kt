@@ -16,5 +16,6 @@ interface RateBookContract {
         fun dismissLoading()
         fun bindResponse(bookDetailsData: Book)
         fun showMessage(message: String)
+        fun showHompageScreen()
     }
 }

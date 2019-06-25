@@ -15,5 +15,6 @@ interface ContactUsContract {
         fun dismissLoading()
         fun finalizeView()
         fun showMessage(message: String)
+        fun showHompageScreen()
     }
 }

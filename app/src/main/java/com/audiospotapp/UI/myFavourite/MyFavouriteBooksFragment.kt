@@ -66,11 +66,16 @@ class MyFavouriteBooksFragment : Fragment(), myFavouriteBooksContract.View, onBo
     }
 
     override fun setBookList(listMyBooks: List<Book>) {
-        recyclerBooks.layoutManager = LinearLayoutManager(context)
-        recyclerBooks.setHasFixedSize(true)
-        recyclerBooks.isNestedScrollingEnabled = false
-        adapter = BooksAdapter(listMyBooks, this,this)
-        recyclerBooks.adapter = adapter
+        if (listMyBooks.isNotEmpty()) {
+            recyclerBooks.layoutManager = LinearLayoutManager(context)
+            recyclerBooks.setHasFixedSize(true)
+            recyclerBooks.isNestedScrollingEnabled = false
+            adapter = BooksAdapter(listMyBooks, this, this)
+            recyclerBooks.adapter = adapter
+        } else {
+            relativeEmptyBooks.visibility = View.VISIBLE
+            emptyBooks.text = "You have no favorite books yet"
+        }
     }
 
     override fun showBookDetailsScreen() {
@@ -104,7 +109,7 @@ class MyFavouriteBooksFragment : Fragment(), myFavouriteBooksContract.View, onBo
         try {
             mPlayCallback = activity as onItemPlayClickListener
         } catch (e: ClassCastException) {
-            throw ClassCastException(activity.toString() + " must implement MyInterface ")
+            throw ClassCastException("$activity must implement MyInterface ")
         }
     }
 

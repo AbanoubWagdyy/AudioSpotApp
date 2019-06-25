@@ -20,10 +20,6 @@ class CongratulationsActivity : BaseActivity() {
         return CongratulationsFragment.newInstance()
     }
 
-    override fun getActiveTab(): ActiveTab {
-        return ActiveTab.MENU
-    }
-
     override fun onStop() {
         var mRepositorySource = DataRepository.getInstance(applicationContext)
         mRepositorySource.saveVoucherBook(null)

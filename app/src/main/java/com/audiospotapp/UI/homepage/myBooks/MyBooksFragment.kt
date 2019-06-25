@@ -24,6 +24,11 @@ import kotlinx.android.synthetic.main.fragment_my_books.*
 
 class MyBooksFragment : Fragment(), MyBooksContract.View, onBookItemClickListener {
 
+    override fun showEmptyBooksScreen(strEmptyListBooks: String) {
+        relativeEmptyBooks.visibility = View.VISIBLE
+        emptyBooks.text = strEmptyListBooks
+    }
+
     override fun showBookDetailsScreen() {
         val intent = Intent(activity!!, BookDetailsActivity::class.java)
         startActivity(intent)

@@ -1,10 +1,14 @@
 package com.audiospotapp.DataLayer.Model
 
 data class Bookmark(
+    val id: Int,
     val book_id: Int,
     val chapter_id: Int,
+    val book_name: String,
+    val chapter_name: String,
     val comment: String,
-    val id: Int,
+    val time: Int,
     val sound_file: String,
-    val time: Int
+    val book_cover: String
+
 )

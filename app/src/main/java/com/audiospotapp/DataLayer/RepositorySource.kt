@@ -6,6 +6,7 @@ import com.audiospot.DataLayer.Model.CategoriesListData
 import com.audiospotapp.DataLayer.Cache.CacheDataSource
 import com.audiospotapp.DataLayer.Model.*
 import com.audiospotapp.DataLayer.Retrofit.RetrofitCallbacks
+import com.audiospotapp.UI.ActiveTab
 import com.audiospotapp.UI.giftSelection.GiftSelection
 
 interface RepositorySource : CacheDataSource {
@@ -168,5 +169,10 @@ interface RepositorySource : CacheDataSource {
     fun addPromoCode(promoCode: String, responseCallback: RetrofitCallbacks.PromoCodeResponseCallback)
 
     fun saveVoucherBook(data: Book?)
+
     fun getVoucherBook(): Book
+
+    fun setActiveTab(tabActive: ActiveTab)
+
+    fun getActiveTab(): ActiveTab
 }

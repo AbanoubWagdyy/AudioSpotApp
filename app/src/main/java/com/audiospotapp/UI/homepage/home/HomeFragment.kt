@@ -20,6 +20,7 @@ import com.audiospotapp.UI.books.Interface.onBookItemClickListener
 import com.audiospotapp.UI.homepage.home.adapter.HomepageAdapter
 import com.audiospotapp.UI.bookDetails.BookDetailsActivity
 import com.audiospotapp.utils.BookMediaDataConversion
+import dm.audiostreamer.AudioStreamingManager
 import dm.audiostreamer.MediaMetaData
 
 
@@ -38,15 +39,32 @@ class HomeFragment : Fragment(), HomeContract.View, onBookItemClickListener {
     }
 
     override fun onPlayClicked(book: Book) {
-        var mediaData = BookMediaDataConversion.convertBookToMediaMetaData(book)
-        mPlayCallback.OnItemPlayed(mediaData)
+        if (streamingManager.isPlaying) {
+            if (book.id == streamingManager.currentAudioId.toInt()) {
+                streamingManager.handlePauseRequest()
+                adapter = HomepageAdapter(this.homePageResponse, this, null)
+                recyclerHome.adapter = adapter
+            } else {
+                var mediaData = BookMediaDataConversion.convertBookToMediaMetaData(book)
+                mPlayCallback.OnItemPlayed(mediaData)
+            }
+        } else {
+            if (currentSong != null) {
+                streamingManager.handlePlayRequest()
+            } else {
+                var mediaData = BookMediaDataConversion.convertBookToMediaMetaData(book)
+                mPlayCallback.OnItemPlayed(mediaData)
+            }
+        }
     }
 
     override fun setHomeResponse(result: HomepageRepsonse?) {
+        this.homePageResponse = result
         recyclerHome.layoutManager = LinearLayoutManager(context)
         recyclerHome.setHasFixedSize(true)
         recyclerHome.isNestedScrollingEnabled = false
-        recyclerHome.adapter = HomepageAdapter(result, this)
+        adapter = HomepageAdapter(this.homePageResponse, this, currentSong)
+        recyclerHome.adapter = adapter
     }
 
     override fun showErrorMessage(message: String) {
@@ -80,12 +98,33 @@ class HomeFragment : Fragment(), HomeContract.View, onBookItemClickListener {
         progress = view.findViewById(R.id.progress)
         mPresenter = HomePresenter(this)
         mPresenter.start()
+        configAudioStreamer()
+        checkAlreadyPlaying()
     }
 
+    private fun configAudioStreamer() {
+        streamingManager = AudioStreamingManager.getInstance(activity!!.applicationContext)
+        streamingManager!!.isPlayMultiple = false
+        streamingManager!!.setShowPlayerNotification(true)
+    }
+
+    private fun checkAlreadyPlaying() {
+        if (streamingManager!!.isPlaying) {
+            currentSong = streamingManager!!.currentAudio
+            if (currentSong != null) {
+                currentSong!!.playState = streamingManager!!.mLastPlaybackState
+            }
+        }
+    }
+
+    private var currentSong: MediaMetaData? = null
+    private lateinit var streamingManager: AudioStreamingManager
     private lateinit var mPlayCallback: onItemPlayClickListener
     lateinit var mPresenter: HomeContract.Presenter
     lateinit var recyclerHome: RecyclerView
     lateinit var progress: ProgressBar
+    var homePageResponse: HomepageRepsonse? = null
+    var adapter: HomepageAdapter? = null
 
     companion object {
 

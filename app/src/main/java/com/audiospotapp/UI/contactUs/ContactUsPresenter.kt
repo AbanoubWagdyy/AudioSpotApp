@@ -17,6 +17,10 @@ class ContactUsPresenter(val mView: ContactUsContract.View) : ContactUsContract.
                 mView.dismissLoading()
                 if (result != null) {
                     mView.showMessage(result.status.message)
+                    val status = RetrofitResponseHandler.validateAuthResponseStatus(result)
+                    if (status == RetrofitResponseHandler.Companion.Status.VALID) {
+                        mView.showHompageScreen()
+                    }
                 }
             }
 

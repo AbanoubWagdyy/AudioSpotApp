@@ -1,9 +1,7 @@
 package com.audiospotapp.UI.homepage.menu
 
-import com.audiospot.DataLayer.Model.AuthResponse
 import com.audiospotapp.DataLayer.DataRepository
 import com.audiospotapp.DataLayer.Model.LogoutAuthResponse
-import com.audiospotapp.DataLayer.Retrofit.GlobalKeys
 import com.audiospotapp.DataLayer.Retrofit.RetrofitCallbacks
 import com.audiospotapp.DataLayer.Retrofit.RetrofitResponseHandler
 import com.visionvalley.letuno.DataLayer.RepositorySource
@@ -62,7 +60,11 @@ class MenuPresenter(val mView: MenuContract.View) : MenuContract.Presenter {
     }
 
     override fun handleMyBookmarksClicked() {
-        mView.showMyBookmarksScreen()
+        if (mRepositorySource.getAuthResponse() == null) {
+            mView.showShouldBeLoggedInMessage()
+        } else {
+            mView.showMyBookmarksScreen()
+        }
     }
 
     override fun handleSignoutPressed() {
