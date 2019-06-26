@@ -3,6 +3,7 @@ package com.audiospotapp.UI.bookChapters
 import android.content.Context
 import com.audiospotapp.DataLayer.Model.Bookmark
 import com.audiospotapp.DataLayer.Model.ChaptersData
+import dm.audiostreamer.MediaMetaData
 
 interface BookChaptersContract {
 
@@ -10,6 +11,8 @@ interface BookChaptersContract {
         fun start()
         fun handleBookmarkClicked(timeString: String, id: Int, title: String)
         fun isBookMine(): Boolean
+        fun handleDownloadPressed(currentSong: MediaMetaData?)
+        fun validateChapterDownloaded(mediaData: MediaMetaData): String
     }
 
     interface View {
@@ -22,5 +25,7 @@ interface BookChaptersContract {
         fun showAddBookmarkScreen()
         fun setBookmark(bookmark: Bookmark)
         fun onChapterClicked(chapterData: ChaptersData)
+        fun showDownloadComplete(message: String, currentPath: String)
+        fun showMessage(s: String)
     }
 }

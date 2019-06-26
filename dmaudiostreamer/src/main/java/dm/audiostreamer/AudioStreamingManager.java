@@ -143,27 +143,31 @@ public class AudioStreamingManager extends StreamingManager {
 
     @Override
     public void onSkipToNext() {
-        int nextIndex = index + 1;
-        if (isValidIndex(true, nextIndex)) {
-            MediaMetaData metaData = mediaList.get(nextIndex);
-            onPlay(metaData);
-            if (instance.currentSessionCallback != null) {
-                currentSessionCallback.playNext(nextIndex, metaData);
-            }
-        }
+        audioPlayback.seekTo((int) audioPlayback.getCurrentStreamPosition() + 30000);
+//        int nextIndex = index + 1;
+//        if (isValidIndex(true, nextIndex)) {
+//            MediaMetaData metaData = mediaList.get(nextIndex);
+//            onPlay(metaData);
+//            if (instance.currentSessionCallback != null) {
+//                currentSessionCallback.playNext(nextIndex, metaData);
+//            }
+//        }
     }
 
 
     @Override
     public void onSkipToPrevious() {
-        int prvIndex = index - 1;
-        if (isValidIndex(false, prvIndex)) {
-            MediaMetaData metaData = mediaList.get(prvIndex);
-            onPlay(metaData);
-            if (instance.currentSessionCallback != null) {
-                currentSessionCallback.playPrevious(prvIndex, metaData);
-            }
-        }
+
+        audioPlayback.seekTo((int) audioPlayback.getCurrentStreamPosition() - 30000);
+
+//        int prvIndex = index - 1;
+//        if (isValidIndex(false, prvIndex)) {
+//            MediaMetaData metaData = mediaList.get(prvIndex);
+//            onPlay(metaData);
+//            if (instance.currentSessionCallback != null) {
+//                currentSessionCallback.playPrevious(prvIndex, metaData);
+//            }
+//        }
     }
 
     /**
@@ -205,7 +209,7 @@ public class AudioStreamingManager extends StreamingManager {
         }
     }
 
-    private void setPendingIntent(){
+    private void setPendingIntent() {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -213,7 +217,7 @@ public class AudioStreamingManager extends StreamingManager {
                     NotificationManager.getInstance().postNotificationName(NotificationManager.setAnyPendingIntent, pendingIntent);
                 }
             }
-        },400);
+        }, 400);
     }
 
     public void handlePauseRequest() {
@@ -257,7 +261,7 @@ public class AudioStreamingManager extends StreamingManager {
                 }
 
                 instance.mLastPlaybackState = state;
-                if(instance.currentAudio!=null){
+                if (instance.currentAudio != null) {
                     instance.currentAudio.setPlayState(state);
                 }
                 if (instance.showPlayerNotification) {

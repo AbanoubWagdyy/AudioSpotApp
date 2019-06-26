@@ -3,14 +3,12 @@ package com.audiospotapp.UI.bookChapters
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
-import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.support.v4.media.session.PlaybackStateCompat
 import android.text.format.DateUtils
 import android.util.Log
 import android.view.View
-import android.widget.ImageView
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.audiospotapp.DataLayer.Model.Bookmark
 import com.audiospotapp.DataLayer.Model.ChaptersData
@@ -42,6 +40,21 @@ import java.util.ArrayList
 
 class BookChaptersActivity : AppCompatActivity(), CurrentSessionCallback, View.OnClickListener,
     Slider.OnValueChangedListener, BookChaptersContract.View, OnChapterCLickListener {
+
+    override fun showMessage(s: String) {
+        Snackbar.make(
+            findViewById(android.R.id.content),
+            s, Snackbar.LENGTH_SHORT
+        ).show()
+    }
+
+    override fun showDownloadComplete(message: String, currentPath: String) {
+        currentSong!!.mediaUrl = currentPath
+        Snackbar.make(
+            findViewById(android.R.id.content),
+            message, Snackbar.LENGTH_SHORT
+        ).show()
+    }
 
     override fun setBookmark(bookmark: Bookmark) {
         this.currentBookmark = bookmark
@@ -91,8 +104,8 @@ class BookChaptersActivity : AppCompatActivity(), CurrentSessionCallback, View.O
         timer.setOnClickListener(this)
         speed.setOnClickListener(this)
 
-        changeButtonColor(btn_backward)
-        changeButtonColor(btn_forward)
+//        changeButtonColor(btn_backward)
+//        changeButtonColor(btn_forward)
 
         slideBottomView.visibility = View.VISIBLE
         slideBottomView.setOnClickListener(View.OnClickListener {
@@ -171,10 +184,14 @@ class BookChaptersActivity : AppCompatActivity(), CurrentSessionCallback, View.O
             paragraphs = data.paragraphs
             chapterData = data
             var mediaData = BookMediaDataConversion.convertBookToMediaMetaData(data)
+            var isChapterDownloaded = mPresenter.validateChapterDownloaded(mediaData)
+            if (!isChapterDownloaded.equals("")) {
+                mediaData.mediaUrl = isChapterDownloaded
+            }
             playSong(mediaData)
         } else {
             Snackbar.make(
-               findViewById(android.R.id.content),
+                findViewById(android.R.id.content),
                 applicationContext.getString(R.string.you_should_own), Snackbar.LENGTH_SHORT
             ).show()
         }
@@ -198,6 +215,18 @@ class BookChaptersActivity : AppCompatActivity(), CurrentSessionCallback, View.O
         Log.d("SliderValue", value.toLong().toString())
         streamingManager.onSeekTo(value.toLong())
         streamingManager.scheduleSeekBarUpdate()
+
+        var isParagraphSet = false
+        for (paragraph in paragraphs) {
+            if ((value / 1000) in paragraph.from_time.toLong()..paragraph.to_time.toLong()) {
+                paragraphTitle.text = paragraph.title
+                isParagraphSet = true
+                break
+            }
+        }
+        if (!isParagraphSet) {
+            paragraphTitle.text = ""
+        }
     }
 
     override fun updatePlaybackState(state: Int) {
@@ -271,20 +300,21 @@ class BookChaptersActivity : AppCompatActivity(), CurrentSessionCallback, View.O
     }
 
     override fun playNext(indexP: Int, currentAudio: MediaMetaData?) {
-        showMediaInfo(currentAudio!!)
+//        showMediaInfo(currentAudio!!)
+//        for (paragraph in paragraphs) {
+//            if ((currentAudio!!.mediaDuration.toInt() / 1000) in paragraph.from_time.toLong()..paragraph.to_time.toLong()) {
+//                paragraphTitle.text = paragraph.title
+//            }
+//        }
     }
 
     override fun playPrevious(indexP: Int, currentAudio: MediaMetaData?) {
-        showMediaInfo(currentAudio!!)
-    }
-
-    private fun changeButtonColor(imageView: ImageView?) {
-        try {
-            val color = Color.BLACK
-            imageView!!.setColorFilter(color)
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
+//        showMediaInfo(currentAudio!!)
+//        for (paragraph in paragraphs) {
+//            if ((currentAudio!!.mediaDuration.toInt() / 1000) in paragraph.from_time.toLong()..paragraph.to_time.toLong()) {
+//                paragraphTitle.text = paragraph.title
+//            }
+//        }
     }
 
     private fun getNotificationPendingIntent(): PendingIntent {
@@ -381,10 +411,16 @@ class BookChaptersActivity : AppCompatActivity(), CurrentSessionCallback, View.O
 
             slidepanel_time_progress.text = timeString
 
+            var isParagraphSet = false
             for (paragraph in paragraphs) {
                 if ((progress / 1000) in paragraph.from_time.toLong()..paragraph.to_time.toLong()) {
                     paragraphTitle.text = paragraph.title
+                    isParagraphSet = true
+                    break
                 }
+            }
+            if (!isParagraphSet) {
+                paragraphTitle.text = ""
             }
 
         } catch (e: NumberFormatException) {
@@ -405,7 +441,6 @@ class BookChaptersActivity : AppCompatActivity(), CurrentSessionCallback, View.O
         text_songName.text = metaData.mediaTitle
         var chapterId = metaData.mediaId
         text_chapterNumber.text = "#Chapter $chapterId"
-
     }
 
     override fun onClick(view: View?) {
@@ -430,7 +465,8 @@ class BookChaptersActivity : AppCompatActivity(), CurrentSessionCallback, View.O
             }
 
             R.id.download -> {
-
+                if (currentSong != null)
+                    mPresenter.handleDownloadPressed(currentSong)
             }
 
             R.id.timer -> {
