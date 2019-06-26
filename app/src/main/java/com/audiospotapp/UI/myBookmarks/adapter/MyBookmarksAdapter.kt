@@ -1,18 +1,17 @@
 package com.audiospotapp.UI.myBookmarks.adapter
 
 import android.content.Context
-import android.text.format.DateUtils
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.audiospotapp.DataLayer.Model.Bookmark
 import com.audiospotapp.R
 import com.audiospotapp.UI.myBookmarks.Interface.OnBookmarkClickListener
+import com.audiospotapp.utils.ImageUtils
 import com.audiospotapp.utils.TimeUtils
-import java.text.SimpleDateFormat
-import java.util.*
 
 class MyBookmarksAdapter(
     private var bookmarks: List<Bookmark>,
@@ -40,6 +39,11 @@ class MyBookmarksAdapter(
         holder.comment.text = bookmark.comment
         holder.bookName.text = bookmark.book_name
         holder.chapterName.text = bookmark.chapter_name
+
+        ImageUtils.setImageFromUrlIntoImageViewUsingPicasso(
+            bookmark.book_cover, context, holder.ivBook,
+            false
+        )
     }
 
     inner class ViewHolder(val mView: View) : RecyclerView.ViewHolder(mView), View.OnClickListener {
@@ -47,6 +51,7 @@ class MyBookmarksAdapter(
         val bookName: TextView = mView.findViewById(R.id.bookName)
         val chapterName: TextView = mView.findViewById(R.id.chapterName)
         val bookmarkTime: TextView = mView.findViewById(R.id.bookmarkTime)
+        val ivBook: ImageView = mView.findViewById(R.id.ivBook)
 
         init {
             mView.setOnClickListener(this)

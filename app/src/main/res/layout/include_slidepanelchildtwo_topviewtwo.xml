@@ -18,7 +18,7 @@
         <ImageView android:id="@+id/bookCover"
                    android:layout_width="60dp"
                    android:layout_height="90dp"
-                   android:src="@mipmap/book_sample"/>
+                   android:src="@mipmap/login_icon"/>
 
         <TextView
                 android:id="@+id/bookName"

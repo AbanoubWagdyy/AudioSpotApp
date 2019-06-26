@@ -13,7 +13,7 @@
 
         <ImageView android:id="@+id/ivBook"
                    android:layout_width="match_parent"
-                   android:src="@mipmap/start"
+                   android:src="@mipmap/login_icon"
                    android:scaleType="fitXY"
                    android:layout_height="match_parent"/>
         <ImageView

@@ -23,8 +23,7 @@
                    android:layout_width="100dp"
                    android:scaleType="fitXY"
                    android:layout_marginStart="20dp"
-
-                   android:src="@mipmap/start"
+                   android:src="@mipmap/login_icon"
                    android:layout_height="130dp"/>
 
         <LinearLayout

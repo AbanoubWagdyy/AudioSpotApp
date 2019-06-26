@@ -98,15 +98,8 @@ class HomepageActivity : AppCompatActivity(), HomeFragment.onItemPlayClickListen
 
     private fun configAudioStreamer() {
         streamingManager = AudioStreamingManager.getInstance(applicationContext)
-        //Set PlayMultiple 'true' if want to playing sequentially one by one songs
-        // and provide the list of songs else set it 'false'
         streamingManager!!.isPlayMultiple = mRepositorySource.getAuthResponse() != null
-
         streamingManager!!.setMediaList(listOfSongs)
-
-        //If you want to show the Player Notification then set ShowPlayerNotification as true
-        //and provide the pending intent so that after click on notification it will redirect to an activity
-
         streamingManager!!.setShowPlayerNotification(true)
         streamingManager!!.setPendingIntentAct(getNotificationPendingIntent())
     }
@@ -184,7 +177,7 @@ class HomepageActivity : AppCompatActivity(), HomeFragment.onItemPlayClickListen
                 ivLibrary.setImageResource(R.mipmap.tab_library_inactive)
                 tvLibrary.setTextColor(resources.getColor(R.color.grey))
                 mRepositorySource.setActiveTab(ActiveTab.HOME)
-                tvTitle.text = "Homepage"
+                tvTitle.text = "AudioSpot"
             }
 
             ActiveTab.LIBRARY -> {
@@ -197,7 +190,7 @@ class HomepageActivity : AppCompatActivity(), HomeFragment.onItemPlayClickListen
                 ivLibrary.setImageResource(R.mipmap.tab_library)
                 tvLibrary.setTextColor(resources.getColor(R.color.white))
                 mRepositorySource.setActiveTab(ActiveTab.LIBRARY)
-                tvTitle.text = "Library"
+                tvTitle.text = "AudioSpot"
             }
 
             ActiveTab.MYBOOKS -> {
@@ -210,7 +203,7 @@ class HomepageActivity : AppCompatActivity(), HomeFragment.onItemPlayClickListen
                 ivLibrary.setImageResource(R.mipmap.tab_library_inactive)
                 tvLibrary.setTextColor(resources.getColor(R.color.grey))
                 mRepositorySource.setActiveTab(ActiveTab.MYBOOKS)
-                tvTitle.text = "My Books"
+                tvTitle.text = "AudioSpot"
             }
 
             ActiveTab.MENU -> {
@@ -223,8 +216,7 @@ class HomepageActivity : AppCompatActivity(), HomeFragment.onItemPlayClickListen
                 ivLibrary.setImageResource(R.mipmap.tab_library_inactive)
                 tvLibrary.setTextColor(resources.getColor(R.color.grey))
                 mRepositorySource.setActiveTab(ActiveTab.MENU)
-
-                tvTitle.text = "Menu"
+                tvTitle.text = "AudioSpot"
             }
         }
     }

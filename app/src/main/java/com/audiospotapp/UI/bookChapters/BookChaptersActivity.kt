@@ -75,6 +75,10 @@ class BookChaptersActivity : AppCompatActivity(), CurrentSessionCallback, View.O
     }
 
     private fun uiInitialization() {
+
+        btn_backward.visibility = View.VISIBLE
+        btn_forward.visibility = View.VISIBLE
+
         btn_backward.setOnClickListener(this)
         btn_forward.setOnClickListener(this)
         btn_play.setOnClickListener(this)
