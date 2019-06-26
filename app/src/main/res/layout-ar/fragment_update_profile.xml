@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             xmlns:tools="http://schemas.android.com/tools"
+             xmlns:app="http://schemas.android.com/apk/res-auto"
+             android:layout_width="match_parent" android:layout_height="match_parent"
+             android:background="@color/black"
+             android:padding="20dp"
+             tools:context=".UI.updateProfile.UpdateProfileFragment">
+
+    <LinearLayout android:layout_width="match_parent"
+                  android:layout_height="match_parent"
+                  android:orientation="vertical">
+
+        <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="14.5sp"
+                android:textColor="@color/white"
+                android:letterSpacing="0.07"
+                android:lineSpacingExtra="79.8sp"
+                android:gravity="center_horizontal"
+                android:text="Change Data"/>
+
+        <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginTop="15dp"
+                android:orientation="horizontal">
+
+            <EditText
+                    android:id="@+id/etFirstName"
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    android:textSize="13.7sp"
+                    android:textColor="@color/white"
+                    android:textColorHint="@color/white"
+                    android:paddingStart="10dp"
+                    android:letterSpacing="0.07"
+                    android:lineSpacingExtra="16sp"
+                    android:hint="@string/first_name"
+                    android:background="@drawable/edit_text_background"
+                    android:layout_marginEnd="10dp"
+                    android:layout_weight="1" android:singleLine="true"/>
+
+            <EditText
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    android:textSize="13.7sp"
+                    android:textColor="@color/white"
+                    android:textColorHint="@color/white"
+                    android:paddingStart="10dp"
+                    android:letterSpacing="0.07"
+                    android:lineSpacingExtra="16sp"
+                    android:hint="@string/last_name"
+                    android:background="@drawable/edit_text_background"
+                    android:layout_marginStart="10dp"
+                    android:layout_weight="1" android:id="@+id/etLastName" android:singleLine="true"/>
+
+        </LinearLayout>
+
+        <EditText
+                android:layout_width="fill_parent"
+                android:layout_height="50dp"
+                android:layout_marginTop="15dp"
+                android:textSize="13.7sp"
+                android:textColor="@color/white"
+                android:textColorHint="@color/white"
+                android:paddingStart="10dp"
+                android:letterSpacing="0.07"
+                android:inputType="textEmailAddress"
+                android:lineSpacingExtra="16sp"
+                android:hint="@string/prompt_email"
+                android:background="@drawable/edit_text_background"
+                android:layout_marginEnd="10dp"
+                android:id="@+id/etEmail"
+                android:singleLine="true"/>
+
+        <EditText
+                android:layout_width="fill_parent"
+                android:layout_height="50dp"
+                android:layout_marginTop="15dp"
+                android:textSize="13.7sp"
+                android:textColor="@color/white"
+                android:textColorHint="@color/white"
+                android:paddingStart="10dp"
+                android:letterSpacing="0.07"
+                android:lineSpacingExtra="16sp"
+                android:hint="@string/mobile_phone"
+                android:background="@drawable/edit_text_background"
+                android:layout_marginEnd="10dp"
+                android:id="@+id/etMobilePhone"
+                android:singleLine="true"/>
+
+        <TextView
+                android:id="@+id/tvChangePassword"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:gravity="end"
+                android:layout_marginTop="20dp"
+                android:textSize="13.8sp"
+                android:textColor="@color/white"
+                android:letterSpacing="0.07"
+                android:lineSpacingExtra="9.2sp"
+                android:text="@string/change_password"/>
+
+        <!--<EditText-->
+                <!--android:layout_width="fill_parent"-->
+                <!--android:layout_height="50dp"-->
+                <!--android:layout_marginTop="15dp"-->
+                <!--android:textSize="13.7sp"-->
+                <!--android:textColor="@color/white"-->
+                <!--android:textColorHint="@color/white"-->
+                <!--android:paddingStart="10dp"-->
+                <!--android:inputType="date"-->
+                <!--android:letterSpacing="0.07"-->
+                <!--android:lineSpacingExtra="16sp"-->
+                <!--android:hint="@string/birthday"-->
+                <!--android:background="@drawable/edit_text_background"-->
+                <!--android:layout_marginEnd="10dp" android:id="@+id/etBirthday"-->
+                <!--android:singleLine="true"/>-->
+
+        <!--<org.angmarch.views.NiceSpinner-->
+                <!--android:id="@+id/spinnerGender"-->
+                <!--android:layout_width="fill_parent"-->
+                <!--android:layout_height="50dp"-->
+                <!--app:arrowTint="@color/white"-->
+                <!--app:textTint="@color/white"-->
+                <!--app:entries="@array/gender_entries"-->
+                <!--app:popupTextAlignment="start"-->
+                <!--android:layout_marginTop="15dp"/>-->
+
+        <Button
+                android:text="@string/update"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:id="@+id/btnUpdate"
+                android:singleLine="true"
+                android:textColor="@color/white"
+                android:background="@mipmap/reset_pass_back"
+                android:layout_marginTop="30dp"
+                android:layout_marginEnd="20dp"
+                android:layout_marginStart="20dp"/>
+
+    </LinearLayout>
+
+</FrameLayout>

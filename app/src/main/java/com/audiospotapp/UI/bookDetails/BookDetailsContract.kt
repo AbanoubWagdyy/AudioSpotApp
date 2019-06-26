@@ -30,7 +30,7 @@ interface BookDetailsContract {
         fun viewBookChaptersScreen()
         fun viewAllReviewsScreen()
         fun hideAddFavoritesButton()
-        fun setAdToCartText(s: String)
+        fun setAddToCartText(s: String)
         fun viewRateBookScreen()
         fun playSong(mediaMetaData: MediaMetaData)
     }

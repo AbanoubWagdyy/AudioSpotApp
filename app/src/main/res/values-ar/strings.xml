@@ -1,0 +1,65 @@
+<resources>
+    <string name="app_name">AudioSpot</string>
+    <string name="title_activity_login">Sign in</string>
+    <string name="prompt_email">Email</string>
+    <string name="prompt_password">Password</string>
+    <string name="action_sign_in">Sign in or register</string>
+    <string name="action_sign_in_short">Sign in</string>
+    <string name="welcome">"Welcome !"</string>
+    <string name="invalid_username">Not a valid username</string>
+    <string name="invalid_password">Password must be >5 characters</string>
+    <string name="login_failed">"Login failed"</string>
+    <string name="facebook_app_id">402190117171536</string>
+    <string name="fb_login_protocol_scheme">fb402190117171536</string>
+    <string name="username">Username</string>
+    <string name="password">Password</string>
+    <string name="login">Login</string>
+    <string name="forget_password">نسيت كلمه المرور ؟</string>
+    <string name="create_new_account">Create a new account? Sign up</string>
+    <string name="or_sign">Or Sign by</string>
+    <string name="default_notification_channel_id" translatable="false">audiospot_fcm_default_channel</string>
+    <string name="skip">Skip</string>
+    <string name="audio_spot">AudioSpot</string>
+    <string name="first_name">الاسم الاول</string>
+    <string name="last_name">الاسم الاخير</string>
+    <string name="confirm_password">تاكيد كلمه المرور</string>
+    <string name="create">انشاء</string>
+    <string name="cancel">Cancel</string>
+    <string name="reset_password">Reset Password</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="newest_arrival">Newest arrival</string>
+    <string name="a_z">A-Z</string>
+    <string name="best_seller">Best seller</string>
+    <string name="length">Length</string>
+    <string name="average_review">Average customer review</string>
+    <string name="view_book_chapters">
+        <u>View Book Chapters</u>
+    </string>
+    <string name="see_all_reviews">
+        <u>See All Reviews</u>
+    </string>
+    <string name="should_be_logged_in">You have to be logged in !.</string>
+    <string name="prefered_categories">
+        <u>Prefered Categories</u>
+    </string>
+    <string name="mobile_phone">الموبايل</string>
+    <string name="birthday">تاريح الميلاد</string>
+    <string name="old_password">كلمه المرور القديمه</string>
+    <string name="new_password">كلمه المرور الجديده</string>
+    <string name="update">تحديث</string>
+    <string name="change_password">
+        <u>تغيير كلمه المرور</u>
+    </string>
+    <string name="try_again">رجاء المحاوله مره اخري</string>
+    <string name="you_should_own">يجب ان تمتلك هذل الكتاب لسماع المحتوي</string>
+    <string name="voucher">Voucher</string>
+
+    <string-array name="gender_entries">
+        <item>Gender</item>
+        <item>Male</item>
+        <item>Female</item>
+    </string-array>
+
+</resources>

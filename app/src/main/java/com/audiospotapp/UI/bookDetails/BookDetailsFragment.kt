@@ -22,13 +22,11 @@ import com.audiospotapp.UI.bookChapters.BookChaptersActivity
 import com.audiospotapp.UI.bookDetails.adapter.ReviewListAdapter
 import com.audiospotapp.UI.bookReviews.BookReviewsActivity
 import com.audiospotapp.UI.giftSelection.GiftSelectionActivity
-import com.audiospotapp.UI.giveAgift.GiveGiftActivity
 import com.audiospotapp.UI.login.LoginActivity
 import com.audiospotapp.UI.rateBook.RateBookActivity
 import com.audiospotapp.UI.splash.SplashActivity
 import com.audiospotapp.utils.DialogUtils
 import com.audiospotapp.utils.ImageUtils
-import com.audiospotapp.utils.TimeUtils
 import com.google.android.material.snackbar.Snackbar
 import dm.audiostreamer.AudioStreamingManager
 import dm.audiostreamer.MediaMetaData
@@ -69,8 +67,9 @@ class BookDetailsFragment : Fragment(), BookDetailsContract.View {
         relativeAddToFavourites.visibility = View.GONE
     }
 
-    override fun setAdToCartText(s: String) {
-        tvAddToCart.text = s
+    override fun setAddToCartText(addToCartStr: String) {
+        tvAddToCart.text = addToCartStr
+        ivAddToCart.visibility = View.GONE
     }
 
     override fun viewAllReviewsScreen() {
@@ -193,7 +192,7 @@ class BookDetailsFragment : Fragment(), BookDetailsContract.View {
         tvPublisher.text = result!!.data.publisher
         tvAbout.text = result!!.data.about_book
 
-        tvLength.text = result!!.data.total_time_trt + " Hours"
+        tvLength.text = result!!.data.total_time_trt + " Hours."
 
         tvPrice.text = result!!.data.price.toString() + " EGP."
 

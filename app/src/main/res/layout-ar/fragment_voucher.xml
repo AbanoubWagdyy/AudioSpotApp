@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             xmlns:tools="http://schemas.android.com/tools"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent"
+             android:paddingTop="15dp"
+             android:background="@color/black"
+             tools:context=".UI.voucher.VoucherFragment">
+
+   <LinearLayout android:layout_width="match_parent"
+                 android:layout_height="match_parent"
+                 android:padding="20dp"
+                 android:orientation="vertical">
+       <TextView
+               android:layout_width="match_parent"
+               android:layout_height="wrap_content"
+               android:textSize="18.3sp"
+               android:textStyle="bold"
+               android:textColor="#fcfcfc"
+               android:letterSpacing="0.07"
+               android:lineSpacingExtra="-3.5sp"
+               android:gravity="center_horizontal"
+               android:text="Receive a book"/>
+
+       <TextView
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"
+               android:textSize="13.5sp"
+               android:textColor="@color/white"
+               android:letterSpacing="0.07"
+               android:layout_marginTop="20dp"
+               android:lineSpacingExtra="10sp"
+               android:text="Please enter your voucher"/>
+
+       <EditText
+               android:id="@+id/voucher"
+               android:layout_width="match_parent"
+               android:layout_height="40dp"
+               android:inputType="textEmailAddress"
+               android:ems="10"
+               android:hint="@string/voucher"
+               android:textColorHint="@color/white"
+               android:textColor="@color/white"
+               android:background="@drawable/edit_text_background"
+               android:layout_marginTop="25dp"
+               android:layout_marginEnd="8dp"
+               android:paddingStart="10dp"
+               android:layout_marginStart="8dp"/>
+
+       <RelativeLayout
+               android:layout_width="match_parent"
+               android:layout_height="match_parent"
+               android:padding="15dp">
+
+           <TextView
+                   android:id="@+id/voucherStatus"
+                   android:layout_width="match_parent"
+                   android:layout_height="wrap_content"
+                   android:textSize="13.5sp"
+                   android:layout_marginTop="20dp"
+                   android:textStyle="bold"
+                   android:textColor="@color/white"
+                   android:letterSpacing="0.07"
+                   android:lineSpacingExtra="10sp"/>
+
+           <Button
+                   android:text="Submit"
+                   android:layout_width="200dp"
+                   android:layout_height="40dp"
+                   android:layout_weight="1"
+                   android:layout_alignParentBottom="true"
+                   android:id="@+id/btnSubmit"
+                   android:background="@mipmap/reset_pass_back"
+                   android:textSize="14.5sp"
+                   android:layout_centerHorizontal="true"
+                   android:layout_marginStart="10dp"
+                   android:layout_marginEnd="15dp"
+                   android:textColor="@color/white"
+                   android:letterSpacing="0.07"
+                   android:lineSpacingExtra="50.3sp"
+                   android:textStyle="normal"
+                   android:gravity="center"/>
+
+       </RelativeLayout>
+
+   </LinearLayout>
+
+</FrameLayout>

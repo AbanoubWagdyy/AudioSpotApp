@@ -1,6 +1,5 @@
 package com.audiospotapp.UI.bookDetails
 
-import com.audiospot.DataLayer.Model.AuthResponse
 import com.audiospot.DataLayer.Model.Book
 import com.audiospot.DataLayer.Model.BookDetailsResponse
 import com.audiospotapp.DataLayer.DataRepository
@@ -45,7 +44,6 @@ class BookDetailsPresenter(val mView: BookDetailsContract.View) : BookDetailsCon
 //                mView.showMessage("You Should own this book to view all chapters !.")
 //            }
 //        }
-
         mView.viewBookChaptersScreen()
     }
 
@@ -61,7 +59,6 @@ class BookDetailsPresenter(val mView: BookDetailsContract.View) : BookDetailsCon
 //                mView.showMessage("You Should own this book to give this book as a gift !.")
 //            }
 //        }
-
         mView.showGiveGiftScreen()
     }
 
@@ -119,7 +116,7 @@ class BookDetailsPresenter(val mView: BookDetailsContract.View) : BookDetailsCon
 
         if (mRepositorySource.isBookMine()) {
             mView.hideAddFavoritesButton()
-            mView.setAdToCartText("Review the book")
+            mView.setAddToCartText("Review the book")
         }
 
         mRepositorySource.getBookDetails(object : RetrofitCallbacks.BookDetailsResponseCallback {
