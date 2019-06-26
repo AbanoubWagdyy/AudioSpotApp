@@ -1,7 +1,6 @@
 package com.audiospotapp.UI.bookDetails
 
 import android.content.Context
-import com.audiospot.DataLayer.Model.AuthResponse
 import com.audiospot.DataLayer.Model.BookDetailsResponse
 import com.audiospotapp.DataLayer.Model.Review
 import dm.audiostreamer.MediaMetaData
@@ -33,5 +32,6 @@ interface BookDetailsContract {
         fun setAddToCartText(s: String)
         fun viewRateBookScreen()
         fun playSong(mediaMetaData: MediaMetaData)
+        fun validatePlayResouce(result1: BookDetailsResponse)
     }
 }

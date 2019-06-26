@@ -127,6 +127,7 @@ class BookDetailsPresenter(val mView: BookDetailsContract.View) : BookDetailsCon
                     if (status == RetrofitResponseHandler.Companion.Status.VALID) {
                         bookDetails = result1.data
                         mView.bindResponse(result1)
+                        mView.validatePlayResouce(result1)
                     } else {
                         mView.showMessage(result1.message)
                     }

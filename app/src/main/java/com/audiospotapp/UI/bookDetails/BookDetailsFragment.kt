@@ -33,21 +33,41 @@ import dm.audiostreamer.MediaMetaData
 
 class BookDetailsFragment : Fragment(), BookDetailsContract.View {
 
+    override fun validatePlayResouce(result1: BookDetailsResponse) {
+        if (streamingManager.isPlaying) {
+            var currentAudio = streamingManager.currentAudio
+            if (result1.data.id.toString().equals(currentAudio.mediaId)) {
+                ivPlay.setImageResource(R.mipmap.homepage_play)
+            }
+        }
+    }
+
     override fun playSong(mediaMetaData: MediaMetaData) {
-        streamingManager = AudioStreamingManager.getInstance(activity!!.applicationContext)
+        if (streamingManager.isPlaying) {
+            var currentAudio = streamingManager.currentAudio
+            if (mediaMetaData.mediaId.equals(currentAudio.mediaId)) {
+                ivPlay.setImageResource(R.mipmap.play)
+                streamingManager.handlePauseRequest()
+                return
+            }
+        } else {
+            if (streamingManager.currentAudio == null) {
+                streamingManager!!.isPlayMultiple = false
 
-        streamingManager!!.isPlayMultiple = false
+                var list = ArrayList<MediaMetaData>()
+                list.add(mediaMetaData)
 
-        var list = ArrayList<MediaMetaData>()
-        list.add(mediaMetaData)
+                streamingManager!!.setMediaList(list)
 
-        streamingManager!!.setMediaList(list)
+                streamingManager!!.setShowPlayerNotification(true)
+                streamingManager!!.setPendingIntentAct(getNotificationPendingIntent())
 
-        streamingManager!!.setShowPlayerNotification(true)
-        streamingManager!!.setPendingIntentAct(getNotificationPendingIntent())
-
-        if (streamingManager != null) {
-            streamingManager!!.onPlay(mediaMetaData)
+                if (streamingManager != null) {
+                    streamingManager!!.onPlay(mediaMetaData)
+                }
+            } else {
+                streamingManager.handlePlayRequest()
+            }
         }
     }
 
@@ -132,6 +152,9 @@ class BookDetailsFragment : Fragment(), BookDetailsContract.View {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        streamingManager = AudioStreamingManager.getInstance(activity!!.applicationContext)
+
         var content = SpannableString("See All Reviews")
         content.setSpan(UnderlineSpan(), 0, content.length, 0)
         tvSeeAllReviews.text = content

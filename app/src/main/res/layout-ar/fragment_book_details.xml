@@ -43,7 +43,7 @@
                         android:textSize="17sp"
                         android:gravity="center"
                         android:layout_centerInParent="true"
-                        android:layout_toEndOf="@id/imageView4"
+                        android:layout_toEndOf="@id/ivAddToCart"
                         android:textColor="@color/white"
                         android:letterSpacing="0.07"
                         android:lineSpacingExtra="14.7sp"
