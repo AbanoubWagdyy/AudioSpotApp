@@ -18,7 +18,7 @@ import android.util.TypedValue;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.RelativeLayout;
-import com.audiospotapp.R;
+import com.audiospotapplication.R;
 import com.nineoldandroids.view.ViewHelper;
 
 public class Slider extends CustomView {

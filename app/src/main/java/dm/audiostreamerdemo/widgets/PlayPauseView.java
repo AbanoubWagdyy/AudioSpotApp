@@ -5,10 +5,6 @@
  */
 package dm.audiostreamerdemo.widgets;
 
-import android.animation.Animator;
-import android.animation.AnimatorSet;
-import android.animation.ArgbEvaluator;
-import android.animation.ObjectAnimator;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -23,10 +19,8 @@ import android.util.Property;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewOutlineProvider;
-import android.view.animation.DecelerateInterpolator;
-import android.widget.ImageView;
 import androidx.appcompat.widget.AppCompatImageView;
-import com.audiospotapp.R;
+import com.audiospotapplication.R;
 
 
 public class PlayPauseView extends AppCompatImageView {

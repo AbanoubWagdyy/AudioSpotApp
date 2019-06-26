@@ -13,7 +13,7 @@ import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.util.Log;
 import androidx.appcompat.widget.AppCompatImageView;
-import com.audiospotapp.R;
+import com.audiospotapplication.R;
 
 
 public class CircleImageView extends AppCompatImageView {
