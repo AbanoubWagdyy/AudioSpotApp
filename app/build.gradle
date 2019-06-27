@@ -10,6 +10,14 @@ androidExtensions {
 }
 
 android {
+    signingConfigs {
+        config {
+            storeFile file('/Users/vv/Desktop/audiospot')
+            storePassword '@udio4Aziz'
+            keyAlias = 'audioSpot'
+            keyPassword '@udio4Aziz'
+        }
+    }
     useLibrary 'org.apache.http.legacy'
     compileSdkVersion 29
     defaultConfig {
@@ -24,6 +32,8 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            debuggable = true
+            signingConfig signingConfigs.config
         }
     }
 

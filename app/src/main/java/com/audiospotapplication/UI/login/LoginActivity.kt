@@ -85,6 +85,8 @@ class LoginActivity : AppCompatActivity(), LoginContract.View, FacebookHelper.On
     }
 
     override fun viewHomepageScreen() {
+//        googleSignInHelper!!.signOut()
+//        fbConnectHelper!!.logout()
         val intent = Intent(applicationContext, HomepageActivity::class.java)
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         startActivity(intent)
@@ -146,20 +148,18 @@ class LoginActivity : AppCompatActivity(), LoginContract.View, FacebookHelper.On
                     Log.i("", e.message)
                 }
             }
-
         }
     }
 
     override fun OnGSignInSuccess(googleSignInAccount: GoogleSignInAccount?) {
         if (googleSignInAccount != null) {
-            googleSignInHelper!!.signOut()
             var first_name = ""
             if (googleSignInAccount.givenName != null)
                 first_name = googleSignInAccount.givenName!!
 
             var last_name = ""
             if (googleSignInAccount.familyName != null)
-                first_name = googleSignInAccount.familyName!!
+                last_name = googleSignInAccount.familyName!!
 
             mPresenter.handleSocialLoginPressed(
                 first_name,
