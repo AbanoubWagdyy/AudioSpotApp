@@ -119,6 +119,7 @@ class LoginActivity : AppCompatActivity(), LoginContract.View, FacebookHelper.On
         tvSignUp.setOnClickListener {
             mPresenter.validateSignUpClicked()
         }
+
         tvSkip.setOnClickListener {
             mPresenter.validateSkipClicked()
         }

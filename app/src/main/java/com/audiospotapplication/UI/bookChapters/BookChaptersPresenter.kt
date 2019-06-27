@@ -3,27 +3,28 @@ package com.audiospotapplication.UI.bookChapters
 import android.util.Log
 import com.audiospotapplication.DataLayer.DataRepository
 import com.audiospotapplication.DataLayer.Model.BookmarkBody
+import com.audiospotapplication.DataLayer.Model.ChaptersData
 import com.audiospotapplication.DataLayer.Model.ChaptersResponse
 import com.audiospotapplication.DataLayer.Retrofit.RetrofitCallbacks
 import com.audiospotapplication.DataLayer.Retrofit.RetrofitResponseHandler
+import com.example.jean.jcplayer.model.JcAudio
 import com.snatik.storage.Storage
 import com.tonyodev.fetch2.*
 import com.tonyodev.fetch2core.DownloadBlock
 import com.visionvalley.letuno.DataLayer.RepositorySource
-import dm.audiostreamer.MediaMetaData
 import retrofit2.Call
 import java.io.File
 
 
 class BookChaptersPresenter(val mView: BookChaptersContract.View) : BookChaptersContract.Presenter, FetchListener {
 
-    override fun validateChapterDownloaded(mediaData: MediaMetaData): String {
+    override fun validateChapterDownloaded(data: ChaptersData): String {
         val storage = Storage(mView.getAppContext())
         val path = storage.internalCacheDirectory
 
         val newDir = path + File.separator + "AudioSpotDownloadsCache"
 
-        var fileNameStr = mediaData!!.mediaUrl.split("/")
+        var fileNameStr = data.sound_file.split("/")
 
         if (storage.isFileExist(newDir + "/" + fileNameStr[fileNameStr.size - 1])) {
             currentPath = newDir + "/" + fileNameStr[fileNameStr.size - 1]
@@ -97,27 +98,28 @@ class BookChaptersPresenter(val mView: BookChaptersContract.View) : BookChapters
     }
 
     override fun onStarted(download: Download, downloadBlocks: List<DownloadBlock>, totalBlocks: Int) {
-        mView.showLoadingDialog()
     }
 
     override fun onWaitingNetwork(download: Download) {
 
     }
 
-    override fun handleDownloadPressed(currentSong: MediaMetaData?) {
+    override fun handleDownloadPressed(currentSong: JcAudio?) {
 
+        mView.showLoadingDialog()
         val storage = Storage(mView.getAppContext())
         val path = storage.internalCacheDirectory
 
         val newDir = path + File.separator + "AudioSpotDownloadsCache"
-        var fileNameStr = currentSong!!.mediaUrl.split("/")
+        var fileNameStr = currentSong!!.path.split("/")
         currentPath = newDir + "/" + fileNameStr[fileNameStr.size - 1]
 
         if (storage.isFileExist(currentPath)) {
+            mView.dismissLoading()
             mView.showMessage("Item Already Downloaded")
             return
         }
-        val request = Request(currentSong!!.mediaUrl, currentPath)
+        val request = Request(currentSong!!.path, currentPath)
         request.priority = Priority.HIGH
         request.networkType = NetworkType.ALL
         fetch.enqueue(request)
@@ -151,6 +153,7 @@ class BookChaptersPresenter(val mView: BookChaptersContract.View) : BookChapters
 
         mView.setBookName(book.title)
         mView.setBookImage(book.cover)
+
         mView.showLoadingDialog()
         mRepoSource.getBookChapters(object : RetrofitCallbacks.ChaptersResponseCallback {
             override fun onSuccess(result: ChaptersResponse?) {
@@ -158,17 +161,11 @@ class BookChaptersPresenter(val mView: BookChaptersContract.View) : BookChapters
                 val status = RetrofitResponseHandler.validateResponseStatus(result)
                 if (status == RetrofitResponseHandler.Companion.Status.VALID) {
                     mView.setChapters(result!!.data)
-
                     if (bookmark != null) {
-//                        mView.setBookmark(bookmark)
-//                        mRepoSource.saveBookmark(null)
-
                         var chapterData = result!!.data.filter {
                             it.id == bookmark!!.chapter_id
                         }[0]
-
                         mView.setBookmark(bookmark)
-
                         mView.onChapterClicked(chapterData)
                     }
                 }

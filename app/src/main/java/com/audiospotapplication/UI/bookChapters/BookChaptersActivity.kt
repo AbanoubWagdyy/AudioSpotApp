@@ -1,45 +1,135 @@
 package com.audiospotapplication.UI.bookChapters
 
-import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.support.v4.media.session.PlaybackStateCompat
-import android.text.format.DateUtils
-import android.util.Log
 import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.audiospotapplication.DataLayer.Model.Bookmark
 import com.audiospotapplication.DataLayer.Model.ChaptersData
-import com.audiospotapplication.DataLayer.Model.Paragraph
 import com.audiospotapplication.R
 import com.audiospotapplication.UI.addBookmark.AddBookmarkActivity
 import com.audiospotapplication.UI.bookChapters.Interface.OnChapterCLickListener
 import com.audiospotapplication.UI.bookChapters.adapter.ChaptersAdapter
-import com.audiospotapplication.UI.splash.SplashActivity
-import com.audiospotapplication.utils.BookMediaDataConversion
 import com.audiospotapplication.utils.DialogUtils
 import com.audiospotapplication.utils.ImageUtils
-import com.audiospotapplication.utils.TimeUtils
+import com.example.jean.jcplayer.JcPlayerManagerListener
+import com.example.jean.jcplayer.general.JcStatus
 import com.google.android.material.snackbar.Snackbar
 import com.sothree.slidinguppanel.SlidingUpPanelLayout
-import dm.audiostreamer.AudioStreamingManager
-import dm.audiostreamer.CurrentSessionCallback
-import dm.audiostreamer.Logger
-import dm.audiostreamer.MediaMetaData
-import dm.audiostreamerdemo.widgets.Slider
 import kotlinx.android.synthetic.main.activity_chapters.*
 import kotlinx.android.synthetic.main.activity_chapters_content.*
-import kotlinx.android.synthetic.main.include_slidepanelchildtwo_bottomview.*
-import kotlinx.android.synthetic.main.include_slidepanelchildtwo_bottomview.btn_play
 import kotlinx.android.synthetic.main.include_slidepanelchildtwo_topviewtwo.*
 import kotlinx.android.synthetic.main.include_slidingpanel_childtwo.*
-import me.rohanpeshkar.filterablelistdialog.FilterableListDialog
 import java.util.ArrayList
+import com.example.jean.jcplayer.model.JcAudio
+import kotlinx.android.synthetic.main.include_slidepanelchildtwo_bottomview.*
+import me.rohanpeshkar.filterablelistdialog.FilterableListDialog
 
-class BookChaptersActivity : AppCompatActivity(), CurrentSessionCallback, View.OnClickListener,
-    Slider.OnValueChangedListener, BookChaptersContract.View, OnChapterCLickListener {
+class BookChaptersActivity : AppCompatActivity(), View.OnClickListener,
+    BookChaptersContract.View, OnChapterCLickListener, JcPlayerManagerListener,
+    JcPlayerManagerListener.PlayerFunctionsListener {
+
+    override fun onBookmarkClicked() {
+        var audio = player.currentAudio
+        mPresenter.handleBookmarkClicked(player.getCurrentTimeString(), audio!!.id, audio.title)
+    }
+
+    override fun onDownloadClicked() {
+        var audio = player.currentAudio
+        if (audio != null)
+            mPresenter.handleDownloadPressed(audio)
+    }
+
+    override fun onSpeedClicked() {
+
+    }
+
+    override fun onTimerClicked() {
+
+    }
+
+    override fun onPreparedAudio(status: JcStatus) {
+        btn_play_bottom.setBackgroundResource(R.drawable.play_bottom)
+    }
+
+    override fun onCompletedAudio() {
+    }
+
+    override fun onPaused(status: JcStatus) {
+        btn_play_bottom.setBackgroundResource(R.drawable.pause_bottom)
+    }
+
+    override fun onContinueAudio(status: JcStatus) {
+        btn_play_bottom.setBackgroundResource(R.drawable.play_bottom)
+    }
+
+    override fun onPlaying(status: JcStatus) {
+        btn_play_bottom.setBackgroundResource(R.drawable.play_bottom)
+    }
+
+    override fun onTimeChanged(status: JcStatus) {
+    }
+
+    private fun updateProgress(jcStatus: JcStatus) {
+
+    }
+
+    override fun onStopped(status: JcStatus) {
+    }
+
+    override fun onJcpError(throwable: Throwable) {
+    }
+
+    override fun onClick(view: View?) {
+        when (view!!.id) {
+            R.id.ivParagraphs -> {
+                FilterableListDialog.create(
+                    this,
+                    getListItems()
+                ) {
+                    validateParagraphClicked(it)
+                }.show()
+            }
+
+            R.id.ivChapters -> {
+                sliding_layout.panelState = SlidingUpPanelLayout.PanelState.COLLAPSED
+            }
+
+            R.id.tvClose -> {
+                player.kill()
+                include_sliding_panel_childtwo.visibility = View.GONE
+            }
+            R.id.btn_play_bottom ->
+                if (player.isPlaying) {
+                    btn_play_bottom.setBackgroundResource(R.drawable.pause_bottom)
+                    player.pause()
+                } else {
+                    player.continueAudio()
+                }
+
+            R.id.back ->{
+                finish()
+            }
+        }
+    }
+
+    private fun validateParagraphClicked(str: String) {
+        var selectedParagraph = chapterData.paragraphs.filter {
+            str.equals(it.title)
+        }[0]
+
+        player.seekToParagraph(selectedParagraph)
+    }
+
+    private fun getListItems(): ArrayList<String>? {
+        var items = ArrayList<String>()
+        for (paragraph in chapterData.paragraphs) {
+            items.add(paragraph.title)
+        }
+        return items
+    }
 
     override fun showMessage(s: String) {
         Snackbar.make(
@@ -49,7 +139,6 @@ class BookChaptersActivity : AppCompatActivity(), CurrentSessionCallback, View.O
     }
 
     override fun showDownloadComplete(message: String, currentPath: String) {
-        currentSong!!.mediaUrl = currentPath
         Snackbar.make(
             findViewById(android.R.id.content),
             message, Snackbar.LENGTH_SHORT
@@ -68,52 +157,26 @@ class BookChaptersActivity : AppCompatActivity(), CurrentSessionCallback, View.O
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_chapters)
-        configAudioStreamer()
         uiInitialization()
-        checkAlreadyPlaying()
+
         mPresenter = BookChaptersPresenter(this)
         mPresenter.start()
     }
 
-    private fun checkAlreadyPlaying() {
-        if (streamingManager.isPlaying) {
-            currentSong = streamingManager.currentAudio
-            if (currentSong != null) {
-                currentSong!!.playState = streamingManager.mLastPlaybackState
-                showMediaInfo(currentSong!!)
-                btn_play.setBackgroundResource(R.drawable.play_bottom)
-                btn_play_bottom.setBackgroundResource(R.drawable.play_bottom)
-            }
-        }
-    }
 
     private fun uiInitialization() {
 
-        btn_backward.visibility = View.VISIBLE
-        btn_forward.visibility = View.VISIBLE
-
-        btn_backward.setOnClickListener(this)
-        btn_forward.setOnClickListener(this)
-        btn_play.setOnClickListener(this)
         btn_play_bottom.setOnClickListener(this)
         ivParagraphs.setOnClickListener(this)
         back.setOnClickListener(this)
         tvClose.setOnClickListener(this)
-        bookmark.setOnClickListener(this)
-        download.setOnClickListener(this)
-        timer.setOnClickListener(this)
-        speed.setOnClickListener(this)
-
-//        changeButtonColor(btn_backward)
-//        changeButtonColor(btn_forward)
+        ivParagraphs.setOnClickListener(this)
+        ivChapters.setOnClickListener(this)
 
         slideBottomView.visibility = View.VISIBLE
         slideBottomView.setOnClickListener(View.OnClickListener {
             sliding_layout.panelState = SlidingUpPanelLayout.PanelState.EXPANDED
         })
-
-        audio_progress_control.max = 0
-        audio_progress_control.onValueChangedListener = this
 
         sliding_layout.addPanelSlideListener(object : SlidingUpPanelLayout.PanelSlideListener {
             override fun onPanelSlide(view: View, slideOffset: Float) {
@@ -142,20 +205,6 @@ class BookChaptersActivity : AppCompatActivity(), CurrentSessionCallback, View.O
         })
     }
 
-    private fun configAudioStreamer() {
-        streamingManager = AudioStreamingManager.getInstance(applicationContext)
-        //Set PlayMultiple 'true' if want to playing sequentially one by one songs
-        // and provide the list of songs else set it 'false'
-        streamingManager.isPlayMultiple = true
-        streamingManager.setMediaList(listOfSongs)
-        //If you want to show the Player Notification then set ShowPlayerNotification as true
-        //and provide the pending intent so that after click on notification it will redirect to an activity
-        streamingManager.setShowPlayerNotification(true)
-        streamingManager.setPendingIntentAct(getNotificationPendingIntent())
-    }
-
-    //book details
-
     override fun getAppContext(): Context? {
         return applicationContext
     }
@@ -179,16 +228,23 @@ class BookChaptersActivity : AppCompatActivity(), CurrentSessionCallback, View.O
 
     override fun onChapterClicked(data: ChaptersData) {
         if (mPresenter.isBookMine()) {
-            configAudioStreamer()
-            slidepanel_time_total.text = data.duration_str
-            paragraphs = data.paragraphs
+//            paragraphs = data.paragraphs
             chapterData = data
-            var mediaData = BookMediaDataConversion.convertBookToMediaMetaData(data)
-            var isChapterDownloaded = mPresenter.validateChapterDownloaded(mediaData)
-            if (!isChapterDownloaded.equals("")) {
-                mediaData.mediaUrl = isChapterDownloaded
+            text_songName.text = chapterData.title
+            var isDownloadedPath = mPresenter.validateChapterDownloaded(data)
+            val jcAudios = ArrayList<JcAudio>()
+            if (!isDownloadedPath.equals("")) {
+                jcAudios.add(JcAudio.createFromFilePath(data.id, data.title, isDownloadedPath, data.paragraphs))
+            } else {
+                jcAudios.add(JcAudio.createFromURL(data.id, data.title, data.sound_file, data.paragraphs))
             }
-            playSong(mediaData)
+            player.initPlaylist(jcAudios, this, this)
+            player.playAudio(player.myPlaylist!![0])
+            player.createNotification(R.mipmap.ic_launcher)
+            sliding_layout.panelState = SlidingUpPanelLayout.PanelState.EXPANDED
+            if (currentBookmark != null) {
+                player.setBookmarkTime(currentBookmark!!.time)
+            }
         } else {
             Snackbar.make(
                 findViewById(android.R.id.content),
@@ -203,6 +259,11 @@ class BookChaptersActivity : AppCompatActivity(), CurrentSessionCallback, View.O
             recyclerChapters.setHasFixedSize(true)
             recyclerChapters.isNestedScrollingEnabled = false
             recyclerChapters.adapter = ChaptersAdapter(data!!, this)
+            val jcAudios = ArrayList<JcAudio>()
+            for (chapter in data) {
+                jcAudios.add(JcAudio.createFromURL(chapter.id, chapter.title, chapter.sound_file, chapter.paragraphs))
+            }
+            player.initPlaylist(jcAudios, this, this)
         } else {
             Snackbar.make(
                 findViewById(android.R.id.content), "Chapters not Found",
@@ -211,122 +272,9 @@ class BookChaptersActivity : AppCompatActivity(), CurrentSessionCallback, View.O
         }
     }
 
-    override fun onValueChanged(value: Int) {
-        Log.d("SliderValue", value.toLong().toString())
-        streamingManager.onSeekTo(value.toLong())
-        streamingManager.scheduleSeekBarUpdate()
-
-        var isParagraphSet = false
-        for (paragraph in paragraphs) {
-            if ((value / 1000) in paragraph.from_time.toLong()..paragraph.to_time.toLong()) {
-                paragraphTitle.text = paragraph.title
-                isParagraphSet = true
-                break
-            }
-        }
-        if (!isParagraphSet) {
-            paragraphTitle.text = ""
-        }
-    }
-
-    override fun updatePlaybackState(state: Int) {
-        Logger.e("updatePlaybackState: ", "" + state)
-        when (state) {
-            PlaybackStateCompat.STATE_PLAYING -> {
-                btn_play.setBackgroundResource(R.drawable.play_bottom)
-                btn_play_bottom.setBackgroundResource(R.drawable.play_bottom)
-                if (currentSong != null) {
-                    currentSong!!.playState = PlaybackStateCompat.STATE_PLAYING
-                }
-            }
-            PlaybackStateCompat.STATE_PAUSED -> {
-                btn_play.setBackgroundResource(R.drawable.pause_bottom)
-                btn_play_bottom.setBackgroundResource(R.drawable.pause_bottom)
-                if (currentSong != null) {
-                    currentSong!!.playState = PlaybackStateCompat.STATE_PAUSED
-                }
-            }
-            PlaybackStateCompat.STATE_NONE -> {
-                currentSong!!.playState = PlaybackStateCompat.STATE_NONE
-
-            }
-            PlaybackStateCompat.STATE_STOPPED -> {
-                btn_play.setBackgroundResource(R.drawable.pause_bottom)
-                btn_play_bottom.setBackgroundResource(R.drawable.pause_bottom)
-                audio_progress_control.value = 0
-                if (currentSong != null) {
-                    currentSong!!.playState = PlaybackStateCompat.STATE_NONE
-                }
-            }
-            PlaybackStateCompat.STATE_BUFFERING -> {
-                if (currentSong != null) {
-                    currentSong!!.playState = PlaybackStateCompat.STATE_NONE
-                }
-            }
-        }
-    }
-
-    override fun playSongComplete() {
-        val timeString = "00.00"
-        slidepanel_time_total.text = timeString
-        slidepanel_time_progress.text = timeString
-        audio_progress_control.value = 0
-    }
-
-    override fun currentSeekBarPosition(progress: Int) {
-        if (progress == 0) {
-            if (currentBookmark != null) {
-                if (!isBookmarkSlided) {
-                    audio_progress_control.value = currentBookmark!!.time * 1000
-                    streamingManager.onSeekTo((currentBookmark!!.time * 1000).toLong())
-                    streamingManager.scheduleSeekBarUpdate()
-                    isBookmarkSlided = true
-                } else {
-                    audio_progress_control.value = progress
-                }
-            } else {
-                audio_progress_control.value = progress
-            }
-
-        } else {
-            audio_progress_control.value = progress
-        }
-
-        setPGTime(progress)
-    }
-
-    override fun playCurrent(indexP: Int, currentAudio: MediaMetaData?) {
-        showMediaInfo(currentAudio!!)
-    }
-
-    override fun playNext(indexP: Int, currentAudio: MediaMetaData?) {
-//        showMediaInfo(currentAudio!!)
-//        for (paragraph in paragraphs) {
-//            if ((currentAudio!!.mediaDuration.toInt() / 1000) in paragraph.from_time.toLong()..paragraph.to_time.toLong()) {
-//                paragraphTitle.text = paragraph.title
-//            }
-//        }
-    }
-
-    override fun playPrevious(indexP: Int, currentAudio: MediaMetaData?) {
-//        showMediaInfo(currentAudio!!)
-//        for (paragraph in paragraphs) {
-//            if ((currentAudio!!.mediaDuration.toInt() / 1000) in paragraph.from_time.toLong()..paragraph.to_time.toLong()) {
-//                paragraphTitle.text = paragraph.title
-//            }
-//        }
-    }
-
-    private fun getNotificationPendingIntent(): PendingIntent {
-        val intent = Intent(applicationContext, SplashActivity::class.java)
-        intent.setAction("openplayer")
-        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
-        return PendingIntent.getActivity(applicationContext, 0, intent, 0)
-    }
-
     override fun onBackPressed() {
         if (isExpand) {
-            sliding_layout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED)
+            sliding_layout.panelState = SlidingUpPanelLayout.PanelState.COLLAPSED
         } else {
             super.onBackPressed()
             overridePendingTransition(0, 0)
@@ -334,188 +282,23 @@ class BookChaptersActivity : AppCompatActivity(), CurrentSessionCallback, View.O
         }
     }
 
-    public override fun onStart() {
-        super.onStart()
-        try {
-            if (streamingManager != null) {
-                streamingManager.subscribesCallBack(this)
-            }
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
-    }
-
-    public override fun onStop() {
-        try {
-            if (streamingManager != null) {
-                streamingManager.unSubscribeCallBack()
-            }
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
-
-        super.onStop()
-    }
-
-    override fun onDestroy() {
-        try {
-            if (streamingManager != null) {
-                streamingManager.unSubscribeCallBack()
-            }
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
-
-        super.onDestroy()
-    }
-
-    private fun playPauseEvent(v: View) {
-        if (streamingManager.isPlaying) {
-            streamingManager.onPause()
-            btn_play.setBackgroundResource(R.drawable.pause_bottom)
-            btn_play_bottom.setBackgroundResource(R.drawable.pause_bottom)
-        } else {
-            streamingManager.onPlay(currentSong)
-            btn_play.setBackgroundResource(R.drawable.play_bottom)
-            btn_play_bottom.setBackgroundResource(R.drawable.play_bottom)
-        }
-    }
-
-    private fun playSong(media: MediaMetaData) {
-        include_sliding_panel_childtwo.visibility = View.VISIBLE
-        if (streamingManager != null) {
-            streamingManager.onPlay(media)
-            showMediaInfo(media)
-        }
-    }
-
-    private fun showMediaInfo(media: MediaMetaData) {
-        currentSong = media
-        audio_progress_control.min = 0
-        audio_progress_control.max = Integer.valueOf(media.mediaDuration) * 1000
-        setMaxTime()
-        loadSongDetails(media)
-    }
-
-    @Synchronized
-    private fun setPGTime(progress: Int) {
-        try {
-            timeString = "00.00"
-            currentSong = streamingManager.currentAudio
-            if (currentSong != null && progress.toLong() != java.lang.Long.parseLong(currentSong!!.mediaDuration)) {
-                timeString = TimeUtils.toTimeFormat(progress / 1000)
-//                timeString = DateUtils.formatElapsedTime((progress / 1000).toLong())
-                Log.d("timeString", timeString)
-                Log.d("MyProgress", (progress / 1000).toString())
-            }
-
-            slidepanel_time_progress.text = timeString
-
-            var isParagraphSet = false
-            for (paragraph in paragraphs) {
-                if ((progress / 1000) in paragraph.from_time.toLong()..paragraph.to_time.toLong()) {
-                    paragraphTitle.text = paragraph.title
-                    isParagraphSet = true
-                    break
-                }
-            }
-            if (!isParagraphSet) {
-                paragraphTitle.text = ""
-            }
-
-        } catch (e: NumberFormatException) {
-            e.printStackTrace()
-        }
-    }
-
-    private fun setMaxTime() {
-        try {
-            val timeString = DateUtils.formatElapsedTime(java.lang.Long.parseLong(currentSong!!.getMediaDuration()))
-            slidepanel_time_total.text = timeString
-        } catch (e: NumberFormatException) {
-            e.printStackTrace()
-        }
-    }
-
-    private fun loadSongDetails(metaData: MediaMetaData) {
-        text_songName.text = metaData.mediaTitle
-        var chapterId = metaData.mediaId
-        text_chapterNumber.text = "#Chapter $chapterId"
-    }
-
-    override fun onClick(view: View?) {
-        when (view!!.id) {
-            R.id.btn_forward -> streamingManager.onSkipToNext()
-            R.id.btn_backward -> streamingManager.onSkipToPrevious()
-            R.id.back -> finish()
-            R.id.btn_play -> if (currentSong != null) {
-                playPauseEvent(view)
-            }
-            R.id.btn_play_bottom -> if (currentSong != null) {
-                playPauseEvent(view)
-            }
-            R.id.tvClose -> {
-                include_sliding_panel_childtwo.visibility = View.GONE
-                streamingManager.handleStopRequest(null)
-            }
-
-            R.id.bookmark -> {
-                streamingManager.handlePauseRequest()
-                mPresenter.handleBookmarkClicked(timeString, chapterData.id, chapterData.title)
-            }
-
-            R.id.download -> {
-                if (currentSong != null)
-                    mPresenter.handleDownloadPressed(currentSong)
-            }
-
-            R.id.timer -> {
-
-            }
-
-            R.id.speed -> {
-
-            }
-
-            R.id.ivParagraphs -> {
-                FilterableListDialog.create(
-                    this,
-                    getListItems()
-                ) {
-                    validateParagraphClicked(it)
-                }.show()
-            }
-        }
-    }
-
-    private fun validateParagraphClicked(str: String) {
-        var selectedParagraph = paragraphs.filter {
-            str.equals(it.title)
-        }[0]
-
-        audio_progress_control.value = selectedParagraph!!.from_time.toInt() * 1000
-        streamingManager.onSeekTo((selectedParagraph!!.from_time.toInt() * 1000).toLong())
-        streamingManager.scheduleSeekBarUpdate()
-
-        paragraphTitle.text = selectedParagraph.title
-    }
-
-    private fun getListItems(): ArrayList<String>? {
-        var items = ArrayList<String>()
-        for (paragraph in paragraphs) {
-            items.add(paragraph.title)
-        }
-        return items
-    }
+//    override fun onStop() {
+//        super.onStop()
+//        player.createNotification(R.mipmap.ic_launcher)
+//    }
+//
+//    override fun onPause() {
+//        super.onPause()
+//        player.createNotification(R.mipmap.ic_launcher)
+//    }
+//
+//    override fun onDestroy() {
+//        super.onDestroy()
+//        player.kill()
+//    }
 
     private lateinit var chapterData: ChaptersData
-    private lateinit var timeString: String
     private var isExpand = false
-    private lateinit var streamingManager: AudioStreamingManager
-    private var currentSong: MediaMetaData? = null
-    private var listOfSongs: List<MediaMetaData> = ArrayList()
     var currentBookmark: Bookmark? = null
-    var isBookmarkSlided: Boolean = false
     lateinit var mPresenter: BookChaptersContract.Presenter
-    lateinit var paragraphs: List<Paragraph>
 }

@@ -27,48 +27,70 @@ import com.audiospotapplication.UI.rateBook.RateBookActivity
 import com.audiospotapplication.UI.splash.SplashActivity
 import com.audiospotapplication.utils.DialogUtils
 import com.audiospotapplication.utils.ImageUtils
+import com.example.jean.jcplayer.JcPlayerManager
+import com.example.jean.jcplayer.JcPlayerManagerListener
+import com.example.jean.jcplayer.general.JcStatus
+import com.example.jean.jcplayer.model.JcAudio
 import com.google.android.material.snackbar.Snackbar
 import dm.audiostreamer.AudioStreamingManager
 import dm.audiostreamer.MediaMetaData
 
-class BookDetailsFragment : Fragment(), BookDetailsContract.View {
+class BookDetailsFragment : Fragment(), BookDetailsContract.View, JcPlayerManagerListener {
+    override fun onPreparedAudio(status: JcStatus) {
+
+    }
+
+    override fun onCompletedAudio() {
+
+    }
+
+    override fun onPaused(status: JcStatus) {
+
+    }
+
+    override fun onContinueAudio(status: JcStatus) {
+
+    }
+
+    override fun onPlaying(status: JcStatus) {
+
+    }
+
+    override fun onTimeChanged(status: JcStatus) {
+
+    }
+
+    override fun onStopped(status: JcStatus) {
+
+    }
+
+    override fun onJcpError(throwable: Throwable) {
+
+    }
 
     override fun validatePlayResouce(result1: BookDetailsResponse) {
-        if (streamingManager.isPlaying) {
-            var currentAudio = streamingManager.currentAudio
-            if (result1.data.id.toString().equals(currentAudio.mediaId)) {
+        if (jcPlayerManager.isPlaying()) {
+            var currentAudio = jcPlayerManager.currentAudio
+            if (result1.data.id.toString().equals(currentAudio!!.id.toString())) {
                 ivPlay.setImageResource(R.mipmap.homepage_play)
             }
         }
     }
 
     override fun playSong(mediaMetaData: MediaMetaData) {
-        if (streamingManager.isPlaying) {
-            var currentAudio = streamingManager.currentAudio
-            if (mediaMetaData.mediaId.equals(currentAudio.mediaId)) {
-                ivPlay.setImageResource(R.mipmap.play)
-                streamingManager.handlePauseRequest()
-                return
-            }
-        } else {
-            if (streamingManager.currentAudio == null) {
-                streamingManager!!.isPlayMultiple = false
+        var audio = JcAudio.createFromURL(
+            mediaMetaData.mediaId.toInt(), mediaMetaData.mediaTitle,
+            mediaMetaData.mediaUrl, null
+        )
 
-                var list = ArrayList<MediaMetaData>()
-                list.add(mediaMetaData)
+        var playlist = ArrayList<JcAudio>()
+        playlist.add(audio)
 
-                streamingManager!!.setMediaList(list)
+        jcPlayerManager.playlist = playlist as ArrayList<JcAudio>
+        jcPlayerManager.jcPlayerManagerListener = this
 
-                streamingManager!!.setShowPlayerNotification(true)
-                streamingManager!!.setPendingIntentAct(getNotificationPendingIntent())
-
-                if (streamingManager != null) {
-                    streamingManager!!.onPlay(mediaMetaData)
-                }
-            } else {
-                streamingManager.handlePlayRequest()
-            }
-        }
+        jcPlayerManager.playAudio(audio)
+        jcPlayerManager.createNewNotification(R.mipmap.ic_launcher)
     }
 
     private fun getNotificationPendingIntent(): PendingIntent {
@@ -140,7 +162,6 @@ class BookDetailsFragment : Fragment(), BookDetailsContract.View {
         DialogUtils.dismissProgressDialog()
     }
 
-    private lateinit var streamingManager: AudioStreamingManager
     lateinit var mPresenter: BookDetailsContract.Presenter
 
     override fun onCreateView(
@@ -152,8 +173,6 @@ class BookDetailsFragment : Fragment(), BookDetailsContract.View {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        streamingManager = AudioStreamingManager.getInstance(activity!!.applicationContext)
 
         var content = SpannableString("See All Reviews")
         content.setSpan(UnderlineSpan(), 0, content.length, 0)
@@ -226,5 +245,9 @@ class BookDetailsFragment : Fragment(), BookDetailsContract.View {
         @JvmStatic
         fun newInstance() =
             BookDetailsFragment()
+    }
+
+    private val jcPlayerManager: JcPlayerManager by lazy {
+        JcPlayerManager.getInstance(activity!!.applicationContext).get()!!
     }
 }

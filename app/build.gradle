@@ -13,8 +13,8 @@ android {
     signingConfigs {
         config {
             storeFile file('/Users/vv/Desktop/audiospot')
-            storePassword '@udio4Aziz'
             keyAlias = 'audioSpot'
+            storePassword '@udio4Aziz'
             keyPassword '@udio4Aziz'
         }
     }
@@ -27,13 +27,14 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        signingConfig signingConfigs.config
+        multiDexEnabled = true
     }
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             debuggable = true
-            signingConfig signingConfigs.config
         }
     }
 
@@ -78,7 +79,7 @@ dependencies {
     androidTestImplementation 'androidx.test:runner:1.2.0'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
     androidTestImplementation 'com.google.code.findbugs:jsr305:1.3.9'
-    implementation 'com.android.support:multidex:1.0.1'
+    implementation 'androidx.multidex:multidex:2.0.0'
     implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
     implementation 'com.google.android.material:material:1.0.0'
 
@@ -123,4 +124,6 @@ dependencies {
     implementation 'com.github.delight-im:Android-AdvancedWebView:v3.0.0'
     implementation "androidx.tonyodev.fetch2:xfetch2:3.1.3"
     implementation 'com.snatik:storage:2.1.0'
+
+    implementation project(path: ':jcplayer')
 }

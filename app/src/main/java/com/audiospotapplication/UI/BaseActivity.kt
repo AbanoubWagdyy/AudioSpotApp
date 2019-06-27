@@ -23,6 +23,10 @@ import com.audiospotapplication.UI.promoCodeCongratulations.CongratulationsActiv
 import com.audiospotapplication.UI.rateBook.RateBookActivity
 import com.audiospotapplication.UI.splash.SplashActivity
 import com.audiospotapplication.UI.voucher.VoucherActivity
+import com.example.jean.jcplayer.JcPlayerManager
+import com.example.jean.jcplayer.JcPlayerManagerListener
+import com.example.jean.jcplayer.general.JcStatus
+import com.example.jean.jcplayer.model.JcAudio
 import com.visionvalley.letuno.DataLayer.RepositorySource
 import dm.audiostreamer.AudioStreamingManager
 import dm.audiostreamer.MediaMetaData
@@ -33,7 +37,38 @@ import retrofit2.Call
 
 abstract class BaseActivity : AppCompatActivity(),
     MyBooksFragment.onItemPlayClickListener,
-    HomeFragment.onItemPlayClickListener {
+    HomeFragment.onItemPlayClickListener, JcPlayerManagerListener {
+    override fun onPreparedAudio(status: JcStatus) {
+        
+    }
+
+    override fun onCompletedAudio() {
+        
+    }
+
+    override fun onPaused(status: JcStatus) {
+        
+    }
+
+    override fun onContinueAudio(status: JcStatus) {
+        
+    }
+
+    override fun onPlaying(status: JcStatus) {
+        
+    }
+
+    override fun onTimeChanged(status: JcStatus) {
+        
+    }
+
+    override fun onStopped(status: JcStatus) {
+        
+    }
+
+    override fun onJcpError(throwable: Throwable) {
+        
+    }
 
     lateinit var ivArrow: ImageView
     lateinit var tabShown: ActiveTab
@@ -244,10 +279,26 @@ abstract class BaseActivity : AppCompatActivity(),
     }
 
     override fun OnItemPlayed(mediaData: MediaMetaData) {
-        listOfSongs = ArrayList()
-        listOfSongs.add(mediaData)
-        configAudioStreamer()
-        playSong(mediaData)
+//        listOfSongs = ArrayList()
+//        listOfSongs.add(mediaData)
+//        configAudioStreamer()
+//        playSong(mediaData)
+
+        if (mediaData != null && mediaData.mediaUrl != null && !mediaData.mediaUrl.equals("")) {
+            var audio = JcAudio.createFromURL(
+                mediaData.mediaId.toInt(), mediaData.mediaTitle,
+                mediaData.mediaUrl, null
+            )
+//
+            var playlist = ArrayList<JcAudio>()
+            playlist.add(audio)
+
+            jcPlayerManager.playlist = playlist as ArrayList<JcAudio>
+            jcPlayerManager.jcPlayerManagerListener = this
+
+            jcPlayerManager.playAudio(audio)
+            jcPlayerManager.createNewNotification(R.mipmap.ic_launcher)
+        }
     }
 
     override fun onStop() {
@@ -258,4 +309,7 @@ abstract class BaseActivity : AppCompatActivity(),
     abstract fun getHeaderTitle(): String
     abstract fun getArrowHeaderVisibility(): Int
     abstract fun getFragment(ivArrow: ImageView): Fragment
+    private val jcPlayerManager: JcPlayerManager by lazy {
+        JcPlayerManager.getInstance(applicationContext).get()!!
+    }
 }

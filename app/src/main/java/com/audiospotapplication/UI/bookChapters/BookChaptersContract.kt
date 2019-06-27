@@ -3,7 +3,7 @@ package com.audiospotapplication.UI.bookChapters
 import android.content.Context
 import com.audiospotapplication.DataLayer.Model.Bookmark
 import com.audiospotapplication.DataLayer.Model.ChaptersData
-import dm.audiostreamer.MediaMetaData
+import com.example.jean.jcplayer.model.JcAudio
 
 interface BookChaptersContract {
 
@@ -11,8 +11,8 @@ interface BookChaptersContract {
         fun start()
         fun handleBookmarkClicked(timeString: String, id: Int, title: String)
         fun isBookMine(): Boolean
-        fun handleDownloadPressed(currentSong: MediaMetaData?)
-        fun validateChapterDownloaded(mediaData: MediaMetaData): String
+        fun handleDownloadPressed(currentSong: JcAudio?)
+        fun validateChapterDownloaded(mediaData: ChaptersData): String
     }
 
     interface View {

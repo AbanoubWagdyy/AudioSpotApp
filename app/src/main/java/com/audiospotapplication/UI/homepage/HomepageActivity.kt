@@ -18,6 +18,10 @@ import com.audiospotapplication.UI.homepage.menu.MenuFragment
 import com.audiospotapplication.UI.homepage.myBooks.MyBooksFragment
 import com.audiospotapplication.UI.login.LoginActivity
 import com.audiospotapplication.utils.DialogUtils
+import com.example.jean.jcplayer.JcPlayerManager
+import com.example.jean.jcplayer.JcPlayerManagerListener
+import com.example.jean.jcplayer.general.JcStatus
+import com.example.jean.jcplayer.model.JcAudio
 import com.google.android.material.snackbar.Snackbar
 import com.visionvalley.letuno.DataLayer.RepositorySource
 import dm.audiostreamer.AudioStreamingManager
@@ -27,16 +31,69 @@ import kotlinx.android.synthetic.main.header.*
 import retrofit2.Call
 
 class HomepageActivity : AppCompatActivity(), HomeFragment.onItemPlayClickListener,
-    MyBooksFragment.onItemPlayClickListener {
+    MyBooksFragment.onItemPlayClickListener, JcPlayerManagerListener {
+    override fun onPreparedAudio(status: JcStatus) {
+
+    }
+
+    override fun onCompletedAudio() {
+
+    }
+
+    override fun onPaused(status: JcStatus) {
+
+    }
+
+    override fun onContinueAudio(status: JcStatus) {
+
+    }
+
+    override fun onPlaying(status: JcStatus) {
+
+    }
+
+    override fun onTimeChanged(status: JcStatus) {
+
+    }
+
+    override fun onStopped(status: JcStatus) {
+
+    }
+
+    override fun onJcpError(throwable: Throwable) {
+
+    }
 
     private var currentSong: MediaMetaData? = null
     private var listOfSongs: MutableList<MediaMetaData> = ArrayList()
 
+    private val jcPlayerManager: JcPlayerManager by lazy {
+        JcPlayerManager.getInstance(applicationContext).get()!!
+    }
+
     override fun OnItemPlayed(mediaData: MediaMetaData) {
-        listOfSongs = ArrayList()
-        listOfSongs.add(mediaData)
-        configAudioStreamer()
-        playSong(mediaData)
+//        listOfSongs = ArrayList()
+//        listOfSongs.add(mediaData)
+//        configAudioStreamer()
+//        playSong(mediaData)
+
+        if (mediaData != null && mediaData.mediaUrl != null && !mediaData.mediaUrl.equals("")) {
+            var audio = JcAudio.createFromURL(
+                mediaData.mediaId.toInt(), mediaData.mediaTitle,
+                mediaData.mediaUrl, null
+            )
+//
+            var playlist = ArrayList<JcAudio>()
+            playlist.add(audio)
+
+            jcPlayerManager.playlist = playlist as ArrayList<JcAudio>
+            jcPlayerManager.jcPlayerManagerListener = this
+
+            jcPlayerManager.playAudio(audio)
+            jcPlayerManager.createNewNotification(R.mipmap.ic_launcher)
+        }
+
+
     }
 
     private fun checkAlreadyPlaying() {
@@ -215,12 +272,6 @@ class HomepageActivity : AppCompatActivity(), HomeFragment.onItemPlayClickListen
                 mRepositorySource.setActiveTab(ActiveTab.MENU)
                 tvTitle.text = "AudioSpot"
             }
-        }
-    }
-
-    private fun playSong(media: MediaMetaData) {
-        if (streamingManager != null) {
-            streamingManager!!.onPlay(media)
         }
     }
 
