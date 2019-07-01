@@ -8,7 +8,7 @@ import com.audiospotapplication.UI.BaseActivity
 class ChangePasswordActivity : BaseActivity() {
 
     override fun getHeaderTitle(): String {
-        return "Profile"
+        return "Change Password"
     }
 
     override fun getArrowHeaderVisibility(): Int {

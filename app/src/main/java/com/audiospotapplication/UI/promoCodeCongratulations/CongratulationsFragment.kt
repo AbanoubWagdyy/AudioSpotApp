@@ -26,7 +26,7 @@ class CongratulationsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         mRepositorySource = DataRepository.getInstance(activity!!.applicationContext)
-        bindResponse(mRepositorySource.getVoucherBook())
+        mRepositorySource.getVoucherBook()?.let { bindResponse(it) }
     }
 
     fun bindResponse(result: Book) {

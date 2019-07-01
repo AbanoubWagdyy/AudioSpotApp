@@ -16,6 +16,7 @@ import kotlinx.android.synthetic.main.fragment_book_details.*
 import android.text.style.UnderlineSpan
 import android.text.SpannableString
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.audiospot.DataLayer.Model.Book
 import com.audiospot.DataLayer.Model.BookDetailsResponse
 import com.audiospotapplication.DataLayer.Model.Review
 import com.audiospotapplication.UI.bookChapters.BookChaptersActivity
@@ -25,6 +26,7 @@ import com.audiospotapplication.UI.giftSelection.GiftSelectionActivity
 import com.audiospotapplication.UI.login.LoginActivity
 import com.audiospotapplication.UI.rateBook.RateBookActivity
 import com.audiospotapplication.UI.splash.SplashActivity
+import com.audiospotapplication.utils.BookDataConversion
 import com.audiospotapplication.utils.DialogUtils
 import com.audiospotapplication.utils.ImageUtils
 import com.example.jean.jcplayer.JcPlayerManager
@@ -71,33 +73,41 @@ class BookDetailsFragment : Fragment(), BookDetailsContract.View, JcPlayerManage
     override fun validatePlayResouce(result1: BookDetailsResponse) {
         if (jcPlayerManager.isPlaying()) {
             var currentAudio = jcPlayerManager.currentAudio
-            if (result1.data.id.toString().equals(currentAudio!!.id.toString())) {
-                ivPlay.setImageResource(R.mipmap.homepage_play)
+
+            if (result1.data.sample.equals(currentAudio!!.path)) {
+                ivPlay.setBackgroundResource(R.mipmap.homepage_play)
+                ivPlay.setTag(R.mipmap.homepage_play)
+            } else {
+                ivPlay.setBackgroundResource(R.mipmap.play)
+                ivPlay.setTag(R.mipmap.play)
             }
         }
     }
 
-    override fun playSong(mediaMetaData: MediaMetaData) {
+    override fun playSong(mediaData: MediaMetaData) {
+        if (mediaData == null || mediaData.mediaUrl == null || mediaData.mediaUrl.equals("")) {
+            Snackbar.make(
+                activity!!.findViewById(android.R.id.content), "Audio is not available right now ," +
+                        "please check again later", Snackbar.LENGTH_LONG
+            ).show()
+            return
+        }
+        jcPlayerManager.kill()
+
         var audio = JcAudio.createFromURL(
-            mediaMetaData.mediaId.toInt(), mediaMetaData.mediaTitle,
-            mediaMetaData.mediaUrl, null
+            mediaData.mediaId.toInt(), mediaData.mediaTitle,
+            mediaData.mediaUrl, null
         )
 
         var playlist = ArrayList<JcAudio>()
         playlist.add(audio)
 
-        jcPlayerManager.playlist = playlist as ArrayList<JcAudio>
+        jcPlayerManager.playlist = playlist
         jcPlayerManager.jcPlayerManagerListener = this
 
         jcPlayerManager.playAudio(audio)
         jcPlayerManager.createNewNotification(R.mipmap.ic_launcher)
-    }
 
-    private fun getNotificationPendingIntent(): PendingIntent {
-        val intent = Intent(activity!!.applicationContext, SplashActivity::class.java)
-        intent.setAction("openplayer")
-        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
-        return PendingIntent.getActivity(activity!!.applicationContext, 0, intent, 0)
     }
 
     override fun viewRateBookScreen() {
@@ -202,7 +212,24 @@ class BookDetailsFragment : Fragment(), BookDetailsContract.View, JcPlayerManage
         }
 
         ivPlay.setOnClickListener {
-            mPresenter.handlePlayClicked()
+            var currentAudio = jcPlayerManager.currentAudio
+            if (jcPlayerManager.isPlaying()) {
+                if (currentAudio?.path.equals(mPresenter.getSavedBook()!!.sample)) {
+                    jcPlayerManager.pauseAudio()
+                    ivPlay.setBackgroundResource(R.mipmap.play)
+                    ivPlay.setTag(R.mipmap.play)
+                } else {
+                    mPresenter.handlePlayClicked()
+                }
+            } else {
+                if (currentAudio?.path.equals(mPresenter.getSavedBook()!!.sample)) {
+                    jcPlayerManager.continueAudio()
+                    ivPlay.setBackgroundResource(R.mipmap.homepage_play)
+                    ivPlay.setTag(R.mipmap.homepage_play)
+                } else {
+                    mPresenter.handlePlayClicked()
+                }
+            }
         }
 
         mPresenter = BookDetailsPresenter(this)

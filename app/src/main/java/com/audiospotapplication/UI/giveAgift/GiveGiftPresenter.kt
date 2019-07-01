@@ -28,7 +28,7 @@ class GiveGiftPresenter(val mView: GiveGiftContract.View) : GiveGiftContract.Pre
                                 mView.dismissLoading()
                                 status = RetrofitResponseHandler.validateAuthResponseStatus(result1)
                                 if (status == RetrofitResponseHandler.Companion.Status.VALID) {
-                                    mView.showCartScreen()
+                                    mView.showPayment()
                                 } else {
                                     mView.showMessage(result1!!.message)
                                 }
@@ -43,7 +43,7 @@ class GiveGiftPresenter(val mView: GiveGiftContract.View) : GiveGiftContract.Pre
                             }
 
                         })
-                    }else{
+                    } else {
                         mView.dismissLoading()
                     }
                 }
@@ -61,9 +61,10 @@ class GiveGiftPresenter(val mView: GiveGiftContract.View) : GiveGiftContract.Pre
     }
 
     override fun start() {
-        mRepositorySource = DataRepository.getInstance(mView.getAppContext())
+        mRepositorySource = mView.getAppContext()?.let { DataRepository.getInstance(it) }!!
         var bookDetailsData = mRepositorySource.getSavedBook()
-        mView.bindResponse(bookDetailsData!!)
+
+        mView.bindResponse(bookDetailsData!!, (mRepositorySource as DataRepository).quantity)
     }
 
     lateinit var mRepositorySource: RepositorySource

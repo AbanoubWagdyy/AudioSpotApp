@@ -32,7 +32,7 @@ class ContactUsPresenter(val mView: ContactUsContract.View) : ContactUsContract.
     }
 
     override fun start() {
-        mRepositorySource = DataRepository.getInstance(mView.getAppContext())
+        mRepositorySource = mView.getAppContext()?.let { DataRepository.getInstance(it) }!!
     }
 
     lateinit var mRepositorySource: RepositorySource

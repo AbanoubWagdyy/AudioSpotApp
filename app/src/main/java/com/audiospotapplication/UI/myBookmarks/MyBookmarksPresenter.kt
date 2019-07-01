@@ -14,7 +14,7 @@ class MyBookmarksPresenter(val mView: MyBookmarksContract.View) : MyBookmarksCon
     lateinit var mRepositorySource: RepositorySource
 
     override fun start() {
-        mRepositorySource = DataRepository.getInstance(mView.getAppContext())
+        mRepositorySource = DataRepository.getInstance(mView.getAppContext()!!)
         mView.showLoading()
         mRepositorySource.myBookmarks(object : RetrofitCallbacks.MyBookmarkResponseCallback {
             override fun onSuccess(result: MyBookmarksResponse?) {

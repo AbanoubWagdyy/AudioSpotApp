@@ -40,8 +40,8 @@ class AddBookmarkPresenter(val mView: AddBookmarkContract.View) : AddBookmarkCon
     lateinit var mRepositorySource: RepositorySource
 
     override fun start() {
-        mRepositorySource = DataRepository.getInstance(mView.getAppContext())
-        bookmarkData = mRepositorySource.getBookmarkData()
+        mRepositorySource = DataRepository.getInstance(mView.getAppContext()!!)
+        bookmarkData = mRepositorySource.getBookmarkData()!!
         mView.setBookName(bookmarkData.bookName)
         mView.setBookImage(bookmarkData.url)
         mView.setChapterName(bookmarkData.chapter_name)

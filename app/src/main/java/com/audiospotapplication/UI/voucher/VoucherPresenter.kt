@@ -36,7 +36,7 @@ class VoucherPresenter(val mView: VoucherContract.View) : VoucherContract.Presen
     }
 
     override fun start() {
-        mRepositorySource = DataRepository.getInstance(mView.getAppContext())
+        mRepositorySource = DataRepository.getInstance(mView.getAppContext()!!)
     }
 
     lateinit var mRepositorySource: RepositorySource

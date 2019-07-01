@@ -52,7 +52,7 @@ class BookChaptersPresenter(val mView: BookChaptersContract.View) : BookChapters
     }
 
     override fun onCompleted(download: Download) {
-        mView.dismissLoading()
+        mView.dismissDownloadingDialog()
         mView.showDownloadComplete("Item Downloaded !.", currentPath)
     }
 
@@ -82,7 +82,7 @@ class BookChaptersPresenter(val mView: BookChaptersContract.View) : BookChapters
     }
 
     override fun onProgress(download: Download, etaInMilliSeconds: Long, downloadedBytesPerSecond: Long) {
-        Log.d("onProgress", "onProgress")
+        mView.updateProgress(download.progress)
     }
 
     override fun onQueued(download: Download, waitingOnNetwork: Boolean) {
@@ -106,7 +106,7 @@ class BookChaptersPresenter(val mView: BookChaptersContract.View) : BookChapters
 
     override fun handleDownloadPressed(currentSong: JcAudio?) {
 
-        mView.showLoadingDialog()
+        mView.showDownloadingDialog()
         val storage = Storage(mView.getAppContext())
         val path = storage.internalCacheDirectory
 
@@ -136,10 +136,16 @@ class BookChaptersPresenter(val mView: BookChaptersContract.View) : BookChapters
         var bookmarkBody = BookmarkBody()
         bookmarkBody.bookmarkTime = timeString
         bookmarkBody.chapter_id = id
-        bookmarkBody.bookId = savedbook.id
-        bookmarkBody.url = savedbook.cover
+        if (savedbook != null) {
+            bookmarkBody.bookId = savedbook.id
+        }
+        if (savedbook != null) {
+            bookmarkBody.url = savedbook.cover
+        }
         bookmarkBody.chapter_name = title
-        bookmarkBody.bookName = savedbook.title
+        if (savedbook != null) {
+            bookmarkBody.bookName = savedbook.title
+        }
 
         mRepoSource.setBookmarkData(bookmarkBody)
         mView.showAddBookmarkScreen()
@@ -147,12 +153,14 @@ class BookChaptersPresenter(val mView: BookChaptersContract.View) : BookChapters
 
     override fun start() {
 
-        mRepoSource = DataRepository.getInstance(mView.getAppContext())
+        mRepoSource = DataRepository.getInstance(mView.getAppContext()!!)
         var book = mRepoSource.getSavedBook()
         var bookmark = mRepoSource.getBookmark()
 
-        mView.setBookName(book.title)
-        mView.setBookImage(book.cover)
+        if (book != null) {
+            mView.setBookName(book.title)
+            mView.setBookImage(book.cover)
+        }
 
         mView.showLoadingDialog()
         mRepoSource.getBookChapters(object : RetrofitCallbacks.ChaptersResponseCallback {

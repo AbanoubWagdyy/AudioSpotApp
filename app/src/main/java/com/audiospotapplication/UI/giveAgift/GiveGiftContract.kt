@@ -19,10 +19,10 @@ interface GiveGiftContract {
         fun getAppContext(): Context?
         fun showLoadingDialog()
         fun dismissLoading()
-        fun bindResponse(result: Book?)
+        fun bindResponse(result: Book?, quantity: Int)
         fun showInvalidEmailMessage(message: String)
         fun showMessage(message: String)
         fun finalizeView()
-        fun showCartScreen()
+        fun showPayment()
     }
 }

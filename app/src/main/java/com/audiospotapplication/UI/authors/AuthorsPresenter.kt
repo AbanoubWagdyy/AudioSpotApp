@@ -18,7 +18,7 @@ class AuthorsPresenter(val mView: AuthorsContract.View) : AuthorsContract.Presen
 
     override fun start() {
         mView.showLoading()
-        mRepositorySource = DataRepository.getInstance(mView.getAppContext())
+        mRepositorySource = DataRepository.getInstance(mView.getAppContext()!!)
         mRepositorySource.getAllAuthors(object : RetrofitCallbacks.AuthorsResponseCallback {
             override fun onSuccess(result: AuthorsResponse?) {
                 mView.dismissLoading()

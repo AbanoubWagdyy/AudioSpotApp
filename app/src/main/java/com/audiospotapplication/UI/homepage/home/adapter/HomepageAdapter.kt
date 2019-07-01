@@ -11,18 +11,18 @@ import com.audiospot.DataLayer.Model.Book
 import com.audiospot.DataLayer.Model.HomepageRepsonse
 import com.audiospotapplication.R
 import com.audiospotapplication.UI.books.Interface.onBookItemClickListener
-import com.audiospotapplication.utils.BookMediaDataConversion
-import dm.audiostreamer.MediaMetaData
+import com.audiospotapplication.utils.BookDataConversion
+import com.example.jean.jcplayer.model.JcAudio
 
 class HomepageAdapter(
     private var response: HomepageRepsonse?,
     private var mOnItemClickListener: onBookItemClickListener,
-    currentSong: MediaMetaData?
+    currentSong: JcAudio?
 ) : RecyclerView.Adapter<HomepageAdapter.ViewHolder>(), onBookItemClickListener {
 
 
     private var context: Context? = null
-    private var currentSong: MediaMetaData? = null
+    private var currentSong: JcAudio? = null
 
     init {
         this.currentSong = currentSong
@@ -33,7 +33,7 @@ class HomepageAdapter(
     }
 
     override fun onPlayClicked(book: Book) {
-        currentSong = BookMediaDataConversion.convertBookToMediaMetaData(book)
+        currentSong = BookDataConversion.convertBookToJcAudio(book)
         notifyDataSetChanged()
         mOnItemClickListener.onPlayClicked(book)
     }

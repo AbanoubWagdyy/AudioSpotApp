@@ -10,7 +10,7 @@ import retrofit2.Call
 class ChangePasswordPresenter(val mView: ChangePasswordContract.View) : ChangePasswordContract.Presenter {
 
     override fun updatePassword(old_password: String, new_password: String, confirm_password: String) {
-        mRepositorySource = DataRepository.getInstance(mView.getAppContext())
+        mRepositorySource = DataRepository.getInstance(mView.getAppContext()!!)
         if (isFieldsValid(old_password, new_password, confirm_password)) {
             if (isValidOldPassword(old_password)) {
                 mView.showLoading()
@@ -44,7 +44,7 @@ class ChangePasswordPresenter(val mView: ChangePasswordContract.View) : ChangePa
     }
 
     private fun isValidOldPassword(old_password: String): Boolean {
-        mRepositorySource = DataRepository.getInstance(mView.getAppContext())
+        mRepositorySource = DataRepository.getInstance(mView.getAppContext()!!)
         var authResponse = mRepositorySource.getAuthResponse()
         return old_password.equals(authResponse!!.data.Password)
     }

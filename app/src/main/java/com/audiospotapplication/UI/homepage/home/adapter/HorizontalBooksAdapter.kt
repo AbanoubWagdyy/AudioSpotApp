@@ -11,6 +11,7 @@ import com.audiospot.DataLayer.Model.Book
 import com.audiospotapplication.R
 import com.audiospotapplication.UI.books.Interface.onBookItemClickListener
 import com.audiospotapplication.utils.ImageUtils
+import com.example.jean.jcplayer.model.JcAudio
 import com.willy.ratingbar.ScaleRatingBar
 import dm.audiostreamer.MediaMetaData
 
@@ -18,11 +19,11 @@ import dm.audiostreamer.MediaMetaData
 class HorizontalBooksAdapter(
     private var books: List<Book>?,
     private var mOnItemClickListener: onBookItemClickListener,
-    currentSong: MediaMetaData?
+    currentSong: JcAudio?
 ) : RecyclerView.Adapter<HorizontalBooksAdapter.ViewHolder>() {
 
     private var context: Context? = null
-    private var currentSong: MediaMetaData? = null
+    private var currentSong: JcAudio? = null
 
     init {
         this.currentSong = currentSong
@@ -46,10 +47,12 @@ class HorizontalBooksAdapter(
         holder.rating.setOnTouchListener { p0, p1 -> true }
 
         if (currentSong != null) {
-            if (book.id == currentSong!!.mediaId.toInt()) {
+            if (book.id == currentSong!!.id) {
                 holder.ivPlay.setBackgroundResource(R.mipmap.homepage_play)
+                holder.ivPlay.setTag(R.mipmap.homepage_play)
             } else {
                 holder.ivPlay.setBackgroundResource(R.mipmap.play)
+                holder.ivPlay.setTag(R.mipmap.play)
             }
         }
 
@@ -58,6 +61,16 @@ class HorizontalBooksAdapter(
         }
 
         holder.ivPlay.setOnClickListener {
+            if (holder.ivPlay.getTag() != null) {
+                val resourceID = holder.ivPlay.getTag() as Int
+                if (resourceID == R.mipmap.homepage_play) {
+                    holder.ivPlay.setBackgroundResource(R.mipmap.play)
+                    holder.ivPlay.setTag(R.mipmap.play)
+                } else {
+                    holder.ivPlay.setBackgroundResource(R.mipmap.homepage_play)
+                    holder.ivPlay.setTag(R.mipmap.homepage_play)
+                }
+            }
             mOnItemClickListener.onPlayClicked(book)
         }
     }

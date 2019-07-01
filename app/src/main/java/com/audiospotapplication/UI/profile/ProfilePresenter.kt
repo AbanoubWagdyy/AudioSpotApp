@@ -9,8 +9,8 @@ import retrofit2.Call
 class ProfilePresenter(val mView: ProfileContract.View) : ProfileContract.Presenter {
 
     override fun start() {
-        mRepositorySource = DataRepository.getInstance(mView.getAppContext())
-        mRepositorySource.getProfile(object : RetrofitCallbacks.ProfileResponseCallback {
+        mRepositorySource = mView.getAppContext()?.let { DataRepository.getInstance(it) }
+        mRepositorySource?.getProfile(object : RetrofitCallbacks.ProfileResponseCallback {
             override fun onSuccess(result: ProfileResponse?) {
                 mView.setFullName(result!!.data.first_name + " " + result!!.data.last_name)
                 mView.setEmail(result!!.data.email)
@@ -24,5 +24,5 @@ class ProfilePresenter(val mView: ProfileContract.View) : ProfileContract.Presen
         })
     }
 
-    lateinit var mRepositorySource: RepositorySource
+    var mRepositorySource: RepositorySource? = null
 }

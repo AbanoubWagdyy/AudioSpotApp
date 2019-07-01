@@ -19,12 +19,45 @@ import com.audiospot.DataLayer.Model.HomepageRepsonse
 import com.audiospotapplication.UI.books.Interface.onBookItemClickListener
 import com.audiospotapplication.UI.homepage.home.adapter.HomepageAdapter
 import com.audiospotapplication.UI.bookDetails.BookDetailsActivity
-import com.audiospotapplication.utils.BookMediaDataConversion
-import dm.audiostreamer.AudioStreamingManager
+import com.audiospotapplication.utils.BookDataConversion
+import com.example.jean.jcplayer.JcPlayerManager
+import com.example.jean.jcplayer.JcPlayerManagerListener
+import com.example.jean.jcplayer.general.JcStatus
 import dm.audiostreamer.MediaMetaData
 
 
-class HomeFragment : Fragment(), HomeContract.View, onBookItemClickListener {
+class HomeFragment : Fragment(), HomeContract.View, onBookItemClickListener, JcPlayerManagerListener {
+    override fun onPreparedAudio(status: JcStatus) {
+
+    }
+
+    override fun onCompletedAudio() {
+
+    }
+
+    override fun onPaused(status: JcStatus) {
+
+    }
+
+    override fun onContinueAudio(status: JcStatus) {
+
+    }
+
+    override fun onPlaying(status: JcStatus) {
+
+    }
+
+    override fun onTimeChanged(status: JcStatus) {
+
+    }
+
+    override fun onStopped(status: JcStatus) {
+
+    }
+
+    override fun onJcpError(throwable: Throwable) {
+
+    }
 
     override fun setCartNumber(size: Int) {
     }
@@ -39,21 +72,21 @@ class HomeFragment : Fragment(), HomeContract.View, onBookItemClickListener {
     }
 
     override fun onPlayClicked(book: Book) {
-        if (streamingManager.isPlaying) {
-            if (book.id == streamingManager.currentAudioId.toInt()) {
-                streamingManager.handlePauseRequest()
+        var currentAudio = jcPlayerManager.currentAudio
+        if (jcPlayerManager.isPlaying()) {
+            if (currentAudio?.path.equals(book.sample)) {
+                jcPlayerManager.pauseAudio()
                 adapter = HomepageAdapter(this.homePageResponse, this, null)
                 recyclerHome.adapter = adapter
+                return
             } else {
-                var mediaData = BookMediaDataConversion.convertBookToMediaMetaData(book)
-                mPlayCallback.OnItemPlayed(mediaData)
+                mPlayCallback.OnItemPlayed(BookDataConversion.convertBookToMediaMetaData(book))
             }
         } else {
-            if (currentSong != null) {
-                streamingManager.handlePlayRequest()
+            if (currentAudio != null && currentAudio?.path.equals(book.sample)) {
+                jcPlayerManager.continueAudio()
             } else {
-                var mediaData = BookMediaDataConversion.convertBookToMediaMetaData(book)
-                mPlayCallback.OnItemPlayed(mediaData)
+                mPlayCallback.OnItemPlayed(BookDataConversion.convertBookToMediaMetaData(book))
             }
         }
     }
@@ -63,7 +96,7 @@ class HomeFragment : Fragment(), HomeContract.View, onBookItemClickListener {
         recyclerHome.layoutManager = LinearLayoutManager(context)
         recyclerHome.setHasFixedSize(true)
         recyclerHome.isNestedScrollingEnabled = false
-        adapter = HomepageAdapter(this.homePageResponse, this, currentSong)
+        adapter = HomepageAdapter(this.homePageResponse, this, jcPlayerManager.currentAudio)
         recyclerHome.adapter = adapter
     }
 
@@ -98,27 +131,8 @@ class HomeFragment : Fragment(), HomeContract.View, onBookItemClickListener {
         progress = view.findViewById(R.id.progress)
         mPresenter = HomePresenter(this)
         mPresenter.start()
-        configAudioStreamer()
-        checkAlreadyPlaying()
     }
 
-    private fun configAudioStreamer() {
-        streamingManager = AudioStreamingManager.getInstance(activity!!.applicationContext)
-        streamingManager!!.isPlayMultiple = false
-        streamingManager!!.setShowPlayerNotification(true)
-    }
-
-    private fun checkAlreadyPlaying() {
-        if (streamingManager!!.isPlaying) {
-            currentSong = streamingManager!!.currentAudio
-            if (currentSong != null) {
-                currentSong!!.playState = streamingManager!!.mLastPlaybackState
-            }
-        }
-    }
-
-    private var currentSong: MediaMetaData? = null
-    private lateinit var streamingManager: AudioStreamingManager
     private lateinit var mPlayCallback: onItemPlayClickListener
     lateinit var mPresenter: HomeContract.Presenter
     lateinit var recyclerHome: RecyclerView
@@ -146,5 +160,9 @@ class HomeFragment : Fragment(), HomeContract.View, onBookItemClickListener {
 
     interface onItemPlayClickListener {
         fun OnItemPlayed(mediaData: MediaMetaData)
+    }
+
+    private val jcPlayerManager: JcPlayerManager by lazy {
+        JcPlayerManager.getInstance(activity!!.applicationContext).get()!!
     }
 }

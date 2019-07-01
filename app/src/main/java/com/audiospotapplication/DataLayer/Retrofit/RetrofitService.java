@@ -51,7 +51,7 @@ public interface RetrofitService {
             "Content-type: application/json"
     })
     @POST("reset-password")
-    Call<AuthResponse> resetPassword(
+    Call<Response> resetPassword(
             @Query("email") String email);
 
     //Logout

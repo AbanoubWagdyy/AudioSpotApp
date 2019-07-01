@@ -1,5 +1,6 @@
 package com.audiospotapplication.UI.bookChapters
 
+import android.app.ProgressDialog
 import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
@@ -24,12 +25,27 @@ import kotlinx.android.synthetic.main.include_slidepanelchildtwo_topviewtwo.*
 import kotlinx.android.synthetic.main.include_slidingpanel_childtwo.*
 import java.util.ArrayList
 import com.example.jean.jcplayer.model.JcAudio
+import kotlinx.android.synthetic.main.header.*
 import kotlinx.android.synthetic.main.include_slidepanelchildtwo_bottomview.*
 import me.rohanpeshkar.filterablelistdialog.FilterableListDialog
 
 class BookChaptersActivity : AppCompatActivity(), View.OnClickListener,
     BookChaptersContract.View, OnChapterCLickListener, JcPlayerManagerListener,
     JcPlayerManagerListener.PlayerFunctionsListener {
+
+    override fun dismissDownloadingDialog() {
+        downloadProgressDialog!!.dismiss()
+    }
+
+    override fun updateProgress(progress: Int) {
+        runOnUiThread {
+            downloadProgressDialog!!.setMessage("Downloading($progress %) ....")
+        }
+    }
+
+    override fun showDownloadingDialog() {
+        downloadProgressDialog!!.show()
+    }
 
     override fun onBookmarkClicked() {
         var audio = player.currentAudio
@@ -85,12 +101,19 @@ class BookChaptersActivity : AppCompatActivity(), View.OnClickListener,
     override fun onClick(view: View?) {
         when (view!!.id) {
             R.id.ivParagraphs -> {
-                FilterableListDialog.create(
-                    this,
-                    getListItems()
-                ) {
-                    validateParagraphClicked(it)
-                }.show()
+                if (getListItems()!!.size > 0) {
+                    FilterableListDialog.create(
+                        this,
+                        getListItems()
+                    ) {
+                        validateParagraphClicked(it)
+                    }.show()
+                } else {
+                    Snackbar.make(
+                        findViewById(android.R.id.content),
+                        "No Paragraphs Found !.", Snackbar.LENGTH_SHORT
+                    ).show()
+                }
             }
 
             R.id.ivChapters -> {
@@ -109,7 +132,7 @@ class BookChaptersActivity : AppCompatActivity(), View.OnClickListener,
                     player.continueAudio()
                 }
 
-            R.id.back ->{
+            R.id.back -> {
                 finish()
             }
         }
@@ -147,6 +170,7 @@ class BookChaptersActivity : AppCompatActivity(), View.OnClickListener,
 
     override fun setBookmark(bookmark: Bookmark) {
         this.currentBookmark = bookmark
+        player.stopCurrentPlayingAudio()
     }
 
     override fun showAddBookmarkScreen() {
@@ -172,6 +196,8 @@ class BookChaptersActivity : AppCompatActivity(), View.OnClickListener,
         tvClose.setOnClickListener(this)
         ivParagraphs.setOnClickListener(this)
         ivChapters.setOnClickListener(this)
+
+        tvTitle.text = "Chapters"
 
         slideBottomView.visibility = View.VISIBLE
         slideBottomView.setOnClickListener(View.OnClickListener {
@@ -203,6 +229,10 @@ class BookChaptersActivity : AppCompatActivity(), View.OnClickListener,
                 }
             }
         })
+
+        downloadProgressDialog = ProgressDialog(this)
+        downloadProgressDialog!!.setMessage("Downloading(0 %) ....")
+        downloadProgressDialog!!.setCancelable(false)
     }
 
     override fun getAppContext(): Context? {
@@ -228,7 +258,6 @@ class BookChaptersActivity : AppCompatActivity(), View.OnClickListener,
 
     override fun onChapterClicked(data: ChaptersData) {
         if (mPresenter.isBookMine()) {
-//            paragraphs = data.paragraphs
             chapterData = data
             text_songName.text = chapterData.title
             var isDownloadedPath = mPresenter.validateChapterDownloaded(data)
@@ -259,11 +288,20 @@ class BookChaptersActivity : AppCompatActivity(), View.OnClickListener,
             recyclerChapters.setHasFixedSize(true)
             recyclerChapters.isNestedScrollingEnabled = false
             recyclerChapters.adapter = ChaptersAdapter(data!!, this)
-            val jcAudios = ArrayList<JcAudio>()
-            for (chapter in data) {
-                jcAudios.add(JcAudio.createFromURL(chapter.id, chapter.title, chapter.sound_file, chapter.paragraphs))
+            if (mPresenter.isBookMine()) {
+                val jcAudios = ArrayList<JcAudio>()
+                for (chapter in data) {
+                    jcAudios.add(
+                        JcAudio.createFromURL(
+                            chapter.id,
+                            chapter.title,
+                            chapter.sound_file,
+                            chapter.paragraphs
+                        )
+                    )
+                }
+                player.initPlaylist(jcAudios, this, this)
             }
-            player.initPlaylist(jcAudios, this, this)
         } else {
             Snackbar.make(
                 findViewById(android.R.id.content), "Chapters not Found",
@@ -301,4 +339,6 @@ class BookChaptersActivity : AppCompatActivity(), View.OnClickListener,
     private var isExpand = false
     var currentBookmark: Bookmark? = null
     lateinit var mPresenter: BookChaptersContract.Presenter
+
+    private var downloadProgressDialog: ProgressDialog? = null
 }

@@ -8,26 +8,19 @@
     <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_marginTop="20dp"
             android:orientation="vertical">
 
         <LinearLayout
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
-                android:layout_weight="2.5">
-
-        </LinearLayout>
-
-        <LinearLayout
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:orientation="vertical"
-                android:layout_weight="1">
+                android:orientation="vertical">
 
             <LinearLayout
                     android:layout_width="fill_parent"
-                    android:layout_height="fill_parent"
-                    android:orientation="horizontal"
-                    android:layout_weight="1">
+                    android:layout_height="wrap_content"
+                    android:paddingBottom="@dimen/spacing_large"
+                    android:orientation="horizontal">
 
                 <RelativeLayout
                         android:id="@+id/relativeBooks"
@@ -103,10 +96,10 @@
 
             <LinearLayout
                     android:layout_width="fill_parent"
-                    android:layout_height="fill_parent"
+                    android:layout_height="wrap_content"
                     android:orientation="horizontal"
-                    android:layout_marginTop="15dp"
-                    android:layout_weight="1">
+                    android:paddingBottom="@dimen/spacing_large"
+                    android:layout_marginTop="15dp">
 
                 <RelativeLayout
                         android:id="@+id/relativeAuthors"
@@ -178,13 +171,6 @@
 
                 </RelativeLayout>
             </LinearLayout>
-
-        </LinearLayout>
-
-        <LinearLayout
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:layout_weight="2.5">
 
         </LinearLayout>
 

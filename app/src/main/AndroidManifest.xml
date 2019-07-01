@@ -53,62 +53,88 @@
                 android:screenOrientation="portrait"
                 android:windowSoftInputMode="stateHidden|stateAlwaysHidden">
         </activity>
-        <activity android:name="com.audiospotapplication.UI.homepage.HomepageActivity" android:screenOrientation="portrait">
+        <activity android:name="com.audiospotapplication.UI.homepage.HomepageActivity"
+                  android:screenOrientation="portrait">
         </activity>
-        <activity android:name="com.audiospotapplication.UI.forgetPassword.ForgetPasswordActivity" android:screenOrientation="portrait">
+        <activity android:name="com.audiospotapplication.UI.forgetPassword.ForgetPasswordActivity"
+                  android:screenOrientation="portrait">
         </activity>
-        <activity android:name="com.audiospotapplication.UI.register.RegisterActivity" android:screenOrientation="portrait">
+        <activity android:name="com.audiospotapplication.UI.register.RegisterActivity"
+                  android:screenOrientation="portrait"
+                  android:windowSoftInputMode="stateHidden|stateAlwaysHidden">
         </activity>
-        <activity android:name="com.audiospotapplication.UI.authors.AuthorsActivity" android:screenOrientation="portrait">
+        <activity android:name="com.audiospotapplication.UI.authors.AuthorsActivity"
+                  android:screenOrientation="portrait">
         </activity>
         <activity android:name="com.audiospotapplication.UI.books.BooksActivity" android:screenOrientation="portrait">
         </activity>
         <activity android:name="com.audiospotapplication.UI.cart.CartActivity" android:screenOrientation="portrait">
         </activity>
-        <activity android:name="com.audiospotapplication.UI.giveAgift.GiveGiftActivity" android:screenOrientation="portrait">
+        <activity android:name="com.audiospotapplication.UI.giveAgift.GiveGiftActivity"
+                  android:screenOrientation="portrait">
         </activity>
-        <activity android:name="com.audiospotapplication.UI.bookChapters.BookChaptersActivity" android:screenOrientation="portrait">
+        <activity android:name="com.audiospotapplication.UI.bookChapters.BookChaptersActivity"
+                  android:screenOrientation="portrait">
         </activity>
-        <activity android:name="com.audiospotapplication.UI.bookReviews.BookReviewsActivity" android:screenOrientation="portrait">
+        <activity android:name="com.audiospotapplication.UI.bookReviews.BookReviewsActivity"
+                  android:screenOrientation="portrait">
         </activity>
-        <activity android:name="com.audiospotapplication.UI.changePassword.ChangePasswordActivity" android:screenOrientation="portrait">
+        <activity android:name="com.audiospotapplication.UI.changePassword.ChangePasswordActivity"
+                  android:screenOrientation="portrait">
         </activity>
-        <activity android:name="com.audiospotapplication.UI.updateProfile.UpdateProfileActivity" android:screenOrientation="portrait">
+        <activity android:name="com.audiospotapplication.UI.updateProfile.UpdateProfileActivity"
+                  android:screenOrientation="portrait">
         </activity>
-        <activity android:name="com.audiospotapplication.UI.profile.ProfileActivity" android:screenOrientation="portrait">
+        <activity android:name="com.audiospotapplication.UI.profile.ProfileActivity"
+                  android:screenOrientation="portrait">
         </activity>
-        <activity android:name="com.audiospotapplication.UI.bookDetails.BookDetailsActivity" android:screenOrientation="portrait">
+        <activity android:name="com.audiospotapplication.UI.bookDetails.BookDetailsActivity"
+                  android:screenOrientation="portrait">
         </activity>
-        <activity android:name="com.audiospotapplication.UI.publisherDetails.PublisherDetailsActivity" android:screenOrientation="portrait">
+        <activity android:name="com.audiospotapplication.UI.publisherDetails.PublisherDetailsActivity"
+                  android:screenOrientation="portrait">
         </activity>
-        <activity android:name="com.audiospotapplication.UI.authorDetails.AuthorDetailsActivity" android:screenOrientation="portrait">
+        <activity android:name="com.audiospotapplication.UI.authorDetails.AuthorDetailsActivity"
+                  android:screenOrientation="portrait">
         </activity>
-        <activity android:name="com.audiospotapplication.UI.publishers.PublishersActivity" android:screenOrientation="portrait">
+        <activity android:name="com.audiospotapplication.UI.publishers.PublishersActivity"
+                  android:screenOrientation="portrait">
         </activity>
-        <activity android:name="com.audiospotapplication.UI.categories.CategoriesActivity" android:screenOrientation="portrait">
+        <activity android:name="com.audiospotapplication.UI.categories.CategoriesActivity"
+                  android:screenOrientation="portrait">
         </activity>
-        <activity android:name="com.audiospotapplication.UI.settings.SettingsActivity" android:screenOrientation="portrait">
+        <activity android:name="com.audiospotapplication.UI.settings.SettingsActivity"
+                  android:screenOrientation="portrait">
         </activity>
-        <activity android:name="com.audiospotapplication.UI.contactUs.ContactUsActivity" android:screenOrientation="portrait">
+        <activity android:name="com.audiospotapplication.UI.contactUs.ContactUsActivity"
+                  android:screenOrientation="portrait">
         </activity>
-        <activity android:name="com.audiospotapplication.UI.myFavourite.MyFavouriteBooksActivity" android:screenOrientation="portrait">
+        <activity android:name="com.audiospotapplication.UI.myFavourite.MyFavouriteBooksActivity"
+                  android:screenOrientation="portrait">
         </activity>
-        <activity android:name="com.audiospotapplication.UI.rateBook.RateBookActivity" android:screenOrientation="portrait">
+        <activity android:name="com.audiospotapplication.UI.rateBook.RateBookActivity"
+                  android:screenOrientation="portrait">
         </activity>
-        <activity android:name="com.audiospotapplication.UI.myBookmarks.MyBookmarksActivity" android:screenOrientation="portrait">
+        <activity android:name="com.audiospotapplication.UI.myBookmarks.MyBookmarksActivity"
+                  android:screenOrientation="portrait">
         </activity>
-        <activity android:name="com.audiospotapplication.UI.addBookmark.AddBookmarkActivity" android:screenOrientation="portrait">
+        <activity android:name="com.audiospotapplication.UI.addBookmark.AddBookmarkActivity"
+                  android:screenOrientation="portrait">
         </activity>
         <activity android:name="com.audiospotapplication.UI.promoCodeCongratulations.CongratulationsActivity"
                   android:screenOrientation="portrait">
         </activity>
-        <activity android:name="com.audiospotapplication.UI.voucher.VoucherActivity" android:screenOrientation="portrait">
+        <activity android:name="com.audiospotapplication.UI.voucher.VoucherActivity"
+                  android:screenOrientation="portrait">
         </activity>
-        <activity android:name="com.audiospotapplication.UI.promoCode.PromoCodeActivity" android:screenOrientation="portrait">
+        <activity android:name="com.audiospotapplication.UI.promoCode.PromoCodeActivity"
+                  android:screenOrientation="portrait">
         </activity>
-        <activity android:name="com.audiospotapplication.UI.payment.PaymentActivity" android:screenOrientation="portrait">
+        <activity android:name="com.audiospotapplication.UI.payment.PaymentActivity"
+                  android:screenOrientation="portrait">
         </activity>
-        <activity android:name="com.audiospotapplication.UI.giftSelection.GiftSelectionActivity" android:screenOrientation="portrait">
+        <activity android:name="com.audiospotapplication.UI.giftSelection.GiftSelectionActivity"
+                  android:screenOrientation="portrait">
         </activity>
 
         <service

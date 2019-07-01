@@ -12,6 +12,7 @@ import com.audiospotapplication.R
 import com.audiospotapplication.UI.books.Interface.onBookItemClickListener
 import com.audiospotapplication.utils.ImageUtils
 import com.audiospotapplication.utils.TimeUtils
+import com.example.jean.jcplayer.model.JcAudio
 import com.willy.ratingbar.ScaleRatingBar
 
 class BooksAdapter() : RecyclerView.Adapter<BooksAdapter.ViewHolder>() {
@@ -19,6 +20,7 @@ class BooksAdapter() : RecyclerView.Adapter<BooksAdapter.ViewHolder>() {
     private lateinit var books: List<Book>
     private lateinit var mOnItemClickListener: onBookItemClickListener
     private lateinit var mDeleteListener: onBookItemClickListener.onCartBookDeleteClickListener
+    var jcAudio: JcAudio? = null
 
     constructor(
         books: List<Book>,
@@ -34,6 +36,19 @@ class BooksAdapter() : RecyclerView.Adapter<BooksAdapter.ViewHolder>() {
     constructor(
         books: List<Book>,
         mOnItemClickListener: onBookItemClickListener,
+        jcAudio: JcAudio?
+    ) : this() {
+        this.books = books
+        this.mOnItemClickListener = mOnItemClickListener
+        for (book in this.books) {
+            book.isToShowDelete = false
+        }
+        this.jcAudio = jcAudio
+    }
+
+    constructor(
+        books: List<Book>,
+        mOnItemClickListener: onBookItemClickListener,
         mDeleteListener: onBookItemClickListener.onCartBookDeleteClickListener
     ) : this() {
         this.books = books
@@ -42,6 +57,21 @@ class BooksAdapter() : RecyclerView.Adapter<BooksAdapter.ViewHolder>() {
         for (book in this.books) {
             book.isToShowDelete = false
         }
+    }
+
+    constructor(
+        books: List<Book>,
+        mOnItemClickListener: onBookItemClickListener,
+        mDeleteListener: onBookItemClickListener.onCartBookDeleteClickListener,
+        jcAudio: JcAudio?
+    ) : this() {
+        this.books = books
+        this.mOnItemClickListener = mOnItemClickListener
+        this.mDeleteListener = mDeleteListener
+        for (book in this.books) {
+            book.isToShowDelete = false
+        }
+        this.jcAudio = jcAudio
     }
 
     private var context: Context? = null
@@ -68,8 +98,9 @@ class BooksAdapter() : RecyclerView.Adapter<BooksAdapter.ViewHolder>() {
             holder.tvNarrator.text = builder.toString().substring(0, builder.toString().length - 1)
         }
 
-        holder.tvLength.text =  TimeUtils.toTimeFormat(book.total_time.toInt()) + " Hours"
+        holder.tvLength.text = TimeUtils.toTimeFormat(book.total_time.toInt()) + " Hours"
         holder.tvLanguage.text = book.language
+        holder.tvBookName.text = book.title
         holder.tvPrice.text = book.price.toString() + " EGP."
 
         holder.ratingBar.rating = book.rate.toFloat()
@@ -88,6 +119,33 @@ class BooksAdapter() : RecyclerView.Adapter<BooksAdapter.ViewHolder>() {
             }
         } else {
             holder.delete.visibility = View.GONE
+        }
+
+        if (jcAudio != null) {
+            if (jcAudio!!.path.equals(book.sample)) {
+                holder.ivPlay.setBackgroundResource(R.mipmap.homepage_play)
+                holder.ivPlay.setTag(R.mipmap.homepage_play)
+            } else {
+                holder.ivPlay.setBackgroundResource(R.mipmap.play)
+                holder.ivPlay.setTag(R.mipmap.play)
+            }
+        } else {
+            holder.ivPlay.setBackgroundResource(R.mipmap.play)
+            holder.ivPlay.setTag(R.mipmap.play)
+        }
+
+        holder.ivPlay.setOnClickListener {
+            if (holder.ivPlay.getTag() != null) {
+                val resourceID = holder.ivPlay.getTag() as Int
+                if (resourceID == R.mipmap.homepage_play) {
+                    holder.ivPlay.setBackgroundResource(R.mipmap.play)
+                    holder.ivPlay.setTag(R.mipmap.play)
+                } else {
+                    holder.ivPlay.setBackgroundResource(R.mipmap.homepage_play)
+                    holder.ivPlay.setTag(R.mipmap.homepage_play)
+                }
+            }
+            mOnItemClickListener.onPlayClicked(book)
         }
     }
 
@@ -108,6 +166,7 @@ class BooksAdapter() : RecyclerView.Adapter<BooksAdapter.ViewHolder>() {
         val ivPlay: ImageView = mView.findViewById(R.id.ivPlay)
         val delete: ImageView = mView.findViewById(R.id.delete)
         val tvAuthor: TextView = mView.findViewById(R.id.tvAuthor)
+        val tvBookName: TextView = mView.findViewById(R.id.tvBookName)
         val tvPublisher: TextView = mView.findViewById(R.id.tvPublisher)
         val tvNarrator: TextView = mView.findViewById(R.id.tvNarrator)
         val tvLength: TextView = mView.findViewById(R.id.tvLength)
@@ -117,9 +176,6 @@ class BooksAdapter() : RecyclerView.Adapter<BooksAdapter.ViewHolder>() {
 
         init {
             mView.setOnClickListener(this)
-            ivPlay.setOnClickListener {
-                mOnItemClickListener.onPlayClicked(books!![position])
-            }
         }
 
         override fun onClick(v: View) {

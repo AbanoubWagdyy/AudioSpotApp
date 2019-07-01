@@ -60,7 +60,7 @@ class AddBookmarkActivity : AppCompatActivity(), AddBookmarkContract.View {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_bookmark)
 
-        tvTitle.text = "Play"
+        tvTitle.text = "Add Bookmark"
 
         back.setOnClickListener {
             setResult(Activity.RESULT_CANCELED)

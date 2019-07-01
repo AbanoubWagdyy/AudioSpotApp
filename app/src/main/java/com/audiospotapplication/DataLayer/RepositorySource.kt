@@ -8,6 +8,7 @@ import com.audiospotapplication.DataLayer.Model.*
 import com.audiospotapplication.DataLayer.Retrofit.RetrofitCallbacks
 import com.audiospotapplication.UI.ActiveTab
 import com.audiospotapplication.UI.giftSelection.GiftSelection
+import dm.audiostreamer.MediaMetaData
 
 interface RepositorySource : CacheDataSource {
 
@@ -31,7 +32,7 @@ interface RepositorySource : CacheDataSource {
         callback: RetrofitCallbacks.AuthResponseCallback
     )
 
-    fun resetPassword(email: String, callback: RetrofitCallbacks.AuthResponseCallback)
+    fun resetPassword(email: String, callback: RetrofitCallbacks.ResponseCallback)
 
     fun getHomepage(callback: RetrofitCallbacks.HomepageResponseCallback)
 
@@ -57,25 +58,25 @@ interface RepositorySource : CacheDataSource {
 
     fun saveCategoryItem(categoryListData: CategoriesListData)
 
-    fun getCurrentCategoryItem(): CategoriesListData
+    fun getCurrentCategoryItem(): CategoriesListData?
 
     fun clearCategoryItem()
 
     fun saveAuthorItem(authorsData: AuthorsData)
 
-    fun getAuthorItem(): AuthorsData
+    fun getAuthorItem(): AuthorsData?
 
     fun clearAuthorItem()
 
     fun savePublisherItem(authorsData: PublishersResponseData)
 
-    fun getPublisherItem(): PublishersResponseData
+    fun getPublisherItem(): PublishersResponseData?
 
     fun clearPublisherItem()
 
-    fun saveBook(book: Book)
+    fun saveBook(book: Book?)
 
-    fun getSavedBook(): Book
+    fun getSavedBook(): Book?
 
     fun clearSavedBook()
 
@@ -128,7 +129,7 @@ interface RepositorySource : CacheDataSource {
 
     fun isBookMine(): Boolean
 
-    fun getMyBooks(): List<Book>
+    fun getMyBooks(): List<Book>?
 
     fun getCurrentBookReviews(): List<Review>
 
@@ -140,7 +141,7 @@ interface RepositorySource : CacheDataSource {
 
     fun setBookmarkData(bookmarkBody: BookmarkBody)
 
-    fun getBookmarkData(): BookmarkBody
+    fun getBookmarkData(): BookmarkBody?
 
     fun addBookmark(bookmarkData: BookmarkBody, callback: RetrofitCallbacks.ResponseCallback)
 
@@ -170,9 +171,9 @@ interface RepositorySource : CacheDataSource {
 
     fun saveVoucherBook(data: Book?)
 
-    fun getVoucherBook(): Book
+    fun getVoucherBook(): Book?
 
     fun setActiveTab(tabActive: ActiveTab)
 
-    fun getActiveTab(): ActiveTab
+    fun getActiveTab(): ActiveTab?
 }

@@ -13,7 +13,7 @@ class MyBooksPresenter(val mView: MyBooksContract.View) : MyBooksContract.Presen
     }
 
     override fun start() {
-        mRepositorySource = DataRepository.getInstance(mView.getAppContext())
+        mRepositorySource = DataRepository.getInstance(mView.getAppContext()!!)
         var listMyBooks = mRepositorySource.getMyBooks()
         if (listMyBooks != null && listMyBooks.isNotEmpty()) {
             mView.setBookList(listMyBooks)

@@ -26,4 +26,13 @@ public class DialogUtils {
         if (progressDialog != null && progressDialog.isShowing())
             progressDialog.dismiss();
     }
+
+    public static synchronized void showDownloadingDialog(Context context, String message) {
+        if (progressDialog == null || !progressDialog.isShowing()) {
+            progressDialog = new ProgressDialog(context);
+            progressDialog.setMessage(message);
+            progressDialog.setCancelable(false);
+            progressDialog.show();
+        }
+    }
 }

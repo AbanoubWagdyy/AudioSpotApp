@@ -88,18 +88,18 @@ public class RemoteDataSourceUsingRetrofit {
     public void resetPassword(String api_key,
                               String lang,
                               String device_key,
-                              String email, RetrofitCallbacks.AuthResponseCallback callback) {
+                              String email, RetrofitCallbacks.ResponseCallback callback) {
 
         RestClient.getRetrofitService(api_key, lang, device_key)
                 .resetPassword(email)
-                .enqueue(new Callback<AuthResponse>() {
+                .enqueue(new Callback<com.audiospotapplication.DataLayer.Model.Response>() {
                     @Override
-                    public void onResponse(Call<AuthResponse> call, Response<AuthResponse> response) {
+                    public void onResponse(Call<com.audiospotapplication.DataLayer.Model.Response> call, Response<com.audiospotapplication.DataLayer.Model.Response> response) {
                         callback.onSuccess(response.body());
                     }
 
                     @Override
-                    public void onFailure(Call<AuthResponse> call, Throwable t) {
+                    public void onFailure(Call<com.audiospotapplication.DataLayer.Model.Response> call, Throwable t) {
                         callback.onFailure(call, t);
                     }
                 });

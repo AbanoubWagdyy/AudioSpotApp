@@ -26,9 +26,9 @@ class BookReviewsFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        mRepositorySource = DataRepository.getInstance(context)
+        mRepositorySource = DataRepository.getInstance(context!!)
 
-        recyclerReviews.layoutManager = LinearLayoutManager(context)
+        recyclerReviews.layoutManager = LinearLayoutManager(context!!)
         recyclerReviews.setHasFixedSize(true)
         recyclerReviews.isNestedScrollingEnabled = false
 

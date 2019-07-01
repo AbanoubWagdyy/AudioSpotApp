@@ -11,7 +11,7 @@ import android.view.ViewGroup
 import com.audiospot.DataLayer.Model.Book
 
 import com.audiospotapplication.R
-import com.audiospotapplication.UI.cart.CartActivity
+import com.audiospotapplication.UI.payment.PaymentActivity
 import com.audiospotapplication.utils.DialogUtils
 import com.audiospotapplication.utils.ImageUtils
 import com.google.android.material.snackbar.Snackbar
@@ -19,9 +19,10 @@ import kotlinx.android.synthetic.main.fragment_give_agift.*
 
 class GiveGiftFragment : Fragment(), GiveGiftContract.View {
 
-    override fun showCartScreen() {
-        val intent = Intent(activity!!, CartActivity::class.java)
+    override fun showPayment() {
+        val intent = Intent(activity!!, PaymentActivity::class.java)
         startActivity(intent)
+        activity!!.finish()
     }
 
     override fun showMessage(message: String) {
@@ -50,7 +51,7 @@ class GiveGiftFragment : Fragment(), GiveGiftContract.View {
         DialogUtils.dismissProgressDialog()
     }
 
-    override fun bindResponse(result: Book?) {
+    override fun bindResponse(result: Book?, quantity: Int) {
         ratingBar.rating = result!!.rate.toFloat()
         tvBookTitle.text = result!!.title
         var numberOfReviews = result.reviews
@@ -63,6 +64,22 @@ class GiveGiftFragment : Fragment(), GiveGiftContract.View {
             }
             tvNarrator.text = builder.toString().substring(0, builder.toString().length - 1)
         }
+        if (quantity == 1) {
+            email2.visibility = View.GONE
+            email3.visibility = View.GONE
+            email4.visibility = View.GONE
+            email5.visibility = View.GONE
+        } else if (quantity == 2) {
+            email3.visibility = View.GONE
+            email4.visibility = View.GONE
+            email5.visibility = View.GONE
+        } else if (quantity == 3) {
+            email4.visibility = View.GONE
+            email5.visibility = View.GONE
+        } else if (quantity == 4) {
+            email5.visibility = View.GONE
+        }
+
         ImageUtils.setImageFromUrlIntoImageViewUsingPicasso(result.cover, activity!!.applicationContext, ivBook)
     }
 

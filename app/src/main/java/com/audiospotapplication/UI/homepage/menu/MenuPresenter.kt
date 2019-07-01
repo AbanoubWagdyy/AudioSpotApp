@@ -10,7 +10,7 @@ import retrofit2.Call
 class MenuPresenter(val mView: MenuContract.View) : MenuContract.Presenter {
 
     override fun start() {
-        mRepositorySource = DataRepository.getInstance(mView.getAppContext())
+        mRepositorySource = DataRepository.getInstance(mView.getAppContext()!!)
     }
 
     lateinit var mRepositorySource: RepositorySource

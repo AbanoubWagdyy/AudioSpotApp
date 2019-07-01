@@ -9,23 +9,66 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.audiospot.DataLayer.Model.Book
 
 import com.audiospotapplication.R
+import com.audiospotapplication.UI.bookDetails.BookDetailsActivity
 import com.audiospotapplication.UI.books.Interface.onBookItemClickListener
 import com.audiospotapplication.UI.books.adapter.BooksAdapter
 import com.audiospotapplication.UI.homepage.HomepageActivity
+import com.audiospotapplication.UI.homepage.home.adapter.HomepageAdapter
 import com.audiospotapplication.UI.payment.PaymentActivity
 import com.audiospotapplication.UI.promoCode.PromoCodeActivity
-import com.audiospotapplication.utils.BookMediaDataConversion
+import com.audiospotapplication.utils.BookDataConversion
 import com.audiospotapplication.utils.DialogUtils
+import com.example.jean.jcplayer.JcPlayerManager
+import com.example.jean.jcplayer.JcPlayerManagerListener
+import com.example.jean.jcplayer.general.JcStatus
+import com.example.jean.jcplayer.model.JcAudio
 import com.google.android.material.snackbar.Snackbar
-import dm.audiostreamer.AudioStreamingManager
 import dm.audiostreamer.MediaMetaData
 import kotlinx.android.synthetic.main.fragment_cart.*
 
 class CartFragment : Fragment(), CartContract.View, onBookItemClickListener,
-    onBookItemClickListener.onCartBookDeleteClickListener {
+    onBookItemClickListener.onCartBookDeleteClickListener, JcPlayerManagerListener {
+
+    override fun showBookDetailsScreen() {
+        val intent = Intent(activity!!, BookDetailsActivity::class.java)
+        startActivity(intent)
+    }
+
+    override fun onPreparedAudio(status: JcStatus) {
+
+    }
+
+    override fun onCompletedAudio() {
+
+    }
+
+    override fun onPaused(status: JcStatus) {
+
+    }
+
+    override fun onContinueAudio(status: JcStatus) {
+
+    }
+
+    override fun onPlaying(status: JcStatus) {
+
+    }
+
+    override fun onTimeChanged(status: JcStatus) {
+
+    }
+
+    override fun onStopped(status: JcStatus) {
+
+    }
+
+    override fun onJcpError(throwable: Throwable) {
+
+    }
 
     override fun showMessage(message: String) {
         Snackbar.make(
@@ -40,34 +83,66 @@ class CartFragment : Fragment(), CartContract.View, onBookItemClickListener,
     }
 
     override fun onItemClicked(book: Book) {
-        var mediaMetaData = BookMediaDataConversion.convertBookToMediaMetaData(book)
-        listOfSongs.add(mediaMetaData)
-        playSong(mediaMetaData)
-    }
-
-    private fun playSong(mediaMetaData: MediaMetaData) {
-        if (streamingManager != null) {
-            streamingManager!!.onPlay(mediaMetaData)
-        }
+        mPresenter.saveBook(book)
     }
 
     override fun onPlayClicked(book: Book) {
-        configAudioStreamer()
+        var currentAudio = jcPlayerManager.currentAudio
+        if (jcPlayerManager.isPlaying()) {
+            if (currentAudio?.path.equals(book.sample)) {
+                jcPlayerManager.pauseAudio()
+                adapter = BooksAdapter(listMyBooks, this, this)
+                recyclerCartBooks.adapter = adapter
+                return
+            } else {
+                playAudio(book)
+            }
+        } else {
+            if (currentAudio != null && currentAudio?.path.equals(book.sample)) {
+                jcPlayerManager.continueAudio()
+                adapter = BooksAdapter(
+                    listMyBooks, this, this,
+                    jcPlayerManager.currentAudio
+                )
+                recyclerCartBooks.adapter = adapter
+            } else {
+                playAudio(book)
+            }
+        }
     }
 
-    private fun configAudioStreamer() {
-        streamingManager = AudioStreamingManager.getInstance(activity!!.applicationContext)
-        //Set PlayMultiple 'true' if want to playing sequentially one by one songs
-        // and provide the list of songs else set it 'false'
-        streamingManager!!.isPlayMultiple = mPresenter.getAuthResponse() != null
+    private fun playAudio(book: Book) {
 
-        streamingManager!!.setMediaList(listOfSongs)
+        if (book == null || book.sample == null || book.sample.equals("")) {
+            Snackbar.make(
+                activity!!.findViewById(android.R.id.content), "Audio is not available right now ," +
+                        "please check again later", Snackbar.LENGTH_LONG
+            ).show()
 
-        //If you want to show the Player Notification then set ShowPlayerNotification as true
-        //and provide the pending intent so that after click on notification it will redirect to an activity
+            adapter = BooksAdapter(listMyBooks, this, this)
+            recyclerCartBooks.adapter = adapter
+            return
+        }
 
-        streamingManager!!.setShowPlayerNotification(true)
-        streamingManager!!.setPendingIntentAct(getNotificationPendingIntent())
+        jcPlayerManager.kill()
+
+        var audio = JcAudio.createFromURL(
+            book.id, book.title,
+            book.sample, null
+        )
+        var playlist = ArrayList<JcAudio>()
+        playlist.add(audio)
+
+        jcPlayerManager.playlist = playlist
+        jcPlayerManager.jcPlayerManagerListener = this
+
+        jcPlayerManager.playAudio(audio)
+        jcPlayerManager.createNewNotification(R.mipmap.ic_launcher)
+        adapter = BooksAdapter(
+            listMyBooks, this, this,
+            jcPlayerManager.currentAudio
+        )
+        recyclerCartBooks.adapter = adapter
     }
 
     private fun getNotificationPendingIntent(): PendingIntent {
@@ -97,6 +172,7 @@ class CartFragment : Fragment(), CartContract.View, onBookItemClickListener,
     }
 
     override fun setBookList(listMyBooks: List<Book>) {
+        this.listMyBooks = listMyBooks
         if (listMyBooks.isEmpty()) {
             promoCode.visibility = View.GONE
             payNow.visibility = View.GONE
@@ -105,7 +181,14 @@ class CartFragment : Fragment(), CartContract.View, onBookItemClickListener,
             recyclerCartBooks.layoutManager = LinearLayoutManager(context)
             recyclerCartBooks.setHasFixedSize(true)
             recyclerCartBooks.isNestedScrollingEnabled = false
-            adapter = BooksAdapter(listMyBooks, this, this)
+            adapter = if (jcPlayerManager.isPlaying()) {
+                BooksAdapter(
+                    listMyBooks, this, this,
+                    jcPlayerManager.currentAudio
+                )
+            } else {
+                BooksAdapter(listMyBooks, this, this)
+            }
             recyclerCartBooks.adapter = adapter
         }
 
@@ -153,8 +236,10 @@ class CartFragment : Fragment(), CartContract.View, onBookItemClickListener,
         }
     }
 
+    private lateinit var listMyBooks: List<Book>
     private lateinit var adapter: BooksAdapter
     lateinit var mPresenter: CartContract.Presenter
-    private var streamingManager: AudioStreamingManager? = null
-    private var listOfSongs: MutableList<MediaMetaData> = ArrayList()
+    private val jcPlayerManager: JcPlayerManager by lazy {
+        JcPlayerManager.getInstance(activity!!.applicationContext).get()!!
+    }
 }

@@ -17,7 +17,7 @@ class BookItemUseCase : BookItemInterceptor {
 
     var data: Book? = null
 
-    override fun saveBook(book: Book) {
+    override fun saveBook(book: Book?) {
         this.data = book
     }
 

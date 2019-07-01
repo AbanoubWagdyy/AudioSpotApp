@@ -34,11 +34,11 @@ class BooksPresenter(val mView: BooksContract.View) : BooksContract.Presenter {
     lateinit var mRepositorySource: RepositorySource
 
     override fun start() {
-        mRepositorySource = DataRepository.getInstance(mView.getAppContext())
+        mRepositorySource = DataRepository.getInstance(mView.getAppContext()!!)
         mView.showLoadingDialog()
 
         if (mRepositorySource.getCurrentCategoryItem() != null) {
-            category = mRepositorySource.getCurrentCategoryItem().id
+            category = mRepositorySource.getCurrentCategoryItem()!!.id
         }
         getBooks()
     }

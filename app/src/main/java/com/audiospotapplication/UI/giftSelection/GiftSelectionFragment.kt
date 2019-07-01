@@ -13,11 +13,19 @@ import com.audiospot.DataLayer.Model.Book
 import com.audiospotapplication.R
 import com.audiospotapplication.UI.cart.CartActivity
 import com.audiospotapplication.UI.giveAgift.GiveGiftActivity
+import com.audiospotapplication.UI.payment.PaymentActivity
 import com.audiospotapplication.utils.DialogUtils
 import com.audiospotapplication.utils.ImageUtils
+import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.fragment_gift_selection.*
 
 class GiftSelectionFragment : Fragment(), GiftSelectionContract.View {
+    
+    override fun showPayment() {
+        val intent = Intent(activity!!, PaymentActivity::class.java)
+        startActivity(intent)
+        activity!!.finish()
+    }
 
     override fun showCartScreen() {
         val intent = Intent(activity!!, CartActivity::class.java)
@@ -62,7 +70,11 @@ class GiftSelectionFragment : Fragment(), GiftSelectionContract.View {
     }
 
     override fun showMessage(message: String) {
-
+        Snackbar.make(
+            activity!!.findViewById(android.R.id.content),
+            message,
+            Snackbar.LENGTH_SHORT
+        ).show()
     }
 
     override fun onCreateView(

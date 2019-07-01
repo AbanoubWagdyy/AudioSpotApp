@@ -19,7 +19,7 @@ class CategoriesPresenter(val mView: CategoriesContract.View) : CategoriesContra
 
     override fun start() {
         mView.showLoadingDialog()
-        mRepositorySource = DataRepository.getInstance(mView.getAppContext())
+        mRepositorySource = DataRepository.getInstance(mView.getAppContext()!!)
         mRepositorySource.getAllCategories(object : RetrofitCallbacks.CategoriesListCallback {
             override fun onSuccess(result: CategoriesListResponse?) {
                 mView.dismissLoadingDialog()

@@ -12,7 +12,7 @@ class RateBookPresenter(val mView: RateBookContract.View) : RateBookContract.Pre
 
     override fun rateBook(rating: Float, message: String) {
         mView.showLoadingDialog()
-        mRepositorySource.rateBook(rating.toInt(), message, object : RetrofitCallbacks.ResponseCallback {
+        mRepositorySource?.rateBook(rating.toInt(), message, object : RetrofitCallbacks.ResponseCallback {
             override fun onSuccess(result: Response?) {
                 mView.dismissLoading()
                 if (result != null)
@@ -35,11 +35,11 @@ class RateBookPresenter(val mView: RateBookContract.View) : RateBookContract.Pre
     }
 
     override fun start() {
-        mRepositorySource = DataRepository.getInstance(mView.getAppContext())
-        var bookDetailsData = mRepositorySource.getSavedBook()
+        mRepositorySource = mView.getAppContext()?.let { DataRepository.getInstance(it) }
+        var bookDetailsData = mRepositorySource?.getSavedBook()
         mView.bindResponse(bookDetailsData!!)
     }
 
-    lateinit var mRepositorySource: RepositorySource
+    var mRepositorySource: RepositorySource? = null
     lateinit var bookDetails: Book
 }

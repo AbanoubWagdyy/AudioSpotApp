@@ -27,5 +27,8 @@ interface BookChaptersContract {
         fun onChapterClicked(chapterData: ChaptersData)
         fun showDownloadComplete(message: String, currentPath: String)
         fun showMessage(s: String)
+        fun showDownloadingDialog()
+        fun updateProgress(progress: Int)
+        fun dismissDownloadingDialog()
     }
 }

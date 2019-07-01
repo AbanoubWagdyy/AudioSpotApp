@@ -21,12 +21,13 @@ class GiftSelectionPresenter(val mView: GiftSelectionContract.View) : GiftSelect
                 mRepositorySource.addBookToCart(object : RetrofitCallbacks.ResponseCallback {
                     override fun onSuccess(result1: Response?) {
                         mView.dismissLoading()
-                        var status = RetrofitResponseHandler.validateAuthResponseStatus(result1)
-                        if (status == RetrofitResponseHandler.Companion.Status.VALID) {
-                            mView.showCartScreen()
-                        } else {
-                            mView.showMessage(result1!!.message)
-                        }
+//                        var status = RetrofitResponseHandler.validateAuthResponseStatus(result1)
+//                        if (status == RetrofitResponseHandler.Companion.Status.VALID) {
+//                            mView.showPayment()
+//                        } else {
+//                            mView.showMessage(result1!!.message)
+//                        }
+                        mView.showPayment()
                     }
 
                     override fun onFailure(call: Call<Response>?, t: Throwable?) {
@@ -42,7 +43,7 @@ class GiftSelectionPresenter(val mView: GiftSelectionContract.View) : GiftSelect
     }
 
     override fun start() {
-        mRepositorySource = DataRepository.getInstance(mView.getAppContext())
+        mRepositorySource = DataRepository.getInstance(mView.getAppContext()!!)
         var bookDetailsData = mRepositorySource.getSavedBook()
         mView.bindResponse(bookDetailsData!!)
     }

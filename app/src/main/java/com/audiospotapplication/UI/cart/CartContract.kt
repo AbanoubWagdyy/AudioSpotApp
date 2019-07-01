@@ -10,6 +10,7 @@ interface CartContract {
         fun start()
         fun deleteBookFromCart(book: Book)
         fun getAuthResponse(): AuthResponse?
+        fun saveBook(book: Book)
     }
 
     interface View {
@@ -19,5 +20,6 @@ interface CartContract {
         fun dismissLoading()
         fun setBookList(listMyBooks: List<Book>)
         fun showMessage(message: String)
+        fun showBookDetailsScreen()
     }
 }

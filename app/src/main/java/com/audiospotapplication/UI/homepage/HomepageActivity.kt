@@ -32,6 +32,7 @@ import retrofit2.Call
 
 class HomepageActivity : AppCompatActivity(), HomeFragment.onItemPlayClickListener,
     MyBooksFragment.onItemPlayClickListener, JcPlayerManagerListener {
+
     override fun onPreparedAudio(status: JcStatus) {
 
     }
@@ -64,61 +65,51 @@ class HomepageActivity : AppCompatActivity(), HomeFragment.onItemPlayClickListen
 
     }
 
-    private var currentSong: MediaMetaData? = null
-    private var listOfSongs: MutableList<MediaMetaData> = ArrayList()
-
-    private val jcPlayerManager: JcPlayerManager by lazy {
-        JcPlayerManager.getInstance(applicationContext).get()!!
-    }
-
     override fun OnItemPlayed(mediaData: MediaMetaData) {
-//        listOfSongs = ArrayList()
-//        listOfSongs.add(mediaData)
-//        configAudioStreamer()
-//        playSong(mediaData)
+//        var currentAudio: JcAudio? = null
+//        if (jcPlayerManager.isPlaying()) {
+//            currentAudio = jcPlayerManager.currentAudio
+//        }
+//        if (mediaData != null && mediaData.mediaUrl != null && !mediaData.mediaUrl.equals("")) {
+//            if (currentAudio != null) {
+//                if (currentAudio?.path.equals(mediaData.mediaUrl)) {
+//                    jcPlayerManager.pauseAudio()
+//                } else {
+//                    playAudio(mediaData)
+//                }
+//            } else {
+//                playAudio(mediaData)
+//            }
+//        }
 
-        if (mediaData != null && mediaData.mediaUrl != null && !mediaData.mediaUrl.equals("")) {
-            var audio = JcAudio.createFromURL(
-                mediaData.mediaId.toInt(), mediaData.mediaTitle,
-                mediaData.mediaUrl, null
-            )
-//
-            var playlist = ArrayList<JcAudio>()
-            playlist.add(audio)
-
-            jcPlayerManager.playlist = playlist as ArrayList<JcAudio>
-            jcPlayerManager.jcPlayerManagerListener = this
-
-            jcPlayerManager.playAudio(audio)
-            jcPlayerManager.createNewNotification(R.mipmap.ic_launcher)
-        }
-
-
+        playAudio(mediaData)
     }
 
-    private fun checkAlreadyPlaying() {
-        if (streamingManager!!.isPlaying) {
-            currentSong = streamingManager!!.currentAudio
-            if (currentSong != null) {
-                currentSong!!.playState = streamingManager!!.mLastPlaybackState
-            }
-        }
+    private fun playAudio(mediaData: MediaMetaData) {
+
+        jcPlayerManager.kill()
+        var audio = JcAudio.createFromURL(
+            mediaData.mediaId.toInt(), mediaData.mediaTitle,
+            mediaData.mediaUrl, null
+        )
+        var playlist = ArrayList<JcAudio>()
+        playlist.add(audio)
+
+        jcPlayerManager.playlist = playlist
+        jcPlayerManager.jcPlayerManagerListener = this
+
+        jcPlayerManager.playAudio(audio)
+        jcPlayerManager.createNewNotification(R.mipmap.ic_launcher)
     }
 
     var tabShown = ActiveTab.HOME
     lateinit var mRepositorySource: RepositorySource
-
-    private var streamingManager: AudioStreamingManager? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_homepage3)
 
         mRepositorySource = DataRepository.getInstance(applicationContext)
-
-        configAudioStreamer()
-
-        checkAlreadyPlaying()
 
         var authResponse = mRepositorySource.getAuthResponse()
 
@@ -148,14 +139,6 @@ class HomepageActivity : AppCompatActivity(), HomeFragment.onItemPlayClickListen
         } else {
             showHomePageContent()
         }
-    }
-
-    private fun configAudioStreamer() {
-        streamingManager = AudioStreamingManager.getInstance(applicationContext)
-        streamingManager!!.isPlayMultiple = mRepositorySource.getAuthResponse() != null
-        streamingManager!!.setMediaList(listOfSongs)
-        streamingManager!!.setShowPlayerNotification(true)
-        streamingManager!!.setPendingIntentAct(getNotificationPendingIntent())
     }
 
     private fun showHomePageContent() {
@@ -280,5 +263,9 @@ class HomepageActivity : AppCompatActivity(), HomeFragment.onItemPlayClickListen
         intent.setAction("openplayer")
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
         return PendingIntent.getActivity(applicationContext, 0, intent, 0)
+    }
+
+    private val jcPlayerManager: JcPlayerManager by lazy {
+        JcPlayerManager.getInstance(applicationContext).get()!!
     }
 }

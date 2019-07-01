@@ -11,7 +11,7 @@ import kotlinx.android.synthetic.main.back_header.*
 class MyFavouriteBooksActivity : BaseActivity(), onItemPlayClickListener {
 
     override fun OnItemPlayed(mediaData: MediaMetaData) {
-        playSong(mediaData)
+        super.OnItemPlayed(mediaData)
     }
 
     override fun getHeaderTitle(): String {

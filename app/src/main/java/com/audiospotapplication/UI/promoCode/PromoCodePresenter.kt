@@ -30,7 +30,7 @@ class PromoCodePresenter(val mView: PromoCodeContract.View) : PromoCodeContract.
     }
 
     override fun start() {
-        mRepositorySource = DataRepository.getInstance(mView.getAppContext())
+        mRepositorySource = DataRepository.getInstance(mView.getAppContext()!!)
     }
 
     lateinit var mRepositorySource: RepositorySource

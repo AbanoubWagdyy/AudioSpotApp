@@ -6,7 +6,7 @@ import com.audiospotapplication.DataLayer.Model.Review
 
 interface BookItemInterceptor {
 
-    fun saveBook(book: Book)
+    fun saveBook(book: Book?)
 
     fun getSavedBook(): Book?
 

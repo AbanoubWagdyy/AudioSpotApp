@@ -141,7 +141,7 @@
                             android:background="@color/white"/>
 
                     <TextView
-                            android:text="@string/or_sign"
+                            android:text="or Sign in"
                             android:layout_width="fill_parent"
                             android:layout_height="fill_parent"
                             android:layout_marginEnd="4dp"

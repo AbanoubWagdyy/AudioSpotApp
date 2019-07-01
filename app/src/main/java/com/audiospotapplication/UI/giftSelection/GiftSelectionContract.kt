@@ -18,5 +18,6 @@ interface GiftSelectionContract {
         fun showMessage(message: String)
         fun showGiftSCreen()
         fun showCartScreen()
+        fun showPayment()
     }
 }

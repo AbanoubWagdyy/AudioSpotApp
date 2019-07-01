@@ -5,7 +5,7 @@ import com.audiospotapplication.DataLayer.Model.ChaptersData
 import com.example.jean.jcplayer.model.JcAudio
 import dm.audiostreamer.MediaMetaData
 
-class BookMediaDataConversion {
+class BookDataConversion {
 
     companion object {
 
@@ -25,14 +25,8 @@ class BookMediaDataConversion {
             return mediaMetaData
         }
 
-        fun convertBookToMediaMetaData(book: ChaptersData): MediaMetaData {
-            var mediaMetaData = MediaMetaData()
-            mediaMetaData.mediaId = book.id.toString()
-            mediaMetaData.mediaTitle = book.title
-            mediaMetaData.mediaUrl = book.sound_file
-            mediaMetaData.mediaDuration = book.duration.toString()
-
-            return mediaMetaData
+        fun convertBookToJcAudio(book: Book): JcAudio {
+            return JcAudio.createFromURL(book.id, book.title, book.sample, null)
         }
     }
 }

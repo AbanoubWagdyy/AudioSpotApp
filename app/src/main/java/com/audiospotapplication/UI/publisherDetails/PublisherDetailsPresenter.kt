@@ -19,31 +19,38 @@ class PublisherDetailsPresenter(val mView: PublisherDetailsContract.View) : Publ
 
     override fun start() {
         mView.showLoading()
-        mRepositorySource = DataRepository.getInstance(mView.getAppContext())
+        mRepositorySource = mView.getAppContext()?.let { DataRepository.getInstance(it) }!!
         var publisherItem = mRepositorySource.getPublisherItem()
-        mView.setPublisherName(publisherItem.name)
-        mView.setPublisherImage(publisherItem.photo)
-        mView.setPublisherBio(publisherItem.bio)
-        mRepositorySource = DataRepository.getInstance(mView.getAppContext())
-        mRepositorySource.getBooks(
-            "", "", 0, publisherItem.id, 0,
-            0,
-            object : RetrofitCallbacks.BookListCallback {
-                override fun onSuccess(result: BookListResponse?) {
-                    mView.dismissLoading()
-                    val status = RetrofitResponseHandler.validateAuthResponseStatus(result)
-                    if (status == RetrofitResponseHandler.Companion.Status.VALID) {
-                        mView.setBookList(result)
-                    } else {
-                        mView!!.showErrorMessage(result!!.message)
+        if (publisherItem != null) {
+            mView.setPublisherName(publisherItem.name)
+        }
+        if (publisherItem != null) {
+            mView.setPublisherImage(publisherItem.photo)
+        }
+        if (publisherItem != null) {
+            mView.setPublisherBio(publisherItem.bio)
+        }
+        if (publisherItem != null) {
+            mRepositorySource.getBooks(
+                "", "", 0, publisherItem.id, 0,
+                0,
+                object : RetrofitCallbacks.BookListCallback {
+                    override fun onSuccess(result: BookListResponse?) {
+                        mView.dismissLoading()
+                        val status = RetrofitResponseHandler.validateAuthResponseStatus(result)
+                        if (status == RetrofitResponseHandler.Companion.Status.VALID) {
+                            mView.setBookList(result)
+                        } else {
+                            mView!!.showErrorMessage(result!!.message)
+                        }
+                    }
+
+                    override fun onFailure(call: Call<BookListResponse>?, t: Throwable?) {
+                        mView.dismissLoading()
+                        mView.showErrorMessage("Please check your internet connection")
                     }
                 }
-
-                override fun onFailure(call: Call<BookListResponse>?, t: Throwable?) {
-                    mView.dismissLoading()
-                    mView.showErrorMessage("Please check your internet connection")
-                }
-            }
-        )
+            )
+        }
     }
 }

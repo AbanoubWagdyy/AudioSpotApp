@@ -9,7 +9,7 @@ import com.audiospotapplication.UI.BaseActivity
 class CongratulationsActivity : BaseActivity() {
 
     override fun getHeaderTitle(): String {
-        return "Books"
+        return "Congratulations"
     }
 
     override fun getArrowHeaderVisibility(): Int {

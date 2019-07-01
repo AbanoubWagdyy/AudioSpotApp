@@ -9,6 +9,7 @@ import com.audiospotapplication.DataLayer.Retrofit.GlobalKeys
 import com.audiospotapplication.R
 import im.delight.android.webview.AdvancedWebView
 import kotlinx.android.synthetic.main.activity_payment.*
+import kotlinx.android.synthetic.main.header.*
 
 
 class PaymentActivity : AppCompatActivity(), AdvancedWebView.Listener {
@@ -16,18 +17,26 @@ class PaymentActivity : AppCompatActivity(), AdvancedWebView.Listener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_payment)
+        
+        tvTitle.text = "Payment"
 
+        var bookId: Int = 0
         var mRepositorySource = DataRepository.getInstance(applicationContext)
+        if (mRepositorySource.getSavedBook() != null) {
+            bookId = mRepositorySource.getSavedBook()!!.id
+        }
 
-        webView.addHttpHeader("AUTHORIZATION",mRepositorySource.getAuthResponse()!!.data.token)
-        webView.addHttpHeader("APIKEY",GlobalKeys.API_KEY)
-        webView.addHttpHeader("LANG","en")
-        webView.addHttpHeader("DEVICEKEY",mRepositorySource.getDeviceToken())
-        webView.addHttpHeader("PROMO",mRepositorySource.getPromoCode())
-        webView.addHttpHeader("SENDTO","")
-        webView.addHttpHeader("VOUCHER",mRepositorySource.getVoucher().toString())
+        webView.addHttpHeader("AUTHORIZATION", mRepositorySource.getAuthResponse()!!.data.token)
+        webView.addHttpHeader("APIKEY", GlobalKeys.API_KEY)
+        webView.addHttpHeader("LANG", "en")
+        webView.addHttpHeader("DEVICEKEY", mRepositorySource.getDeviceToken())
+        webView.addHttpHeader("PROMO", mRepositorySource.getPromoCode())
+        webView.addHttpHeader("SENDTO", "")
+        webView.addHttpHeader("VOUCHER", mRepositorySource.getVoucher().toString())
+        if (bookId != 0)
+            webView.addHttpHeader("BOOKID", bookId.toString())
+
         webView.setThirdPartyCookiesEnabled(true)
-
         webView.setListener(this, this)
         webView.loadUrl("https://www.audio-spot.com/payments", null);
     }

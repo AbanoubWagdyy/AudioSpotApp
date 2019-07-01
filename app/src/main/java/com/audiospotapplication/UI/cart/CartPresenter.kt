@@ -13,6 +13,11 @@ import retrofit2.Call
 
 class CartPresenter(val mView: CartContract.View) : CartContract.Presenter {
 
+    override fun saveBook(book: Book) {
+        mRepositorySource.saveBook(book)
+        mView.showBookDetailsScreen()
+    }
+
     override fun getAuthResponse(): AuthResponse? {
         return mRepositorySource.getAuthResponse()
     }
@@ -42,7 +47,10 @@ class CartPresenter(val mView: CartContract.View) : CartContract.Presenter {
     }
 
     override fun start() {
-        mRepositorySource = DataRepository.getInstance(mView.getAppContext())
+        mRepositorySource = DataRepository.getInstance(mView.getAppContext()!!)
+
+        mRepositorySource.saveBook(null)
+
         mView.showLoading()
         mRepositorySource.getMyCart(object : RetrofitCallbacks.BookListCallback {
             override fun onSuccess(result: BookListResponse?) {

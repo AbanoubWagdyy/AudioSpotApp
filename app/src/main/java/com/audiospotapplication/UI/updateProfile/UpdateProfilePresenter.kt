@@ -11,7 +11,7 @@ import retrofit2.Call
 class UpdateProfilePresenter(val mView: UpdateProfileContract.View) : UpdateProfileContract.Presenter {
 
     override fun handleChangePasswordClicked() {
-        mRepositorySource = DataRepository.getInstance(mView.getAppContext())
+        mRepositorySource = DataRepository.getInstance(mView.getAppContext()!!)
         var authResponse = mRepositorySource.getAuthResponse()
         if(authResponse!!.data.Password.equals("")){
             mView.disableChangePasswordClick()
@@ -24,7 +24,7 @@ class UpdateProfilePresenter(val mView: UpdateProfileContract.View) : UpdateProf
         if (isFieldsValid(first_name, last_name, email, mobile_phone)) {
             if (EmailUtils.isValidEmail(email)) {
                 mView.showLoading()
-                mRepositorySource = DataRepository.getInstance(mView.getAppContext())
+                mRepositorySource = DataRepository.getInstance(mView.getAppContext()!!)
                 mRepositorySource.updateProfile(
                     first_name,
                     last_name,

@@ -19,7 +19,7 @@ class PublishersPresenter(val mView: PublishersContract.View) : PublishersContra
 
     override fun start() {
         mView.showLoading()
-        mRepositorySource = DataRepository.getInstance(mView.getAppContext())
+        mRepositorySource = mView.getAppContext()?.let { DataRepository.getInstance(it) }!!
         mRepositorySource.getAllPublishers(object : RetrofitCallbacks.PublishersResponseCallback {
             override fun onSuccess(result: PublishersResponse?) {
                 mView.dismissLoading()

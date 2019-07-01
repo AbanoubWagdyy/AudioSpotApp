@@ -8,15 +8,24 @@ import com.audiospotapplication.DataLayer.Model.Review
 import com.audiospotapplication.DataLayer.Model.ReviewListResponse
 import com.audiospotapplication.DataLayer.Retrofit.RetrofitCallbacks
 import com.audiospotapplication.DataLayer.Retrofit.RetrofitResponseHandler
-import com.audiospotapplication.utils.BookMediaDataConversion
+import com.audiospotapplication.utils.BookDataConversion
 import com.visionvalley.letuno.DataLayer.RepositorySource
 import retrofit2.Call
 
 class BookDetailsPresenter(val mView: BookDetailsContract.View) : BookDetailsContract.Presenter {
+    override fun getSavedBook(): Book? {
+        return mRepositorySource.getSavedBook()
+    }
 
     override fun handlePlayClicked() {
-        var mediaMetaData = BookMediaDataConversion.convertBookToMediaMetaData(mRepositorySource.getSavedBook())
-        mView.playSong(mediaMetaData)
+        var mediaMetaData = mRepositorySource.getSavedBook()?.let {
+            BookDataConversion.convertBookToMediaMetaData(
+                it
+            )
+        }
+        if (mediaMetaData != null) {
+            mView.playSong(mediaMetaData)
+        }
     }
 
     override fun handleSeeAllReviewsClicked() {
@@ -111,7 +120,7 @@ class BookDetailsPresenter(val mView: BookDetailsContract.View) : BookDetailsCon
     lateinit var bookDetails: Book
 
     override fun start() {
-        mRepositorySource = DataRepository.getInstance(mView.getAppContext())
+        mRepositorySource = DataRepository.getInstance(mView.getAppContext()!!)
         mView.showLoadingDialog()
 
         if (mRepositorySource.isBookMine()) {
