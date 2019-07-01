@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.audiospot.DataLayer.Model.Book
 
 import com.audiospotapplication.R
+import com.audiospotapplication.UI.BaseActivity
 import com.audiospotapplication.UI.bookDetails.BookDetailsActivity
 import com.audiospotapplication.UI.books.Interface.onBookItemClickListener
 import com.audiospotapplication.UI.books.adapter.BooksAdapter
@@ -32,6 +33,10 @@ import kotlinx.android.synthetic.main.fragment_cart.*
 
 class CartFragment : Fragment(), CartContract.View, onBookItemClickListener,
     onBookItemClickListener.onCartBookDeleteClickListener, JcPlayerManagerListener {
+
+    override fun setCartCount(size: Int) {
+        (activity as BaseActivity).setCartNumber(size)
+    }
 
     override fun showBookDetailsScreen() {
         val intent = Intent(activity!!, BookDetailsActivity::class.java)
@@ -71,11 +76,12 @@ class CartFragment : Fragment(), CartContract.View, onBookItemClickListener,
     }
 
     override fun showMessage(message: String) {
-        Snackbar.make(
-            activity!!.findViewById(android.R.id.content),
-            message,
-            Snackbar.LENGTH_SHORT
-        ).show()
+        if (activity != null)
+            Snackbar.make(
+                activity!!.findViewById(android.R.id.content),
+                message,
+                Snackbar.LENGTH_SHORT
+            ).show()
     }
 
     override fun onItemDeleted(book: Book) {
@@ -114,10 +120,11 @@ class CartFragment : Fragment(), CartContract.View, onBookItemClickListener,
     private fun playAudio(book: Book) {
 
         if (book == null || book.sample == null || book.sample.equals("")) {
-            Snackbar.make(
-                activity!!.findViewById(android.R.id.content), "Audio is not available right now ," +
-                        "please check again later", Snackbar.LENGTH_LONG
-            ).show()
+            if (activity != null)
+                Snackbar.make(
+                    activity!!.findViewById(android.R.id.content), "Audio is not available right now ," +
+                            "please check again later", Snackbar.LENGTH_LONG
+                ).show()
 
             adapter = BooksAdapter(listMyBooks, this, this)
             recyclerCartBooks.adapter = adapter
@@ -157,10 +164,11 @@ class CartFragment : Fragment(), CartContract.View, onBookItemClickListener,
     }
 
     override fun showErrorMessage() {
-        Snackbar.make(
-            activity!!.findViewById(android.R.id.content),
-            activity!!.applicationContext.getString(R.string.try_again), Snackbar.LENGTH_SHORT
-        ).show()
+        if (activity != null)
+            Snackbar.make(
+                activity!!.findViewById(android.R.id.content),
+                activity!!.applicationContext.getString(R.string.try_again), Snackbar.LENGTH_SHORT
+            ).show()
     }
 
     override fun showLoading() {

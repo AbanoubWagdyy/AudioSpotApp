@@ -66,8 +66,9 @@ class LoginActivity : AppCompatActivity(), LoginContract.View, FacebookHelper.On
 
         }
 
-        setContentView(R.layout.activity_login)
+        hashFromSHA1("80:31:7E:EA:78:48:8C:B4:E0:4A:A7:87:56:7B:E6:A8:20:0A:E8:44")
 
+        setContentView(R.layout.activity_login)
 
         fbConnectHelper = FacebookHelper(this, this)
 
@@ -170,6 +171,18 @@ class LoginActivity : AppCompatActivity(), LoginContract.View, FacebookHelper.On
                 googleSignInAccount.id!!
             )
         }
+    }
+
+    fun hashFromSHA1(sha1: String) {
+        val arr = sha1.split(":".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
+        val byteArr = ByteArray(arr.size)
+
+        for (i in arr.indices) {
+            byteArr[i] = Integer.decode("0x" + arr[i]).toByte()
+        }
+
+        var keyHash = Base64.encodeToString(byteArr, Base64.NO_WRAP)
+        Log.d("hash Signing : ", keyHash)
     }
 
     override fun OnGSignInError(error: String?) {

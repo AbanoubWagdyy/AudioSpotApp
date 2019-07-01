@@ -29,43 +29,44 @@ class MyFavouriteBooksFragment : Fragment(), myFavouriteBooksContract.View, onBo
     onBookItemClickListener.onCartBookDeleteClickListener, JcPlayerManagerListener {
 
     override fun onPreparedAudio(status: JcStatus) {
-        
+
     }
 
     override fun onCompletedAudio() {
-        
+
     }
 
     override fun onPaused(status: JcStatus) {
-        
+
     }
 
     override fun onContinueAudio(status: JcStatus) {
-        
+
     }
 
     override fun onPlaying(status: JcStatus) {
-        
+
     }
 
     override fun onTimeChanged(status: JcStatus) {
-        
+
     }
 
     override fun onStopped(status: JcStatus) {
-        
+
     }
 
     override fun onJcpError(throwable: Throwable) {
-        
+
     }
 
     override fun showMessage(message: String) {
-        Snackbar.make(
-            activity!!.findViewById(android.R.id.content),
-            message,
-            Snackbar.LENGTH_SHORT
-        ).show()
+        if (activity != null)
+            Snackbar.make(
+                activity!!.findViewById(android.R.id.content),
+                message,
+                Snackbar.LENGTH_SHORT
+            ).show()
     }
 
     override fun onItemDeleted(book: Book) {
@@ -161,11 +162,11 @@ class MyFavouriteBooksFragment : Fragment(), myFavouriteBooksContract.View, onBo
             recyclerBooks.isNestedScrollingEnabled = false
             adapter = if (jcPlayerManager.isPlaying()) {
                 BooksAdapter(
-                    listMyBooks, this,this,
+                    listMyBooks, this, this,
                     jcPlayerManager.currentAudio
                 )
             } else {
-                BooksAdapter(listMyBooks, this,this)
+                BooksAdapter(listMyBooks, this, this)
             }
         } else {
             relativeEmptyBooks.visibility = View.VISIBLE

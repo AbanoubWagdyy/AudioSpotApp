@@ -3,6 +3,7 @@ package com.audiospotapplication.UI.bookDetails
 import com.audiospot.DataLayer.Model.Book
 import com.audiospot.DataLayer.Model.BookDetailsResponse
 import com.audiospotapplication.DataLayer.DataRepository
+import com.audiospotapplication.DataLayer.Model.BookListResponse
 import com.audiospotapplication.DataLayer.Model.Response
 import com.audiospotapplication.DataLayer.Model.Review
 import com.audiospotapplication.DataLayer.Model.ReviewListResponse
@@ -84,8 +85,17 @@ class BookDetailsPresenter(val mView: BookDetailsContract.View) : BookDetailsCon
                 }
 
                 override fun onSuccess(result: Response?) {
-                    mView.dismissLoading()
                     mView!!.showMessage(result!!.message)
+                    mRepositorySource.getMyCart(object : RetrofitCallbacks.BookListCallback{
+                        override fun onSuccess(result: BookListResponse?) {
+                            mView.dismissLoading()
+                            mView.setCartNumber(result?.data?.size)
+                        }
+
+                        override fun onFailure(call: Call<BookListResponse>?, t: Throwable?) {
+                            mView.dismissLoading()
+                        }
+                    })
                 }
 
                 override fun onFailure(call: Call<Response>?, t: Throwable?) {

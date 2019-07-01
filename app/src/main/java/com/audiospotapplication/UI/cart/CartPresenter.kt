@@ -56,6 +56,7 @@ class CartPresenter(val mView: CartContract.View) : CartContract.Presenter {
             override fun onSuccess(result: BookListResponse?) {
                 mView.dismissLoading()
                 mView.setBookList(result!!.data)
+                mView.setCartCount(result?.data?.size)
             }
 
             override fun onFailure(call: Call<BookListResponse>?, t: Throwable?) {

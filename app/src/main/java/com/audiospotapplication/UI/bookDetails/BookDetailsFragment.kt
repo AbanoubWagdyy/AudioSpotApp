@@ -1,7 +1,6 @@
 package com.audiospotapplication.UI.bookDetails
 
 
-import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -19,14 +18,14 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.audiospot.DataLayer.Model.Book
 import com.audiospot.DataLayer.Model.BookDetailsResponse
 import com.audiospotapplication.DataLayer.Model.Review
+import com.audiospotapplication.UI.BaseActivity
 import com.audiospotapplication.UI.bookChapters.BookChaptersActivity
 import com.audiospotapplication.UI.bookDetails.adapter.ReviewListAdapter
 import com.audiospotapplication.UI.bookReviews.BookReviewsActivity
 import com.audiospotapplication.UI.giftSelection.GiftSelectionActivity
 import com.audiospotapplication.UI.login.LoginActivity
 import com.audiospotapplication.UI.rateBook.RateBookActivity
-import com.audiospotapplication.UI.splash.SplashActivity
-import com.audiospotapplication.utils.BookDataConversion
+
 import com.audiospotapplication.utils.DialogUtils
 import com.audiospotapplication.utils.ImageUtils
 import com.example.jean.jcplayer.JcPlayerManager
@@ -34,10 +33,14 @@ import com.example.jean.jcplayer.JcPlayerManagerListener
 import com.example.jean.jcplayer.general.JcStatus
 import com.example.jean.jcplayer.model.JcAudio
 import com.google.android.material.snackbar.Snackbar
-import dm.audiostreamer.AudioStreamingManager
 import dm.audiostreamer.MediaMetaData
 
 class BookDetailsFragment : Fragment(), BookDetailsContract.View, JcPlayerManagerListener {
+
+    override fun setCartNumber(size: Int?) {
+        (activity as BaseActivity).setCartNumber(size)
+    }
+
     override fun onPreparedAudio(status: JcStatus) {
 
     }
@@ -140,7 +143,8 @@ class BookDetailsFragment : Fragment(), BookDetailsContract.View, JcPlayerManage
     }
 
     override fun showLoginMessage(message: String) {
-        Snackbar.make(activity!!.findViewById(android.R.id.content), message, Snackbar.LENGTH_LONG).show()
+        if (activity != null)
+            Snackbar.make(activity!!.findViewById(android.R.id.content), message, Snackbar.LENGTH_LONG).show()
         Handler().postDelayed({
             val mainIntent = Intent(activity!!, LoginActivity::class.java)
             activity!!.startActivity(mainIntent)
@@ -148,7 +152,8 @@ class BookDetailsFragment : Fragment(), BookDetailsContract.View, JcPlayerManage
     }
 
     override fun showMessage(message: String) {
-        Snackbar.make(activity!!.findViewById(android.R.id.content), message, Snackbar.LENGTH_LONG).show()
+        if (activity != null)
+            Snackbar.make(activity!!.findViewById(android.R.id.content), message, Snackbar.LENGTH_LONG).show()
     }
 
     override fun setBookReviews(reviews: List<Review>) {
@@ -234,6 +239,9 @@ class BookDetailsFragment : Fragment(), BookDetailsContract.View, JcPlayerManage
 
         mPresenter = BookDetailsPresenter(this)
         mPresenter.start()
+
+        ivPlay.setBackgroundResource(R.mipmap.play)
+        ivPlay.setTag(R.mipmap.play)
     }
 
     override fun bindResponse(result: BookDetailsResponse?) {

@@ -39,41 +39,40 @@ abstract class BaseActivity : AppCompatActivity(),
     HomeFragment.onItemPlayClickListener, JcPlayerManagerListener {
 
     override fun onPreparedAudio(status: JcStatus) {
-        
+
     }
 
     override fun onCompletedAudio() {
-        
+
     }
 
     override fun onPaused(status: JcStatus) {
-        
+
     }
 
     override fun onContinueAudio(status: JcStatus) {
-        
+
     }
 
     override fun onPlaying(status: JcStatus) {
-        
+
     }
 
     override fun onTimeChanged(status: JcStatus) {
-        
+
     }
 
     override fun onStopped(status: JcStatus) {
-        
+
     }
 
     override fun onJcpError(throwable: Throwable) {
-        
+
     }
 
     lateinit var ivArrow: ImageView
     lateinit var tabShown: ActiveTab
     lateinit var mRepositorySource: RepositorySource
-    private var listOfSongs: MutableList<MediaMetaData> = ArrayList()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -112,14 +111,15 @@ abstract class BaseActivity : AppCompatActivity(),
                 if (mRepositorySource.getActiveTab() != ActiveTab.HOME) {
                     supportFragmentManager.beginTransaction()
                         .replace(R.id.container, HomeFragment.newInstance()).commitAllowingStateLoss()
+                    tvTitle.text = "Home"
                     ivArrow.visibility = View.GONE
                 } else {
                     supportFragmentManager.beginTransaction()
                         .replace(R.id.container, getFragment(ivArrow)).commitAllowingStateLoss()
                     ivArrow.visibility = getArrowHeaderVisibility()
+                    tvTitle.text = getHeaderTitle()
                 }
                 validateTabColorVisibility(tabShown)
-
             }
         }
 
@@ -130,10 +130,12 @@ abstract class BaseActivity : AppCompatActivity(),
                     supportFragmentManager.beginTransaction()
                         .replace(R.id.container, LibraryFragment.newInstance()).commitAllowingStateLoss()
                     ivArrow.visibility = View.GONE
+                    tvTitle.text = "Library"
                 } else {
                     supportFragmentManager.beginTransaction()
                         .replace(R.id.container, getFragment(ivArrow)).commitAllowingStateLoss()
                     ivArrow.visibility = getArrowHeaderVisibility()
+                    tvTitle.text = getHeaderTitle()
                 }
                 validateTabColorVisibility(tabShown)
             }
@@ -146,10 +148,12 @@ abstract class BaseActivity : AppCompatActivity(),
                     supportFragmentManager.beginTransaction()
                         .replace(R.id.container, MyBooksFragment.newInstance()).commitAllowingStateLoss()
                     ivArrow.visibility = View.GONE
+                    tvTitle.text = "My Books"
                 } else {
                     supportFragmentManager.beginTransaction()
                         .replace(R.id.container, getFragment(ivArrow)).commitAllowingStateLoss()
                     ivArrow.visibility = getArrowHeaderVisibility()
+                    tvTitle.text = getHeaderTitle()
                 }
                 validateTabColorVisibility(tabShown)
             }
@@ -162,10 +166,12 @@ abstract class BaseActivity : AppCompatActivity(),
                     supportFragmentManager.beginTransaction()
                         .replace(R.id.container, MenuFragment.newInstance()).commitAllowingStateLoss()
                     ivArrow.visibility = View.GONE
+                    tvTitle.text = "Menu"
                 } else {
                     supportFragmentManager.beginTransaction()
                         .replace(R.id.container, getFragment(ivArrow)).commitAllowingStateLoss()
                     ivArrow.visibility = getArrowHeaderVisibility()
+                    tvTitle.text = getHeaderTitle()
                 }
                 validateTabColorVisibility(tabShown)
             }
@@ -293,6 +299,11 @@ abstract class BaseActivity : AppCompatActivity(),
     abstract fun getHeaderTitle(): String
     abstract fun getArrowHeaderVisibility(): Int
     abstract fun getFragment(ivArrow: ImageView): Fragment
+
+    fun setCartNumber(size: Int?) {
+        tvCartCount.text = "$size"
+    }
+
     private val jcPlayerManager: JcPlayerManager by lazy {
         JcPlayerManager.getInstance(applicationContext).get()!!
     }

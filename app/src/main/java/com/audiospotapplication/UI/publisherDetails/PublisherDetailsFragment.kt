@@ -29,35 +29,35 @@ import kotlinx.android.synthetic.main.fragment_publisher_details.tvAbout
 class PublisherDetailsFragment : Fragment(), PublisherDetailsContract.View, onBookItemClickListener,
     JcPlayerManagerListener {
     override fun onPreparedAudio(status: JcStatus) {
-        
+
     }
 
     override fun onCompletedAudio() {
-        
+
     }
 
     override fun onPaused(status: JcStatus) {
-        
+
     }
 
     override fun onContinueAudio(status: JcStatus) {
-        
+
     }
 
     override fun onPlaying(status: JcStatus) {
-        
+
     }
 
     override fun onTimeChanged(status: JcStatus) {
-        
+
     }
 
     override fun onStopped(status: JcStatus) {
-        
+
     }
 
     override fun onJcpError(throwable: Throwable) {
-        
+
     }
 
     override fun showBookDetailsScreen() {
@@ -96,10 +96,11 @@ class PublisherDetailsFragment : Fragment(), PublisherDetailsContract.View, onBo
 
     private fun playAudio(book: Book) {
         if (book == null || book.sample == null || book.sample.equals("")) {
-            Snackbar.make(
-                activity!!.findViewById(android.R.id.content), "Audio is not available right now ," +
-                        "please check again later", Snackbar.LENGTH_LONG
-            ).show()
+            if (activity != null)
+                Snackbar.make(
+                    activity!!.findViewById(android.R.id.content), "Audio is not available right now ," +
+                            "please check again later", Snackbar.LENGTH_LONG
+                ).show()
 
             adapter = BooksAdapter(listMyBooks, this)
             recyclerBooks.adapter = adapter
@@ -158,7 +159,8 @@ class PublisherDetailsFragment : Fragment(), PublisherDetailsContract.View, onBo
     }
 
     override fun showErrorMessage(message: String) {
-        Snackbar.make(activity!!.findViewById(android.R.id.content), message, Snackbar.LENGTH_LONG).show()
+        if (activity != null)
+            Snackbar.make(activity!!.findViewById(android.R.id.content), message, Snackbar.LENGTH_LONG).show()
     }
 
     lateinit var mPresenter: PublisherDetailsContract.Presenter

@@ -26,7 +26,8 @@ class GiveGiftFragment : Fragment(), GiveGiftContract.View {
     }
 
     override fun showMessage(message: String) {
-        Snackbar.make(activity!!.findViewById(android.R.id.content), message, Snackbar.LENGTH_LONG).show()
+        if (activity != null)
+            Snackbar.make(activity!!.findViewById(android.R.id.content), message, Snackbar.LENGTH_LONG).show()
     }
 
     override fun finalizeView() {
@@ -36,7 +37,8 @@ class GiveGiftFragment : Fragment(), GiveGiftContract.View {
     }
 
     override fun showInvalidEmailMessage(message: String) {
-        Snackbar.make(activity!!.findViewById(android.R.id.content), message, Snackbar.LENGTH_LONG).show()
+        if (activity != null)
+            Snackbar.make(activity!!.findViewById(android.R.id.content), message, Snackbar.LENGTH_LONG).show()
     }
 
     override fun getAppContext(): Context? {

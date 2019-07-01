@@ -1,1 +1,1 @@
-include ':app', ':dmaudiostreamer'
+include ':app', ':dmaudiostreamer', ':jcplayer'

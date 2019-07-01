@@ -80,11 +80,12 @@ class MenuFragment : Fragment(), MenuContract.View {
     }
 
     override fun showErrorMessage() {
-        Snackbar.make(
-            activity!!.findViewById(android.R.id.content),
-            "Please Check Your Internet Connection",
-            Snackbar.LENGTH_SHORT
-        ).show()
+        if (activity != null)
+            Snackbar.make(
+                activity!!.findViewById(android.R.id.content),
+                "Please Check Your Internet Connection",
+                Snackbar.LENGTH_SHORT
+            ).show()
     }
 
     override fun getAppContext(): Context? {

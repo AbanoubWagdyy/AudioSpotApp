@@ -101,7 +101,8 @@ class HomeFragment : Fragment(), HomeContract.View, onBookItemClickListener, JcP
     }
 
     override fun showErrorMessage(message: String) {
-        Snackbar.make(activity!!.findViewById(android.R.id.content), message, Snackbar.LENGTH_LONG).show()
+        if (activity != null)
+            Snackbar.make(activity!!.findViewById(android.R.id.content), message, Snackbar.LENGTH_LONG).show()
     }
 
     override fun showDialog() {

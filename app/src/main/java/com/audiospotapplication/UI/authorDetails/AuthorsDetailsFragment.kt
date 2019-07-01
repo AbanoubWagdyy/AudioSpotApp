@@ -95,10 +95,11 @@ class AuthorsDetailsFragment : Fragment(), AuthorDetailsContract.View, onBookIte
 
     private fun playAudio(book: Book) {
         if (book == null || book.sample == null || book.sample.equals("")) {
-            Snackbar.make(
-                activity!!.findViewById(android.R.id.content), "Audio is not available right now ," +
-                        "please check again later", Snackbar.LENGTH_LONG
-            ).show()
+            if (activity != null)
+                Snackbar.make(
+                    activity!!.findViewById(android.R.id.content), "Audio is not available right now ," +
+                            "please check again later", Snackbar.LENGTH_LONG
+                ).show()
 
             adapter = BooksAdapter(listMyBooks, this)
             recyclerBooks.adapter = adapter

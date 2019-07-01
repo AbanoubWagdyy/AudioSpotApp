@@ -21,5 +21,6 @@ interface CartContract {
         fun setBookList(listMyBooks: List<Book>)
         fun showMessage(message: String)
         fun showBookDetailsScreen()
+        fun setCartCount(size: Int)
     }
 }

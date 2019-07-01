@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import android.util.Log
+import android.view.View
 import com.audiospotapplication.DataLayer.DataRepository
 import com.audiospotapplication.DataLayer.Model.BookListResponse
 import com.audiospotapplication.DataLayer.Retrofit.RetrofitCallbacks
@@ -126,16 +127,6 @@ class HomepageActivity : AppCompatActivity(), HomeFragment.onItemPlayClickListen
                     Log.d("", "")
                 }
             })
-
-            mRepositorySource.getMyCart(object : RetrofitCallbacks.BookListCallback {
-                override fun onSuccess(result: BookListResponse?) {
-                    tvCartCount.text = result!!.data.size.toString()
-                }
-
-                override fun onFailure(call: Call<BookListResponse>?, t: Throwable?) {
-                    Log.d("", "")
-                }
-            })
         } else {
             showHomePageContent()
         }
@@ -147,7 +138,7 @@ class HomepageActivity : AppCompatActivity(), HomeFragment.onItemPlayClickListen
                 tabShown = ActiveTab.HOME
                 supportFragmentManager.beginTransaction().add(R.id.container, HomeFragment.newInstance())
                     .commitAllowingStateLoss()
-
+                tvTitle.text = "Homepage"
                 validateTabColorVisibility(tabShown)
             }
         }
@@ -157,6 +148,7 @@ class HomepageActivity : AppCompatActivity(), HomeFragment.onItemPlayClickListen
                 tabShown = ActiveTab.MENU
                 supportFragmentManager.beginTransaction().add(R.id.container, MenuFragment.newInstance())
                     .commitAllowingStateLoss()
+                tvTitle.text = "Menu"
                 validateTabColorVisibility(tabShown)
             }
         }
@@ -166,7 +158,7 @@ class HomepageActivity : AppCompatActivity(), HomeFragment.onItemPlayClickListen
                 tabShown = ActiveTab.MYBOOKS
                 supportFragmentManager.beginTransaction().add(R.id.container, MyBooksFragment.newInstance())
                     .commitAllowingStateLoss()
-
+                tvTitle.text = "My Books"
                 validateTabColorVisibility(tabShown)
             }
         }
@@ -176,6 +168,7 @@ class HomepageActivity : AppCompatActivity(), HomeFragment.onItemPlayClickListen
                 tabShown = ActiveTab.LIBRARY
                 supportFragmentManager.beginTransaction().add(R.id.container, LibraryFragment.newInstance())
                     .commitAllowingStateLoss()
+                tvTitle.text = "Library"
                 validateTabColorVisibility(tabShown)
             }
         }
@@ -199,6 +192,7 @@ class HomepageActivity : AppCompatActivity(), HomeFragment.onItemPlayClickListen
 
         supportFragmentManager.beginTransaction().add(R.id.container, HomeFragment.newInstance())
             .commitAllowingStateLoss()
+        tvTitle.text = "Homepage"
         validateTabColorVisibility(tabShown)
     }
 
@@ -214,7 +208,6 @@ class HomepageActivity : AppCompatActivity(), HomeFragment.onItemPlayClickListen
                 ivLibrary.setImageResource(R.mipmap.tab_library_inactive)
                 tvLibrary.setTextColor(resources.getColor(R.color.grey))
                 mRepositorySource.setActiveTab(ActiveTab.HOME)
-                tvTitle.text = "AudioSpot"
             }
 
             ActiveTab.LIBRARY -> {
@@ -227,7 +220,6 @@ class HomepageActivity : AppCompatActivity(), HomeFragment.onItemPlayClickListen
                 ivLibrary.setImageResource(R.mipmap.tab_library)
                 tvLibrary.setTextColor(resources.getColor(R.color.white))
                 mRepositorySource.setActiveTab(ActiveTab.LIBRARY)
-                tvTitle.text = "AudioSpot"
             }
 
             ActiveTab.MYBOOKS -> {
@@ -240,7 +232,6 @@ class HomepageActivity : AppCompatActivity(), HomeFragment.onItemPlayClickListen
                 ivLibrary.setImageResource(R.mipmap.tab_library_inactive)
                 tvLibrary.setTextColor(resources.getColor(R.color.grey))
                 mRepositorySource.setActiveTab(ActiveTab.MYBOOKS)
-                tvTitle.text = "AudioSpot"
             }
 
             ActiveTab.MENU -> {
@@ -253,7 +244,6 @@ class HomepageActivity : AppCompatActivity(), HomeFragment.onItemPlayClickListen
                 ivLibrary.setImageResource(R.mipmap.tab_library_inactive)
                 tvLibrary.setTextColor(resources.getColor(R.color.grey))
                 mRepositorySource.setActiveTab(ActiveTab.MENU)
-                tvTitle.text = "AudioSpot"
             }
         }
     }
@@ -267,5 +257,20 @@ class HomepageActivity : AppCompatActivity(), HomeFragment.onItemPlayClickListen
 
     private val jcPlayerManager: JcPlayerManager by lazy {
         JcPlayerManager.getInstance(applicationContext).get()!!
+    }
+
+    override fun onResume() {
+        tvCartCount.visibility = View.INVISIBLE
+        mRepositorySource.getMyCart(object : RetrofitCallbacks.BookListCallback {
+            override fun onSuccess(result: BookListResponse?) {
+                tvCartCount.visibility = View.VISIBLE
+                tvCartCount.text = result!!.data.size.toString()
+            }
+
+            override fun onFailure(call: Call<BookListResponse>?, t: Throwable?) {
+                Log.d("", "")
+            }
+        })
+        super.onResume()
     }
 }

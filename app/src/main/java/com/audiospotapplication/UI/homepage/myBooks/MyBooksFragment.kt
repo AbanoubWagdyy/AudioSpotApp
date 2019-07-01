@@ -102,10 +102,11 @@ class MyBooksFragment : Fragment(), MyBooksContract.View, onBookItemClickListene
     private fun playAudio(book: Book) {
 
         if (book == null || book.sample == null || book.sample.equals("")) {
-            Snackbar.make(
-                activity!!.findViewById(android.R.id.content), "Audio is not available right now ," +
-                        "please check again later", Snackbar.LENGTH_LONG
-            ).show()
+            if (activity != null)
+                Snackbar.make(
+                    activity!!.findViewById(android.R.id.content), "Audio is not available right now ," +
+                            "please check again later", Snackbar.LENGTH_LONG
+                ).show()
 
             adapter = BooksAdapter(listMyBooks, this)
             recyclerMyBooks.adapter = adapter
@@ -136,11 +137,12 @@ class MyBooksFragment : Fragment(), MyBooksContract.View, onBookItemClickListene
     }
 
     override fun showErrorMessage() {
-        Snackbar.make(
-            activity!!.findViewById(android.R.id.content),
-            activity!!.applicationContext.getString(R.string.try_again),
-            Snackbar.LENGTH_SHORT
-        ).show()
+        if (activity != null)
+            Snackbar.make(
+                activity!!.findViewById(android.R.id.content),
+                activity!!.applicationContext.getString(R.string.try_again),
+                Snackbar.LENGTH_SHORT
+            ).show()
     }
 
     override fun showLoading() {
@@ -174,12 +176,6 @@ class MyBooksFragment : Fragment(), MyBooksContract.View, onBookItemClickListene
         return inflater.inflate(R.layout.fragment_my_books, container, false)
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        mPresenter = MyBooksPresenter(this)
-        mPresenter.start()
-    }
-
     companion object {
         @JvmStatic
         fun newInstance() =
@@ -190,6 +186,8 @@ class MyBooksFragment : Fragment(), MyBooksContract.View, onBookItemClickListene
         super.onAttach(activity)
         try {
             mPlayCallback = activity as onItemPlayClickListener
+            mPresenter = MyBooksPresenter(this)
+            mPresenter.start()
         } catch (e: ClassCastException) {
             throw ClassCastException(activity.toString() + " must implement MyInterface ")
         }

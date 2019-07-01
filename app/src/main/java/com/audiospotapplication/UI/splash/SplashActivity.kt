@@ -21,7 +21,7 @@ class SplashActivity : AppCompatActivity(), SplashContract.View {
 
     private val STORAGE_PERMISSION_CODE: Int = 10
 
-    private val SPLASH_DISPLAY_LENGTH = 3000
+    private val SPLASH_DISPLAY_LENGTH = 2000
 
     lateinit var mPresenter: SplashContract.Presenter
 

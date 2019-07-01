@@ -28,7 +28,8 @@ class RateBookFragment : Fragment(), RateBookContract.View {
     }
 
     override fun showMessage(message: String) {
-        Snackbar.make(activity!!.findViewById(android.R.id.content), message, Snackbar.LENGTH_LONG).show()
+        if (activity != null)
+            Snackbar.make(activity!!.findViewById(android.R.id.content), message, Snackbar.LENGTH_LONG).show()
     }
 
     override fun bindResponse(bookDetailsData: Book) {
@@ -77,7 +78,7 @@ class RateBookFragment : Fragment(), RateBookContract.View {
 
         mPresenter.start()
 
-        ratingBarUser.setOnRatingChangeListener(object : BaseRatingBar.OnRatingChangeListener{
+        ratingBarUser.setOnRatingChangeListener(object : BaseRatingBar.OnRatingChangeListener {
             override fun onRatingChange(ratingBar: BaseRatingBar?, rating: Float, fromUser: Boolean) {
                 this@RateBookFragment.rating = ratingBar!!.rating
             }
@@ -95,5 +96,5 @@ class RateBookFragment : Fragment(), RateBookContract.View {
     }
 
     lateinit var mPresenter: RateBookContract.Presenter
-    var rating : Float = 0.0f
+    var rating: Float = 0.0f
 }
