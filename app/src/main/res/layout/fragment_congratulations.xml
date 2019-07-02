@@ -26,6 +26,7 @@ You received this Audiobook as a gift"/>
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="25dp"
+                android:id="@+id/linearBook"
                 android:orientation="horizontal">
 
             <LinearLayout

@@ -1,6 +1,7 @@
 package com.audiospotapplication.UI.promoCodeCongratulations
 
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -10,6 +11,7 @@ import com.audiospot.DataLayer.Model.Book
 import com.audiospotapplication.DataLayer.DataRepository
 
 import com.audiospotapplication.R
+import com.audiospotapplication.UI.bookDetails.BookDetailsActivity
 import com.audiospotapplication.utils.ImageUtils
 import com.visionvalley.letuno.DataLayer.RepositorySource
 import kotlinx.android.synthetic.main.fragment_congratulations.*
@@ -27,9 +29,18 @@ class CongratulationsFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         mRepositorySource = DataRepository.getInstance(activity!!.applicationContext)
         mRepositorySource.getVoucherBook()?.let { bindResponse(it) }
+
+        linearBook.setOnClickListener {
+            mRepositorySource.saveBook(currentBook)
+            val intent = Intent(activity!!, BookDetailsActivity::class.java)
+            startActivity(intent)
+            activity!!.finish()
+        }
     }
 
     fun bindResponse(result: Book) {
+
+        this.currentBook = result
 
         ratingBar.rating = result!!.rate.toFloat()
         ratingBar.setOnRatingChangeListener(null)
@@ -50,7 +61,14 @@ class CongratulationsFragment : Fragment() {
             tvNarrator.text = builder.toString().substring(0, builder.toString().length - 1)
         }
         ImageUtils.setImageFromUrlIntoImageViewUsingPicasso(result.cover, activity!!.applicationContext, ivBook)
+
+        var listMyBooks = ArrayList<Book>()
+        mRepositorySource.getMyBooks()?.let { listMyBooks.addAll(it) }
+        listMyBooks.add(result)
+        mRepositorySource.setMyBooks(listMyBooks)
     }
+
+    private lateinit var currentBook: Book
 
     lateinit var mRepositorySource: RepositorySource
 

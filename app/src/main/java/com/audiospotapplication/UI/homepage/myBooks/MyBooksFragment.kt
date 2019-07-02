@@ -61,7 +61,7 @@ class MyBooksFragment : Fragment(), MyBooksContract.View, onBookItemClickListene
     }
 
     override fun showEmptyBooksScreen(strEmptyListBooks: String) {
-        relativeEmptyBooks.visibility = View.VISIBLE
+        emptyBooks.visibility = View.VISIBLE
         emptyBooks.text = strEmptyListBooks
     }
 
@@ -146,14 +146,17 @@ class MyBooksFragment : Fragment(), MyBooksContract.View, onBookItemClickListene
     }
 
     override fun showLoading() {
-        DialogUtils.showProgressDialog(activity!!, "Loading ...")
+//        progress.visibility = View.VISIBLE
+        swipeToRefresh.isRefreshing = true
     }
 
     override fun dismissLoading() {
-        DialogUtils.dismissProgressDialog()
+//        progress.visibility = View.GONE
+        swipeToRefresh.isRefreshing = false
     }
 
     override fun setBookList(listMyBooks: List<Book>) {
+        swipeToRefresh.isRefreshing = false
         this.listMyBooks = listMyBooks
         recyclerMyBooks.layoutManager = LinearLayoutManager(context)
         recyclerMyBooks.setHasFixedSize(true)
@@ -176,6 +179,13 @@ class MyBooksFragment : Fragment(), MyBooksContract.View, onBookItemClickListene
         return inflater.inflate(R.layout.fragment_my_books, container, false)
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        swipeToRefresh.setOnRefreshListener {
+            mPresenter.start()
+        }
+    }
+
     companion object {
         @JvmStatic
         fun newInstance() =
@@ -187,10 +197,15 @@ class MyBooksFragment : Fragment(), MyBooksContract.View, onBookItemClickListene
         try {
             mPlayCallback = activity as onItemPlayClickListener
             mPresenter = MyBooksPresenter(this)
-            mPresenter.start()
+
         } catch (e: ClassCastException) {
             throw ClassCastException(activity.toString() + " must implement MyInterface ")
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        mPresenter.start()
     }
 
     interface onItemPlayClickListener {

@@ -9,6 +9,7 @@ import com.audiospotapplication.DataLayer.Retrofit.RetrofitCallbacks
 import com.audiospotapplication.UI.ActiveTab
 import com.audiospotapplication.UI.giftSelection.GiftSelection
 import dm.audiostreamer.MediaMetaData
+import java.util.ArrayList
 
 interface RepositorySource : CacheDataSource {
 
@@ -176,4 +177,6 @@ interface RepositorySource : CacheDataSource {
     fun setActiveTab(tabActive: ActiveTab)
 
     fun getActiveTab(): ActiveTab?
+
+    fun setMyBooks(listMyBooks: ArrayList<Book>)
 }

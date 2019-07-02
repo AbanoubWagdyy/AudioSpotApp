@@ -30,8 +30,12 @@ import dm.audiostreamer.MediaMetaData
 import retrofit2.Call
 
 class DataRepository
-
 private constructor(context: Context) : RepositorySource {
+
+    override fun setMyBooks(listMyBooks: ArrayList<Book>) {
+        myBooks = ArrayList()
+        myBooks = listMyBooks
+    }
 
     private val TAG = javaClass.simpleName
     private val mRetrofitService: RemoteDataSourceUsingRetrofit
@@ -42,7 +46,7 @@ private constructor(context: Context) : RepositorySource {
     private val mPublisherListInterceptor: PublisherItemInterceptor
     private val mBookItemInterceptor: BookItemInterceptor
     private var authResponse: AuthResponse? = null
-    private var myBooks: List<Book>? = null
+    private var myBooks: ArrayList<Book>? = null
     private var bookmarkBody: BookmarkBody? = null
     private var bookmark: Bookmark? = null
     private var promoCode = ""
@@ -461,7 +465,7 @@ private constructor(context: Context) : RepositorySource {
                 mCacheDataSource.getStringFromCache(GlobalKeys.StoreData.TOKEN, null),
                 object : RetrofitCallbacks.BookListCallback {
                     override fun onSuccess(result: BookListResponse) {
-                        myBooks = result.data
+                        myBooks = ArrayList(result.data)
                         callback.onSuccess(result)
                     }
 
