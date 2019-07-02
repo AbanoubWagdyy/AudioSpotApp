@@ -138,7 +138,7 @@ class HomepageActivity : AppCompatActivity(), HomeFragment.onItemPlayClickListen
                 tabShown = ActiveTab.HOME
                 supportFragmentManager.beginTransaction().add(R.id.container, HomeFragment.newInstance())
                     .commitAllowingStateLoss()
-                tvTitle.text = "Homepage"
+                tvTitle.text = "AudioSpot"
                 validateTabColorVisibility(tabShown)
             }
         }
@@ -192,7 +192,7 @@ class HomepageActivity : AppCompatActivity(), HomeFragment.onItemPlayClickListen
 
         supportFragmentManager.beginTransaction().add(R.id.container, HomeFragment.newInstance())
             .commitAllowingStateLoss()
-        tvTitle.text = "Homepage"
+        tvTitle.text = "AudioSpot"
         validateTabColorVisibility(tabShown)
     }
 

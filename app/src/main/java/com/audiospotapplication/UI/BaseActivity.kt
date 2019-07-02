@@ -111,7 +111,7 @@ abstract class BaseActivity : AppCompatActivity(),
                 if (mRepositorySource.getActiveTab() != ActiveTab.HOME) {
                     supportFragmentManager.beginTransaction()
                         .replace(R.id.container, HomeFragment.newInstance()).commitAllowingStateLoss()
-                    tvTitle.text = "Home"
+                    tvTitle.text = "AudioSpot"
                     ivArrow.visibility = View.GONE
                 } else {
                     supportFragmentManager.beginTransaction()
