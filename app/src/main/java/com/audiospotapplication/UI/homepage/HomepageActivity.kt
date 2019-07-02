@@ -248,13 +248,6 @@ class HomepageActivity : AppCompatActivity(), HomeFragment.onItemPlayClickListen
         }
     }
 
-    private fun getNotificationPendingIntent(): PendingIntent {
-        val intent = Intent(applicationContext, HomepageActivity::class.java)
-        intent.setAction("openplayer")
-        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
-        return PendingIntent.getActivity(applicationContext, 0, intent, 0)
-    }
-
     private val jcPlayerManager: JcPlayerManager by lazy {
         JcPlayerManager.getInstance(applicationContext).get()!!
     }
