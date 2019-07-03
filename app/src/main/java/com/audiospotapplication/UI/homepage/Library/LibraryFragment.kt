@@ -31,14 +31,17 @@ class LibraryFragment : Fragment() {
             startActivity(intent)
 
         }
+
         relativeAuthors.setOnClickListener {
             val intent = Intent(activity, AuthorsActivity::class.java)
             startActivity(intent)
         }
+
         relativeCategories.setOnClickListener {
             val intent = Intent(activity, CategoriesActivity::class.java)
             startActivity(intent)
         }
+
         relativePublishers.setOnClickListener {
             val intent = Intent(activity, PublishersActivity::class.java)
             startActivity(intent)

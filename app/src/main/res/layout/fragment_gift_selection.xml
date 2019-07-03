@@ -124,7 +124,7 @@
                 android:textStyle="bold"
                 android:paddingStart="15dp"
                 android:lineSpacingExtra="10sp"
-                android:text="You are close to making a difference in\n someone&apos;s life"/>
+                android:text="@string/you_are_close_to_make"/>
 
         <RadioGroup
                 android:layout_width="match_parent"
@@ -143,7 +143,7 @@
                     android:textStyle="bold"
                     android:letterSpacing="0.07"
                     android:lineSpacingExtra="10sp"
-                    android:text="Send to an AudioSpot account"/>
+                    android:text="@string/send_to_audiospot_account"/>
 
             <RadioButton
                     android:id="@+id/radioVoucher"
@@ -155,7 +155,7 @@
                     android:textColor="@color/white"
                     android:letterSpacing="0.07"
                     android:lineSpacingExtra="10sp"
-                    android:text="I will present it as a voucher"/>
+                    android:text="@string/will_present_as_voucher"/>
 
         </RadioGroup>
 
@@ -177,7 +177,7 @@
                         android:letterSpacing="0.07"
                         android:textStyle="bold"
                         android:lineSpacingExtra="14.7sp"
-                        android:text="Quantity"/>
+                        android:text="@string/quantity"/>
 
             </RelativeLayout>
 

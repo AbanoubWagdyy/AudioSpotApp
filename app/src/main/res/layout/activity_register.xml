@@ -58,7 +58,7 @@
                     android:letterSpacing="0.07"
                     android:lineSpacingExtra="79.8sp"
                     android:gravity="center_horizontal"
-                    android:text="Create New Account"/>
+                    android:text="@string/create_new_account_sign_up"/>
 
             <View
                     android:layout_width="fill_parent"
@@ -126,7 +126,7 @@
                     android:textColor="@color/white"
                     android:inputType="textEmailAddress"
                     android:layout_marginTop="15dp"
-                    android:hint="@string/prompt_email"
+                    android:hint="@string/email"
                     android:layout_marginStart="10dp"
                     android:textColorHint="@color/white"
                     android:background="@drawable/light_black_btn_background_3"

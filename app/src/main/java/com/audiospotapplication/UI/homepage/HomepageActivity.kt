@@ -1,6 +1,5 @@
 package com.audiospotapplication.UI.homepage
 
-import android.app.PendingIntent
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -25,9 +24,8 @@ import com.example.jean.jcplayer.general.JcStatus
 import com.example.jean.jcplayer.model.JcAudio
 import com.google.android.material.snackbar.Snackbar
 import com.visionvalley.letuno.DataLayer.RepositorySource
-import dm.audiostreamer.AudioStreamingManager
 import dm.audiostreamer.MediaMetaData
-import kotlinx.android.synthetic.main.activity_homepage3.*
+import kotlinx.android.synthetic.main.activity_homepage.*
 import kotlinx.android.synthetic.main.header.*
 import retrofit2.Call
 
@@ -108,7 +106,7 @@ class HomepageActivity : AppCompatActivity(), HomeFragment.onItemPlayClickListen
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_homepage3)
+        setContentView(R.layout.activity_homepage)
 
         mRepositorySource = DataRepository.getInstance(applicationContext)
 

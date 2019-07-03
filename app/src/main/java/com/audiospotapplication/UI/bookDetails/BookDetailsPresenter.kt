@@ -9,6 +9,7 @@ import com.audiospotapplication.DataLayer.Model.Review
 import com.audiospotapplication.DataLayer.Model.ReviewListResponse
 import com.audiospotapplication.DataLayer.Retrofit.RetrofitCallbacks
 import com.audiospotapplication.DataLayer.Retrofit.RetrofitResponseHandler
+import com.audiospotapplication.R
 import com.audiospotapplication.utils.BookDataConversion
 import com.visionvalley.letuno.DataLayer.RepositorySource
 import retrofit2.Call
@@ -135,7 +136,7 @@ class BookDetailsPresenter(val mView: BookDetailsContract.View) : BookDetailsCon
 
         if (mRepositorySource.isBookMine()) {
             mView.hideAddFavoritesButton()
-            mView.setAddToCartText("Review the book")
+            mView.setAddToCartText(mView.getAppContext()!!.getString(R.string.rate_book))
         }
 
         mRepositorySource.getBookDetails(object : RetrofitCallbacks.BookDetailsResponseCallback {

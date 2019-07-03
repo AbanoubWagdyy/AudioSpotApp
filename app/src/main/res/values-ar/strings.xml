@@ -1,48 +1,40 @@
 <resources>
     <string name="app_name">AudioSpot</string>
-    <string name="title_activity_login">Sign in</string>
-    <string name="prompt_email">Email</string>
-    <string name="prompt_password">Password</string>
-    <string name="action_sign_in">Sign in or register</string>
-    <string name="action_sign_in_short">Sign in</string>
+    <string name="email">البريد الإلكتروني</string>
     <string name="welcome">"Welcome !"</string>
-    <string name="invalid_username">Not a valid username</string>
-    <string name="invalid_password">Password must be >5 characters</string>
     <string name="login_failed">"Login failed"</string>
     <string name="facebook_app_id">402190117171536</string>
     <string name="fb_login_protocol_scheme">fb402190117171536</string>
-    <string name="username">Username</string>
-    <string name="password">Password</string>
-    <string name="login">Login</string>
+    <string name="username">اسم المستخدم</string>
+    <string name="password">كلمة المرور</string>
+    <string name="login">دخول</string>
     <string name="forget_password">نسيت كلمه المرور ؟</string>
-    <string name="create_new_account">Create a new account? Sign up</string>
+    <string name="create_new_account">إنشاء حساب جديد</string>
     <string name="or_sign">Or Sign by</string>
     <string name="default_notification_channel_id" translatable="false">audiospot_fcm_default_channel</string>
-    <string name="skip">Skip</string>
+    <string name="skip">تخطى</string>
     <string name="audio_spot">AudioSpot</string>
     <string name="first_name">الاسم الاول</string>
-    <string name="last_name">الاسم الاخير</string>
-    <string name="confirm_password">تاكيد كلمه المرور</string>
+    <string name="last_name">اسم العائلة</string>
+    <string name="confirm_password">تأكيد كلمة المرور</string>
     <string name="create">انشاء</string>
-    <string name="cancel">Cancel</string>
-    <string name="reset_password">Reset Password</string>
+    <string name="cancel">إلغاء</string>
+    <string name="reset_password">إعادة تعيين كلمة المرور</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="newest_arrival">Newest arrival</string>
+    <string name="newest_arrival">أحدث وصول</string>
     <string name="a_z">A-Z</string>
-    <string name="best_seller">Best seller</string>
-    <string name="length">Length</string>
+    <string name="best_seller">الأكثر مبيعا</string>
+    <string name="length">الطول:  </string>
     <string name="average_review">Average customer review</string>
     <string name="view_book_chapters">
-        <u>View Book Chapters</u>
+        <u>اعرض فصول الكتاب</u>
     </string>
     <string name="see_all_reviews">
         <u>See All Reviews</u>
     </string>
     <string name="should_be_logged_in">You have to be logged in !.</string>
     <string name="prefered_categories">
-        <u>Prefered Categories</u>
+        <u>الفئات المفضلة</u>
     </string>
     <string name="mobile_phone">الموبايل</string>
     <string name="birthday">تاريح الميلاد</string>
@@ -54,7 +46,74 @@
     </string>
     <string name="try_again">رجاء المحاوله مره اخري</string>
     <string name="you_should_own">يجب ان تمتلك هذل الكتاب لسماع المحتوي</string>
-    <string name="voucher">Voucher</string>
+    <string name="voucher">إيصال</string>
+    <string name="comment">تعليق</string>
+    <string name="add_bookmark">اضافة للمفضلة</string>
+    <string name="home">Home</string>
+    <string name="library">Library</string>
+    <string name="my_books">My Books</string>
+    <string name="menu">Menu</string>
+    <string name="book_chapters">فصول الكتاب</string>
+    <string name="please_enter_your_mail">برجاء ادخال بريدك الإليكتروني</string>
+    <string name="or_sign_up">أو إنشئ حساب باستخدام</string>
+    <string name="create_new_account_sign_up">إنشاء حساب جديد</string>
+    <string name="author">المؤلف:</string>
+    <string name="book">اسم الكتاب:</string>
+    <string name="narator">بصوت:</string>
+    <string name="rating">التقييم:  </string>
+    <string name="price">السعر: </string>
+    <string name="about_author">عن المؤلف</string>
+    <string name="add_to_favorite">أضف إلي المفضلة</string>
+    <string name="give_as_gift">أرسل كهدية</string>
+    <string name="category">الفئة:</string>
+    <string name="publisher">الناشر:</string>
+    <string name="about_book">عن الكتاب:</string>
+    <string name="add_to_cart">أضف إلي المشتريات</string>
+    <string name="rate_book">تقييم الكتاب</string>
+    <string name="pay_now">ادفع الآن</string>
+    <string name="promo_code">اضافة رمز تتويجي</string>
+    <string name="send_to_us">أرسل إلينا</string>
+    <string name="send">ارسل</string>
+    <string name="congratulations_for_receiving_book">مبروك !
+        لقد استقبلت هذا الكتاب الصوتي كهدية
+    </string>
+    <string name="send_to_audiospot_account">إرسال إلى حساب AudioSpot</string>
+    <string name="will_present_as_voucher">سوف أقدمها كقسيمة</string>
+    <string name="quantity">الكمية</string>
+    <string name="you_are_close_to_make">
+        أنت على وشك إحداث فرق في حياة شخص ما</string>
+    <string name="please_enter_audiospot_account_email">يرجى إدخال البريد الإلكتروني لحساب AudioSpot</string>
+
+    <string name="profile">الملف الشخصي</string>
+    <string name="my_favorite">مفضلتي</string>
+    <string name="my_bookmarks">إشاراتي المرجعية</string>
+    <string name="receive_a_book">تلقي كتاب</string>
+    <string name="about_us">معلومات عنا</string>
+    <string name="contact_us">اتصل بنا</string>
+    <string name="t_c">الأحكام والشروط</string>
+    <string name="sign_out">تسجيل الخروج</string>
+    <string name="books">الكتب</string>
+    <string name="categories">الاقسام</string>
+    <string name="authors">المؤلفون</string>
+    <string name="publishers">الناشرون</string>
+    <string name="full_name">الاسم الكامل</string>
+    <string name="use_promo_code">استخدم الرمز الترويجي</string>
+    <string name="enter_your_promo_code">يرجى إدخال الرمز الترويجي الخاص بك</string>
+    <string name="apply">تطبيق</string>
+    <string name="sub_total">حاصل الجمع:</string>
+    <string name="discount">خصم:</string>
+    <string name="total">المجموع:</string>
+    <string name="proceed_to_payment">الشروع في دفع</string>
+    <string name="about_publisher">عن الناشر</string>
+    <string name="submit">سلم</string>
+    <string name="app_language">لغة التطبيق</string>
+    <string name="forward_backward_duration">مدة الأمام والخلف</string>
+    <string name="change_data">تغيير البيانات</string>
+    <string name="please_enter_voucher">يرجى إدخال قسيمة الخاص بك</string>
+    <string name="by">بواسطة</string>
+    <string name="on">في</string>
+    <string name="the_message">الرسالة</string>
+    <string name="or_find_us_here">أو تجدنا هنا</string>
 
     <string-array name="gender_entries">
         <item>Gender</item>
