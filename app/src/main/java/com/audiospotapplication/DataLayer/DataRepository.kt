@@ -32,6 +32,15 @@ import retrofit2.Call
 class DataRepository
 private constructor(context: Context) : RepositorySource {
 
+    override fun setCurrentLanguage(lang: String) {
+        this.lang = lang
+        mCacheDataSource.setStringIntoCache(GlobalKeys.Language.LANGUAGE_KEY, lang)
+    }
+
+    override fun getCurrentLanguage(): String {
+        return lang
+    }
+
     override fun setMyBooks(listMyBooks: ArrayList<Book>) {
         myBooks = ArrayList()
         myBooks = listMyBooks
@@ -40,7 +49,7 @@ private constructor(context: Context) : RepositorySource {
     private val TAG = javaClass.simpleName
     private val mRetrofitService: RemoteDataSourceUsingRetrofit
     private val mCacheDataSource: CacheDataSource
-    internal var lang = "en"
+    internal var lang = ""
     private val mAuthorItemInterceptor: AuthorItemInterceptor
     private val mCategoryListInterceptor: CategoryListInterceptor
     private val mPublisherListInterceptor: PublisherItemInterceptor
@@ -64,6 +73,7 @@ private constructor(context: Context) : RepositorySource {
         mPublisherListInterceptor = PublisherItemUseCase()
         mBookItemInterceptor = BookItemUseCase()
         authResponse = mCacheDataSource.loggedInUser
+        lang = mCacheDataSource.getStringFromCache(GlobalKeys.Language.LANGUAGE_KEY, "en")
     }
 
     override fun setStringIntoCache(key: String, value: String) {

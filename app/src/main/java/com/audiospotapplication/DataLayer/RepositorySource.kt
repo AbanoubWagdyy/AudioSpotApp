@@ -179,4 +179,7 @@ interface RepositorySource : CacheDataSource {
     fun getActiveTab(): ActiveTab?
 
     fun setMyBooks(listMyBooks: ArrayList<Book>)
+
+    fun getCurrentLanguage(): String
+    fun setCurrentLanguage(lang: String)
 }

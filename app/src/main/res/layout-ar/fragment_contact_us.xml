@@ -76,7 +76,7 @@
                 android:gravity="start"
                 android:layout_gravity="center_vertical"
                 android:padding="15dp"
-                android:hint="@string/the_message"/>
+                android:hint="The message"/>
 
         <Button
                 android:text="@string/send"
@@ -104,7 +104,7 @@
                 android:layout_marginTop="30dp"
                 android:layout_marginStart="15dp"
                 android:textStyle="bold"
-                android:text="@string/or_find_us_here"/>
+                android:text="Or find us here"/>
 
         <LinearLayout
                 android:layout_width="match_parent"

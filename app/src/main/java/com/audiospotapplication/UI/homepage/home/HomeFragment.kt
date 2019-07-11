@@ -27,6 +27,7 @@ import dm.audiostreamer.MediaMetaData
 
 
 class HomeFragment : Fragment(), HomeContract.View, onBookItemClickListener, JcPlayerManagerListener {
+
     override fun onPreparedAudio(status: JcStatus) {
 
     }

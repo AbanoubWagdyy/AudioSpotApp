@@ -112,6 +112,8 @@
     <string name="on">on</string>
     <string name="the_message">The message</string>
     <string name="or_find_us_here">Or find us here</string>
+    <string name="customer_reviews">Customer reviews</string>
+    <string name="settings">Settings</string>
 
     <string-array name="gender_entries">
         <item>Gender</item>

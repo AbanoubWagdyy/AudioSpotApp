@@ -114,6 +114,8 @@
     <string name="on">في</string>
     <string name="the_message">الرسالة</string>
     <string name="or_find_us_here">أو تجدنا هنا</string>
+    <string name="customer_reviews">تقييم العميل</string>
+    <string name="settings">الإعدادات</string>
 
     <string-array name="gender_entries">
         <item>Gender</item>

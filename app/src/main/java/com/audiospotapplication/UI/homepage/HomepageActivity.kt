@@ -17,6 +17,7 @@ import com.audiospotapplication.UI.homepage.Library.LibraryFragment
 import com.audiospotapplication.UI.homepage.menu.MenuFragment
 import com.audiospotapplication.UI.homepage.myBooks.MyBooksFragment
 import com.audiospotapplication.UI.login.LoginActivity
+import com.audiospotapplication.utils.ApplicationLanguageHelper
 import com.audiospotapplication.utils.DialogUtils
 import com.example.jean.jcplayer.JcPlayerManager
 import com.example.jean.jcplayer.JcPlayerManagerListener
@@ -109,6 +110,8 @@ class HomepageActivity : AppCompatActivity(), HomeFragment.onItemPlayClickListen
         setContentView(R.layout.activity_homepage)
 
         mRepositorySource = DataRepository.getInstance(applicationContext)
+
+        ApplicationLanguageHelper.wrap(applicationContext, mRepositorySource.getCurrentLanguage())
 
         var authResponse = mRepositorySource.getAuthResponse()
 

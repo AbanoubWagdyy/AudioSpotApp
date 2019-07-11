@@ -22,6 +22,12 @@ public class GlobalKeys {
         public static final String AVERAGE_REVIEW = "average-review";
     }
 
+    public static class Language {
+        public static final String LANGUAGE_KEY = "language";
+        public static final String ENGLISH = "English";
+        public static final String ARABIC = "Arabic";
+    }
+
     public static class Share {
         public static final String WEBSITE = "https://www.audio-spot.com/";
         public static final String FACEBOOK = "https://www.facebook.com/audiospotapp";
