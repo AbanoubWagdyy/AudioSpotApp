@@ -20,7 +20,7 @@ class PaymentActivity : AppCompatActivity(), AdvancedWebView.Listener {
         
         tvTitle.text = "Payment"
 
-        var bookId: Int = 0
+        var bookId = 0
         var mRepositorySource = DataRepository.getInstance(applicationContext)
         if (mRepositorySource.getSavedBook() != null) {
             bookId = mRepositorySource.getSavedBook()!!.id

@@ -141,7 +141,7 @@ class PublisherDetailsFragment : Fragment(), PublisherDetailsContract.View, onBo
     }
 
     override fun setPublisherName(name: String) {
-        tvPublisher.text = name
+        tvPublisher.text = "$name #"
     }
 
     override fun setPublisherImage(photo: String) {

@@ -21,9 +21,6 @@ import kotlinx.android.synthetic.main.fragment_rate_book.*
 class RateBookFragment : Fragment(), RateBookContract.View {
 
     override fun showHompageScreen() {
-        val intent = Intent(activity!!, HomepageActivity::class.java)
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
-        startActivity(intent)
         activity!!.finish()
     }
 

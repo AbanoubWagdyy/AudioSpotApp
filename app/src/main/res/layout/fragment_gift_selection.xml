@@ -28,7 +28,6 @@
 
                     <ImageView android:id="@+id/ivBook"
                                android:layout_width="match_parent"
-                               android:src="@drawable/sample"
                                android:scaleType="fitXY"
                                android:layout_height="match_parent"/>
                 </RelativeLayout>

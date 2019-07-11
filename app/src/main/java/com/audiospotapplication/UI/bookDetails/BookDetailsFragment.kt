@@ -217,22 +217,30 @@ class BookDetailsFragment : Fragment(), BookDetailsContract.View, JcPlayerManage
         }
 
         ivPlay.setOnClickListener {
-            var currentAudio = jcPlayerManager.currentAudio
-            if (jcPlayerManager.isPlaying()) {
-                if (currentAudio?.path.equals(mPresenter.getSavedBook()!!.sample)) {
-                    jcPlayerManager.pauseAudio()
-                    ivPlay.setBackgroundResource(R.mipmap.play)
-                    ivPlay.setTag(R.mipmap.play)
-                } else {
-                    mPresenter.handlePlayClicked()
+
+            if (mPresenter.isBookMine()) {
+                if (jcPlayerManager.isPlaying()) {
+                    jcPlayerManager.kill()
                 }
+                mPresenter.handlePlayClicked()
             } else {
-                if (currentAudio?.path.equals(mPresenter.getSavedBook()!!.sample)) {
-                    jcPlayerManager.continueAudio()
-                    ivPlay.setBackgroundResource(R.mipmap.homepage_play)
-                    ivPlay.setTag(R.mipmap.homepage_play)
+                var currentAudio = jcPlayerManager.currentAudio
+                if (jcPlayerManager.isPlaying()) {
+                    if (currentAudio?.path.equals(mPresenter.getSavedBook()!!.sample)) {
+                        jcPlayerManager.pauseAudio()
+                        ivPlay.setBackgroundResource(R.mipmap.play)
+                        ivPlay.setTag(R.mipmap.play)
+                    } else {
+                        mPresenter.handlePlayClicked()
+                    }
                 } else {
-                    mPresenter.handlePlayClicked()
+                    if (currentAudio?.path.equals(mPresenter.getSavedBook()!!.sample)) {
+                        jcPlayerManager.continueAudio()
+                        ivPlay.setBackgroundResource(R.mipmap.homepage_play)
+                        ivPlay.setTag(R.mipmap.homepage_play)
+                    } else {
+                        mPresenter.handlePlayClicked()
+                    }
                 }
             }
         }

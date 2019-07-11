@@ -32,6 +32,14 @@ import retrofit2.Call
 class DataRepository
 private constructor(context: Context) : RepositorySource {
 
+    override fun getIsPlayFirstChapter(): Boolean {
+        return this.isToPlayFirstChapter
+    }
+
+    override fun setIsPlayFirstChapter(isToPlayFirstChapter: Boolean) {
+        this.isToPlayFirstChapter = isToPlayFirstChapter
+    }
+
     override fun setCurrentLanguage(lang: String) {
         this.lang = lang
         mCacheDataSource.setStringIntoCache(GlobalKeys.Language.LANGUAGE_KEY, lang)
@@ -46,6 +54,7 @@ private constructor(context: Context) : RepositorySource {
         myBooks = listMyBooks
     }
 
+    private var isToPlayFirstChapter: Boolean=false
     private val TAG = javaClass.simpleName
     private val mRetrofitService: RemoteDataSourceUsingRetrofit
     private val mCacheDataSource: CacheDataSource

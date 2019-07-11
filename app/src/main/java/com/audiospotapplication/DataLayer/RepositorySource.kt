@@ -182,4 +182,7 @@ interface RepositorySource : CacheDataSource {
 
     fun getCurrentLanguage(): String
     fun setCurrentLanguage(lang: String)
+    fun setIsPlayFirstChapter(isToPlayFirstChapter: Boolean)
+
+    fun getIsPlayFirstChapter(): Boolean
 }

@@ -17,6 +17,7 @@ interface BookDetailsContract {
         fun handleSeeAllReviewsClicked()
         fun handlePlayClicked()
         fun getSavedBook(): Book?
+        fun isBookMine(): Boolean
     }
 
     interface View {

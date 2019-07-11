@@ -42,6 +42,7 @@ class BookChaptersPresenter(val mView: BookChaptersContract.View) : BookChapters
         mView.dismissLoading()
 
         mView.showDownloadComplete("Error in Item Downloading !.", currentPath)
+
         val storage = Storage(mView.getAppContext())
         val path = storage.internalCacheDirectory
 
@@ -57,7 +58,7 @@ class BookChaptersPresenter(val mView: BookChaptersContract.View) : BookChapters
     }
 
     override fun onDeleted(download: Download) {
-        Log.d("onDEleted", "onDeleted")
+        Log.d("onDeleted", "onDeleted")
     }
 
     override fun onDownloadBlockUpdated(download: Download, downloadBlock: DownloadBlock, totalBlocks: Int) {
@@ -116,7 +117,7 @@ class BookChaptersPresenter(val mView: BookChaptersContract.View) : BookChapters
 
         if (storage.isFileExist(currentPath)) {
             mView.dismissLoading()
-            mView.showMessage("Item Already Downloaded")
+            mView.showMessage("Already Downloaded")
             return
         }
         val request = Request(currentSong!!.path, currentPath)
@@ -156,6 +157,7 @@ class BookChaptersPresenter(val mView: BookChaptersContract.View) : BookChapters
         mRepoSource = DataRepository.getInstance(mView.getAppContext()!!)
         var book = mRepoSource.getSavedBook()
         var bookmark = mRepoSource.getBookmark()
+        var isToPlayFirstChapter = mRepoSource.getIsPlayFirstChapter()
 
         if (book != null) {
             mView.setBookName(book.title)
@@ -169,7 +171,10 @@ class BookChaptersPresenter(val mView: BookChaptersContract.View) : BookChapters
                 val status = RetrofitResponseHandler.validateResponseStatus(result)
                 if (status == RetrofitResponseHandler.Companion.Status.VALID) {
                     mView.setChapters(result!!.data)
-                    if (bookmark != null) {
+                    if (isToPlayFirstChapter) {
+                        mView.onChapterClicked(result.data[0])
+                        mRepoSource.setIsPlayFirstChapter(false)
+                    } else if (bookmark != null) {
                         var chapterData = result!!.data.filter {
                             it.id == bookmark!!.chapter_id
                         }[0]

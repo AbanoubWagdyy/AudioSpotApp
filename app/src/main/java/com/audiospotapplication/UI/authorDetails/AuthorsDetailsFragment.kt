@@ -128,7 +128,7 @@ class AuthorsDetailsFragment : Fragment(), AuthorDetailsContract.View, onBookIte
     }
 
     override fun setAuthorName(name: String) {
-        tvAuthor.text = name
+        tvAuthor.text = "$name #"
     }
 
     override fun setAuthorImage(photo: String) {

@@ -15,18 +15,28 @@ import com.visionvalley.letuno.DataLayer.RepositorySource
 import retrofit2.Call
 
 class BookDetailsPresenter(val mView: BookDetailsContract.View) : BookDetailsContract.Presenter {
+
+    override fun isBookMine(): Boolean {
+        return mRepositorySource.isBookMine()
+    }
+
     override fun getSavedBook(): Book? {
         return mRepositorySource.getSavedBook()
     }
 
     override fun handlePlayClicked() {
-        var mediaMetaData = mRepositorySource.getSavedBook()?.let {
-            BookDataConversion.convertBookToMediaMetaData(
-                it
-            )
-        }
-        if (mediaMetaData != null) {
-            mView.playSong(mediaMetaData)
+
+        if (isBookMine()) {
+            mRepositorySource.setIsPlayFirstChapter(true)
+        } else {
+            var mediaMetaData = mRepositorySource.getSavedBook()?.let {
+                BookDataConversion.convertBookToMediaMetaData(
+                    it
+                )
+            }
+            if (mediaMetaData != null) {
+                mView.playSong(mediaMetaData)
+            }
         }
     }
 
@@ -87,7 +97,7 @@ class BookDetailsPresenter(val mView: BookDetailsContract.View) : BookDetailsCon
 
                 override fun onSuccess(result: Response?) {
                     mView!!.showMessage(result!!.message)
-                    mRepositorySource.getMyCart(object : RetrofitCallbacks.BookListCallback{
+                    mRepositorySource.getMyCart(object : RetrofitCallbacks.BookListCallback {
                         override fun onSuccess(result: BookListResponse?) {
                             mView.dismissLoading()
                             mView.setCartNumber(result?.data?.size)

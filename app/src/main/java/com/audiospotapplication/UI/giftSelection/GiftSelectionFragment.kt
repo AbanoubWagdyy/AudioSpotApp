@@ -89,8 +89,10 @@ class GiftSelectionFragment : Fragment(), GiftSelectionContract.View {
         super.onViewCreated(view, savedInstanceState)
         relativeAdd.setOnClickListener {
             var quantityStrAsInt = quantity.text.toString().toInt()
-            quantityStrAsInt += 1
-            quantity.text = quantityStrAsInt.toString()
+            if (quantityStrAsInt < 5) {
+                quantityStrAsInt += 1
+                quantity.text = quantityStrAsInt.toString()
+            }
         }
 
         relativeMinus.setOnClickListener {
