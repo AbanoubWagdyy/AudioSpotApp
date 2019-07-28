@@ -676,6 +676,7 @@ private constructor(context: Context) : RepositorySource {
         this.quantity = quantity
     }
 
+    //Not Used
     override fun sendAsVoucher(email: String, responseCallback: RetrofitCallbacks.ResponseCallback) {
         mRetrofitService.sendAsVoucher(
             authResponse!!.data.token, GlobalKeys.API_KEY, lang,

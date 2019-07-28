@@ -19,8 +19,10 @@ import kotlinx.android.synthetic.main.fragment_give_agift.*
 
 class GiveGiftFragment : Fragment(), GiveGiftContract.View {
 
-    override fun showPayment() {
+    override fun showPayment(emails: String, id: Int) {
         val intent = Intent(activity!!, PaymentActivity::class.java)
+        intent.putExtra("BOOKID", id.toString())
+        intent.putExtra("SENDTO", emails)
         startActivity(intent)
         activity!!.finish()
     }

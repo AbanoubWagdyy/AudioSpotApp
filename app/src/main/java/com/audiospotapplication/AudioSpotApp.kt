@@ -23,6 +23,7 @@ class AudioSpotApp : Application() {
     }
 
     companion object {
+
         private val CACHE_SIZE = 20 * 1024 * 1024
         private val context: Context? = null
         private var instance: AudioSpotApp? = null

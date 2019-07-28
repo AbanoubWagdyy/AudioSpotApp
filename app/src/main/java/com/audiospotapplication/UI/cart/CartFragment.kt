@@ -11,6 +11,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.audiospot.DataLayer.Model.Book
+import com.audiospotapplication.DataLayer.Retrofit.GlobalKeys
 
 import com.audiospotapplication.R
 import com.audiospotapplication.UI.BaseActivity
@@ -33,6 +34,12 @@ import kotlinx.android.synthetic.main.fragment_cart.*
 
 class CartFragment : Fragment(), CartContract.View, onBookItemClickListener,
     onBookItemClickListener.onCartBookDeleteClickListener, JcPlayerManagerListener {
+
+    override fun showPaymentScreen() {
+        val intent = Intent(activity!!, PaymentActivity::class.java)
+        startActivity(intent)
+        activity!!.finish()
+    }
 
     override fun setCartCount(size: Int) {
         (activity as BaseActivity).setCartNumber(size)
@@ -224,9 +231,7 @@ class CartFragment : Fragment(), CartContract.View, onBookItemClickListener,
         }
 
         payNow.setOnClickListener {
-            val intent = Intent(activity!!, PaymentActivity::class.java)
-            startActivity(intent)
-            activity!!.finish()
+            mPresenter.handlePayNowPressed()
         }
 
         mPresenter = CartPresenter(this)

@@ -13,6 +13,7 @@ import com.audiospotapplication.R
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.fragment_authors.*
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.audiospotapplication.DataLayer.Model.AuthorsData
 import com.audiospotapplication.UI.authorDetails.AuthorDetailsActivity
 import com.audiospotapplication.UI.authors.Adapter.AuthorsListAdapter
@@ -39,7 +40,7 @@ class AuthorsFragment(var ivArrow: ImageView) : Fragment(), AuthorsContract.View
     }
 
     override fun setAuthorsList(authorsResponse: AuthorsResponse?) {
-        recyclerAuthors.layoutManager = GridLayoutManager(activity!!, 2)
+        recyclerAuthors.layoutManager = GridLayoutManager(activity!!, 2) as RecyclerView.LayoutManager?
         recyclerAuthors.setHasFixedSize(true)
         recyclerAuthors.isNestedScrollingEnabled = false
         recyclerAuthors.adapter = AuthorsListAdapter(authorsResponse!!, this)

@@ -13,6 +13,10 @@ import retrofit2.Call
 
 class CartPresenter(val mView: CartContract.View) : CartContract.Presenter {
 
+    override fun handlePayNowPressed() {
+        mView.showPaymentScreen()
+    }
+
     override fun saveBook(book: Book) {
         mRepositorySource.saveBook(book)
         mView.showBookDetailsScreen()
@@ -48,9 +52,6 @@ class CartPresenter(val mView: CartContract.View) : CartContract.Presenter {
 
     override fun start() {
         mRepositorySource = DataRepository.getInstance(mView.getAppContext()!!)
-
-        mRepositorySource.saveBook(null)
-
         mView.showLoading()
         mRepositorySource.getMyCart(object : RetrofitCallbacks.BookListCallback {
             override fun onSuccess(result: BookListResponse?) {

@@ -22,6 +22,12 @@ public class GlobalKeys {
         public static final String AVERAGE_REVIEW = "average-review";
     }
 
+    public static class Extras {
+        public static final String PAYMENT_TYPE = "payment_type";
+        public static final String CART = "cart";
+        public static final String PROMO = "promo";
+    }
+
     public static class Language {
         public static final String LANGUAGE_KEY = "language";
         public static final String ENGLISH = "English";

@@ -1,5 +1,6 @@
 package com.audiospotapplication.UI.homepage
 
+import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -24,6 +25,7 @@ import com.example.jean.jcplayer.JcPlayerManagerListener
 import com.example.jean.jcplayer.general.JcStatus
 import com.example.jean.jcplayer.model.JcAudio
 import com.google.android.material.snackbar.Snackbar
+import com.squareup.picasso.Picasso
 import com.visionvalley.letuno.DataLayer.RepositorySource
 import dm.audiostreamer.MediaMetaData
 import kotlinx.android.synthetic.main.activity_homepage.*

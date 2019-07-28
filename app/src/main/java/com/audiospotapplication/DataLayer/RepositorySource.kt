@@ -181,7 +181,9 @@ interface RepositorySource : CacheDataSource {
     fun setMyBooks(listMyBooks: ArrayList<Book>)
 
     fun getCurrentLanguage(): String
+
     fun setCurrentLanguage(lang: String)
+
     fun setIsPlayFirstChapter(isToPlayFirstChapter: Boolean)
 
     fun getIsPlayFirstChapter(): Boolean

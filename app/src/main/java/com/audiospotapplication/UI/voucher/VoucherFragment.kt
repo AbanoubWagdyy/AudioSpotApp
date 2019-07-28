@@ -53,6 +53,7 @@ class VoucherFragment : Fragment(), VoucherContract.View {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         mPresenter = VoucherPresenter(this)
         mPresenter.start()
 

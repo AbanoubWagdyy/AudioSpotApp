@@ -3,6 +3,7 @@ package com.audiospotapplication.utils;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.util.Base64;
 import android.view.View;
 import android.widget.ImageView;
@@ -19,7 +20,22 @@ public class ImageUtils {
     }
 
     public static void setImageFromUrlIntoImageViewUsingPicasso(String url, Context context, ImageView imageView) {
-        setImageFromUrlIntoImageViewUsingPicasso(url, context, imageView, true, null);
+//        setImageFromUrlIntoImageViewUsingPicasso(url, context, imageView, true, null);
+
+//        Picasso picasso = new Picasso.Builder(context).listener(new Picasso.Listener() {
+//            @Override
+//            public void onImageLoadFailed(Picasso picasso, Uri uri, Exception exception) {
+//                exception.printStackTrace();
+//            }
+//        }).build();
+//
+//        picasso.with(context).setLoggingEnabled(true);
+
+        if (url.isEmpty()) {
+            return;
+        }
+        Picasso.get().setLoggingEnabled(true);
+        Picasso.get().load(url).memoryPolicy(MemoryPolicy.NO_CACHE).into(imageView);
     }
 
     public static void setImageFromUrlIntoImageViewUsingPicasso(String url, Context context, ImageView imageView, boolean withPreLoadingImage, Callback cb) {

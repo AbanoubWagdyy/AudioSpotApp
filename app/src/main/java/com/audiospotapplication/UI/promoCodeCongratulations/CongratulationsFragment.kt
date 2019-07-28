@@ -1,6 +1,7 @@
 package com.audiospotapplication.UI.promoCodeCongratulations
 
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -38,11 +39,12 @@ class CongratulationsFragment : Fragment() {
         }
     }
 
+    @SuppressLint("SetTextI18n")
     fun bindResponse(result: Book) {
 
         this.currentBook = result
 
-        ratingBar.rating = result!!.rate.toFloat()
+        ratingBar.rating = result.rate.toFloat()
         ratingBar.setOnRatingChangeListener(null)
         ratingBar.setOnTouchListener { p0, p1 -> true }
 
@@ -50,19 +52,20 @@ class CongratulationsFragment : Fragment() {
             ratingBar.rating = result.rate.toFloat()
         }
 
-        tvBookTitle.text = result!!.title
-        tvNumberOfReviews.text = "(" + result!!.reviews.toString() + " reviews" + ")"
-        tvAuthor.text = result!!.author
+        tvBookTitle.text = result.title
+        var numberofReviews= result.reviews.toString()
+        tvNumberOfReviews.text = "($numberofReviews reviews)"
+        tvAuthor.text = result.author
         if (result.narators.isNotEmpty()) {
             val builder = StringBuilder()
-            for (narator in result.narators) {
-                builder.append(narator.name).append(",")
+            for (narrator in result.narators) {
+                builder.append(narrator.name).append(",")
             }
             tvNarrator.text = builder.toString().substring(0, builder.toString().length - 1)
         }
         ImageUtils.setImageFromUrlIntoImageViewUsingPicasso(result.cover, activity!!.applicationContext, ivBook)
 
-        var listMyBooks = ArrayList<Book>()
+        val listMyBooks = ArrayList<Book>()
         mRepositorySource.getMyBooks()?.let { listMyBooks.addAll(it) }
         listMyBooks.add(result)
         mRepositorySource.setMyBooks(listMyBooks)

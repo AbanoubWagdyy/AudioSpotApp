@@ -13,8 +13,10 @@
             android:name="com.audiospotapplication.AudioSpotApp"
             android:allowBackup="true"
             android:icon="@mipmap/ic_launcher"
+            android:usesCleartextTraffic="true"
             android:label="@string/app_name"
             android:supportsRtl="true"
+            tools:replace="android:name"
             android:theme="@style/AppTheme">
         <meta-data
                 android:name="com.facebook.sdk.ApplicationId"

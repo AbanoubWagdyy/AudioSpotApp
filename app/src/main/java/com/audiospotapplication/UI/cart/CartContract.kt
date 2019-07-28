@@ -11,6 +11,7 @@ interface CartContract {
         fun deleteBookFromCart(book: Book)
         fun getAuthResponse(): AuthResponse?
         fun saveBook(book: Book)
+        fun handlePayNowPressed()
     }
 
     interface View {
@@ -22,5 +23,6 @@ interface CartContract {
         fun showMessage(message: String)
         fun showBookDetailsScreen()
         fun setCartCount(size: Int)
+        fun showPaymentScreen()
     }
 }

@@ -23,6 +23,6 @@ interface GiveGiftContract {
         fun showInvalidEmailMessage(message: String)
         fun showMessage(message: String)
         fun finalizeView()
-        fun showPayment()
+        fun showPayment(emails: String, id: Int)
     }
 }
