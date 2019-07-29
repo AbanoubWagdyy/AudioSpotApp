@@ -17,6 +17,7 @@ import android.text.SpannableString
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.audiospot.DataLayer.Model.Book
 import com.audiospot.DataLayer.Model.BookDetailsResponse
+import com.audiospotapplication.BaseFragment
 import com.audiospotapplication.DataLayer.Model.Review
 import com.audiospotapplication.UI.BaseActivity
 import com.audiospotapplication.UI.bookChapters.BookChaptersActivity
@@ -35,7 +36,7 @@ import com.example.jean.jcplayer.model.JcAudio
 import com.google.android.material.snackbar.Snackbar
 import dm.audiostreamer.MediaMetaData
 
-class BookDetailsFragment : Fragment(), BookDetailsContract.View, JcPlayerManagerListener {
+class BookDetailsFragment : BaseFragment(), BookDetailsContract.View, JcPlayerManagerListener {
 
     override fun setCartNumber(size: Int?) {
         (activity as BaseActivity).setCartNumber(size)

@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
+import com.audiospotapplication.BaseFragment
 import com.audiospotapplication.DataLayer.Model.PublishersResponse
 import com.audiospotapplication.DataLayer.Model.PublishersResponseData
 import com.audiospotapplication.R
@@ -19,7 +20,7 @@ import com.audiospotapplication.utils.DialogUtils
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.fragment_publishers.*
 
-class PublishersFragment(var ivArrow: ImageView) : Fragment(), PublishersContract.View, OnPublishersItemClickListener {
+class PublishersFragment(var ivArrow: ImageView) : BaseFragment(), PublishersContract.View, OnPublishersItemClickListener {
 
     override fun showLoading() {
         DialogUtils.showProgressDialog(activity!!,"Loading ....")

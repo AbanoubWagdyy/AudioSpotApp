@@ -6,10 +6,11 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.audiospotapplication.BaseFragment
 
 import com.audiospotapplication.R
 
-class BookChaptersFragment : Fragment() {
+class BookChaptersFragment : BaseFragment() {
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

@@ -14,6 +14,7 @@ import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.fragment_authors.*
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.audiospotapplication.BaseFragment
 import com.audiospotapplication.DataLayer.Model.AuthorsData
 import com.audiospotapplication.UI.authorDetails.AuthorDetailsActivity
 import com.audiospotapplication.UI.authors.Adapter.AuthorsListAdapter
@@ -21,7 +22,7 @@ import com.audiospotapplication.UI.authors.Interface.OnAuthorsItemClickListener
 import com.audiospotapplication.utils.DialogUtils
 
 
-class AuthorsFragment(var ivArrow: ImageView) : Fragment(), AuthorsContract.View, OnAuthorsItemClickListener {
+class AuthorsFragment(var ivArrow: ImageView) : BaseFragment(), AuthorsContract.View, OnAuthorsItemClickListener {
     override fun showLoading() {
         DialogUtils.showProgressDialog(activity!!,"Loading ....")
     }

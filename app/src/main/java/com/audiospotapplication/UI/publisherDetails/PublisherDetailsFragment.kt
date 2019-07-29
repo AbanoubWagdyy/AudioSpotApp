@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.audiospot.DataLayer.Model.Book
+import com.audiospotapplication.BaseFragment
 import com.audiospotapplication.DataLayer.Model.BookListResponse
 
 import com.audiospotapplication.R
@@ -26,7 +27,7 @@ import kotlinx.android.synthetic.main.fragment_publisher_details.*
 import kotlinx.android.synthetic.main.fragment_publisher_details.recyclerBooks
 import kotlinx.android.synthetic.main.fragment_publisher_details.tvAbout
 
-class PublisherDetailsFragment : Fragment(), PublisherDetailsContract.View, onBookItemClickListener,
+class PublisherDetailsFragment : BaseFragment(), PublisherDetailsContract.View, onBookItemClickListener,
     JcPlayerManagerListener {
     override fun onPreparedAudio(status: JcStatus) {
 

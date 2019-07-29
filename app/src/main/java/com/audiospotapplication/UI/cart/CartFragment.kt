@@ -11,6 +11,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.audiospot.DataLayer.Model.Book
+import com.audiospotapplication.BaseFragment
 import com.audiospotapplication.DataLayer.Retrofit.GlobalKeys
 
 import com.audiospotapplication.R
@@ -32,7 +33,7 @@ import com.google.android.material.snackbar.Snackbar
 import dm.audiostreamer.MediaMetaData
 import kotlinx.android.synthetic.main.fragment_cart.*
 
-class CartFragment : Fragment(), CartContract.View, onBookItemClickListener,
+class CartFragment : BaseFragment(), CartContract.View, onBookItemClickListener,
     onBookItemClickListener.onCartBookDeleteClickListener, JcPlayerManagerListener {
 
     override fun showPaymentScreen() {

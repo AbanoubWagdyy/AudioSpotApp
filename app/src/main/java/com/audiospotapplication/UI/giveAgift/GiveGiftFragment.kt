@@ -9,6 +9,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.audiospot.DataLayer.Model.Book
+import com.audiospotapplication.BaseFragment
 
 import com.audiospotapplication.R
 import com.audiospotapplication.UI.payment.PaymentActivity
@@ -17,7 +18,7 @@ import com.audiospotapplication.utils.ImageUtils
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.fragment_give_agift.*
 
-class GiveGiftFragment : Fragment(), GiveGiftContract.View {
+class GiveGiftFragment : BaseFragment(), GiveGiftContract.View {
 
     override fun showPayment(emails: String, id: Int) {
         val intent = Intent(activity!!, PaymentActivity::class.java)

@@ -16,6 +16,7 @@ import com.google.android.material.snackbar.Snackbar
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.audiospot.DataLayer.Model.HomepageRepsonse
+import com.audiospotapplication.BaseFragment
 import com.audiospotapplication.UI.books.Interface.onBookItemClickListener
 import com.audiospotapplication.UI.homepage.home.adapter.HomepageAdapter
 import com.audiospotapplication.UI.bookDetails.BookDetailsActivity
@@ -26,7 +27,7 @@ import com.example.jean.jcplayer.general.JcStatus
 import dm.audiostreamer.MediaMetaData
 
 
-class HomeFragment : Fragment(), HomeContract.View, onBookItemClickListener, JcPlayerManagerListener {
+class HomeFragment : BaseFragment(), HomeContract.View, onBookItemClickListener, JcPlayerManagerListener {
 
     override fun onPreparedAudio(status: JcStatus) {
 

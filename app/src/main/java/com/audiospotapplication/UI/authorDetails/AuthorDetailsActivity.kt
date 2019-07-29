@@ -14,5 +14,5 @@ class AuthorDetailsActivity : BaseActivity() {
         return View.GONE
     }
 
-    override fun getFragment(ivArrow: ImageView): Fragment =AuthorsDetailsFragment.newInstance()
+    override fun getFragment(ivArrow: ImageView): Fragment = AuthorsDetailsFragment.newInstance()
 }

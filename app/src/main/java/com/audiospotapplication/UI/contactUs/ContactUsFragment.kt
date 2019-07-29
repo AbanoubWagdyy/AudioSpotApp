@@ -14,12 +14,13 @@ import com.audiospotapplication.utils.DialogUtils
 import kotlinx.android.synthetic.main.fragment_contact_us.*
 import android.content.Intent.ACTION_VIEW
 import android.net.Uri
+import com.audiospotapplication.BaseFragment
 import com.audiospotapplication.DataLayer.Retrofit.GlobalKeys
 import com.audiospotapplication.UI.homepage.HomepageActivity
 import com.google.android.material.snackbar.Snackbar
 
 
-class ContactUsFragment : Fragment(), ContactUsContract.View {
+class ContactUsFragment : BaseFragment(), ContactUsContract.View {
 
     override fun showHompageScreen() {
         val intent = Intent(activity!!, HomepageActivity::class.java)

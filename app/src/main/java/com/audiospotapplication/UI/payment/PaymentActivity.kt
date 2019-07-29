@@ -114,12 +114,9 @@ class PaymentActivity : AppCompatActivity(), PaymentContract.View, FawrySdkCallb
             if (resultCode == Activity.RESULT_OK) {
                 val requestResult = data!!.getIntExtra(FawryPluginAppClass.REQUEST_RESULT, -1)
                 if (requestResult == FawryPluginAppClass.SUCCESS_CODE) {
-
                 } else if (requestResult == FawryPluginAppClass.FAILURE_CODE) {
-
                 }
             } else {
-
             }
         }
     }

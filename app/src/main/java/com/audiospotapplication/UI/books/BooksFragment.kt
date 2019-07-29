@@ -10,6 +10,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.audiospot.DataLayer.Model.Book
+import com.audiospotapplication.BaseFragment
 import com.audiospotapplication.DataLayer.Model.BookListResponse
 import com.audiospotapplication.DataLayer.Retrofit.GlobalKeys
 import com.audiospotapplication.R
@@ -25,7 +26,7 @@ import com.github.zawadz88.materialpopupmenu.popupMenu
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.fragment_books.*
 
-class BooksFragment(var ivArrow: ImageView) : Fragment(), BooksContract.View, onBookItemClickListener,
+class BooksFragment(var ivArrow: ImageView) : BaseFragment(), BooksContract.View, onBookItemClickListener,
     JcPlayerManagerListener {
     override fun onPreparedAudio(status: JcStatus) {
 

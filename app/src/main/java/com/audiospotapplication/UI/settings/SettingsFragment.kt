@@ -10,6 +10,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import androidx.appcompat.app.AlertDialog
+import com.audiospotapplication.BaseFragment
 import com.audiospotapplication.DataLayer.Retrofit.GlobalKeys
 
 import com.audiospotapplication.R
@@ -18,7 +19,7 @@ import com.audiospotapplication.utils.ApplicationLanguageHelper
 import kotlinx.android.synthetic.main.fragment_settings.*
 import java.util.*
 
-class SettingsFragment : Fragment(), SettingsContract.View {
+class SettingsFragment : BaseFragment(), SettingsContract.View {
 
     override fun restartAppWithDifferentLanguage(language: String) {
 

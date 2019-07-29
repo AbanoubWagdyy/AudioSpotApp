@@ -9,6 +9,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.audiospotapplication.BaseFragment
 import com.audiospotapplication.DataLayer.Model.Bookmark
 
 import com.audiospotapplication.R
@@ -19,7 +20,7 @@ import com.audiospotapplication.utils.DialogUtils
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.fragment_my_bookmarks.*
 
-class MyBookmarksFragment : Fragment(), MyBookmarksContract.View, OnBookmarkClickListener {
+class MyBookmarksFragment : BaseFragment(), MyBookmarksContract.View, OnBookmarkClickListener {
 
     override fun showBookChaptersScreen() {
         val intent = Intent(activity!!, BookChaptersActivity::class.java)

@@ -9,6 +9,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.audiospot.DataLayer.Model.Book
+import com.audiospotapplication.BaseFragment
 
 import com.audiospotapplication.R
 import com.audiospotapplication.UI.cart.CartActivity
@@ -19,7 +20,7 @@ import com.audiospotapplication.utils.ImageUtils
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.fragment_gift_selection.*
 
-class GiftSelectionFragment : Fragment(), GiftSelectionContract.View {
+class GiftSelectionFragment : BaseFragment(), GiftSelectionContract.View {
 
     override fun showPayment(id: Int, quantity: Int) {
         val intent = Intent(activity!!, PaymentActivity::class.java)

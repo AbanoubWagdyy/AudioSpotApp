@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.audiospotapplication.BaseFragment
 
 import com.audiospotapplication.R
 import com.audiospotapplication.UI.contactUs.ContactUsActivity
@@ -22,7 +23,7 @@ import com.audiospotapplication.utils.DialogUtils
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.fragment_menu.*
 
-class MenuFragment : Fragment(), MenuContract.View {
+class MenuFragment : BaseFragment(), MenuContract.View {
 
     override fun showVoucherScreen() {
         val intent = Intent(activity!!, VoucherActivity::class.java)

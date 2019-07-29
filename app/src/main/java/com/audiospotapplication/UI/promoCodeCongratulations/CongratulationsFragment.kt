@@ -9,6 +9,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.audiospot.DataLayer.Model.Book
+import com.audiospotapplication.BaseFragment
 import com.audiospotapplication.DataLayer.DataRepository
 
 import com.audiospotapplication.R
@@ -17,7 +18,7 @@ import com.audiospotapplication.utils.ImageUtils
 import com.visionvalley.letuno.DataLayer.RepositorySource
 import kotlinx.android.synthetic.main.fragment_congratulations.*
 
-class CongratulationsFragment : Fragment() {
+class CongratulationsFragment : BaseFragment() {
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

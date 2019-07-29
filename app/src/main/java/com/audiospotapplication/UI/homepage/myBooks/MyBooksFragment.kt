@@ -11,6 +11,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.audiospot.DataLayer.Model.Book
+import com.audiospotapplication.BaseFragment
 
 import com.audiospotapplication.R
 import com.audiospotapplication.UI.bookDetails.BookDetailsActivity
@@ -26,7 +27,7 @@ import com.google.android.material.snackbar.Snackbar
 import dm.audiostreamer.MediaMetaData
 import kotlinx.android.synthetic.main.fragment_my_books.*
 
-class MyBooksFragment : Fragment(), MyBooksContract.View, onBookItemClickListener, JcPlayerManagerListener {
+class MyBooksFragment : BaseFragment(), MyBooksContract.View, onBookItemClickListener, JcPlayerManagerListener {
 
     override fun onPreparedAudio(status: JcStatus) {
 

@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.audiospotapplication.BaseFragment
 import com.audiospotapplication.DataLayer.DataRepository
 
 import com.audiospotapplication.R
@@ -14,7 +15,7 @@ import com.audiospotapplication.UI.bookDetails.adapter.ReviewListAdapter
 import com.visionvalley.letuno.DataLayer.RepositorySource
 import kotlinx.android.synthetic.main.fragment_book_reviews.*
 
-class BookReviewsFragment : Fragment() {
+class BookReviewsFragment : BaseFragment() {
 
 
     override fun onCreateView(

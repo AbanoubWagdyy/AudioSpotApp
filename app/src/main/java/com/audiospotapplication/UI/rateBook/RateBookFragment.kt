@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.audiospot.DataLayer.Model.Book
+import com.audiospotapplication.BaseFragment
 
 import com.audiospotapplication.R
 import com.audiospotapplication.UI.homepage.HomepageActivity
@@ -18,7 +19,7 @@ import com.willy.ratingbar.BaseRatingBar
 import kotlinx.android.synthetic.main.fragment_rate_book.*
 
 
-class RateBookFragment : Fragment(), RateBookContract.View {
+class RateBookFragment : BaseFragment(), RateBookContract.View {
 
     override fun showHompageScreen() {
         activity!!.finish()
@@ -93,5 +94,5 @@ class RateBookFragment : Fragment(), RateBookContract.View {
     }
 
     lateinit var mPresenter: RateBookContract.Presenter
-    var rating: Float = 0.0f
+    var rating: Float = 5.0f
 }

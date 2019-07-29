@@ -3,6 +3,7 @@ package com.audiospotapplication.UI.homepage.home
 import androidx.appcompat.app.AppCompatActivity
 import com.audiospot.DataLayer.Model.Book
 import com.audiospot.DataLayer.Model.HomepageRepsonse
+import com.audiospotapplication.BaseView
 
 interface HomeContract {
 
@@ -11,7 +12,7 @@ interface HomeContract {
         fun saveBook(book: Book)
     }
 
-    interface View {
+    interface View : BaseView{
         fun getContainingActivity() : AppCompatActivity
         fun showErrorMessage(message: String)
         fun showDialog()

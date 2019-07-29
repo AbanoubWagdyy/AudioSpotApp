@@ -15,7 +15,7 @@
             android:letterSpacing="0.07"
             android:layout_margin="15dp"
             android:lineSpacingExtra="71.8sp"
-            android:gravity="start"/>
+            android:gravity="center"/>
 
     <View android:layout_width="match_parent"
           android:layout_height="2dp"
