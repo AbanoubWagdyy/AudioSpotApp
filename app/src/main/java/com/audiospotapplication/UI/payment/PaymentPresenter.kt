@@ -4,6 +4,7 @@ import android.os.Bundle
 import com.audiospot.DataLayer.Model.BookDetailsResponse
 import com.audiospotapplication.DataLayer.DataRepository
 import com.audiospotapplication.DataLayer.Model.BookListResponse
+import com.audiospotapplication.DataLayer.Model.FawryCustomParams
 import com.audiospotapplication.DataLayer.Retrofit.RetrofitCallbacks
 import com.emeint.android.fawryplugin.Plugininterfacing.PayableItem
 import com.visionvalley.letuno.DataLayer.RepositorySource
@@ -43,6 +44,29 @@ class PaymentPresenter(val mView: PaymentContract.View, val extras: Bundle?) : P
             })
         } else {
             var bookId = extras.getInt("BOOKID")
+            var voucher = ""
+            voucher = if (extras.getString("VOUCHER") != null)
+                extras.getString("VOUCHER")!!
+            else {
+                "1"
+            }
+            var emails = ""
+            emails = if (extras.getString("SENDTO") != null)
+                extras.getString("SENDTO")!!
+            else {
+                ""
+            }
+
+            var promoCode = ""
+            promoCode = if (extras.getString("promoCode") != null)
+                extras.getString("promoCode")!!
+            else {
+                ""
+            }
+
+            fawryCustomParams = FawryCustomParams(voucher, emails, promoCode)
+
+            mView.setFawryCustomParams(fawryCustomParams)
 
             mRepositorySource.getBookDetailsWithId(bookId, object : RetrofitCallbacks.BookDetailsResponseCallback {
                 override fun onSuccess(result: BookDetailsResponse?) {
@@ -51,7 +75,7 @@ class PaymentPresenter(val mView: PaymentContract.View, val extras: Bundle?) : P
                     val item = Item()
                     item.setPrice(result?.data?.price.toString())
                     item.setDescription(result?.data?.about_book)
-                    item.qty = "1"
+                    item.qty = voucher
                     item.sku = "1"
                     items.add(item)
                     mView.setPayableItems(items, mRepositorySource.getCurrentLanguage().equals("en"))
@@ -65,4 +89,5 @@ class PaymentPresenter(val mView: PaymentContract.View, val extras: Bundle?) : P
     }
 
     lateinit var mRepositorySource: RepositorySource
+    lateinit var fawryCustomParams: FawryCustomParams
 }

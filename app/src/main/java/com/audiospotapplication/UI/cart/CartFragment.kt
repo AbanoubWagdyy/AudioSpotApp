@@ -12,7 +12,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.audiospot.DataLayer.Model.Book
 import com.audiospotapplication.BaseFragment
-import com.audiospotapplication.DataLayer.Retrofit.GlobalKeys
 
 import com.audiospotapplication.R
 import com.audiospotapplication.UI.BaseActivity
@@ -20,17 +19,14 @@ import com.audiospotapplication.UI.bookDetails.BookDetailsActivity
 import com.audiospotapplication.UI.books.Interface.onBookItemClickListener
 import com.audiospotapplication.UI.books.adapter.BooksAdapter
 import com.audiospotapplication.UI.homepage.HomepageActivity
-import com.audiospotapplication.UI.homepage.home.adapter.HomepageAdapter
 import com.audiospotapplication.UI.payment.PaymentActivity
 import com.audiospotapplication.UI.promoCode.PromoCodeActivity
-import com.audiospotapplication.utils.BookDataConversion
 import com.audiospotapplication.utils.DialogUtils
 import com.example.jean.jcplayer.JcPlayerManager
 import com.example.jean.jcplayer.JcPlayerManagerListener
 import com.example.jean.jcplayer.general.JcStatus
 import com.example.jean.jcplayer.model.JcAudio
 import com.google.android.material.snackbar.Snackbar
-import dm.audiostreamer.MediaMetaData
 import kotlinx.android.synthetic.main.fragment_cart.*
 
 class CartFragment : BaseFragment(), CartContract.View, onBookItemClickListener,

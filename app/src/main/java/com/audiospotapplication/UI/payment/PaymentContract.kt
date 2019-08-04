@@ -2,6 +2,7 @@ package com.audiospotapplication.UI.payment
 
 import android.content.Context
 import com.audiospotapplication.BaseView
+import com.audiospotapplication.DataLayer.Model.FawryCustomParams
 import com.emeint.android.fawryplugin.Plugininterfacing.PayableItem
 import java.util.ArrayList
 
@@ -20,5 +21,7 @@ interface PaymentContract {
             items: ArrayList<PayableItem>,
             isEnglish: Boolean
         )
+
+        fun setFawryCustomParams(fawryCustomParams: FawryCustomParams)
     }
 }

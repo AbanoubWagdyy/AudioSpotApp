@@ -8,6 +8,7 @@ import android.os.Handler
 import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.audiospotapplication.DataLayer.Model.FawryCustomParams
 import com.audiospotapplication.R
 import com.audiospotapplication.UI.login.LoginActivity
 import com.audiospotapplication.utils.DialogUtils
@@ -23,11 +24,17 @@ import java.util.*
 
 class PaymentActivity : AppCompatActivity(), PaymentContract.View, FawrySdkCallback {
 
+    override fun setFawryCustomParams(fawryCustomParams: FawryCustomParams) {
+        this.fawryCustomParams = fawryCustomParams
+    }
+
     override fun showLoginPage() {
         mPresenter.resetRepo()
         val intent = Intent(this, LoginActivity::class.java)
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or
-                Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
+        intent.addFlags(
+            Intent.FLAG_ACTIVITY_CLEAR_TOP or
+                    Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        )
         startActivity(intent)
         finish()
     }
@@ -60,6 +67,10 @@ class PaymentActivity : AppCompatActivity(), PaymentContract.View, FawrySdkCallb
 
         val digits = 10
         val n = nDigitRandomNo(digits)
+//        if (fawryCustomParams != null) {
+//
+//            items.add(PayableItem())
+//        }
 
         val merchantRefNum: String? = n.toString()
         try {
@@ -72,7 +83,7 @@ class PaymentActivity : AppCompatActivity(), PaymentContract.View, FawrySdkCallb
                 items,
                 if (english) FawrySdk.Language.EN else FawrySdk.Language.AR,
                 300,
-                null,
+                fawryCustomParams,
                 UUID(1, 2)
             )
             Handler().postDelayed({
@@ -98,6 +109,7 @@ class PaymentActivity : AppCompatActivity(), PaymentContract.View, FawrySdkCallb
         DialogUtils.dismissProgressDialog()
     }
 
+    private var fawryCustomParams: FawryCustomParams? = null
     lateinit var mPresenter: PaymentContract.Presenter
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -137,6 +149,7 @@ class PaymentActivity : AppCompatActivity(), PaymentContract.View, FawrySdkCallb
                 if (requestResult == FawryPluginAppClass.SUCCESS_CODE) {
 
                 } else if (requestResult == FawryPluginAppClass.FAILURE_CODE) {
+
                 }
             } else {
             }
