@@ -40,51 +40,87 @@ class PaymentPresenter(val mView: PaymentContract.View, val extras: Bundle?) : P
                 override fun onFailure(call: Call<BookListResponse>?, t: Throwable?) {
                     mView.dismissLoading()
                 }
-
             })
         } else {
-            var bookId = extras.getInt("BOOKID")
-            var voucher = ""
-            voucher = if (extras.getString("VOUCHER") != null)
-                extras.getString("VOUCHER")!!
-            else {
-                "1"
-            }
-            var emails = ""
-            emails = if (extras.getString("SENDTO") != null)
-                extras.getString("SENDTO")!!
-            else {
-                ""
+            var bookId = -1
+            if (extras.containsKey("BOOKID")) {
+                bookId = extras.getInt("BOOKID")
             }
 
-            var promoCode = ""
-            promoCode = if (extras.getString("promoCode") != null)
-                extras.getString("promoCode")!!
-            else {
-                ""
-            }
+            if (bookId == -1) {
 
-            fawryCustomParams = FawryCustomParams(voucher, emails, promoCode)
-
-            mView.setFawryCustomParams(fawryCustomParams)
-
-            mRepositorySource.getBookDetailsWithId(bookId, object : RetrofitCallbacks.BookDetailsResponseCallback {
-                override fun onSuccess(result: BookDetailsResponse?) {
-                    mView.dismissLoading()
-                    val items = ArrayList<PayableItem>()
-                    val item = Item()
-                    item.setPrice(result?.data?.price.toString())
-                    item.setDescription(result?.data?.about_book)
-                    item.qty = voucher
-                    item.sku = "1"
-                    items.add(item)
-                    mView.setPayableItems(items, mRepositorySource.getCurrentLanguage().equals("en"))
+                var promoCode = ""
+                promoCode = if (extras.getString("promoCode") != null)
+                    extras.getString("promoCode")!!
+                else {
+                    ""
                 }
 
-                override fun onFailure(call: Call<BookDetailsResponse>?, t: Throwable?) {
-                    mView.dismissLoading()
+                fawryCustomParams = FawryCustomParams("", "", promoCode)
+
+                mView.setFawryCustomParams(fawryCustomParams)
+
+                mRepositorySource.getMyCart(object : RetrofitCallbacks.BookListCallback {
+                    override fun onSuccess(result: BookListResponse?) {
+                        mView.dismissLoading()
+                        for (book in result?.data!!) {
+                            val item = Item()
+                            item.setPrice(book.price.toString())
+                            item.setDescription(book.about_book)
+                            item.qty = "1"
+                            item.sku = "1"
+                            items.add(item)
+                        }
+                        mView.setPayableItems(items, mRepositorySource.getCurrentLanguage().equals("en"))
+                    }
+
+                    override fun onFailure(call: Call<BookListResponse>?, t: Throwable?) {
+                        mView.dismissLoading()
+                    }
+                })
+            } else {
+                var voucher = ""
+                voucher = if (extras.getString("VOUCHER") != null)
+                    extras.getString("VOUCHER")!!
+                else {
+                    "1"
                 }
-            })
+                var emails = ""
+                emails = if (extras.getString("SENDTO") != null)
+                    extras.getString("SENDTO")!!
+                else {
+                    ""
+                }
+
+                var promoCode = ""
+                promoCode = if (extras.getString("promoCode") != null)
+                    extras.getString("promoCode")!!
+                else {
+                    ""
+                }
+
+                fawryCustomParams = FawryCustomParams(voucher, emails, promoCode)
+
+                mView.setFawryCustomParams(fawryCustomParams)
+
+                mRepositorySource.getBookDetailsWithId(bookId, object : RetrofitCallbacks.BookDetailsResponseCallback {
+                    override fun onSuccess(result: BookDetailsResponse?) {
+                        mView.dismissLoading()
+                        val items = ArrayList<PayableItem>()
+                        val item = Item()
+                        item.setPrice(result?.data?.price.toString())
+                        item.setDescription(result?.data?.about_book)
+                        item.qty = voucher
+                        item.sku = "1"
+                        items.add(item)
+                        mView.setPayableItems(items, mRepositorySource.getCurrentLanguage().equals("en"))
+                    }
+
+                    override fun onFailure(call: Call<BookDetailsResponse>?, t: Throwable?) {
+                        mView.dismissLoading()
+                    }
+                })
+            }
         }
     }
 
