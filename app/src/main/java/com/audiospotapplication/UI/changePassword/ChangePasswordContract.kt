@@ -1,6 +1,7 @@
 package com.audiospotapplication.UI.changePassword
 
 import android.content.Context
+import com.audiospotapplication.BaseView
 
 interface ChangePasswordContract {
 
@@ -12,7 +13,7 @@ interface ChangePasswordContract {
         )
     }
 
-    interface View {
+    interface View : BaseView {
         fun getAppContext(): Context?
         fun showIncorrectOldPassword(s: String)
         fun showCompleteAllFieldsMessage(s: String)

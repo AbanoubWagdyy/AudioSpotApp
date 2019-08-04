@@ -12,6 +12,10 @@ import java.util.ArrayList
 
 class PaymentPresenter(val mView: PaymentContract.View, val extras: Bundle?) : PaymentContract.Presenter {
 
+    override fun resetRepo() {
+        mRepositorySource.clear()
+    }
+
     override fun start() {
         val items = ArrayList<PayableItem>()
         mView.showLoadingDialog()

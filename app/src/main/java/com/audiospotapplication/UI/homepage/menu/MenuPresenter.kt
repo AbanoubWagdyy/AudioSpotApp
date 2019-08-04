@@ -79,6 +79,8 @@ class MenuPresenter(val mView: MenuContract.View) : MenuContract.Presenter {
                     val status = RetrofitResponseHandler.validateAuthResponseStatus(result)
                     if (status == RetrofitResponseHandler.Companion.Status.VALID) {
                         mView.showLoginScreen()
+                    } else if (status == RetrofitResponseHandler.Companion.Status.UNAUTHORIZED) {
+                        mView!!.showLoginPage()
                     } else {
                         mView!!.showErrorMessage()
                     }

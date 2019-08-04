@@ -158,6 +158,8 @@ class BookDetailsPresenter(val mView: BookDetailsContract.View) : BookDetailsCon
                         bookDetails = result1.data
                         mView.bindResponse(result1)
                         mView.validatePlayResouce(result1)
+                    } else if (status == RetrofitResponseHandler.Companion.Status.UNAUTHORIZED) {
+                        mView!!.showLoginPage()
                     } else {
                         mView.showMessage(result1.message)
                     }
@@ -180,6 +182,8 @@ class BookDetailsPresenter(val mView: BookDetailsContract.View) : BookDetailsCon
                     if (status == RetrofitResponseHandler.Companion.Status.VALID) {
                         reviews = result!!.data
                         mView.setBookReviews(result!!.data)
+                    } else if (status == RetrofitResponseHandler.Companion.Status.UNAUTHORIZED) {
+                        mView!!.showLoginPage()
                     } else {
                         mView.showMessage(result.message)
                     }

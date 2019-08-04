@@ -1,16 +1,17 @@
 package com.audiospotapplication.UI.addBookmark
 
 import android.content.Context
+import com.audiospotapplication.BaseView
 
 interface AddBookmarkContract {
 
     interface Presenter {
         fun start()
         fun addBookmark(toString: String)
-
+        fun resetRepo()
     }
 
-    interface View {
+    interface View :BaseView{
         fun getAppContext(): Context?
         fun showLoading()
         fun dismissLoading()

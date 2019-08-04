@@ -56,6 +56,7 @@
         <activity
                 android:name="com.audiospotapplication.UI.login.LoginActivity"
                 android:screenOrientation="portrait"
+                android:noHistory="true"
                 android:windowSoftInputMode="stateHidden|stateAlwaysHidden">
         </activity>
         <activity android:name="com.audiospotapplication.UI.homepage.HomepageActivity"

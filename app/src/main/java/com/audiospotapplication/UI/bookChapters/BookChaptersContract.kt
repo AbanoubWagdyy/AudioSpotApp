@@ -1,6 +1,7 @@
 package com.audiospotapplication.UI.bookChapters
 
 import android.content.Context
+import com.audiospotapplication.BaseView
 import com.audiospotapplication.DataLayer.Model.Bookmark
 import com.audiospotapplication.DataLayer.Model.ChaptersData
 import com.example.jean.jcplayer.model.JcAudio
@@ -13,9 +14,10 @@ interface BookChaptersContract {
         fun isBookMine(): Boolean
         fun handleDownloadPressed(currentSong: JcAudio?)
         fun validateChapterDownloaded(mediaData: ChaptersData): String
+        fun resetRepo()
     }
 
-    interface View {
+    interface View : BaseView {
         fun getAppContext(): Context?
         fun showLoadingDialog()
         fun dismissLoading()

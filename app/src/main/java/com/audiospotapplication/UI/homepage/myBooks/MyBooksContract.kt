@@ -2,6 +2,7 @@ package com.audiospotapplication.UI.homepage.myBooks
 
 import android.content.Context
 import com.audiospot.DataLayer.Model.Book
+import com.audiospotapplication.BaseView
 
 interface MyBooksContract {
 
@@ -10,7 +11,7 @@ interface MyBooksContract {
         fun saveBook(book: Book)
     }
 
-    interface View {
+    interface View : BaseView {
         fun getAppContext(): Context?
         fun showErrorMessage()
         fun showLoading()

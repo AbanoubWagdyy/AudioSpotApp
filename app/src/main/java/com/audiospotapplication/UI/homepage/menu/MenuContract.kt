@@ -1,6 +1,7 @@
 package com.audiospotapplication.UI.homepage.menu
 
 import android.content.Context
+import com.audiospotapplication.BaseView
 
 interface MenuContract {
 
@@ -19,7 +20,7 @@ interface MenuContract {
 
     }
 
-    interface View {
+    interface View : BaseView {
         fun getAppContext(): Context?
         fun showShouldBeLoggedInMessage()
         fun showProfilePageScreen()

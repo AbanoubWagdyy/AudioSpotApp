@@ -1,6 +1,7 @@
 package com.audiospotapplication.UI.settings
 
 import android.content.Context
+import com.audiospotapplication.BaseView
 
 interface SettingsContract {
 
@@ -11,7 +12,7 @@ interface SettingsContract {
         fun handleLanguageSelection(strName: String?)
     }
 
-    interface View {
+    interface View : BaseView {
         fun getAppContext(): Context?
         fun showLanguageListDialog()
         fun restartAppWithDifferentLanguage(lang: String)

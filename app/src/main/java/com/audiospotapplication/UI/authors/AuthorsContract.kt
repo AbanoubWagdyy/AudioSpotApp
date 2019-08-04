@@ -1,6 +1,7 @@
 package com.audiospotapplication.UI.authors
 
 import android.content.Context
+import com.audiospotapplication.BaseView
 import com.audiospotapplication.DataLayer.Model.AuthorsData
 import com.audiospotapplication.DataLayer.Model.AuthorsResponse
 
@@ -11,7 +12,7 @@ interface AuthorsContract {
         fun handleAuthorItemClicked(authorsData: AuthorsData)
     }
 
-    interface View {
+    interface View : BaseView {
         fun getAppContext(): Context?
         fun showErrorMessage(message: String)
         fun setAuthorsList(authorsResponse: AuthorsResponse?)

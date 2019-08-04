@@ -26,6 +26,8 @@ class CategoriesPresenter(val mView: CategoriesContract.View) : CategoriesContra
                 val status = RetrofitResponseHandler.validateAuthResponseStatus(result)
                 if (status == RetrofitResponseHandler.Companion.Status.VALID) {
                     mView.setCategoriesList(result)
+                } else if (status == RetrofitResponseHandler.Companion.Status.UNAUTHORIZED) {
+                    mView!!.showLoginPage()
                 } else {
                     mView!!.showErrorMessage(result!!.message)
                 }

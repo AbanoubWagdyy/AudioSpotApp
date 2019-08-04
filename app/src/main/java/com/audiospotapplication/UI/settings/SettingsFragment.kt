@@ -26,7 +26,8 @@ class SettingsFragment : BaseFragment(), SettingsContract.View {
         ApplicationLanguageHelper.wrap(activity!!.applicationContext, language)
 
         val intent = Intent(activity!!, SplashActivity::class.java)
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or
+                Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
         startActivity(intent)
         activity!!.finish()
     }

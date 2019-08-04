@@ -130,5 +130,5 @@ dependencies {
     implementation 'com.snatik:storage:2.1.0'
     implementation project(path: ':jcplayer')
 
-    implementation 'com.emeint.fawrypluginclient:FawrySDK_1.0.20_17032019@aar'
+    implementation 'com.emeint.fawrypluginclient:FawrySDK_1.0.22_01072019@aar'
 }

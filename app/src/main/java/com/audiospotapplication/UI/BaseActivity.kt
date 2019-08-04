@@ -8,6 +8,7 @@ import android.view.View
 import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import com.audiospotapplication.BaseView
 import com.audiospotapplication.DataLayer.DataRepository
 import com.audiospotapplication.DataLayer.Model.BookListResponse
 import com.audiospotapplication.DataLayer.Retrofit.RetrofitCallbacks
@@ -19,6 +20,7 @@ import com.audiospotapplication.UI.homepage.Library.LibraryFragment
 import com.audiospotapplication.UI.homepage.home.HomeFragment
 import com.audiospotapplication.UI.homepage.menu.MenuFragment
 import com.audiospotapplication.UI.homepage.myBooks.MyBooksFragment
+import com.audiospotapplication.UI.login.LoginActivity
 import com.audiospotapplication.UI.promoCodeCongratulations.CongratulationsActivity
 import com.audiospotapplication.UI.rateBook.RateBookActivity
 import com.audiospotapplication.UI.splash.SplashActivity
@@ -29,14 +31,25 @@ import com.example.jean.jcplayer.general.JcStatus
 import com.example.jean.jcplayer.model.JcAudio
 import com.visionvalley.letuno.DataLayer.RepositorySource
 import dm.audiostreamer.MediaMetaData
-import kotlinx.android.synthetic.main.activity_base.*
+import kotlinx.android.synthetic.main.audio_spot_activity_base.*
 import kotlinx.android.synthetic.main.back_header.*
 import kotlinx.android.synthetic.main.header.*
 import retrofit2.Call
 
 abstract class BaseActivity : AppCompatActivity(),
     MyBooksFragment.onItemPlayClickListener,
-    HomeFragment.onItemPlayClickListener, JcPlayerManagerListener {
+    HomeFragment.onItemPlayClickListener,
+    BaseView,
+    JcPlayerManagerListener {
+
+    override fun showLoginPage() {
+        mRepositorySource.reset()
+        val intent = Intent(this, LoginActivity::class.java)
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or
+                Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
+        startActivity(intent)
+        finish()
+    }
 
     override fun onPreparedAudio(status: JcStatus) {
 
@@ -76,7 +89,10 @@ abstract class BaseActivity : AppCompatActivity(),
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_base)
+        setContentView(R.layout.audio_spot_activity_base)
+
+        if (supportActionBar != null)
+            supportActionBar!!.hide()
 
         mRepositorySource = DataRepository.getInstance(applicationContext)
         tabShown = mRepositorySource.getActiveTab()!!

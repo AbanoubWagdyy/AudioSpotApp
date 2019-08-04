@@ -56,6 +56,8 @@ class GiveGiftPresenter(val mView: GiveGiftContract.View) : GiveGiftContract.Pre
                                 status = RetrofitResponseHandler.validateAuthResponseStatus(result1)
                                 if (status == RetrofitResponseHandler.Companion.Status.VALID) {
                                     mView.showPayment(str, mRepositorySource.getSavedBook()!!.id)
+                                } else if (status == RetrofitResponseHandler.Companion.Status.UNAUTHORIZED) {
+                                    mView!!.showLoginPage()
                                 } else {
                                     mView.showMessage(result1!!.message)
                                 }
@@ -70,6 +72,8 @@ class GiveGiftPresenter(val mView: GiveGiftContract.View) : GiveGiftContract.Pre
                             }
 
                         })
+                    } else if (status == RetrofitResponseHandler.Companion.Status.UNAUTHORIZED) {
+                        mView!!.showLoginPage()
                     } else {
                         mView.dismissLoading()
                     }

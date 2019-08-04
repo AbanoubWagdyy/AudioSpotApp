@@ -18,6 +18,10 @@ class PromoCodePresenter(val mView: PromoCodeContract.View) : PromoCodeContract.
                     mView.setSubTotal(result!!.data.sub_total.toString())
                     mView.setDiscount(result!!.data.discount.toString())
                     mView.setTotal(result!!.data.total.toString())
+                } else if (status == RetrofitResponseHandler.Companion.Status.UNAUTHORIZED) {
+                    mView!!.showLoginPage()
+                } else {
+                    mView.showLoginPage()
                 }
                 mView.showMessage(result!!.message)
             }

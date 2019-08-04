@@ -3,6 +3,7 @@ package com.audiospotapplication.UI.cart
 import android.content.Context
 import com.audiospot.DataLayer.Model.AuthResponse
 import com.audiospot.DataLayer.Model.Book
+import com.audiospotapplication.BaseView
 
 interface CartContract {
 
@@ -14,7 +15,7 @@ interface CartContract {
         fun handlePayNowPressed()
     }
 
-    interface View {
+    interface View : BaseView {
         fun getAppContext(): Context?
         fun showErrorMessage()
         fun showLoading()

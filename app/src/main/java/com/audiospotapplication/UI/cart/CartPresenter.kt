@@ -33,6 +33,8 @@ class CartPresenter(val mView: CartContract.View) : CartContract.Presenter {
                 val status = RetrofitResponseHandler.validateAuthResponseStatus(result)
                 if (status == RetrofitResponseHandler.Companion.Status.VALID) {
                     start()
+                } else if (status == RetrofitResponseHandler.Companion.Status.UNAUTHORIZED) {
+                    mView!!.showLoginPage()
                 } else {
                     mView.dismissLoading()
                     mView.showMessage(result!!.message)
@@ -56,8 +58,15 @@ class CartPresenter(val mView: CartContract.View) : CartContract.Presenter {
         mRepositorySource.getMyCart(object : RetrofitCallbacks.BookListCallback {
             override fun onSuccess(result: BookListResponse?) {
                 mView.dismissLoading()
-                mView.setBookList(result!!.data)
-                mView.setCartCount(result?.data?.size)
+                val status = RetrofitResponseHandler.validateAuthResponseStatus(result)
+                if (status == RetrofitResponseHandler.Companion.Status.VALID) {
+                    mView.setBookList(result!!.data)
+                    mView.setCartCount(result.data.size)
+                } else if (status == RetrofitResponseHandler.Companion.Status.UNAUTHORIZED) {
+                    mView!!.showLoginPage()
+                } else {
+                    result?.message?.let { mView.showMessage(it) }
+                }
             }
 
             override fun onFailure(call: Call<BookListResponse>?, t: Throwable?) {

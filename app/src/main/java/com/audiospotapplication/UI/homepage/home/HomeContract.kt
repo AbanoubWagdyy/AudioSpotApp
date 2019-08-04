@@ -12,8 +12,8 @@ interface HomeContract {
         fun saveBook(book: Book)
     }
 
-    interface View : BaseView{
-        fun getContainingActivity() : AppCompatActivity
+    interface View : BaseView {
+        fun getContainingActivity(): AppCompatActivity
         fun showErrorMessage(message: String)
         fun showDialog()
         fun hideDialog()

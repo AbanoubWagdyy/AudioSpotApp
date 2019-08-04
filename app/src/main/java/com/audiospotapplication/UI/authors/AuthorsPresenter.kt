@@ -25,6 +25,8 @@ class AuthorsPresenter(val mView: AuthorsContract.View) : AuthorsContract.Presen
                 val status = RetrofitResponseHandler.validateAuthResponseStatus(result)
                 if (status == RetrofitResponseHandler.Companion.Status.VALID) {
                     mView.setAuthorsList(result)
+                } else if (status == RetrofitResponseHandler.Companion.Status.UNAUTHORIZED) {
+                    mView!!.showLoginPage()
                 } else {
                     mView!!.showErrorMessage(result!!.message)
                 }

@@ -21,6 +21,8 @@ class VoucherPresenter(val mView: VoucherContract.View) : VoucherContract.Presen
                     if (status == RetrofitResponseHandler.Companion.Status.VALID) {
                         mRepositorySource.saveVoucherBook(result.data)
                         mView.showCongratulationScreen()
+                    } else if (status == RetrofitResponseHandler.Companion.Status.UNAUTHORIZED) {
+                        mView!!.showLoginPage()
                     } else {
                         mView.showMessage(result.message)
                     }

@@ -17,6 +17,9 @@ import java.io.File
 
 
 class BookChaptersPresenter(val mView: BookChaptersContract.View) : BookChaptersContract.Presenter, FetchListener {
+    override fun resetRepo() {
+        mRepoSource.clear()
+    }
 
     override fun validateChapterDownloaded(data: ChaptersData): String {
         val storage = Storage(mView.getAppContext())
@@ -174,7 +177,11 @@ class BookChaptersPresenter(val mView: BookChaptersContract.View) : BookChapters
                     if (isToPlayFirstChapter) {
                         mView.onChapterClicked(result.data[0])
                         mRepoSource.setIsPlayFirstChapter(false)
-                    } else if (bookmark != null) {
+                    } else if (status == RetrofitResponseHandler.Companion.Status.UNAUTHORIZED) {
+                        mView!!.showLoginPage()
+                    }
+
+                    if (bookmark != null) {
                         var chapterData = result!!.data.filter {
                             it.id == bookmark!!.chapter_id
                         }[0]

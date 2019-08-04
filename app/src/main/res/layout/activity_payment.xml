@@ -19,16 +19,4 @@
 
     <!--</com.audiospotapplication.utils.AdvancedWebView>-->
 
-    <RelativeLayout android:layout_width="match_parent" android:layout_height="match_parent">
-
-        <com.emeint.android.fawryplugin.views.cutomviews.FawryButton
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:layout_gravity="center"
-                android:layout_marginTop="@dimen/unit_1x"
-                android:layout_marginBottom="@dimen/unit_5x" />
-
-    </RelativeLayout>
-
 </LinearLayout>

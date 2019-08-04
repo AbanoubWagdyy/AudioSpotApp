@@ -29,8 +29,17 @@ import com.visionvalley.letuno.DataLayer.RepositorySource
 import dm.audiostreamer.MediaMetaData
 import retrofit2.Call
 
-class DataRepository
-private constructor(context: Context) : RepositorySource {
+class DataRepository private constructor(context: Context) : RepositorySource {
+
+    override fun clear() {
+        INSTANCE = null
+        mCacheDataSource.clear()
+    }
+
+    override fun reset() {
+        INSTANCE = null
+        mCacheDataSource.clear()
+    }
 
     override fun getIsPlayFirstChapter(): Boolean {
         return this.isToPlayFirstChapter
@@ -54,7 +63,7 @@ private constructor(context: Context) : RepositorySource {
         myBooks = listMyBooks
     }
 
-    private var isToPlayFirstChapter: Boolean=false
+    private var isToPlayFirstChapter: Boolean = false
     private val TAG = javaClass.simpleName
     private val mRetrofitService: RemoteDataSourceUsingRetrofit
     private val mCacheDataSource: CacheDataSource

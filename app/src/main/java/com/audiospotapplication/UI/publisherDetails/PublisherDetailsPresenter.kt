@@ -40,6 +40,8 @@ class PublisherDetailsPresenter(val mView: PublisherDetailsContract.View) : Publ
                         val status = RetrofitResponseHandler.validateAuthResponseStatus(result)
                         if (status == RetrofitResponseHandler.Companion.Status.VALID) {
                             mView.setBookList(result)
+                        } else if (status == RetrofitResponseHandler.Companion.Status.UNAUTHORIZED) {
+                            mView!!.showLoginPage()
                         } else {
                             mView!!.showErrorMessage(result!!.message)
                         }

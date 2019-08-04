@@ -2,6 +2,7 @@ package com.audiospotapplication.UI.publisherDetails
 
 import android.content.Context
 import com.audiospot.DataLayer.Model.Book
+import com.audiospotapplication.BaseView
 import com.audiospotapplication.DataLayer.Model.BookListResponse
 
 interface PublisherDetailsContract {
@@ -11,7 +12,7 @@ interface PublisherDetailsContract {
         fun saveBook(book: Book)
     }
 
-    interface View {
+    interface View : BaseView {
         fun getAppContext(): Context?
         fun showLoading()
         fun dismissLoading()

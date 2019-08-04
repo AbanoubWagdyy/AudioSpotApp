@@ -24,6 +24,8 @@ class ChangePasswordPresenter(val mView: ChangePasswordContract.View) : ChangePa
                             val status = RetrofitResponseHandler.validateAuthResponseStatus(result)
                             if (status == RetrofitResponseHandler.Companion.Status.VALID) {
                                 mView!!.finalizeView()
+                            } else if (status == RetrofitResponseHandler.Companion.Status.UNAUTHORIZED) {
+                                mView!!.showLoginPage()
                             } else {
                                 mView!!.showErrorMessage(result!!.message)
                             }

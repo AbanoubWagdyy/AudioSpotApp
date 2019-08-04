@@ -20,6 +20,8 @@ class RateBookPresenter(val mView: RateBookContract.View) : RateBookContract.Pre
                 val status = RetrofitResponseHandler.validateAuthResponseStatus(result)
                 if (status == RetrofitResponseHandler.Companion.Status.VALID) {
                     mView.showHompageScreen()
+                } else if (status == RetrofitResponseHandler.Companion.Status.UNAUTHORIZED) {
+                    mView!!.showLoginPage()
                 }
             }
 

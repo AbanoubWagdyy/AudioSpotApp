@@ -11,6 +11,10 @@ import retrofit2.Call
 
 class ForgetPasswordPresenter(val mView: ForgetPasswordContract.View) : ForgetPasswordContract.Presenter {
 
+    override fun resetRepo() {
+        mRepositorySource.clear()
+    }
+
     lateinit var mRepositorySource: RepositorySource
 
     override fun onCancelPressed() {
@@ -29,6 +33,8 @@ class ForgetPasswordPresenter(val mView: ForgetPasswordContract.View) : ForgetPa
                     mView!!.showErrorMessage(result!!.message)
                     if (status == RetrofitResponseHandler.Companion.Status.VALID) {
                         mView!!.viewLoginScreen()
+                    } else if (status == RetrofitResponseHandler.Companion.Status.UNAUTHORIZED) {
+                        mView!!.showLoginPage()
                     }
                 }
 

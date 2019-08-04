@@ -2,6 +2,7 @@ package com.audiospotapplication.UI.giftSelection
 
 import android.content.Context
 import com.audiospot.DataLayer.Model.Book
+import com.audiospotapplication.BaseView
 
 interface GiftSelectionContract {
 
@@ -10,7 +11,7 @@ interface GiftSelectionContract {
         fun handleSubmitClicked(giftSelection: GiftSelection, quantity: Int)
     }
 
-    interface View {
+    interface View : BaseView {
         fun getAppContext(): Context?
         fun showLoadingDialog()
         fun dismissLoading()

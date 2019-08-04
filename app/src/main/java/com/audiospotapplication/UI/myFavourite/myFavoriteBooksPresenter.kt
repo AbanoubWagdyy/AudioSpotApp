@@ -37,6 +37,8 @@ class myFavoriteBooksPresenter(val mView: myFavouriteBooksContract.View) : myFav
                                 mView.showErrorMessage()
                             }
                         })
+                    } else if (status == RetrofitResponseHandler.Companion.Status.UNAUTHORIZED) {
+                        mView!!.showLoginPage()
                     }
                 }
 

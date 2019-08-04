@@ -1,6 +1,7 @@
 package com.audiospotapplication.UI.publishers
 
 import android.content.Context
+import com.audiospotapplication.BaseView
 import com.audiospotapplication.DataLayer.Model.PublishersResponse
 import com.audiospotapplication.DataLayer.Model.PublishersResponseData
 
@@ -11,7 +12,7 @@ interface PublishersContract {
         fun handlePublisherItemClicked(data: PublishersResponseData)
     }
 
-    interface View {
+    interface View : BaseView {
         fun getAppContext(): Context?
         fun showErrorMessage(message: String)
         fun setPublishersList(result: PublishersResponse?)

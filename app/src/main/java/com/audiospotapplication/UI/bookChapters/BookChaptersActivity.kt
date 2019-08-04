@@ -13,6 +13,7 @@ import com.audiospotapplication.R
 import com.audiospotapplication.UI.addBookmark.AddBookmarkActivity
 import com.audiospotapplication.UI.bookChapters.Interface.OnChapterCLickListener
 import com.audiospotapplication.UI.bookChapters.adapter.ChaptersAdapter
+import com.audiospotapplication.UI.login.LoginActivity
 import com.audiospotapplication.utils.DialogUtils
 import com.audiospotapplication.utils.ImageUtils
 import com.example.jean.jcplayer.JcPlayerManagerListener
@@ -32,6 +33,15 @@ import me.rohanpeshkar.filterablelistdialog.FilterableListDialog
 class BookChaptersActivity : AppCompatActivity(), View.OnClickListener,
     BookChaptersContract.View, OnChapterCLickListener, JcPlayerManagerListener,
     JcPlayerManagerListener.PlayerFunctionsListener {
+
+    override fun showLoginPage() {
+        mPresenter.resetRepo()
+        val intent = Intent(this, LoginActivity::class.java)
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or
+                Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
+        startActivity(intent)
+        finish()
+    }
 
     override fun dismissDownloadingDialog() {
         downloadProgressDialog!!.dismiss()

@@ -3,6 +3,7 @@ package com.audiospotapplication.UI.categories
 import android.content.Context
 import com.audiospot.DataLayer.Model.CategoriesListData
 import com.audiospot.DataLayer.Model.CategoriesListResponse
+import com.audiospotapplication.BaseView
 
 interface CategoriesContract {
 
@@ -11,7 +12,7 @@ interface CategoriesContract {
         fun handleCategoryItemClicked(categoryListData: CategoriesListData)
     }
 
-    interface View {
+    interface View : BaseView {
         fun getAppContext(): Context?
         fun setCategoriesList(result: CategoriesListResponse?)
         fun showErrorMessage(message: String)

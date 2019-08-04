@@ -13,9 +13,9 @@ class UpdateProfilePresenter(val mView: UpdateProfileContract.View) : UpdateProf
     override fun handleChangePasswordClicked() {
         mRepositorySource = DataRepository.getInstance(mView.getAppContext()!!)
         var authResponse = mRepositorySource.getAuthResponse()
-        if(authResponse!!.data.Password.equals("")){
+        if (authResponse!!.data.Password.equals("")) {
             mView.disableChangePasswordClick()
-        }else{
+        } else {
             mView.setChangePasswordClick()
         }
     }
@@ -36,6 +36,8 @@ class UpdateProfilePresenter(val mView: UpdateProfileContract.View) : UpdateProf
                             val status = RetrofitResponseHandler.validateAuthResponseStatus(result)
                             if (status == RetrofitResponseHandler.Companion.Status.VALID) {
                                 mView!!.finalizeView()
+                            } else if (status == RetrofitResponseHandler.Companion.Status.UNAUTHORIZED) {
+                                mView!!.showLoginPage()
                             } else {
                                 mView!!.showErrorMessage(result!!.message)
                             }

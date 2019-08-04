@@ -12,6 +12,15 @@ import kotlinx.android.synthetic.main.activity_forget_password.*
 
 class ForgetPasswordActivity : AppCompatActivity(), ForgetPasswordContract.View {
 
+    override fun showLoginPage() {
+        mPresenter.resetRepo()
+        val intent = Intent(this, LoginActivity::class.java)
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or
+                Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
+        startActivity(intent)
+        finish()
+    }
+
     override fun showProgressDialog() {
         DialogUtils.showProgressDialog(this,"Loading ....")
     }

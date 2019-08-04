@@ -1,6 +1,7 @@
 package com.audiospotapplication.UI.updateProfile
 
 import android.content.Context
+import com.audiospotapplication.BaseView
 
 interface UpdateProfileContract {
 
@@ -26,8 +27,8 @@ interface UpdateProfileContract {
         fun handleChangePasswordClicked()
     }
 
-    interface View {
-        abstract fun getAppContext(): Context?
+    interface View : BaseView {
+        fun getAppContext(): Context?
         fun showCompleteYourFieldsMessage()
         fun showInvalidEmailMessage(s: String)
         fun finalizeView()

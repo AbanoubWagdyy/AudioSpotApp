@@ -59,18 +59,12 @@ class SplashActivity : AppCompatActivity(), SplashContract.View {
             val path = storage.internalCacheDirectory
 
             val newDir = path + File.separator + "AudioSpotDownloadsCache"
-            val isCreated = storage.createDirectory(newDir)
-            if (isCreated) {
-                Handler().postDelayed({
-                    val mainIntent = Intent(this@SplashActivity, LoginActivity::class.java)
-                    this@SplashActivity.startActivity(mainIntent)
-                    this@SplashActivity.finish()
-                }, SPLASH_DISPLAY_LENGTH.toLong())
-            } else {
-                Toast.makeText(this, "Insufficient memory, please free some space", Toast.LENGTH_LONG).show()
-                finish()
-            }
-
+//            val isCreated = storage.createDirectory(newDir)
+            Handler().postDelayed({
+                val mainIntent = Intent(this@SplashActivity, LoginActivity::class.java)
+                this@SplashActivity.startActivity(mainIntent)
+                this@SplashActivity.finish()
+            }, SPLASH_DISPLAY_LENGTH.toLong())
         } else {
             finish()
         }

@@ -4,10 +4,12 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
 import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.audiospotapplication.R
+import com.audiospotapplication.UI.login.LoginActivity
 import com.audiospotapplication.utils.DialogUtils
 import com.emeint.android.fawryplugin.Plugininterfacing.FawrySdk
 import com.emeint.android.fawryplugin.Plugininterfacing.PayableItem
@@ -16,19 +18,28 @@ import com.emeint.android.fawryplugin.interfaces.FawrySdkCallback
 import com.emeint.android.fawryplugin.managers.FawryPluginAppClass
 import com.emeint.android.fawryplugin.utils.UiUtils
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException
-import com.google.android.gms.common.GooglePlayServicesRepairableException
-import com.google.android.gms.common.GooglePlayServicesUtil
 import com.google.android.gms.security.ProviderInstaller
 import java.util.*
 
 class PaymentActivity : AppCompatActivity(), PaymentContract.View, FawrySdkCallback {
 
-    override fun onSuccess(trxId: String, customParams: Any) {
-        Log.d("","")
+    override fun showLoginPage() {
+        mPresenter.resetRepo()
+        val intent = Intent(this, LoginActivity::class.java)
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or
+                Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
+        startActivity(intent)
+        finish()
     }
 
-    override fun onFailure(errorMessage: String) {
-        Log.d("","")
+    override fun onSuccess(trxId: String, customParams: Any?) {
+        Log.d("", trxId)
+        finish()
+    }
+
+    override fun onFailure(errorMessage: String?) {
+        Log.d("", errorMessage)
+        finish()
     }
 
     override fun setPayableItems(
@@ -42,9 +53,9 @@ class PaymentActivity : AppCompatActivity(), PaymentContract.View, FawrySdkCallb
         items: ArrayList<PayableItem>,
         english: Boolean
     ) {
-        FawryPluginAppClass.enableLogging = true
-        var merchantID: String? = null
-        merchantID = "wq9PvdmMBL0="
+//        FawryPluginAppClass.enableLogging = true
+        var merchantID: String? = "wq9PvdmMBL0="
+//        merchantID = "2n5QDrrCsUU="
         val serverUrl = "https://atfawry.fawrystaging.com"
 
         val digits = 10
@@ -52,9 +63,21 @@ class PaymentActivity : AppCompatActivity(), PaymentContract.View, FawrySdkCallb
 
         val merchantRefNum: String? = n.toString()
         try {
-            FawrySdk.initialize(this, serverUrl, this, merchantID, merchantRefNum, items, if (english) FawrySdk.Language.EN else FawrySdk.Language.AR, 300, null, UUID(1, 2))
-            FawrySdk.startPaymentActivity(this)
-            finish()
+            FawrySdk.initialize(
+                this,
+                serverUrl,
+                this,
+                merchantID,
+                merchantRefNum,
+                items,
+                if (english) FawrySdk.Language.EN else FawrySdk.Language.AR,
+                300,
+                null,
+                UUID(1, 2)
+            )
+            Handler().postDelayed({
+                FawrySdk.startPaymentActivity(this)
+            }, 500)
         } catch (e: FawryException) {
             UiUtils.showDialog(this, e, false)
             e.printStackTrace()
@@ -92,8 +115,6 @@ class PaymentActivity : AppCompatActivity(), PaymentContract.View, FawrySdkCallb
     private fun updateAndroidSecurityProvider(activity: PaymentActivity) {
         try {
             ProviderInstaller.installIfNeeded(this)
-        } catch (e: GooglePlayServicesRepairableException) {
-            GooglePlayServicesUtil.getErrorDialog(e.connectionStatusCode, activity, 0)
         } catch (e: GooglePlayServicesNotAvailableException) {
             Log.e("SecurityException", "Google Play Services not available.")
         }
@@ -114,6 +135,7 @@ class PaymentActivity : AppCompatActivity(), PaymentContract.View, FawrySdkCallb
             if (resultCode == Activity.RESULT_OK) {
                 val requestResult = data!!.getIntExtra(FawryPluginAppClass.REQUEST_RESULT, -1)
                 if (requestResult == FawryPluginAppClass.SUCCESS_CODE) {
+
                 } else if (requestResult == FawryPluginAppClass.FAILURE_CODE) {
                 }
             } else {

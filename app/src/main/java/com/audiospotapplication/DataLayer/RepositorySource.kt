@@ -187,4 +187,6 @@ interface RepositorySource : CacheDataSource {
     fun setIsPlayFirstChapter(isToPlayFirstChapter: Boolean)
 
     fun getIsPlayFirstChapter(): Boolean
+
+    fun reset()
 }

@@ -3,6 +3,7 @@ package com.audiospotapplication.UI.bookDetails
 import android.content.Context
 import com.audiospot.DataLayer.Model.Book
 import com.audiospot.DataLayer.Model.BookDetailsResponse
+import com.audiospotapplication.BaseView
 import com.audiospotapplication.DataLayer.Model.Review
 import dm.audiostreamer.MediaMetaData
 
@@ -20,7 +21,7 @@ interface BookDetailsContract {
         fun isBookMine(): Boolean
     }
 
-    interface View {
+    interface View : BaseView {
         fun getAppContext(): Context?
         fun showLoadingDialog()
         fun dismissLoading()

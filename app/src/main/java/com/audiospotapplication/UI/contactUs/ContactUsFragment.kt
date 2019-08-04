@@ -14,6 +14,7 @@ import com.audiospotapplication.utils.DialogUtils
 import kotlinx.android.synthetic.main.fragment_contact_us.*
 import android.content.Intent.ACTION_VIEW
 import android.net.Uri
+import android.os.Handler
 import com.audiospotapplication.BaseFragment
 import com.audiospotapplication.DataLayer.Retrofit.GlobalKeys
 import com.audiospotapplication.UI.homepage.HomepageActivity
@@ -23,10 +24,14 @@ import com.google.android.material.snackbar.Snackbar
 class ContactUsFragment : BaseFragment(), ContactUsContract.View {
 
     override fun showHompageScreen() {
-        val intent = Intent(activity!!, HomepageActivity::class.java)
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
-        startActivity(intent)
-        activity!!.finish()
+
+        Handler().postDelayed(Runnable {
+            val intent = Intent(activity!!, HomepageActivity::class.java)
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or
+                    Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
+            startActivity(intent)
+            activity!!.finish()
+        }, 1500)
     }
 
     override fun showMessage(message: String) {

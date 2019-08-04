@@ -9,11 +9,17 @@ import com.audiospotapplication.DataLayer.Model.*
 class RetrofitResponseHandler {
 
     companion object {
+
         fun validateAuthResponseStatus(result: AuthResponse?): Status {
             when (result!!.status) {
                 1 -> {
                     return Status.VALID
                 }
+
+                0 -> {
+                    return Status.UNAUTHORIZED
+                }
+
                 else -> {
                     return Status.INVALID
                 }
@@ -25,6 +31,11 @@ class RetrofitResponseHandler {
                 1 -> {
                     return Status.VALID
                 }
+
+                0 -> {
+                    return Status.UNAUTHORIZED
+                }
+
                 else -> {
                     return Status.INVALID
                 }
@@ -36,6 +47,11 @@ class RetrofitResponseHandler {
                 1 -> {
                     return Status.VALID
                 }
+
+                0 -> {
+                    return Status.UNAUTHORIZED
+                }
+
                 else -> {
                     return Status.INVALID
                 }
@@ -47,6 +63,11 @@ class RetrofitResponseHandler {
                 1 -> {
                     return Status.VALID
                 }
+
+                0 -> {
+                    return Status.UNAUTHORIZED
+                }
+
                 else -> {
                     return Status.INVALID
                 }
@@ -58,6 +79,11 @@ class RetrofitResponseHandler {
                 1 -> {
                     return Status.VALID
                 }
+
+                0 -> {
+                    return Status.UNAUTHORIZED
+                }
+
                 else -> {
                     return Status.INVALID
                 }
@@ -69,6 +95,11 @@ class RetrofitResponseHandler {
                 1 -> {
                     return Status.VALID
                 }
+
+                0 -> {
+                    return Status.UNAUTHORIZED
+                }
+
                 else -> {
                     return Status.INVALID
                 }
@@ -80,6 +111,11 @@ class RetrofitResponseHandler {
                 1 -> {
                     return Status.VALID
                 }
+
+                0 -> {
+                    return Status.UNAUTHORIZED
+                }
+
                 else -> {
                     return Status.INVALID
                 }
@@ -91,6 +127,11 @@ class RetrofitResponseHandler {
                 1 -> {
                     return Status.VALID
                 }
+
+                0 -> {
+                    return Status.UNAUTHORIZED
+                }
+
                 else -> {
                     return Status.INVALID
                 }
@@ -102,6 +143,11 @@ class RetrofitResponseHandler {
                 1 -> {
                     return Status.VALID
                 }
+
+                0 -> {
+                    return Status.UNAUTHORIZED
+                }
+
                 else -> {
                     return Status.INVALID
                 }
@@ -113,6 +159,11 @@ class RetrofitResponseHandler {
                 1 -> {
                     return Status.VALID
                 }
+
+                0 -> {
+                    return Status.UNAUTHORIZED
+                }
+
                 else -> {
                     return Status.INVALID
                 }
@@ -124,6 +175,11 @@ class RetrofitResponseHandler {
                 1 -> {
                     return Status.VALID
                 }
+
+                0 -> {
+                    return Status.UNAUTHORIZED
+                }
+
                 else -> {
                     return Status.INVALID
                 }
@@ -135,6 +191,11 @@ class RetrofitResponseHandler {
                 1 -> {
                     Status.VALID
                 }
+
+                0 -> {
+                    return Status.UNAUTHORIZED
+                }
+
                 else -> {
                     Status.INVALID
                 }
@@ -146,6 +207,11 @@ class RetrofitResponseHandler {
                 1 -> {
                     Status.VALID
                 }
+
+                0 -> {
+                    return Status.UNAUTHORIZED
+                }
+
                 else -> {
                     Status.INVALID
                 }
@@ -157,6 +223,11 @@ class RetrofitResponseHandler {
                 1 -> {
                     Status.VALID
                 }
+
+                0 -> {
+                    return Status.UNAUTHORIZED
+                }
+
                 else -> {
                     Status.INVALID
                 }
@@ -164,7 +235,7 @@ class RetrofitResponseHandler {
         }
 
         enum class Status {
-            VALID, INVALID
+            VALID, INVALID ,UNAUTHORIZED
         }
     }
 }

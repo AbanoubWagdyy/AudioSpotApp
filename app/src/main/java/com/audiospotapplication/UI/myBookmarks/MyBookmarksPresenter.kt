@@ -22,6 +22,8 @@ class MyBookmarksPresenter(val mView: MyBookmarksContract.View) : MyBookmarksCon
                 val status = RetrofitResponseHandler.validateAuthResponseStatus(result)
                 if (status == RetrofitResponseHandler.Companion.Status.VALID) {
                     mView.setBookmarks(result!!.data)
+                } else if (status == RetrofitResponseHandler.Companion.Status.UNAUTHORIZED) {
+                    mView!!.showLoginPage()
                 } else {
                     mView.showMessage(result!!.message)
                 }
@@ -50,6 +52,8 @@ class MyBookmarksPresenter(val mView: MyBookmarksContract.View) : MyBookmarksCon
                         mRepositorySource.saveBook(result.data)
                         mRepositorySource.saveBookmark(bookmark)
                         mView.showBookChaptersScreen()
+                    } else if (status == RetrofitResponseHandler.Companion.Status.UNAUTHORIZED) {
+                        mView!!.showLoginPage()
                     } else {
                         mView.showMessage("Please Check your internet connection")
                     }

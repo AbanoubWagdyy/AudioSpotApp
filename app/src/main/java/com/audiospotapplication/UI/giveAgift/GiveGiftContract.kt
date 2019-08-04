@@ -2,6 +2,7 @@ package com.audiospotapplication.UI.giveAgift
 
 import android.content.Context
 import com.audiospot.DataLayer.Model.Book
+import com.audiospotapplication.BaseView
 
 interface GiveGiftContract {
 
@@ -12,10 +13,11 @@ interface GiveGiftContract {
             email2: String,
             email3: String,
             email4: String,
-            email5: String)
+            email5: String
+        )
     }
 
-    interface View {
+    interface View : BaseView {
         fun getAppContext(): Context?
         fun showLoadingDialog()
         fun dismissLoading()

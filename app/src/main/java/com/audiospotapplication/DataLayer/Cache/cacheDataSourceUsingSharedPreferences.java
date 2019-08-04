@@ -67,4 +67,10 @@ public class cacheDataSourceUsingSharedPreferences implements CacheDataSource {
         AuthResponse obj = new Gson().fromJson(str, AuthResponse.class);
         return obj;
     }
+
+    @Override
+    public void clear() {
+        mPreferences.edit().putBoolean(GlobalKeys.StoreData.IS_LOGGED, false).apply();
+        mPreferences.edit().putString(GlobalKeys.StoreData.Logged_In_User, null).apply();
+    }
 }

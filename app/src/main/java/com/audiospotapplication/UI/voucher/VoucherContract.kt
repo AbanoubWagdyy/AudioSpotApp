@@ -1,6 +1,7 @@
 package com.audiospotapplication.UI.voucher
 
 import android.content.Context
+import com.audiospotapplication.BaseView
 
 interface VoucherContract {
 
@@ -9,7 +10,7 @@ interface VoucherContract {
         fun applyVoucher(voucher: String)
     }
 
-    interface View {
+    interface View : BaseView {
         fun getAppContext(): Context?
         fun showLoadingDialog()
         fun dismissLoading()

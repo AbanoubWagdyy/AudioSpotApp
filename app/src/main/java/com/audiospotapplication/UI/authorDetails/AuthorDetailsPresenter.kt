@@ -42,6 +42,8 @@ class AuthorDetailsPresenter(val mView: AuthorDetailsContract.View) : AuthorDeta
                         if (status == RetrofitResponseHandler.Companion.Status.VALID
                         ) {
                             mView.setBookList(result)
+                        } else if (status == RetrofitResponseHandler.Companion.Status.UNAUTHORIZED) {
+                            mView!!.showLoginPage()
                         } else {
                             mView!!.showErrorMessage(result!!.message)
                         }

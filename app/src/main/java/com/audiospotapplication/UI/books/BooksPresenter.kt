@@ -57,6 +57,8 @@ class BooksPresenter(val mView: BooksContract.View) : BooksContract.Presenter {
                     val status = RetrofitResponseHandler.validateAuthResponseStatus(result)
                     if (status == RetrofitResponseHandler.Companion.Status.VALID) {
                         mView.setBooksList(result)
+                    } else if (status == RetrofitResponseHandler.Companion.Status.UNAUTHORIZED) {
+                        mView!!.showLoginPage()
                     } else {
                         mView!!.showErrorMessage(result!!.message)
                     }

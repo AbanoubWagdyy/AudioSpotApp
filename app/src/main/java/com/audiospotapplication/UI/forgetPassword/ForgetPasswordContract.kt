@@ -1,15 +1,17 @@
 package com.audiospotapplication.UI.forgetPassword
 
 import android.app.Activity
+import com.audiospotapplication.BaseView
 
 interface ForgetPasswordContract {
 
     interface Presenter {
         fun onCancelPressed()
         fun onResetPasswordClicked(email: String)
+        fun resetRepo()
     }
 
-    interface View {
+    interface View : BaseView {
         fun getActivity(): Activity
         fun finishScreen()
         fun viewLoginScreen()
