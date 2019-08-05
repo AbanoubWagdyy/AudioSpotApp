@@ -21,45 +21,14 @@ import com.audiospotapplication.UI.books.Interface.onBookItemClickListener
 import com.audiospotapplication.UI.homepage.home.adapter.HomepageAdapter
 import com.audiospotapplication.UI.bookDetails.BookDetailsActivity
 import com.audiospotapplication.utils.BookDataConversion
+import com.audiospotapplication.utils.DialogUtils
 import com.example.jean.jcplayer.JcPlayerManager
 import com.example.jean.jcplayer.JcPlayerManagerListener
 import com.example.jean.jcplayer.general.JcStatus
 import dm.audiostreamer.MediaMetaData
 
 
-class HomeFragment : BaseFragment(), HomeContract.View, onBookItemClickListener, JcPlayerManagerListener {
-
-    override fun onPreparedAudio(status: JcStatus) {
-
-    }
-
-    override fun onCompletedAudio() {
-
-    }
-
-    override fun onPaused(status: JcStatus) {
-
-    }
-
-    override fun onContinueAudio(status: JcStatus) {
-
-    }
-
-    override fun onPlaying(status: JcStatus) {
-
-    }
-
-    override fun onTimeChanged(status: JcStatus) {
-
-    }
-
-    override fun onStopped(status: JcStatus) {
-
-    }
-
-    override fun onJcpError(throwable: Throwable) {
-
-    }
+class HomeFragment : BaseFragment(), HomeContract.View, onBookItemClickListener {
 
     override fun setCartNumber(size: Int) {
     }
@@ -82,12 +51,14 @@ class HomeFragment : BaseFragment(), HomeContract.View, onBookItemClickListener,
                 recyclerHome.adapter = adapter
                 return
             } else {
+                jcPlayerManager.kill()
                 mPlayCallback.OnItemPlayed(BookDataConversion.convertBookToMediaMetaData(book))
             }
         } else {
             if (currentAudio != null && currentAudio?.path.equals(book.sample)) {
                 jcPlayerManager.continueAudio()
             } else {
+                jcPlayerManager.kill()
                 mPlayCallback.OnItemPlayed(BookDataConversion.convertBookToMediaMetaData(book))
             }
         }

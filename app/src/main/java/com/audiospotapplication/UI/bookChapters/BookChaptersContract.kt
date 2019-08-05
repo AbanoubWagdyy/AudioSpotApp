@@ -4,6 +4,7 @@ import android.content.Context
 import com.audiospotapplication.BaseView
 import com.audiospotapplication.DataLayer.Model.Bookmark
 import com.audiospotapplication.DataLayer.Model.ChaptersData
+import com.audiospotapplication.DataLayer.Model.ChaptersResponse
 import com.example.jean.jcplayer.model.JcAudio
 
 interface BookChaptersContract {
@@ -32,5 +33,6 @@ interface BookChaptersContract {
         fun showDownloadingDialog()
         fun updateProgress(progress: Int)
         fun dismissDownloadingDialog()
+        fun playAllChapters(result: ChaptersResponse)
     }
 }

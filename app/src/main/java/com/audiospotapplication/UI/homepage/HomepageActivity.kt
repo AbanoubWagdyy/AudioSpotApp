@@ -56,7 +56,7 @@ class HomepageActivity : AppCompatActivity(), HomeFragment.onItemPlayClickListen
     }
 
     override fun onTimeChanged(status: JcStatus) {
-
+        DialogUtils.dismissPlayingProgressDialog()
     }
 
     override fun onStopped(status: JcStatus) {
@@ -83,6 +83,7 @@ class HomepageActivity : AppCompatActivity(), HomeFragment.onItemPlayClickListen
 //                playAudio(mediaData)
 //            }
 //        }
+        DialogUtils.showPlayingProgressDialog(this)
 
         playAudio(mediaData)
     }

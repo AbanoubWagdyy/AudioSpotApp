@@ -9,6 +9,7 @@ import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.audiospotapplication.DataLayer.Model.Bookmark
 import com.audiospotapplication.DataLayer.Model.ChaptersData
+import com.audiospotapplication.DataLayer.Model.ChaptersResponse
 import com.audiospotapplication.R
 import com.audiospotapplication.UI.addBookmark.AddBookmarkActivity
 import com.audiospotapplication.UI.bookChapters.Interface.OnChapterCLickListener
@@ -37,8 +38,10 @@ class BookChaptersActivity : AppCompatActivity(), View.OnClickListener,
     override fun showLoginPage() {
         mPresenter.resetRepo()
         val intent = Intent(this, LoginActivity::class.java)
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or
-                Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
+        intent.addFlags(
+            Intent.FLAG_ACTIVITY_CLEAR_TOP or
+                    Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        )
         startActivity(intent)
         finish()
     }
@@ -96,10 +99,6 @@ class BookChaptersActivity : AppCompatActivity(), View.OnClickListener,
     }
 
     override fun onTimeChanged(status: JcStatus) {
-    }
-
-    private fun updateProgress(jcStatus: JcStatus) {
-
     }
 
     override fun onStopped(status: JcStatus) {
@@ -266,6 +265,26 @@ class BookChaptersActivity : AppCompatActivity(), View.OnClickListener,
         ImageUtils.setImageFromUrlIntoImageViewUsingPicasso(cover, applicationContext, bookCover, false)
     }
 
+    override fun playAllChapters(result: ChaptersResponse) {
+        if (mPresenter.isBookMine()) {
+
+            val jcAudios = ArrayList<JcAudio>()
+            for (data in result.data) {
+                var isDownloadedPath = mPresenter.validateChapterDownloaded(data)
+                if (!isDownloadedPath.equals("")) {
+                    jcAudios.add(JcAudio.createFromFilePath(data.id, data.title, isDownloadedPath, data.paragraphs))
+                } else {
+                    jcAudios.add(JcAudio.createFromURL(data.id, data.title, data.sound_file, data.paragraphs))
+                }
+            }
+
+            player.initPlaylist(jcAudios, this, this)
+            player.playAudio(player.myPlaylist!![0])
+            player.createNotification(R.mipmap.ic_launcher)
+            sliding_layout.panelState = SlidingUpPanelLayout.PanelState.EXPANDED
+        }
+    }
+
     override fun onChapterClicked(data: ChaptersData) {
         if (mPresenter.isBookMine()) {
             chapterData = data
@@ -329,21 +348,6 @@ class BookChaptersActivity : AppCompatActivity(), View.OnClickListener,
             finish()
         }
     }
-
-//    override fun onStop() {
-//        super.onStop()
-//        player.createNotification(R.mipmap.ic_launcher)
-//    }
-//
-//    override fun onPause() {
-//        super.onPause()
-//        player.createNotification(R.mipmap.ic_launcher)
-//    }
-//
-//    override fun onDestroy() {
-//        super.onDestroy()
-//        player.kill()
-//    }
 
     private lateinit var chapterData: ChaptersData
     private var isExpand = false

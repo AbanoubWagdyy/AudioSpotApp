@@ -6,6 +6,7 @@ import android.content.Context;
 public class DialogUtils {
 
     private static ProgressDialog progressDialog;
+    private static ProgressDialog playingProgressDialog;
 
     public static synchronized void showProgressDialog(Context context, String message) {
         if (progressDialog == null || !progressDialog.isShowing()) {
@@ -34,5 +35,26 @@ public class DialogUtils {
             progressDialog.setCancelable(false);
             progressDialog.show();
         }
+    }
+
+
+    public static synchronized void showPlayingProgressDialog(Context context) {
+        if (playingProgressDialog == null || !playingProgressDialog.isShowing()) {
+            playingProgressDialog = new ProgressDialog(context);
+            playingProgressDialog.setMessage("Playing ...");
+            playingProgressDialog.setCancelable(false);
+            playingProgressDialog.show();
+        }
+    }
+
+    public static synchronized Boolean isPlayingProgressShowing() {
+        if (playingProgressDialog == null)
+            return false;
+        return playingProgressDialog.isShowing();
+    }
+
+    public static synchronized void dismissPlayingProgressDialog() {
+        if (playingProgressDialog != null && playingProgressDialog.isShowing())
+            playingProgressDialog.dismiss();
     }
 }

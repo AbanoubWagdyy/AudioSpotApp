@@ -13,7 +13,7 @@
     <uses-permission android:name="android.permission.PROCESS_OUTGOING_CALLS"/>
 
     <application
-            android:name="com.audiospotapplication.AudioSpotApp"
+            android:name=".AudioSpotApp"
             android:allowBackup="true"
             android:icon="@mipmap/ic_launcher"
             android:usesCleartextTraffic="true"
@@ -177,6 +177,13 @@
                 <action android:name="android.intent.action.NEW_OUTGOING_CALL" />
             </intent-filter>
         </receiver>
+
+        <service android:name="com.example.jean.jcplayer.service.JcPlayerService" />
+
+        <receiver
+                android:name="com.example.jean.jcplayer.service.notification.JcPlayerNotificationReceiver"
+                android:enabled="true"
+                android:exported="false" />
 
     </application>
 </manifest>

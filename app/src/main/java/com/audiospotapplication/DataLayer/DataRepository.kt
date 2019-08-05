@@ -2,7 +2,6 @@ package com.audiospotapplication.DataLayer
 
 import android.content.Context
 
-
 import com.audiospot.DataLayer.Model.*
 import com.audiospotapplication.DataLayer.BusinessInterceptors.authors.AuthorItemInterceptor
 import com.audiospotapplication.DataLayer.BusinessInterceptors.authors.AuthorItemUseCase
@@ -18,22 +17,15 @@ import com.audiospotapplication.DataLayer.Model.*
 import com.audiospotapplication.DataLayer.Retrofit.GlobalKeys
 import com.audiospotapplication.DataLayer.Retrofit.RemoteDataSourceUsingRetrofit
 import com.audiospotapplication.DataLayer.Retrofit.RetrofitCallbacks
-import com.audiospotapplication.R
 import com.audiospotapplication.UI.ActiveTab
 import com.audiospotapplication.UI.giftSelection.GiftSelection
-import com.example.jean.jcplayer.JcPlayerManager
-import com.example.jean.jcplayer.JcPlayerManagerListener
-import com.example.jean.jcplayer.general.JcStatus
-import com.example.jean.jcplayer.model.JcAudio
 import com.visionvalley.letuno.DataLayer.RepositorySource
-import dm.audiostreamer.MediaMetaData
 import retrofit2.Call
 
 class DataRepository private constructor(context: Context) : RepositorySource {
 
     override fun clear() {
-        INSTANCE = null
-        mCacheDataSource.clear()
+        reset()
     }
 
     override fun reset() {

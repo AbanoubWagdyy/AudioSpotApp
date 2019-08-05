@@ -187,6 +187,8 @@ class BookChaptersPresenter(val mView: BookChaptersContract.View) : BookChapters
                         }[0]
                         mView.setBookmark(bookmark)
                         mView.onChapterClicked(chapterData)
+                    }else{
+                        mView.playAllChapters(result)
                     }
                 }
             }

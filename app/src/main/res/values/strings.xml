@@ -121,4 +121,11 @@
         <item>Female</item>
     </string-array>
 
+    <string name="text_test" translatable="false">fadsfasdfadsf</string>
+    <string name="play_initial_time" translatable="false">00:00</string>
+    <string name="track_number" translatable="false">Track</string>
+    <string name="play_button_description" translatable="false">Play button</string>
+    <string name="next_button_description" translatable="false">Next button</string>
+    <string name="previous_button_description" translatable="false">Previous button</string>
+
 </resources>
