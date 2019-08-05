@@ -18,7 +18,6 @@ interface GiftSelectionContract {
         fun bindResponse(bookDetailsData: Book)
         fun showMessage(message: String)
         fun showGiftSCreen()
-        fun showCartScreen()
         fun showPayment(id: Int, quantity: Int)
     }
 }

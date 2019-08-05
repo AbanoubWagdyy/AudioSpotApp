@@ -25,6 +25,6 @@ interface GiveGiftContract {
         fun showInvalidEmailMessage(message: String)
         fun showMessage(message: String)
         fun finalizeView()
-        fun showPayment(emails: String, id: Int)
+        fun showPayment(emails: String, voucher: String, id: Int)
     }
 }

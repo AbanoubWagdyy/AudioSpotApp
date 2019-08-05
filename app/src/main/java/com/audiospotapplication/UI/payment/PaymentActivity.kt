@@ -62,7 +62,6 @@ class PaymentActivity : AppCompatActivity(), PaymentContract.View, FawrySdkCallb
     ) {
 //        FawryPluginAppClass.enableLogging = true
         var merchantID: String? = "wq9PvdmMBL0="
-//        merchantID = "2n5QDrrCsUU="
         val serverUrl = "https://atfawry.fawrystaging.com"
 
         val digits = 10
@@ -88,6 +87,7 @@ class PaymentActivity : AppCompatActivity(), PaymentContract.View, FawrySdkCallb
             )
             Handler().postDelayed({
                 FawrySdk.startPaymentActivity(this)
+                this@PaymentActivity.finish()
             }, 500)
         } catch (e: FawryException) {
             UiUtils.showDialog(this, e, false)

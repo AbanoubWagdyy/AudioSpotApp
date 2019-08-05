@@ -38,6 +38,7 @@ class GiveGiftPresenter(val mView: GiveGiftContract.View) : GiveGiftContract.Pre
         }
 
         var str = builder.toString().substring(0, builder.toString().length - 1)
+        var voucher = mRepositorySource.getVoucher().toString()
 
         mRepositorySource.sendAsGift(
             email1,
@@ -48,34 +49,14 @@ class GiveGiftPresenter(val mView: GiveGiftContract.View) : GiveGiftContract.Pre
             object : RetrofitCallbacks.ResponseCallback {
                 override fun onSuccess(result: Response?) {
                     mView.showMessage(result!!.message)
-                    var status = RetrofitResponseHandler.validateAuthResponseStatus(result)
+                    mView.dismissLoading()
+                    val status = RetrofitResponseHandler.validateAuthResponseStatus(result)
                     if (status == RetrofitResponseHandler.Companion.Status.VALID) {
-                        mRepositorySource.addBookToCart(object : RetrofitCallbacks.ResponseCallback {
-                            override fun onSuccess(result1: Response?) {
-                                mView.dismissLoading()
-                                status = RetrofitResponseHandler.validateAuthResponseStatus(result1)
-                                if (status == RetrofitResponseHandler.Companion.Status.VALID) {
-                                    mView.showPayment(str, mRepositorySource.getSavedBook()!!.id)
-                                } else if (status == RetrofitResponseHandler.Companion.Status.UNAUTHORIZED) {
-                                    mView!!.showLoginPage()
-                                } else {
-                                    mView.showMessage(result1!!.message)
-                                }
-                            }
-
-                            override fun onFailure(call: Call<Response>?, t: Throwable?) {
-
-                            }
-
-                            override fun onAuthFailure() {
-
-                            }
-
-                        })
+                        mView.showPayment(str, voucher, mRepositorySource.getSavedBook()!!.id)
                     } else if (status == RetrofitResponseHandler.Companion.Status.UNAUTHORIZED) {
                         mView!!.showLoginPage()
                     } else {
-                        mView.dismissLoading()
+                        mView.showMessage(result!!.message)
                     }
                 }
 
@@ -94,7 +75,6 @@ class GiveGiftPresenter(val mView: GiveGiftContract.View) : GiveGiftContract.Pre
     override fun start() {
         mRepositorySource = mView.getAppContext()?.let { DataRepository.getInstance(it) }!!
         var bookDetailsData = mRepositorySource.getSavedBook()
-
         mView.bindResponse(bookDetailsData!!, (mRepositorySource as DataRepository).quantity)
     }
 

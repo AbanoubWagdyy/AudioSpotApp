@@ -10,6 +10,8 @@ class RetrofitResponseHandler {
 
     companion object {
 
+        val UNAUTHORIZED_MESSAGE = "Session Expired, Please Login Again!"
+
         fun validateAuthResponseStatus(result: AuthResponse?): Status {
             when (result!!.status) {
                 1 -> {
@@ -17,7 +19,10 @@ class RetrofitResponseHandler {
                 }
 
                 0 -> {
-                    return Status.UNAUTHORIZED
+                    if (result.message.equals(UNAUTHORIZED_MESSAGE))
+                        return Status.UNAUTHORIZED
+                    else
+                        return Status.INVALID
                 }
 
                 else -> {
@@ -33,7 +38,10 @@ class RetrofitResponseHandler {
                 }
 
                 0 -> {
-                    return Status.UNAUTHORIZED
+                    if (result.message.equals(UNAUTHORIZED_MESSAGE))
+                        return Status.UNAUTHORIZED
+                    else
+                        return Status.INVALID
                 }
 
                 else -> {
@@ -49,7 +57,10 @@ class RetrofitResponseHandler {
                 }
 
                 0 -> {
-                    return Status.UNAUTHORIZED
+                    if (result.message.equals(UNAUTHORIZED_MESSAGE))
+                        return Status.UNAUTHORIZED
+                    else
+                        return Status.INVALID
                 }
 
                 else -> {
@@ -65,7 +76,10 @@ class RetrofitResponseHandler {
                 }
 
                 0 -> {
-                    return Status.UNAUTHORIZED
+                    if (result.message.equals(UNAUTHORIZED_MESSAGE))
+                        return Status.UNAUTHORIZED
+                    else
+                        return Status.INVALID
                 }
 
                 else -> {
@@ -81,7 +95,10 @@ class RetrofitResponseHandler {
                 }
 
                 0 -> {
-                    return Status.UNAUTHORIZED
+                    if (result.message.equals(UNAUTHORIZED_MESSAGE))
+                        return Status.UNAUTHORIZED
+                    else
+                        return Status.INVALID
                 }
 
                 else -> {
@@ -97,7 +114,10 @@ class RetrofitResponseHandler {
                 }
 
                 0 -> {
-                    return Status.UNAUTHORIZED
+                    if (result.message.equals(UNAUTHORIZED_MESSAGE))
+                        return Status.UNAUTHORIZED
+                    else
+                        return Status.INVALID
                 }
 
                 else -> {
@@ -113,7 +133,10 @@ class RetrofitResponseHandler {
                 }
 
                 0 -> {
-                    return Status.UNAUTHORIZED
+                    if (result.message.equals(UNAUTHORIZED_MESSAGE))
+                        return Status.UNAUTHORIZED
+                    else
+                        return Status.INVALID
                 }
 
                 else -> {
@@ -129,7 +152,10 @@ class RetrofitResponseHandler {
                 }
 
                 0 -> {
-                    return Status.UNAUTHORIZED
+                    if (result.message.equals(UNAUTHORIZED_MESSAGE))
+                        return Status.UNAUTHORIZED
+                    else
+                        return Status.INVALID
                 }
 
                 else -> {
@@ -145,7 +171,10 @@ class RetrofitResponseHandler {
                 }
 
                 0 -> {
-                    return Status.UNAUTHORIZED
+                    if (result.message.equals(UNAUTHORIZED_MESSAGE))
+                        return Status.UNAUTHORIZED
+                    else
+                        return Status.INVALID
                 }
 
                 else -> {
@@ -161,7 +190,10 @@ class RetrofitResponseHandler {
                 }
 
                 0 -> {
-                    return Status.UNAUTHORIZED
+                    if (result.message.equals(UNAUTHORIZED_MESSAGE))
+                        return Status.UNAUTHORIZED
+                    else
+                        return Status.INVALID
                 }
 
                 else -> {
@@ -177,7 +209,10 @@ class RetrofitResponseHandler {
                 }
 
                 0 -> {
-                    return Status.UNAUTHORIZED
+                    if (result.message.equals(UNAUTHORIZED_MESSAGE))
+                        return Status.UNAUTHORIZED
+                    else
+                        return Status.INVALID
                 }
 
                 else -> {
@@ -208,10 +243,6 @@ class RetrofitResponseHandler {
                     Status.VALID
                 }
 
-                0 -> {
-                    return Status.UNAUTHORIZED
-                }
-
                 else -> {
                     Status.INVALID
                 }
@@ -225,7 +256,10 @@ class RetrofitResponseHandler {
                 }
 
                 0 -> {
-                    return Status.UNAUTHORIZED
+                    if (result.message.equals(UNAUTHORIZED_MESSAGE))
+                        return Status.UNAUTHORIZED
+                    else
+                        return Status.INVALID
                 }
 
                 else -> {
@@ -235,7 +269,7 @@ class RetrofitResponseHandler {
         }
 
         enum class Status {
-            VALID, INVALID ,UNAUTHORIZED
+            VALID, INVALID, UNAUTHORIZED
         }
     }
 }

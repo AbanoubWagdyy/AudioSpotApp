@@ -44,7 +44,7 @@ class PaymentPresenter(val mView: PaymentContract.View, val extras: Bundle?) : P
         } else {
             var bookId = -1
             if (extras.containsKey("BOOKID")) {
-                bookId = extras.getInt("BOOKID")
+                bookId = extras.getString("BOOKID")!!.toInt()
             }
 
             if (bookId == -1) {

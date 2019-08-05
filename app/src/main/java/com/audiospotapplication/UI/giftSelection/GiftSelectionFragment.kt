@@ -30,11 +30,6 @@ class GiftSelectionFragment : BaseFragment(), GiftSelectionContract.View {
         activity!!.finish()
     }
 
-    override fun showCartScreen() {
-        val intent = Intent(activity!!, CartActivity::class.java)
-        startActivity(intent)
-    }
-
     override fun showGiftSCreen() {
         val intent = Intent(activity!!, GiveGiftActivity::class.java)
         startActivity(intent)

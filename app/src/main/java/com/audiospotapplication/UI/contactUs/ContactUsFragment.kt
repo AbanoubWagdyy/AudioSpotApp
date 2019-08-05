@@ -1,6 +1,7 @@
 package com.audiospotapplication.UI.contactUs
 
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -19,19 +20,24 @@ import com.audiospotapplication.BaseFragment
 import com.audiospotapplication.DataLayer.Retrofit.GlobalKeys
 import com.audiospotapplication.UI.homepage.HomepageActivity
 import com.google.android.material.snackbar.Snackbar
+import android.content.Context.INPUT_METHOD_SERVICE
+import android.view.inputmethod.InputMethodManager
+import androidx.core.content.ContextCompat.getSystemService
+
+
 
 
 class ContactUsFragment : BaseFragment(), ContactUsContract.View {
 
     override fun showHompageScreen() {
 
-        Handler().postDelayed(Runnable {
+        Handler().postDelayed({
             val intent = Intent(activity!!, HomepageActivity::class.java)
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or
                     Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
             startActivity(intent)
             activity!!.finish()
-        }, 1500)
+        }, 2500)
     }
 
     override fun showMessage(message: String) {
@@ -64,6 +70,7 @@ class ContactUsFragment : BaseFragment(), ContactUsContract.View {
         mPresenter = ContactUsPresenter(this)
         mPresenter.start()
         send.setOnClickListener {
+            hideKeyboard(activity!!)
             mPresenter.contactUs(message.text.toString())
         }
 
@@ -100,6 +107,17 @@ class ContactUsFragment : BaseFragment(), ContactUsContract.View {
         @JvmStatic
         fun newInstance() =
             ContactUsFragment()
+    }
+
+    fun hideKeyboard(activity: Activity) {
+        val imm = activity.getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
+        //Find the currently focused view, so we can grab the correct window token from it.
+        var view = activity.getCurrentFocus()
+        //If no view currently has focus, create a new one, just so we can grab a window token from it
+        if (view == null) {
+            view = View(activity)
+        }
+        imm.hideSoftInputFromWindow(view!!.getWindowToken(), 0)
     }
 
     lateinit var mPresenter: ContactUsContract.Presenter
