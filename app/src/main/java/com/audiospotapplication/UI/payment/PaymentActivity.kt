@@ -82,7 +82,7 @@ class PaymentActivity : AppCompatActivity(), PaymentContract.View, FawrySdkCallb
                 items,
                 if (english) FawrySdk.Language.EN else FawrySdk.Language.AR,
                 300,
-                fawryCustomParams,
+                fawryCustomParams.toString(),
                 UUID(1, 2)
             )
             Handler().postDelayed({
