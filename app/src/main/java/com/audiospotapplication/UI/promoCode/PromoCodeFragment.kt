@@ -4,7 +4,7 @@ package com.audiospotapplication.UI.promoCode
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import androidx.fragment.app.Fragment
+import android.os.Handler
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -17,6 +17,13 @@ import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.fragment_promo_code.*
 
 class PromoCodeFragment : BaseFragment(), PromoCodeContract.View {
+
+    override fun showPayment(promoCode: String) {
+        val intent = Intent(activity!!, PaymentActivity::class.java)
+        intent.putExtra("promoCode", promoCode)
+        startActivity(intent)
+        activity!!.finish()
+    }
 
     override fun setSubTotal(toString: String) {
         subTotal.visibility = View.VISIBLE

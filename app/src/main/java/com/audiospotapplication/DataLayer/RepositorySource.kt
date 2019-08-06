@@ -168,6 +168,8 @@ interface RepositorySource : CacheDataSource {
 
     fun getPromoCode(): String
 
+    fun getPromoCodeResponse(): PromoCodeResponse?
+
     fun addPromoCode(promoCode: String, responseCallback: RetrofitCallbacks.PromoCodeResponseCallback)
 
     fun saveVoucherBook(data: Book?)

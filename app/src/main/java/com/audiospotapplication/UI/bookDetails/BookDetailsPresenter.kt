@@ -96,17 +96,30 @@ class BookDetailsPresenter(val mView: BookDetailsContract.View) : BookDetailsCon
                 }
 
                 override fun onSuccess(result: Response?) {
-                    mView!!.showMessage(result!!.message)
-                    mRepositorySource.getMyCart(object : RetrofitCallbacks.BookListCallback {
-                        override fun onSuccess(result: BookListResponse?) {
-                            mView.dismissLoading()
-                            mView.setCartNumber(result?.data?.size)
-                        }
+                    val status = RetrofitResponseHandler.validateAuthResponseStatus(result)
+                    if (status == RetrofitResponseHandler.Companion.Status.VALID) {
+                        mRepositorySource.getMyCart(object : RetrofitCallbacks.BookListCallback {
+                            override fun onSuccess(result: BookListResponse?) {
+                                mView.dismissLoading()
+                                val status = RetrofitResponseHandler.validateAuthResponseStatus(result)
+                                if (status == RetrofitResponseHandler.Companion.Status.VALID) {
+                                    mView.setCartNumber(result?.data?.size)
+                                } else if (status == RetrofitResponseHandler.Companion.Status.UNAUTHORIZED) {
+                                    mView!!.showLoginPage()
+                                } else {
+                                    mView!!.showMessage(result!!.message)
+                                }
+                            }
 
-                        override fun onFailure(call: Call<BookListResponse>?, t: Throwable?) {
-                            mView.dismissLoading()
-                        }
-                    })
+                            override fun onFailure(call: Call<BookListResponse>?, t: Throwable?) {
+                                mView.dismissLoading()
+                            }
+                        })
+                    } else if (status == RetrofitResponseHandler.Companion.Status.UNAUTHORIZED) {
+                        mView!!.showLoginPage()
+                    } else {
+                        mView!!.showMessage(result!!.message)
+                    }
                 }
 
                 override fun onFailure(call: Call<Response>?, t: Throwable?) {

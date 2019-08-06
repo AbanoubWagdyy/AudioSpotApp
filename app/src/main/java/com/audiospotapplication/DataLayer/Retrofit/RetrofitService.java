@@ -218,13 +218,22 @@ public interface RetrofitService {
     Call<BookDetailsResponse> receiveBook(
             @Path("voucher") String voucher);
 
+//    @Headers({
+//            "Accept: application/json",
+//            "Content-type: application/json"
+//    })
+//    @POST("add-promo-code")
+//    Call<PromoCodeResponse> addPromoCode(
+//            @Query("promo_code") String promo_code);
+
+
     @Headers({
             "Accept: application/json",
             "Content-type: application/json"
     })
-    @POST("add-promo-code")
+    @GET("promo-code/{promo_code}")
     Call<PromoCodeResponse> addPromoCode(
-            @Query("promo_code") String promo_code);
+            @Path("promo_code") String promo_code);
 
     @Headers({
             "Accept: application/json",

@@ -148,29 +148,33 @@ class MyBooksFragment : BaseFragment(), MyBooksContract.View, onBookItemClickLis
 
     override fun showLoading() {
 //        progress.visibility = View.VISIBLE
-        swipeToRefresh.isRefreshing = true
+        if (swipeToRefresh != null)
+            swipeToRefresh.isRefreshing = true
     }
 
     override fun dismissLoading() {
 //        progress.visibility = View.GONE
-        swipeToRefresh.isRefreshing = false
+        if (swipeToRefresh != null)
+            swipeToRefresh.isRefreshing = false
     }
 
     override fun setBookList(listMyBooks: List<Book>) {
-        swipeToRefresh.isRefreshing = false
-        this.listMyBooks = listMyBooks
-        recyclerMyBooks.layoutManager = LinearLayoutManager(context)
-        recyclerMyBooks.setHasFixedSize(true)
-        recyclerMyBooks.isNestedScrollingEnabled = false
-        adapter = if (jcPlayerManager.isPlaying()) {
-            BooksAdapter(
-                listMyBooks, this,
-                jcPlayerManager.currentAudio
-            )
-        } else {
-            BooksAdapter(listMyBooks, this)
+        if (swipeToRefresh != null) {
+            swipeToRefresh.isRefreshing = false
+            this.listMyBooks = listMyBooks
+            recyclerMyBooks.layoutManager = LinearLayoutManager(context)
+            recyclerMyBooks.setHasFixedSize(true)
+            recyclerMyBooks.isNestedScrollingEnabled = false
+            adapter = if (jcPlayerManager.isPlaying()) {
+                BooksAdapter(
+                    listMyBooks, this,
+                    jcPlayerManager.currentAudio
+                )
+            } else {
+                BooksAdapter(listMyBooks, this)
+            }
+            recyclerMyBooks.adapter = adapter
         }
-        recyclerMyBooks.adapter = adapter
     }
 
     override fun onCreateView(

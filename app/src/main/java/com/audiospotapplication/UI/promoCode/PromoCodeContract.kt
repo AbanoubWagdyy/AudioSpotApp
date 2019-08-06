@@ -18,5 +18,6 @@ interface PromoCodeContract {
         fun setDiscount(toString: String)
         fun setTotal(toString: String)
         fun showMessage(message: String)
+        fun showPayment(promoCode: String)
     }
 }

@@ -17,6 +17,7 @@ import com.audiospotapplication.UI.bookChapters.adapter.ChaptersAdapter
 import com.audiospotapplication.UI.login.LoginActivity
 import com.audiospotapplication.utils.DialogUtils
 import com.audiospotapplication.utils.ImageUtils
+import com.example.jean.jcplayer.JcPlayerManager
 import com.example.jean.jcplayer.JcPlayerManagerListener
 import com.example.jean.jcplayer.general.JcStatus
 import com.google.android.material.snackbar.Snackbar
@@ -267,7 +268,7 @@ class BookChaptersActivity : AppCompatActivity(), View.OnClickListener,
 
     override fun playAllChapters(result: ChaptersResponse) {
         if (mPresenter.isBookMine()) {
-
+            chapterData = result.data[0]
             val jcAudios = ArrayList<JcAudio>()
             for (data in result.data) {
                 var isDownloadedPath = mPresenter.validateChapterDownloaded(data)

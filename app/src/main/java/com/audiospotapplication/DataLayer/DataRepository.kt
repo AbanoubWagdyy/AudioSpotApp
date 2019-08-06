@@ -69,6 +69,7 @@ class DataRepository private constructor(context: Context) : RepositorySource {
     private var bookmarkBody: BookmarkBody? = null
     private var bookmark: Bookmark? = null
     private var promoCode = ""
+    private var promoCodeResponse: PromoCodeResponse? = null
     private var voucherBook: Book? = null
     private var activeTab: ActiveTab? = null
 
@@ -725,6 +726,7 @@ class DataRepository private constructor(context: Context) : RepositorySource {
             object : RetrofitCallbacks.PromoCodeResponseCallback {
                 override fun onSuccess(result: PromoCodeResponse) {
                     this@DataRepository.promoCode = promoCode
+                    this@DataRepository.promoCodeResponse = result
                     responseCallback.onSuccess(result)
                 }
 
@@ -736,6 +738,10 @@ class DataRepository private constructor(context: Context) : RepositorySource {
 
     override fun getPromoCode(): String {
         return promoCode
+    }
+
+    override fun getPromoCodeResponse(): PromoCodeResponse? {
+        return promoCodeResponse
     }
 
     override fun receiveBook(voucher: String, callback: RetrofitCallbacks.BookDetailsResponseCallback) {
