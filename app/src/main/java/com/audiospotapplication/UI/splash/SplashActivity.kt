@@ -34,9 +34,11 @@ class SplashActivity : AppCompatActivity(), SplashContract.View {
     }
 
     override fun startHomepageScreen() {
-        val intent = Intent(this@SplashActivity, HomepageActivity::class.java)
-        startActivity(intent)
-        finish()
+        Handler().postDelayed({
+            val intent = Intent(this@SplashActivity, HomepageActivity::class.java)
+            startActivity(intent)
+            finish()
+        }, 1000)
     }
 
     override fun startLoginScreen() {

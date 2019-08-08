@@ -226,7 +226,6 @@ class BookChaptersActivity : AppCompatActivity(), View.OnClickListener,
         mPresenter.start(intent.extras)
     }
 
-
     private fun uiInitialization() {
 
         btn_play_bottom.setOnClickListener(this)

@@ -135,7 +135,8 @@ class JcNotificationPlayer private constructor(private val context: Context) : J
         remoteView.setOnClickPendingIntent(R.id.btn_next_notification, buildPendingIntent(NEXT, NEXT_ID))
         remoteView.setOnClickPendingIntent(R.id.btn_prev_notification, buildPendingIntent(PREVIOUS, PREVIOUS_ID))
 
-        remoteView.setOnClickPendingIntent(R.id.linear, buildHomePendingIntent())
+//        remoteView.setOnClickPendingIntent(R.id.linear, buildHomePendingIntent())
+
         return remoteView
     }
 
