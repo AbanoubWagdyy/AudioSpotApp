@@ -39,6 +39,8 @@ private constructor(private val serviceConnection: JcServiceConnection) : JcPlay
     val currentAudio: JcAudio?
         get() = jcPlayerService?.currentAudio
 
+    var currentStatus: JcStatus? = null
+
     var onShuffleMode: Boolean = false
 
     var repeatPlaylist: Boolean = false
@@ -259,6 +261,7 @@ private constructor(private val serviceConnection: JcServiceConnection) : JcPlay
     }
 
     override fun onTimeChangedListener(status: JcStatus) {
+        currentStatus = status
         for (listener in managerListeners) {
             listener.onTimeChanged(status)
 

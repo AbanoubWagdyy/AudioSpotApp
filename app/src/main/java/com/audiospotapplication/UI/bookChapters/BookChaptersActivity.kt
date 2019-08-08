@@ -14,10 +14,10 @@ import com.audiospotapplication.R
 import com.audiospotapplication.UI.addBookmark.AddBookmarkActivity
 import com.audiospotapplication.UI.bookChapters.Interface.OnChapterCLickListener
 import com.audiospotapplication.UI.bookChapters.adapter.ChaptersAdapter
+import com.audiospotapplication.UI.homepage.HomepageActivity
 import com.audiospotapplication.UI.login.LoginActivity
 import com.audiospotapplication.utils.DialogUtils
 import com.audiospotapplication.utils.ImageUtils
-import com.example.jean.jcplayer.JcPlayerManager
 import com.example.jean.jcplayer.JcPlayerManagerListener
 import com.example.jean.jcplayer.general.JcStatus
 import com.google.android.material.snackbar.Snackbar
@@ -35,6 +35,35 @@ import me.rohanpeshkar.filterablelistdialog.FilterableListDialog
 class BookChaptersActivity : AppCompatActivity(), View.OnClickListener,
     BookChaptersContract.View, OnChapterCLickListener, JcPlayerManagerListener,
     JcPlayerManagerListener.PlayerFunctionsListener {
+
+    override fun onChapterClicked(data: ChaptersData, currentAudioStatus: JcStatus?) {
+        this.chapterData = data
+        text_songName.text = data.title
+//        var isDownloadedPath = mPresenter.validateChapterDownloaded(data)
+//        val jcAudios = ArrayList<JcAudio>()
+//        if (!isDownloadedPath.equals("")) {
+//            jcAudios.add(JcAudio.createFromFilePath(data.id, data.title, isDownloadedPath, data.paragraphs))
+//        } else {
+//            jcAudios.add(JcAudio.createFromURL(data.id, data.title, data.sound_file, data.paragraphs))
+//        }
+//        player.initPlaylist(jcAudios, this, this)
+//        player.playAudio(player.myPlaylist!![0])
+//        player.createNotification(R.mipmap.ic_launcher)
+        sliding_layout.panelState = SlidingUpPanelLayout.PanelState.EXPANDED
+
+        player.seekTo(currentAudioStatus!!.currentPosition.toInt())
+    }
+
+    override fun showHomepageScreen() {
+
+        val intent = Intent(this, HomepageActivity::class.java)
+        intent.addFlags(
+            Intent.FLAG_ACTIVITY_CLEAR_TOP or
+                    Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        )
+        startActivity(intent)
+        finish()
+    }
 
     override fun showLoginPage() {
         mPresenter.resetRepo()
@@ -194,7 +223,7 @@ class BookChaptersActivity : AppCompatActivity(), View.OnClickListener,
         uiInitialization()
 
         mPresenter = BookChaptersPresenter(this)
-        mPresenter.start()
+        mPresenter.start(intent.extras)
     }
 
 

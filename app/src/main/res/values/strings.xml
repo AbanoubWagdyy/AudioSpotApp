@@ -127,5 +127,8 @@
     <string name="play_button_description" translatable="false">Play button</string>
     <string name="next_button_description" translatable="false">Next button</string>
     <string name="previous_button_description" translatable="false">Previous button</string>
+    <string name="play_chapters">Play Chapters</string>
+    <string name="chapters">Chapters</string>
+    <string name="paragraphs">Paragraphs</string>
 
 </resources>

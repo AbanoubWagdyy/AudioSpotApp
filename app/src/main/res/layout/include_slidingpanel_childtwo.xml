@@ -12,7 +12,6 @@
         <RelativeLayout
                 android:id="@+id/relative"
                 android:layout_width="match_parent"
-                android:padding="15dp"
                 android:layout_marginTop="15dp"
                 android:layout_height="wrap_content">
 
@@ -21,18 +20,47 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
-                    android:layout_marginStart="20dp"
+                    android:layout_marginStart="40dp"
                     android:layout_alignParentStart="true"
-                    android:src="@mipmap/location"/>
+                    android:src="@mipmap/paragraphs" />
 
             <ImageView
                     android:id="@+id/ivParagraphs"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
-                    android:layout_marginEnd="20dp"
+                    android:layout_marginEnd="40dp"
                     android:layout_alignParentEnd="true"
-                    android:src="@mipmap/paragraphs"/>
+                    android:src="@mipmap/location"/>
+
+        </RelativeLayout>
+
+        <RelativeLayout
+                android:id="@+id/relative2"
+                android:layout_width="match_parent"
+                android:layout_marginTop="15dp"
+                android:layout_below="@+id/relative"
+                android:layout_height="wrap_content">
+
+            <TextView
+                    android:id="@+id/tvChapters"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginStart="20dp"
+                    android:textColor="@color/white"
+                    android:layout_alignParentStart="true"
+                    android:text="@string/chapters"/>
+
+            <TextView
+                    android:id="@+id/tvParagraphs"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginEnd="20dp"
+                    android:textColor="@color/white"
+                    android:layout_alignParentEnd="true"
+                    android:text="@string/paragraphs"/>
 
         </RelativeLayout>
 
@@ -40,7 +68,7 @@
                 android:id="@+id/relativeCircular"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/relative"
+                android:layout_below="@+id/relative2"
                 android:layout_centerHorizontal="true">
 
             <ImageView android:id="@+id/image_songAlbumArt"

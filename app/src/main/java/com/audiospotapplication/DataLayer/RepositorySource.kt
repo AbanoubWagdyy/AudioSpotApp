@@ -130,6 +130,8 @@ interface RepositorySource : CacheDataSource {
 
     fun isBookMine(): Boolean
 
+    fun isBookMine(id : Int): Boolean
+
     fun getMyBooks(): List<Book>?
 
     fun getCurrentBookReviews(): List<Review>

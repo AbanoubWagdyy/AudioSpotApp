@@ -193,15 +193,12 @@ class BookDetailsFragment : BaseFragment(), BookDetailsContract.View, JcPlayerMa
         var content = SpannableString("See All Reviews")
         content.setSpan(UnderlineSpan(), 0, content.length, 0)
         tvSeeAllReviews.text = content
-        content = SpannableString("View Book Chapters")
-        content.setSpan(UnderlineSpan(), 0, content.length, 0)
-        tvViewBookChapters.text = content
 
         tvSeeAllReviews.setOnClickListener {
             mPresenter.handleSeeAllReviewsClicked()
         }
 
-        tvViewBookChapters.setOnClickListener {
+        relativeViewBookChapters.setOnClickListener {
             mPresenter.handleViewBookChaptersClicked()
         }
 

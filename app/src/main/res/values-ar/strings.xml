@@ -116,11 +116,15 @@
     <string name="or_find_us_here">أو تجدنا هنا</string>
     <string name="customer_reviews">تقييم العميل</string>
     <string name="settings">الإعدادات</string>
+    <string name="paragraphs">Paragraphs</string>
 
     <string-array name="gender_entries">
         <item>Gender</item>
         <item>Male</item>
         <item>Female</item>
     </string-array>
+
+    <string name="play_chapters">Play Chapters</string>
+    <string name="chapters">Chapters</string>
 
 </resources>

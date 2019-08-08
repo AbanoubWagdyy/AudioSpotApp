@@ -25,7 +25,6 @@ import java.lang.ref.WeakReference
 import com.emeint.android.fawryplugin.Plugininterfacing.FawrySdk.context
 
 
-
 /**
  * This class is a Android [Service] that handles notification changes on background.
  *
@@ -73,7 +72,13 @@ class JcNotificationPlayer private constructor(private val context: Context) : J
     fun createNotificationPlayer(title: String?, iconResourceResource: Int) {
         this.title = title
         this.iconResource = iconResourceResource
-        val openUi = Intent(context, context.javaClass)
+
+        val openUi = Intent(context, BookChaptersActivity::class.java)
+
+//        val audio = JcPlayerManager.getInstance(context).get()!!.seekTo()
+        openUi.putExtra("STARTFROMFIRST", false)
+//        if (audio != null)
+//            openUi.putExtra("currentAudio", audio.id)
         openUi.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
 
         notification = NotificationCompat.Builder(context, NOTIFICATION_CHANNEL)

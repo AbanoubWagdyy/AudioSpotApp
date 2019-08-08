@@ -1,5 +1,6 @@
 package com.audiospotapplication.UI.bookChapters
 
+import android.os.Bundle
 import android.util.Log
 import com.audiospotapplication.DataLayer.DataRepository
 import com.audiospotapplication.DataLayer.Model.BookmarkBody
@@ -7,6 +8,8 @@ import com.audiospotapplication.DataLayer.Model.ChaptersData
 import com.audiospotapplication.DataLayer.Model.ChaptersResponse
 import com.audiospotapplication.DataLayer.Retrofit.RetrofitCallbacks
 import com.audiospotapplication.DataLayer.Retrofit.RetrofitResponseHandler
+import com.example.jean.jcplayer.JcPlayerManager
+import com.example.jean.jcplayer.general.JcStatus
 import com.example.jean.jcplayer.model.JcAudio
 import com.snatik.storage.Storage
 import com.tonyodev.fetch2.*
@@ -155,9 +158,29 @@ class BookChaptersPresenter(val mView: BookChaptersContract.View) : BookChapters
         mView.showAddBookmarkScreen()
     }
 
-    override fun start() {
+    override fun start(extras: Bundle?) {
 
         mRepoSource = DataRepository.getInstance(mView.getAppContext()!!)
+
+//        if (extras != null) {
+//            val audioId = extras.getInt("currentAudio")
+//            if (!mRepoSource.isBookMine(audioId)) {
+//                mView.showHomepageScreen()
+//                return
+//            }
+//        }
+
+        var currentAudioId = 0
+        if (JcPlayerManager.getInstance(mView.getAppContext()!!).get()!!.currentAudio != null) {
+            currentAudioId = JcPlayerManager.getInstance(mView.getAppContext()!!).get()!!.currentAudio!!.id
+        }
+
+        var currentAudioStatus: JcStatus? = null
+
+        if (JcPlayerManager.getInstance(mView.getAppContext()!!).get()!!.currentStatus != null) {
+            currentAudioStatus = JcPlayerManager.getInstance(mView.getAppContext()!!).get()!!.currentStatus!!
+        }
+
         var book = mRepoSource.getSavedBook()
         var bookmark = mRepoSource.getBookmark()
         var isToPlayFirstChapter = mRepoSource.getIsPlayFirstChapter()
@@ -174,22 +197,32 @@ class BookChaptersPresenter(val mView: BookChaptersContract.View) : BookChapters
                 val status = RetrofitResponseHandler.validateResponseStatus(result)
                 if (status == RetrofitResponseHandler.Companion.Status.VALID) {
                     mView.setChapters(result!!.data)
-                    if (isToPlayFirstChapter) {
-                        mView.onChapterClicked(result.data[0])
-                        mRepoSource.setIsPlayFirstChapter(false)
-                    } else if (status == RetrofitResponseHandler.Companion.Status.UNAUTHORIZED) {
-                        mView!!.showLoginPage()
-                    }
+                    if (extras == null) {
+                        if (isToPlayFirstChapter) {
+                            mView.onChapterClicked(result.data[0])
+                            mRepoSource.setIsPlayFirstChapter(false)
+                        } else if (status == RetrofitResponseHandler.Companion.Status.UNAUTHORIZED) {
+                            mView!!.showLoginPage()
+                        }
 
-                    if (bookmark != null) {
+                        if (bookmark != null) {
+                            var chapterData = result!!.data.filter {
+                                it.id == bookmark!!.chapter_id
+                            }[0]
+                            mView.setBookmark(bookmark)
+                            mView.onChapterClicked(chapterData)
+                        } else {
+                            mView.playAllChapters(result)
+                        }
+                    } else {
                         var chapterData = result!!.data.filter {
-                            it.id == bookmark!!.chapter_id
+                            it.id == currentAudioId
                         }[0]
-                        mView.setBookmark(bookmark)
-                        mView.onChapterClicked(chapterData)
-                    }else{
-                        mView.playAllChapters(result)
+
+                        mView.onChapterClicked(chapterData, currentAudioStatus)
                     }
+                } else {
+                    mView.showHomepageScreen()
                 }
             }
 

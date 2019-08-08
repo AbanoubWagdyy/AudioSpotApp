@@ -513,6 +513,23 @@ class DataRepository private constructor(context: Context) : RepositorySource {
         return is_Found!!
     }
 
+    override fun isBookMine(id2: Int): Boolean {
+        var is_Found: Boolean? = false
+        if (myBooks == null)
+            return false
+        if (myBooks!!.isEmpty()) {
+            return is_Found!!
+        } else {
+            for ((_, _, _, _, id) in myBooks!!) {
+                if (id2 == id) {
+                    is_Found = true
+                    break
+                }
+            }
+        }
+        return is_Found!!
+    }
+
     override fun getMyCart(callback: RetrofitCallbacks.BookListCallback) {
         if (authResponse != null)
             mRetrofitService.getMyCart(authResponse!!.data.token,

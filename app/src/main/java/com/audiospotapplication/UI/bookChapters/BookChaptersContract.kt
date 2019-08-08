@@ -1,16 +1,18 @@
 package com.audiospotapplication.UI.bookChapters
 
 import android.content.Context
+import android.os.Bundle
 import com.audiospotapplication.BaseView
 import com.audiospotapplication.DataLayer.Model.Bookmark
 import com.audiospotapplication.DataLayer.Model.ChaptersData
 import com.audiospotapplication.DataLayer.Model.ChaptersResponse
+import com.example.jean.jcplayer.general.JcStatus
 import com.example.jean.jcplayer.model.JcAudio
 
 interface BookChaptersContract {
 
     interface Presenter {
-        fun start()
+        fun start(extras: Bundle?)
         fun handleBookmarkClicked(timeString: String, id: Int, title: String)
         fun isBookMine(): Boolean
         fun handleDownloadPressed(currentSong: JcAudio?)
@@ -34,5 +36,7 @@ interface BookChaptersContract {
         fun updateProgress(progress: Int)
         fun dismissDownloadingDialog()
         fun playAllChapters(result: ChaptersResponse)
+        fun showHomepageScreen()
+        fun onChapterClicked(chapterData: ChaptersData, currentAudioStatus: JcStatus?)
     }
 }

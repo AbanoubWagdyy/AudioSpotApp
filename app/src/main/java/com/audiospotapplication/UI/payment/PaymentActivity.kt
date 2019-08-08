@@ -61,8 +61,10 @@ class PaymentActivity : AppCompatActivity(), PaymentContract.View, FawrySdkCallb
         english: Boolean
     ) {
 //        FawryPluginAppClass.enableLogging = true
-        var merchantID: String? = "wq9PvdmMBL0="
-        val serverUrl = "https://atfawry.fawrystaging.com"
+//        var merchantID: String? = "wq9PvdmMBL0="
+        var merchantID: String? = "4iZdY2gYUttKitmTMhLsqw=="
+//        val serverUrl = "https://atfawry.fawrystaging.com"
+        val serverUrl = "https://www.atfawry.com"
 
         val digits = 10
         val n = nDigitRandomNo(digits)
