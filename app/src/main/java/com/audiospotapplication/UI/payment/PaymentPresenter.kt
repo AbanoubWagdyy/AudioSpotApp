@@ -13,13 +13,21 @@ import java.util.*
 
 class PaymentPresenter(val mView: PaymentContract.View, val extras: Bundle?) : PaymentContract.Presenter {
 
+    override fun getMerchantRefNumber(): String {
+        return createOrderBody.merchant_ref_number
+    }
+
     override fun createOrder(
         fawryCustomParams: FawryCustomParams?,
         uuid: UUID,
         createOrderResponseCallback: RetrofitCallbacks.CreateOrderResponseCallback
     ) {
-        var createOrderBody = CreateOrderBody(
-            uuid.toString(),
+
+        val digits = 10
+        val n = nDigitRandomNo(digits)
+        
+        createOrderBody = CreateOrderBody(
+            n.toString(),
             fawryCustomParams!!.promo_code,
             fawryCustomParams.to,
             fawryCustomParams.voucher)
@@ -177,6 +185,16 @@ class PaymentPresenter(val mView: PaymentContract.View, val extras: Bundle?) : P
         }
     }
 
+    private fun nDigitRandomNo(digits: Int): Int {
+        val max = Math.pow(10.0, digits.toDouble()).toInt() - 1
+        val min = 0
+        val range = max - min
+        val r = Random()
+        val x = r.nextInt(range)// This will generate random integers in range 0 - 8999999
+        return x + min
+    }
+
+    private lateinit var createOrderBody: CreateOrderBody
     lateinit var mRepositorySource: RepositorySource
     lateinit var fawryCustomParams: FawryCustomParams
 }

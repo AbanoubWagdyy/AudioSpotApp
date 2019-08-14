@@ -17,6 +17,8 @@ interface PaymentContract {
             uuid: UUID,
             createOrderResponseCallback: RetrofitCallbacks.CreateOrderResponseCallback
         )
+
+        fun getMerchantRefNumber() : String
     }
 
     interface View : BaseView {

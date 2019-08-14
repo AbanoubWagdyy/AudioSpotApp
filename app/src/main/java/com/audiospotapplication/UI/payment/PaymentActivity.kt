@@ -78,22 +78,18 @@ class PaymentActivity : AppCompatActivity(), PaymentContract.View, FawrySdkCallb
         var merchantID: String? = "4iZdY2gYUttKitmTMhLsqw=="
 //        val serverUrl = "https://atfawry.fawrystaging.com"
         val serverUrl = "https://www.atfawry.com"
-
-        val digits = 10
-        val n = nDigitRandomNo(digits)
 //        if (fawryCustomParams != null) {
 //
 //            items.add(PayableItem())
 //        }
 
-        val merchantRefNum: String? = n.toString()
         try {
             FawrySdk.initialize(
                 this,
                 serverUrl,
                 this,
                 merchantID,
-                merchantRefNum,
+                mPresenter.getMerchantRefNumber(),
                 items,
                 if (english) FawrySdk.Language.EN else FawrySdk.Language.AR,
                 300,
@@ -145,15 +141,6 @@ class PaymentActivity : AppCompatActivity(), PaymentContract.View, FawrySdkCallb
         } catch (e: GooglePlayServicesNotAvailableException) {
             Log.e("SecurityException", "Google Play Services not available.")
         }
-    }
-
-    private fun nDigitRandomNo(digits: Int): Int {
-        val max = Math.pow(10.0, digits.toDouble()).toInt() - 1
-        val min = 0
-        val range = max - min
-        val r = Random()
-        val x = r.nextInt(range)// This will generate random integers in range 0 - 8999999
-        return x + min
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
