@@ -24,6 +24,23 @@ import retrofit2.Call
 
 class DataRepository private constructor(context: Context) : RepositorySource {
 
+    override fun createOrder(orderBody: CreateOrderBody, callback: RetrofitCallbacks.CreateOrderResponseCallback) {
+        mRetrofitService.createOrder(authResponse!!.data.token,
+            GlobalKeys.API_KEY,
+            lang,
+            mCacheDataSource.getStringFromCache(GlobalKeys.StoreData.TOKEN, null),
+            orderBody,
+            object : RetrofitCallbacks.CreateOrderResponseCallback {
+                override fun onSuccess(result: CreateOrderResponse?) {
+                    callback.onSuccess(result)
+                }
+
+                override fun onFailure(call: Call<CreateOrderResponse>?, t: Throwable?) {
+                    callback.onFailure(call, t)
+                }
+            })
+    }
+
     override fun clear() {
         reset()
     }

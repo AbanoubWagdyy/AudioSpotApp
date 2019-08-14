@@ -582,4 +582,20 @@ public class RemoteDataSourceUsingRetrofit {
                     }
                 });
     }
+
+    public void createOrder(String token, String apiKey, String lang, String deviceToken, CreateOrderBody body, RetrofitCallbacks.CreateOrderResponseCallback responseCallback) {
+        RestClient.getRetrofitService(token, apiKey, lang, deviceToken)
+                .createOrder(body)
+                .enqueue(new Callback<CreateOrderResponse>() {
+                    @Override
+                    public void onResponse(Call<CreateOrderResponse> call, Response<CreateOrderResponse> response) {
+                        responseCallback.onSuccess(response.body());
+                    }
+
+                    @Override
+                    public void onFailure(Call<CreateOrderResponse> call, Throwable t) {
+                        responseCallback.onFailure(call, t);
+                    }
+                });
+    }
 }

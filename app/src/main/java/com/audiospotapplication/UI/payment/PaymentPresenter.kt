@@ -3,16 +3,37 @@ package com.audiospotapplication.UI.payment
 import android.os.Bundle
 import com.audiospot.DataLayer.Model.BookDetailsResponse
 import com.audiospotapplication.DataLayer.DataRepository
-import com.audiospotapplication.DataLayer.Model.BookListResponse
-import com.audiospotapplication.DataLayer.Model.FawryCustomParams
-import com.audiospotapplication.DataLayer.Model.PromoCodeResponse
+import com.audiospotapplication.DataLayer.Model.*
 import com.audiospotapplication.DataLayer.Retrofit.RetrofitCallbacks
 import com.emeint.android.fawryplugin.Plugininterfacing.PayableItem
 import com.visionvalley.letuno.DataLayer.RepositorySource
 import retrofit2.Call
-import java.util.ArrayList
+import java.util.*
 
 class PaymentPresenter(val mView: PaymentContract.View, val extras: Bundle?) : PaymentContract.Presenter {
+
+    override fun createOrder(
+        fawryCustomParams: FawryCustomParams?,
+        uuid: UUID,
+        createOrderResponseCallback: RetrofitCallbacks.CreateOrderResponseCallback
+    ) {
+        var createOrderBody = CreateOrderBody(
+            uuid.toString(),
+            fawryCustomParams!!.promo_code,
+            fawryCustomParams!!.to,
+            fawryCustomParams!!.voucher
+        )
+
+        mRepositorySource.createOrder(createOrderBody, object : RetrofitCallbacks.CreateOrderResponseCallback {
+            override fun onSuccess(result: CreateOrderResponse?) {
+                createOrderResponseCallback.onSuccess(result)
+            }
+
+            override fun onFailure(call: Call<CreateOrderResponse>?, t: Throwable?) {
+                createOrderResponseCallback.onFailure(call, t)
+            }
+        })
+    }
 
     override fun resetRepo() {
         mRepositorySource.clear()
@@ -35,6 +56,9 @@ class PaymentPresenter(val mView: PaymentContract.View, val extras: Bundle?) : P
                         item.sku = book.id.toString()
                         items.add(item)
                     }
+                    fawryCustomParams = FawryCustomParams("", "", "")
+                    mView.setFawryCustomParams(fawryCustomParams)
+
                     mView.setPayableItems(items, mRepositorySource.getCurrentLanguage().equals("en"))
                 }
 
@@ -82,7 +106,8 @@ class PaymentPresenter(val mView: PaymentContract.View, val extras: Bundle?) : P
                         if (promoCodeResponse != null) {
                             items.forEach {
                                 val item = Item()
-                                val price_before = promoCodeResponse.data.promoCode.percentage* it.fawryItemPrice.toDouble() / 100
+                                val price_before =
+                                    promoCodeResponse.data.promoCode.percentage * it.fawryItemPrice.toDouble() / 100
                                 val price = it.fawryItemPrice.toDouble() - price_before
                                 item.setPrice(price.toString())
                                 item.setDescription(it.fawryItemDescription)

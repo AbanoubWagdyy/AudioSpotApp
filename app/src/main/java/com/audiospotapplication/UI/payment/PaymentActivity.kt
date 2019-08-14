@@ -8,7 +8,9 @@ import android.os.Handler
 import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.audiospotapplication.DataLayer.Model.CreateOrderResponse
 import com.audiospotapplication.DataLayer.Model.FawryCustomParams
+import com.audiospotapplication.DataLayer.Retrofit.RetrofitCallbacks
 import com.audiospotapplication.R
 import com.audiospotapplication.UI.login.LoginActivity
 import com.audiospotapplication.utils.DialogUtils
@@ -20,6 +22,7 @@ import com.emeint.android.fawryplugin.managers.FawryPluginAppClass
 import com.emeint.android.fawryplugin.utils.UiUtils
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException
 import com.google.android.gms.security.ProviderInstaller
+import retrofit2.Call
 import java.util.*
 
 class PaymentActivity : AppCompatActivity(), PaymentContract.View, FawrySdkCallback {
@@ -51,9 +54,19 @@ class PaymentActivity : AppCompatActivity(), PaymentContract.View, FawrySdkCallb
 
     override fun setPayableItems(
         items: ArrayList<PayableItem>,
-        isEnglish: Boolean
-    ) {
-        initSDK(items, isEnglish)
+        isEnglish: Boolean) {
+        DialogUtils.showProgressDialog(this,"Initializing Order ...")
+        mPresenter.createOrder(fawryCustomParams, uuid, object : RetrofitCallbacks.CreateOrderResponseCallback {
+            override fun onSuccess(result: CreateOrderResponse?) {
+                DialogUtils.dismissProgressDialog()
+                initSDK(items, isEnglish)
+            }
+
+            override fun onFailure(call: Call<CreateOrderResponse>?, t: Throwable?) {
+                DialogUtils.dismissProgressDialog()
+                finish()
+            }
+        })
     }
 
     fun initSDK(
@@ -85,7 +98,7 @@ class PaymentActivity : AppCompatActivity(), PaymentContract.View, FawrySdkCallb
                 if (english) FawrySdk.Language.EN else FawrySdk.Language.AR,
                 300,
                 fawryCustomParams.toString(),
-                UUID(1, 2)
+                uuid
             )
             Handler().postDelayed({
                 FawrySdk.startPaymentActivity(this)
@@ -157,4 +170,7 @@ class PaymentActivity : AppCompatActivity(), PaymentContract.View, FawrySdkCallb
             }
         }
     }
+
+
+    var uuid = UUID(1, 2)
 }

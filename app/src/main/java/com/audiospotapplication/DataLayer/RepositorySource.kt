@@ -148,6 +148,8 @@ interface RepositorySource : CacheDataSource {
 
     fun addBookmark(bookmarkData: BookmarkBody, callback: RetrofitCallbacks.ResponseCallback)
 
+    fun createOrder(orderBody: CreateOrderBody, callback: RetrofitCallbacks.CreateOrderResponseCallback)
+
     fun myBookmarks(callback: RetrofitCallbacks.MyBookmarkResponseCallback)
 
     fun contactUs(message: String, callback: RetrofitCallbacks.ContactUsResponseCallback)

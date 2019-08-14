@@ -340,4 +340,11 @@ public interface RetrofitService {
     })
     @GET("narrator/{narratorId}")
     Call<BookDetailsResponse> getNarratorsProfile(@Path("narratorId") int narratorId);
+
+    @Headers({
+            "Accept: application/json",
+            "Content-type: application/json"
+    })
+    @POST("create-order")
+    Call<CreateOrderResponse> createOrder(@Body CreateOrderBody body);
 }

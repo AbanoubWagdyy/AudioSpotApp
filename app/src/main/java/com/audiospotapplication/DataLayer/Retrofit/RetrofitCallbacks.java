@@ -102,5 +102,9 @@ public interface RetrofitCallbacks {
         void onFailure(Call<PromoCodeResponse> call, Throwable t);
     }
 
+    interface CreateOrderResponseCallback {
+        void onSuccess(CreateOrderResponse result);
 
+        void onFailure(Call<CreateOrderResponse> call, Throwable t);
+    }
 }
