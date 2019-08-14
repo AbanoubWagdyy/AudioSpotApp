@@ -5,6 +5,7 @@ import com.audiospot.DataLayer.Model.BookDetailsResponse
 import com.audiospotapplication.DataLayer.DataRepository
 import com.audiospotapplication.DataLayer.Model.*
 import com.audiospotapplication.DataLayer.Retrofit.RetrofitCallbacks
+import com.audiospotapplication.DataLayer.Retrofit.RetrofitResponseHandler
 import com.emeint.android.fawryplugin.Plugininterfacing.PayableItem
 import com.visionvalley.letuno.DataLayer.RepositorySource
 import retrofit2.Call
@@ -20,13 +21,18 @@ class PaymentPresenter(val mView: PaymentContract.View, val extras: Bundle?) : P
         var createOrderBody = CreateOrderBody(
             uuid.toString(),
             fawryCustomParams!!.promo_code,
-            fawryCustomParams!!.to,
-            fawryCustomParams!!.voucher
-        )
+            fawryCustomParams.to,
+            fawryCustomParams.voucher)
 
         mRepositorySource.createOrder(createOrderBody, object : RetrofitCallbacks.CreateOrderResponseCallback {
             override fun onSuccess(result: CreateOrderResponse?) {
-                createOrderResponseCallback.onSuccess(result)
+
+                val status = RetrofitResponseHandler.validateAuthResponseStatus(result)
+                if (status == RetrofitResponseHandler.Companion.Status.VALID) {
+                    createOrderResponseCallback.onSuccess(result)
+                } else {
+                    createOrderResponseCallback.onFailure(null, null)
+                }
             }
 
             override fun onFailure(call: Call<CreateOrderResponse>?, t: Throwable?) {

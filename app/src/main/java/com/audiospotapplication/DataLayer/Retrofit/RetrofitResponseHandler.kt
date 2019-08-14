@@ -268,6 +268,25 @@ class RetrofitResponseHandler {
             }
         }
 
+        fun validateAuthResponseStatus(result: CreateOrderResponse?): Status {
+            return when (result!!.status) {
+                1 -> {
+                    Status.VALID
+                }
+
+                0 -> {
+                    if (result.message.equals(UNAUTHORIZED_MESSAGE))
+                        return Status.UNAUTHORIZED
+                    else
+                        return Status.INVALID
+                }
+
+                else -> {
+                    Status.INVALID
+                }
+            }
+        }
+
         enum class Status {
             VALID, INVALID, UNAUTHORIZED
         }
