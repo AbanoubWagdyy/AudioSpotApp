@@ -12,6 +12,24 @@ import com.audiospotapplication.R
 import com.audiospotapplication.UI.homepage.HomepageActivity
 import java.io.File
 import com.snatik.storage.Storage
+import android.R.attr.versionName
+import android.app.Activity
+import android.content.Context
+import android.content.pm.PackageInfo
+import android.net.Uri
+import android.os.AsyncTask
+import android.util.Log
+import androidx.core.content.ContextCompat.startActivity
+import com.google.android.play.core.appupdate.AppUpdateInfo
+import com.google.android.play.core.appupdate.AppUpdateManagerFactory
+import com.google.android.play.core.install.model.AppUpdateType
+import com.google.android.play.core.install.model.UpdateAvailability
+import com.google.android.play.core.tasks.Task
+import org.json.JSONObject
+import java.io.IOException
+import kotlin.coroutines.resume
+import kotlin.coroutines.resumeWithException
+import kotlin.coroutines.suspendCoroutine
 
 
 class SplashActivity : AppCompatActivity(), SplashContract.View {
@@ -20,6 +38,7 @@ class SplashActivity : AppCompatActivity(), SplashContract.View {
         return this@SplashActivity
     }
 
+    private val REQUEST_CODE_UPDATE: Int = 1000
     private val PERMISSION_CODE: Int = 10
 
     private val SPLASH_DISPLAY_LENGTH = 2000
@@ -29,8 +48,8 @@ class SplashActivity : AppCompatActivity(), SplashContract.View {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_splash)
-        mPresenter = SplashPresenter(this)
-        mPresenter.start()
+
+        forceUpdate()
     }
 
     override fun startHomepageScreen() {
@@ -61,7 +80,7 @@ class SplashActivity : AppCompatActivity(), SplashContract.View {
             val path = storage.internalCacheDirectory
 
             val newDir = path + File.separator + "AudioSpotDownloadsCache"
-//            val isCreated = storage.createDirectory(newDir)
+            storage.createDirectory(newDir)
             Handler().postDelayed({
                 val mainIntent = Intent(this@SplashActivity, LoginActivity::class.java)
                 this@SplashActivity.startActivity(mainIntent)
@@ -69,6 +88,46 @@ class SplashActivity : AppCompatActivity(), SplashContract.View {
             }, SPLASH_DISPLAY_LENGTH.toLong())
         } else {
             finish()
+        }
+    }
+
+    fun forceUpdate() {
+        val appUpdateManager = AppUpdateManagerFactory.create(applicationContext)
+        val appUpdateInfoTask = appUpdateManager.appUpdateInfo
+        appUpdateInfoTask.addOnSuccessListener { appUpdateInfo ->
+            if (appUpdateInfo.updateAvailability() == UpdateAvailability.UPDATE_AVAILABLE
+                // For a flexible update, use AppUpdateType.FLEXIBLE
+                && appUpdateInfo.isUpdateTypeAllowed(AppUpdateType.FLEXIBLE)
+            ) {
+                appUpdateManager.startUpdateFlowForResult(
+                    // Pass the intent that is returned by 'getAppUpdateInfo()'.
+                    appUpdateInfo,
+                    // Or 'AppUpdateType.FLEXIBLE' for flexible updates.
+                    AppUpdateType.IMMEDIATE,
+                    // The current activity making the update request.
+                    this,
+                    // Include a request code to later monitor this update request.
+                    REQUEST_CODE_UPDATE
+                )
+            } else {
+                mPresenter = SplashPresenter(this@SplashActivity)
+                mPresenter.start()
+            }
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == REQUEST_CODE_UPDATE) {
+            if (requestCode == RESULT_OK) {
+                Handler().postDelayed({
+                    val mainIntent = Intent(this@SplashActivity, LoginActivity::class.java)
+                    this@SplashActivity.startActivity(mainIntent)
+                    this@SplashActivity.finish()
+                }, SPLASH_DISPLAY_LENGTH.toLong())
+            } else {
+                finish()
+            }
         }
     }
 }
