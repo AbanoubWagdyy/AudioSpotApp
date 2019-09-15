@@ -70,7 +70,11 @@ class SplashActivity : AppCompatActivity(), SplashContract.View {
         requestPermissions(permissions, PERMISSION_CODE)
     }
 
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
 
         if (requestCode == PERMISSION_CODE &&
@@ -96,17 +100,12 @@ class SplashActivity : AppCompatActivity(), SplashContract.View {
         val appUpdateInfoTask = appUpdateManager.appUpdateInfo
         appUpdateInfoTask.addOnSuccessListener { appUpdateInfo ->
             if (appUpdateInfo.updateAvailability() == UpdateAvailability.UPDATE_AVAILABLE
-                // For a flexible update, use AppUpdateType.FLEXIBLE
                 && appUpdateInfo.isUpdateTypeAllowed(AppUpdateType.FLEXIBLE)
             ) {
                 appUpdateManager.startUpdateFlowForResult(
-                    // Pass the intent that is returned by 'getAppUpdateInfo()'.
                     appUpdateInfo,
-                    // Or 'AppUpdateType.FLEXIBLE' for flexible updates.
                     AppUpdateType.IMMEDIATE,
-                    // The current activity making the update request.
                     this,
-                    // Include a request code to later monitor this update request.
                     REQUEST_CODE_UPDATE
                 )
             } else {

@@ -108,7 +108,7 @@ class JcNotificationPlayer private constructor(private val context: Context) : J
             channel.setSound(null, null)
 
             val notificationManager = context.getSystemService(NotificationManager::class.java)
-            notificationManager.createNotificationChannel(channel)
+            notificationManager?.createNotificationChannel(channel)
         }
 
         notification?.let { notificationManager.notify(NOTIFICATION_ID, it) }
