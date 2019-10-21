@@ -130,7 +130,7 @@ interface RepositorySource : CacheDataSource {
 
     fun isBookMine(): Boolean
 
-    fun isBookMine(id : Int): Boolean
+    fun isBookMine(id: Int): Boolean
 
     fun getMyBooks(): List<Book>?
 
@@ -148,7 +148,10 @@ interface RepositorySource : CacheDataSource {
 
     fun addBookmark(bookmarkData: BookmarkBody, callback: RetrofitCallbacks.ResponseCallback)
 
-    fun createOrder(orderBody: CreateOrderBody, callback: RetrofitCallbacks.CreateOrderResponseCallback)
+    fun createOrder(
+        orderBody: CreateOrderBody,
+        callback: RetrofitCallbacks.CreateOrderResponseCallback
+    )
 
     fun myBookmarks(callback: RetrofitCallbacks.MyBookmarkResponseCallback)
 
@@ -174,7 +177,10 @@ interface RepositorySource : CacheDataSource {
 
     fun getPromoCodeResponse(): PromoCodeResponse?
 
-    fun addPromoCode(promoCode: String, responseCallback: RetrofitCallbacks.PromoCodeResponseCallback)
+    fun addPromoCode(
+        promoCode: String,
+        responseCallback: RetrofitCallbacks.PromoCodeResponseCallback
+    )
 
     fun saveVoucherBook(data: Book?)
 
@@ -193,6 +199,8 @@ interface RepositorySource : CacheDataSource {
     fun setIsPlayFirstChapter(isToPlayFirstChapter: Boolean)
 
     fun getIsPlayFirstChapter(): Boolean
+
+    fun getPaypalArguments(callback: RetrofitCallbacks.PaypalArgumentCallback)
 
     fun reset()
 }

@@ -10,7 +10,6 @@ public class Item implements PayableItem, Serializable {
     private String sku ;
     private String qty ;
 
-
     public void setDescription(String description) {
         this.description = description;
     }

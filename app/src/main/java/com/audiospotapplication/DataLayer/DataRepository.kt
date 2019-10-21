@@ -24,7 +24,10 @@ import retrofit2.Call
 
 class DataRepository private constructor(context: Context) : RepositorySource {
 
-    override fun createOrder(orderBody: CreateOrderBody, callback: RetrofitCallbacks.CreateOrderResponseCallback) {
+    override fun createOrder(
+        orderBody: CreateOrderBody,
+        callback: RetrofitCallbacks.CreateOrderResponseCallback
+    ) {
         mRetrofitService.createOrder(authResponse!!.data.token,
             GlobalKeys.API_KEY,
             lang,
@@ -128,7 +131,11 @@ class DataRepository private constructor(context: Context) : RepositorySource {
         return mCacheDataSource.loggedInUser
     }
 
-    override fun login(username: String, password: String, callback: RetrofitCallbacks.AuthResponseCallback) {
+    override fun login(
+        username: String,
+        password: String,
+        callback: RetrofitCallbacks.AuthResponseCallback
+    ) {
         mRetrofitService.login(GlobalKeys.API_KEY, lang,
             mCacheDataSource.getStringFromCache(GlobalKeys.StoreData.TOKEN, null),
             username,
@@ -191,7 +198,12 @@ class DataRepository private constructor(context: Context) : RepositorySource {
         mRetrofitService.register(GlobalKeys.API_KEY,
             lang,
             mCacheDataSource.getStringFromCache(GlobalKeys.StoreData.TOKEN, null),
-            first_name, last_name, email, mobile_phone, password, object : RetrofitCallbacks.AuthResponseCallback {
+            first_name,
+            last_name,
+            email,
+            mobile_phone,
+            password,
+            object : RetrofitCallbacks.AuthResponseCallback {
 
                 override fun onSuccess(result: AuthResponse) {
                     if (result.data != null) {
@@ -368,9 +380,15 @@ class DataRepository private constructor(context: Context) : RepositorySource {
         mobile_phone: String,
         authResponseCallback: RetrofitCallbacks.AuthResponseCallback
     ) {
-        mRetrofitService.updateProfile(authResponse!!.data.token, GlobalKeys.API_KEY, lang,
+        mRetrofitService.updateProfile(authResponse!!.data.token,
+            GlobalKeys.API_KEY,
+            lang,
             mCacheDataSource.getStringFromCache(GlobalKeys.StoreData.TOKEN, null),
-            first_name, last_name, email, mobile_phone, object : RetrofitCallbacks.AuthResponseCallback {
+            first_name,
+            last_name,
+            email,
+            mobile_phone,
+            object : RetrofitCallbacks.AuthResponseCallback {
                 override fun onSuccess(result: AuthResponse) {
                     if (result.data != null && result.status == 1) {
                         authResponse = result
@@ -390,9 +408,14 @@ class DataRepository private constructor(context: Context) : RepositorySource {
         confirm_password: String,
         authResponseCallback: RetrofitCallbacks.AuthResponseCallback
     ) {
-        mRetrofitService.updatePassword(authResponse!!.data.token, GlobalKeys.API_KEY, lang,
+        mRetrofitService.updatePassword(authResponse!!.data.token,
+            GlobalKeys.API_KEY,
+            lang,
             mCacheDataSource.getStringFromCache(GlobalKeys.StoreData.TOKEN, null),
-            old_password, new_password, confirm_password, object : RetrofitCallbacks.AuthResponseCallback {
+            old_password,
+            new_password,
+            confirm_password,
+            object : RetrofitCallbacks.AuthResponseCallback {
                 override fun onSuccess(result: AuthResponse) {
                     authResponseCallback.onSuccess(result)
                 }
@@ -418,7 +441,10 @@ class DataRepository private constructor(context: Context) : RepositorySource {
             })
     }
 
-    override fun getBookDetailsWithId(bookId: Int, callback: RetrofitCallbacks.BookDetailsResponseCallback) {
+    override fun getBookDetailsWithId(
+        bookId: Int,
+        callback: RetrofitCallbacks.BookDetailsResponseCallback
+    ) {
         mRetrofitService.getBookDetails(GlobalKeys.API_KEY, lang,
             mCacheDataSource.getStringFromCache(GlobalKeys.StoreData.TOKEN, null),
             bookId,
@@ -606,10 +632,16 @@ class DataRepository private constructor(context: Context) : RepositorySource {
             })
     }
 
-    override fun removeBookFromFavorites(book_id: Int, callback: RetrofitCallbacks.ResponseCallback) {
-        mRetrofitService.removeBookFromFavorites(authResponse!!.data.token, GlobalKeys.API_KEY, lang,
+    override fun removeBookFromFavorites(
+        book_id: Int,
+        callback: RetrofitCallbacks.ResponseCallback
+    ) {
+        mRetrofitService.removeBookFromFavorites(authResponse!!.data.token,
+            GlobalKeys.API_KEY,
+            lang,
             mCacheDataSource.getStringFromCache(GlobalKeys.StoreData.TOKEN, null),
-            book_id, object : RetrofitCallbacks.ResponseCallback {
+            book_id,
+            object : RetrofitCallbacks.ResponseCallback {
                 override fun onSuccess(result: Response) {
                     callback.onSuccess(result)
                 }
@@ -625,9 +657,12 @@ class DataRepository private constructor(context: Context) : RepositorySource {
     }
 
     override fun getBookChapters(callback: RetrofitCallbacks.ChaptersResponseCallback) {
-        mRetrofitService.getBookChapters(authResponse!!.data.token, GlobalKeys.API_KEY, lang,
+        mRetrofitService.getBookChapters(authResponse!!.data.token,
+            GlobalKeys.API_KEY,
+            lang,
             mCacheDataSource.getStringFromCache(GlobalKeys.StoreData.TOKEN, null),
-            mBookItemInterceptor.getSavedBook()!!.id, object : RetrofitCallbacks.ChaptersResponseCallback {
+            mBookItemInterceptor.getSavedBook()!!.id,
+            object : RetrofitCallbacks.ChaptersResponseCallback {
                 override fun onSuccess(result: ChaptersResponse) {
                     callback.onSuccess(result)
                 }
@@ -646,7 +681,10 @@ class DataRepository private constructor(context: Context) : RepositorySource {
         return this.bookmarkBody
     }
 
-    override fun addBookmark(bookmarkData: BookmarkBody, callback: RetrofitCallbacks.ResponseCallback) {
+    override fun addBookmark(
+        bookmarkData: BookmarkBody,
+        callback: RetrofitCallbacks.ResponseCallback
+    ) {
         mRetrofitService.addBookmark(authResponse!!.data.token, GlobalKeys.API_KEY, lang,
             mCacheDataSource.getStringFromCache(GlobalKeys.StoreData.TOKEN, null),
             bookmarkData.bookId,
@@ -699,7 +737,11 @@ class DataRepository private constructor(context: Context) : RepositorySource {
         )
     }
 
-    override fun rateBook(rate: Int, comment: String, responseCallback: RetrofitCallbacks.ResponseCallback) {
+    override fun rateBook(
+        rate: Int,
+        comment: String,
+        responseCallback: RetrofitCallbacks.ResponseCallback
+    ) {
         mRetrofitService.rateBook(
             authResponse!!.data.token, GlobalKeys.API_KEY, lang,
             mCacheDataSource.getStringFromCache(GlobalKeys.StoreData.TOKEN, null),
@@ -713,7 +755,10 @@ class DataRepository private constructor(context: Context) : RepositorySource {
     }
 
     //Not Used
-    override fun sendAsVoucher(email: String, responseCallback: RetrofitCallbacks.ResponseCallback) {
+    override fun sendAsVoucher(
+        email: String,
+        responseCallback: RetrofitCallbacks.ResponseCallback
+    ) {
         mRetrofitService.sendAsVoucher(
             authResponse!!.data.token, GlobalKeys.API_KEY, lang,
             mCacheDataSource.getStringFromCache(GlobalKeys.StoreData.TOKEN, null), email,
@@ -751,7 +796,10 @@ class DataRepository private constructor(context: Context) : RepositorySource {
         return quantity
     }
 
-    override fun addPromoCode(promoCode: String, responseCallback: RetrofitCallbacks.PromoCodeResponseCallback) {
+    override fun addPromoCode(
+        promoCode: String,
+        responseCallback: RetrofitCallbacks.PromoCodeResponseCallback
+    ) {
         mRetrofitService.addPromoCode(authResponse!!.data.token,
             GlobalKeys.API_KEY,
             lang,
@@ -778,7 +826,10 @@ class DataRepository private constructor(context: Context) : RepositorySource {
         return promoCodeResponse
     }
 
-    override fun receiveBook(voucher: String, callback: RetrofitCallbacks.BookDetailsResponseCallback) {
+    override fun receiveBook(
+        voucher: String,
+        callback: RetrofitCallbacks.BookDetailsResponseCallback
+    ) {
         mRetrofitService.receiveBook(
             authResponse!!.data.token, GlobalKeys.API_KEY, lang,
             mCacheDataSource.getStringFromCache(GlobalKeys.StoreData.TOKEN, null), voucher, callback
@@ -799,6 +850,73 @@ class DataRepository private constructor(context: Context) : RepositorySource {
 
     override fun getActiveTab(): ActiveTab? {
         return activeTab
+    }
+
+    override fun getPaypalArguments(callback: RetrofitCallbacks.PaypalArgumentCallback) {
+        var paypalArguments = PaypalArguments()
+
+        mRetrofitService.getPaypalStatus(authResponse!!.data.token,
+            GlobalKeys.API_KEY,
+            lang,
+            mCacheDataSource.getStringFromCache(GlobalKeys.StoreData.TOKEN, null),
+            object : RetrofitCallbacks.PaypalStatusResponseCallback {
+                override fun onSuccess(result: PaypalStatusResponse?) {
+                    if (result?.status?.status == 1) {
+                        mRetrofitService.getPaypalKey(authResponse!!.data.token,
+                            GlobalKeys.API_KEY,
+                            lang,
+                            mCacheDataSource.getStringFromCache(GlobalKeys.StoreData.TOKEN, null),
+                            object : RetrofitCallbacks.PaypalStatusResponseCallback {
+                                override fun onSuccess(result: PaypalStatusResponse?) {
+                                    if (result?.status?.status == 1) {
+                                        paypalArguments.key = result?.data
+                                        mRetrofitService.getPaypalAmount(authResponse!!.data.token,
+                                            GlobalKeys.API_KEY,
+                                            lang,
+                                            mCacheDataSource.getStringFromCache(
+                                                GlobalKeys.StoreData.TOKEN,
+                                                null
+                                            ),
+                                            object :
+                                                RetrofitCallbacks.PaypalStatusResponseCallback {
+                                                override fun onSuccess(result: PaypalStatusResponse?) {
+                                                    if (result?.status?.status == 1) {
+                                                        paypalArguments.dollarPrice =
+                                                            result?.data.toDouble()
+                                                        callback.onSuccess(paypalArguments)
+                                                    } else {
+                                                        callback.onSuccess(paypalArguments)
+                                                    }
+                                                }
+
+                                                override fun onFailure(
+                                                    call: Call<PaypalStatusResponse>?,
+                                                    t: Throwable?
+                                                ) {
+                                                    callback.onSuccess(paypalArguments)
+                                                }
+                                            })
+                                    }else{
+                                        callback.onSuccess(paypalArguments)
+                                    }
+                                }
+
+                                override fun onFailure(
+                                    call: Call<PaypalStatusResponse>?,
+                                    t: Throwable?
+                                ) {
+                                    callback.onSuccess(paypalArguments)
+                                }
+                            })
+                    }else{
+                        callback.onSuccess(paypalArguments)
+                    }
+                }
+
+                override fun onFailure(call: Call<PaypalStatusResponse>?, t: Throwable?) {
+                    callback.onSuccess(null)
+                }
+            })
     }
 
     companion object {

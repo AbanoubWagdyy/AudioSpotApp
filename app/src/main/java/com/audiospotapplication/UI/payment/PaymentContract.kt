@@ -18,17 +18,22 @@ interface PaymentContract {
             createOrderResponseCallback: RetrofitCallbacks.CreateOrderResponseCallback
         )
 
+        fun createPaypalOrder(
+            createOrderResponseCallback: RetrofitCallbacks.PaypalArgumentCallback
+        )
+
         fun getMerchantRefNumber() : String
+
+        fun getPayItems(): MutableList<PayableItem>
+
+        fun isEnglish(): Boolean
+        fun getPaypalItemsWholeAmount(dollarPrice: Double): String
     }
 
     interface View : BaseView {
         fun getAppContext(): Context?
         fun showLoadingDialog()
         fun dismissLoading()
-        fun setPayableItems(
-            items: ArrayList<PayableItem>,
-            isEnglish: Boolean
-        )
 
         fun setFawryCustomParams(fawryCustomParams: FawryCustomParams)
     }

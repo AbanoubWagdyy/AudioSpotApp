@@ -107,4 +107,14 @@ public interface RetrofitCallbacks {
 
         void onFailure(Call<CreateOrderResponse> call, Throwable t);
     }
+
+    interface PaypalStatusResponseCallback {
+        void onSuccess(PaypalStatusResponse result);
+
+        void onFailure(Call<PaypalStatusResponse> call, Throwable t);
+    }
+
+    interface PaypalArgumentCallback {
+        void onSuccess(PaypalArguments result);
+    }
 }

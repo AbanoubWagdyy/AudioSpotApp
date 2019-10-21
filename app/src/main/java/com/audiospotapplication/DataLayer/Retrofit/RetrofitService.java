@@ -5,6 +5,7 @@ import com.audiospot.DataLayer.Model.BookDetailsResponse;
 import com.audiospot.DataLayer.Model.CategoriesListResponse;
 import com.audiospot.DataLayer.Model.HomepageRepsonse;
 import com.audiospotapplication.DataLayer.Model.*;
+
 import retrofit2.Call;
 import retrofit2.http.*;
 
@@ -347,4 +348,26 @@ public interface RetrofitService {
     })
     @POST("create-order")
     Call<CreateOrderResponse> createOrder(@Body CreateOrderBody body);
+
+    @Headers({
+            "Accept: application/json",
+            "Content-type: application/json"
+    })
+    @GET("variables/paypal_status")
+    Call<PaypalStatusResponse> getPaypalStatus();
+
+    @Headers({
+            "Accept: application/json",
+            "Content-type: application/json"
+    })
+    @GET("variables/paypal_key")
+    Call<PaypalStatusResponse> getPaypalKey();
+
+    @Headers({
+            "Accept: application/json",
+            "Content-type: application/json"
+    })
+    @GET("variables/paypal_amount")
+    Call<PaypalStatusResponse> getPaypalAmount();
+
 }

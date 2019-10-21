@@ -8,7 +8,7 @@ import com.google.firebase.messaging.RemoteMessage
 
 class MyFirebaseMessagingService : FirebaseMessagingService() {
 
-    override fun onMessageReceived(remoteMessage: RemoteMessage?) {
+    override fun onMessageReceived(remoteMessage: RemoteMessage) {
         Log.d(TAG, "From: ${remoteMessage?.from}")
 
         // Check if message contains a data payload.
@@ -22,9 +22,10 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
         }
     }
 
-    override fun onNewToken(token: String?) {
-        handleTokenChange(token!!)
+    override fun onNewToken(p0: String) {
+        handleTokenChange(p0)
     }
+
 
     private fun handleTokenChange(token: String) {
         val cacheDataSource = cacheDataSourceUsingSharedPreferences.getINSTANCE(applicationContext)
