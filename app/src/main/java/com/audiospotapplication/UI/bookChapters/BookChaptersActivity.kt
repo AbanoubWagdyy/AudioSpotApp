@@ -36,26 +36,175 @@ class BookChaptersActivity : AppCompatActivity(), View.OnClickListener,
     BookChaptersContract.View, OnChapterCLickListener, JcPlayerManagerListener,
     JcPlayerManagerListener.PlayerFunctionsListener {
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_chapters)
+        uiInitialization()
+
+        mPresenter = BookChaptersPresenter(this)
+        mPresenter.start(intent.extras)
+    }
+
+    private fun uiInitialization() {
+
+        btn_play_bottom.setOnClickListener(this)
+        ivParagraphs.setOnClickListener(this)
+        back.setOnClickListener(this)
+        tvClose.setOnClickListener(this)
+        ivParagraphs.setOnClickListener(this)
+        ivChapters.setOnClickListener(this)
+
+        tvTitle.text = applicationContext.getString(R.string.chapters)
+
+        slideBottomView.visibility = View.VISIBLE
+        slideBottomView.setOnClickListener(View.OnClickListener {
+            sliding_layout.panelState = SlidingUpPanelLayout.PanelState.EXPANDED
+        })
+
+        sliding_layout.addPanelSlideListener(object : SlidingUpPanelLayout.PanelSlideListener {
+            override fun onPanelSlide(view: View, slideOffset: Float) {
+                if (slideOffset == 0.0f) {
+                    isExpand = false
+                    slideBottomView.visibility = View.VISIBLE
+                } else if (slideOffset > 0.0f && slideOffset < 1.0f) {
+                    //slideBottomView.getBackground().setAlpha((int) slideOffset * 255);
+                } else {
+                    isExpand = true
+                    slideBottomView.visibility = View.GONE
+                }
+            }
+
+            override fun onPanelStateChanged(
+                view: View,
+                panelState: SlidingUpPanelLayout.PanelState,
+                panelState1: SlidingUpPanelLayout.PanelState
+            ) {
+                isExpand = when (panelState) {
+                    SlidingUpPanelLayout.PanelState.EXPANDED -> true
+                    SlidingUpPanelLayout.PanelState.COLLAPSED -> false
+                    else -> false
+                }
+            }
+        })
+
+        downloadProgressDialog = ProgressDialog(this)
+        downloadProgressDialog!!.setMessage("Downloading(0 %) ....")
+        downloadProgressDialog!!.setCancelable(false)
+    }
+
+    override fun getAppContext(): Context? {
+        return applicationContext
+    }
+
+    override fun showLoadingDialog() {
+        DialogUtils.showProgressDialog(this, "Loading ...")
+    }
+
+    override fun dismissLoading() {
+        DialogUtils.dismissProgressDialog()
+    }
+
+    override fun setBookName(title: String) {
+        bookName.text = title
+    }
+
+    override fun setBookImage(cover: String) {
+        ImageUtils.setImageFromUrlIntoImageViewUsingPicasso(cover, applicationContext, image_songAlbumArt, false)
+        ImageUtils.setImageFromUrlIntoImageViewUsingPicasso(cover, applicationContext, bookCover, false)
+    }
+
+    override fun playAllChapters(result: ChaptersResponse) {
+        if (mPresenter.isBookMine()) {
+            chapterData = result.data[0]
+            val jcAudios = ArrayList<JcAudio>()
+            for (data in result.data) {
+                var isDownloadedPath = mPresenter.validateChapterDownloaded(data)
+                if (!isDownloadedPath.equals("")) {
+                    jcAudios.add(JcAudio.createFromFilePath(data.id, data.title, isDownloadedPath, data.paragraphs))
+                } else {
+                    jcAudios.add(JcAudio.createFromURL(data.id, data.title, data.sound_file, data.paragraphs))
+                }
+            }
+
+            player.initPlaylist(jcAudios, this, this)
+            player.playAudio(player.myPlaylist!![0])
+            player.createNotification(R.mipmap.ic_launcher)
+            sliding_layout.panelState = SlidingUpPanelLayout.PanelState.EXPANDED
+        }
+    }
+
+    override fun onChapterClicked(data: ChaptersData) {
+        if (mPresenter.isBookMine()) {
+            chapterData = data
+            text_songName.text = chapterData.title
+            val isDownloadedPath = mPresenter.validateChapterDownloaded(data)
+            val jcAudios = ArrayList<JcAudio>()
+            if (!isDownloadedPath.equals("")) {
+                jcAudios.add(JcAudio.createFromFilePath(data.id, data.title, isDownloadedPath, data.paragraphs))
+            } else {
+                jcAudios.add(JcAudio.createFromURL(data.id, data.title, data.sound_file, data.paragraphs))
+            }
+            player.initPlaylist(jcAudios, this, this)
+            player.playAudio(player.myPlaylist!![0])
+            player.createNotification(R.mipmap.ic_launcher)
+            sliding_layout.panelState = SlidingUpPanelLayout.PanelState.EXPANDED
+            if (currentBookmark != null) {
+                player.setBookmarkTime(currentBookmark!!.time)
+            }
+        } else {
+            Snackbar.make(
+                findViewById(android.R.id.content),
+                applicationContext.getString(R.string.you_should_own), Snackbar.LENGTH_SHORT
+            ).show()
+        }
+    }
+
+    override fun setChapters(data: List<ChaptersData>) {
+        if (data.isNotEmpty()) {
+            recyclerChapters.layoutManager = LinearLayoutManager(applicationContext)
+            recyclerChapters.setHasFixedSize(true)
+            recyclerChapters.isNestedScrollingEnabled = false
+            recyclerChapters.adapter = ChaptersAdapter(data!!, this)
+            if (mPresenter.isBookMine()) {
+                val jcAudios = ArrayList<JcAudio>()
+                for (chapter in data) {
+                    jcAudios.add(
+                        JcAudio.createFromURL(
+                            chapter.id,
+                            chapter.title,
+                            chapter.sound_file,
+                            chapter.paragraphs
+                        )
+                    )
+                }
+                player.initPlaylist(jcAudios, this, this)
+            }
+        } else {
+            Snackbar.make(
+                findViewById(android.R.id.content), "Chapters not Found",
+                Snackbar.LENGTH_SHORT
+            ).show()
+        }
+    }
+
+    override fun onBackPressed() {
+        if (isExpand) {
+            sliding_layout.panelState = SlidingUpPanelLayout.PanelState.COLLAPSED
+        } else {
+            super.onBackPressed()
+            overridePendingTransition(0, 0)
+            finish()
+        }
+    }
+
     override fun onChapterClicked(data: ChaptersData, currentAudioStatus: JcStatus?) {
         this.chapterData = data
         text_songName.text = data.title
-//        var isDownloadedPath = mPresenter.validateChapterDownloaded(data)
-//        val jcAudios = ArrayList<JcAudio>()
-//        if (!isDownloadedPath.equals("")) {
-//            jcAudios.add(JcAudio.createFromFilePath(data.id, data.title, isDownloadedPath, data.paragraphs))
-//        } else {
-//            jcAudios.add(JcAudio.createFromURL(data.id, data.title, data.sound_file, data.paragraphs))
-//        }
-//        player.initPlaylist(jcAudios, this, this)
-//        player.playAudio(player.myPlaylist!![0])
-//        player.createNotification(R.mipmap.ic_launcher)
         sliding_layout.panelState = SlidingUpPanelLayout.PanelState.EXPANDED
-
         player.seekTo(currentAudioStatus!!.currentPosition.toInt())
     }
 
     override fun showHomepageScreen() {
-
         val intent = Intent(this, HomepageActivity::class.java)
         intent.addFlags(
             Intent.FLAG_ACTIVITY_CLEAR_TOP or
@@ -215,167 +364,6 @@ class BookChaptersActivity : AppCompatActivity(), View.OnClickListener,
     override fun showAddBookmarkScreen() {
         val intent = Intent(this, AddBookmarkActivity::class.java)
         startActivityForResult(intent, 1)
-    }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_chapters)
-        uiInitialization()
-
-        mPresenter = BookChaptersPresenter(this)
-        mPresenter.start(intent.extras)
-    }
-
-    private fun uiInitialization() {
-
-        btn_play_bottom.setOnClickListener(this)
-        ivParagraphs.setOnClickListener(this)
-        back.setOnClickListener(this)
-        tvClose.setOnClickListener(this)
-        ivParagraphs.setOnClickListener(this)
-        ivChapters.setOnClickListener(this)
-
-        tvTitle.text = "Chapters"
-
-        slideBottomView.visibility = View.VISIBLE
-        slideBottomView.setOnClickListener(View.OnClickListener {
-            sliding_layout.panelState = SlidingUpPanelLayout.PanelState.EXPANDED
-        })
-
-        sliding_layout.addPanelSlideListener(object : SlidingUpPanelLayout.PanelSlideListener {
-            override fun onPanelSlide(view: View, slideOffset: Float) {
-                if (slideOffset == 0.0f) {
-                    isExpand = false
-                    slideBottomView.visibility = View.VISIBLE
-                } else if (slideOffset > 0.0f && slideOffset < 1.0f) {
-                    //slideBottomView.getBackground().setAlpha((int) slideOffset * 255);
-                } else {
-                    isExpand = true
-                    slideBottomView.visibility = View.GONE
-                }
-            }
-
-            override fun onPanelStateChanged(
-                view: View,
-                panelState: SlidingUpPanelLayout.PanelState,
-                panelState1: SlidingUpPanelLayout.PanelState
-            ) {
-                isExpand = when (panelState) {
-                    SlidingUpPanelLayout.PanelState.EXPANDED -> true
-                    SlidingUpPanelLayout.PanelState.COLLAPSED -> false
-                    else -> false
-                }
-            }
-        })
-
-        downloadProgressDialog = ProgressDialog(this)
-        downloadProgressDialog!!.setMessage("Downloading(0 %) ....")
-        downloadProgressDialog!!.setCancelable(false)
-    }
-
-    override fun getAppContext(): Context? {
-        return applicationContext
-    }
-
-    override fun showLoadingDialog() {
-        DialogUtils.showProgressDialog(this, "Loading ...")
-    }
-
-    override fun dismissLoading() {
-        DialogUtils.dismissProgressDialog()
-    }
-
-    override fun setBookName(title: String) {
-        bookName.text = title
-    }
-
-    override fun setBookImage(cover: String) {
-        ImageUtils.setImageFromUrlIntoImageViewUsingPicasso(cover, applicationContext, image_songAlbumArt, false)
-        ImageUtils.setImageFromUrlIntoImageViewUsingPicasso(cover, applicationContext, bookCover, false)
-    }
-
-    override fun playAllChapters(result: ChaptersResponse) {
-        if (mPresenter.isBookMine()) {
-            chapterData = result.data[0]
-            val jcAudios = ArrayList<JcAudio>()
-            for (data in result.data) {
-                var isDownloadedPath = mPresenter.validateChapterDownloaded(data)
-                if (!isDownloadedPath.equals("")) {
-                    jcAudios.add(JcAudio.createFromFilePath(data.id, data.title, isDownloadedPath, data.paragraphs))
-                } else {
-                    jcAudios.add(JcAudio.createFromURL(data.id, data.title, data.sound_file, data.paragraphs))
-                }
-            }
-
-            player.initPlaylist(jcAudios, this, this)
-            player.playAudio(player.myPlaylist!![0])
-            player.createNotification(R.mipmap.ic_launcher)
-            sliding_layout.panelState = SlidingUpPanelLayout.PanelState.EXPANDED
-        }
-    }
-
-    override fun onChapterClicked(data: ChaptersData) {
-        if (mPresenter.isBookMine()) {
-            chapterData = data
-            text_songName.text = chapterData.title
-            var isDownloadedPath = mPresenter.validateChapterDownloaded(data)
-            val jcAudios = ArrayList<JcAudio>()
-            if (!isDownloadedPath.equals("")) {
-                jcAudios.add(JcAudio.createFromFilePath(data.id, data.title, isDownloadedPath, data.paragraphs))
-            } else {
-                jcAudios.add(JcAudio.createFromURL(data.id, data.title, data.sound_file, data.paragraphs))
-            }
-            player.initPlaylist(jcAudios, this, this)
-            player.playAudio(player.myPlaylist!![0])
-            player.createNotification(R.mipmap.ic_launcher)
-            sliding_layout.panelState = SlidingUpPanelLayout.PanelState.EXPANDED
-            if (currentBookmark != null) {
-                player.setBookmarkTime(currentBookmark!!.time)
-            }
-        } else {
-            Snackbar.make(
-                findViewById(android.R.id.content),
-                applicationContext.getString(R.string.you_should_own), Snackbar.LENGTH_SHORT
-            ).show()
-        }
-    }
-
-    override fun setChapters(data: List<ChaptersData>) {
-        if (data.isNotEmpty()) {
-            recyclerChapters.layoutManager = LinearLayoutManager(applicationContext)
-            recyclerChapters.setHasFixedSize(true)
-            recyclerChapters.isNestedScrollingEnabled = false
-            recyclerChapters.adapter = ChaptersAdapter(data!!, this)
-            if (mPresenter.isBookMine()) {
-                val jcAudios = ArrayList<JcAudio>()
-                for (chapter in data) {
-                    jcAudios.add(
-                        JcAudio.createFromURL(
-                            chapter.id,
-                            chapter.title,
-                            chapter.sound_file,
-                            chapter.paragraphs
-                        )
-                    )
-                }
-                player.initPlaylist(jcAudios, this, this)
-            }
-        } else {
-            Snackbar.make(
-                findViewById(android.R.id.content), "Chapters not Found",
-                Snackbar.LENGTH_SHORT
-            ).show()
-        }
-    }
-
-    override fun onBackPressed() {
-        if (isExpand) {
-            sliding_layout.panelState = SlidingUpPanelLayout.PanelState.COLLAPSED
-        } else {
-            super.onBackPressed()
-            overridePendingTransition(0, 0)
-            finish()
-        }
     }
 
     private lateinit var chapterData: ChaptersData

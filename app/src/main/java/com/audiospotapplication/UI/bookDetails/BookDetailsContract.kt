@@ -35,7 +35,7 @@ interface BookDetailsContract {
         fun hideAddFavoritesButton()
         fun setAddToCartText(s: String)
         fun viewRateBookScreen()
-        fun playSong(mediaMetaData: MediaMetaData)
+        fun playSong(mediaMetaData: MediaMetaData?)
         fun validatePlayResouce(result1: BookDetailsResponse)
         fun setCartNumber(size: Int?)
     }

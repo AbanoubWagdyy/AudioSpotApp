@@ -2,9 +2,7 @@ package com.audiospotapplication.UI.settings
 
 import android.content.Context
 import android.content.Intent
-import android.content.res.Configuration
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,15 +13,11 @@ import com.audiospotapplication.DataLayer.Retrofit.GlobalKeys
 
 import com.audiospotapplication.R
 import com.audiospotapplication.UI.splash.SplashActivity
-import com.audiospotapplication.utils.ApplicationLanguageHelper
 import kotlinx.android.synthetic.main.fragment_settings.*
-import java.util.*
 
 class SettingsFragment : BaseFragment(), SettingsContract.View {
 
     override fun restartAppWithDifferentLanguage(language: String) {
-
-        ApplicationLanguageHelper.wrap(activity!!.applicationContext, language)
 
         val intent = Intent(activity!!, SplashActivity::class.java)
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or
@@ -36,7 +30,7 @@ class SettingsFragment : BaseFragment(), SettingsContract.View {
 
         val builderSingle = AlertDialog.Builder(activity!!)
         builderSingle.setIcon(R.mipmap.ic_launcher)
-        builderSingle.setTitle("Select Language:-")
+        builderSingle.setTitle(context!!.getString(R.string.select_language))
 
         val arrayAdapter = ArrayAdapter<String>(activity!!, android.R.layout.simple_list_item_1)
         arrayAdapter.add(GlobalKeys.Language.ENGLISH)

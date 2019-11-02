@@ -29,19 +29,17 @@ class BookDetailsPresenter(val mView: BookDetailsContract.View) : BookDetailsCon
         if (isBookMine()) {
             mRepositorySource.setIsPlayFirstChapter(true)
         } else {
-            var mediaMetaData = mRepositorySource.getSavedBook()?.let {
+            val mediaMetaData = mRepositorySource.getSavedBook()?.let {
                 BookDataConversion.convertBookToMediaMetaData(
                     it
                 )
             }
-            if (mediaMetaData != null) {
-                mView.playSong(mediaMetaData)
-            }
+            mView.playSong(mediaMetaData)
         }
     }
 
     override fun handleSeeAllReviewsClicked() {
-        var authResponse = mRepositorySource.getAuthResponse()
+        val authResponse = mRepositorySource.getAuthResponse()
         if (authResponse == null) {
             mView.showLoginMessage("You have to be Logged In First !.")
         } else {
@@ -54,32 +52,10 @@ class BookDetailsPresenter(val mView: BookDetailsContract.View) : BookDetailsCon
     }
 
     override fun handleViewBookChaptersClicked() {
-//        var authResponse = mRepositorySource.getAuthResponse()
-//        if (authResponse == null) {
-//            mView.showLoginMessage("You have to be Logged In First !.")
-//        } else {
-//            if (mRepositorySource.isBookMine()) {
-//                mRepositorySource.saveBook(bookDetails)
-//                mView.viewBookChaptersScreen()
-//            } else {
-//                mView.showMessage("You Should own this book to view all chapters !.")
-//            }
-//        }
         mView.viewBookChaptersScreen()
     }
 
     override fun handleGiveGiftClicked() {
-//        var authResponse = mRepositorySource.getAuthResponse()
-//        if (authResponse == null) {
-//            mView.showLoginMessage("You have to be Logged In First !.")
-//        } else {
-//            if (mRepositorySource.isBookMine()) {
-//                mRepositorySource.saveBook(bookDetails)
-//                mView.showGiveGiftScreen()
-//            } else {
-//                mView.showMessage("You Should own this book to give this book as a gift !.")
-//            }
-//        }
         mView.showGiveGiftScreen()
     }
 

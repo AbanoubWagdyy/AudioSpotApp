@@ -543,6 +543,12 @@ class DataRepository private constructor(context: Context) : RepositorySource {
         var is_Found: Boolean? = false
         if (myBooks == null)
             return false
+
+        if (mBookItemInterceptor.getSavedBook() != null &&
+            mBookItemInterceptor.getSavedBook()?.price == 0) {
+            return true
+        }
+
         if (myBooks!!.isEmpty()) {
             return is_Found!!
         } else {
@@ -896,7 +902,7 @@ class DataRepository private constructor(context: Context) : RepositorySource {
                                                     callback.onSuccess(paypalArguments)
                                                 }
                                             })
-                                    }else{
+                                    } else {
                                         callback.onSuccess(paypalArguments)
                                     }
                                 }
@@ -908,7 +914,7 @@ class DataRepository private constructor(context: Context) : RepositorySource {
                                     callback.onSuccess(paypalArguments)
                                 }
                             })
-                    }else{
+                    } else {
                         callback.onSuccess(paypalArguments)
                     }
                 }

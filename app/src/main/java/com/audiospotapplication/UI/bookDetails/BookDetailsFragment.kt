@@ -1,11 +1,9 @@
 package com.audiospotapplication.UI.bookDetails
 
-
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,7 +13,6 @@ import kotlinx.android.synthetic.main.fragment_book_details.*
 import android.text.style.UnderlineSpan
 import android.text.SpannableString
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.audiospot.DataLayer.Model.Book
 import com.audiospot.DataLayer.Model.BookDetailsResponse
 import com.audiospotapplication.BaseFragment
 import com.audiospotapplication.DataLayer.Model.Review
@@ -88,30 +85,33 @@ class BookDetailsFragment : BaseFragment(), BookDetailsContract.View, JcPlayerMa
         }
     }
 
-    override fun playSong(mediaData: MediaMetaData) {
-        if (mediaData == null || mediaData.mediaUrl == null || mediaData.mediaUrl.equals("")) {
-            Snackbar.make(
-                activity!!.findViewById(android.R.id.content), "Audio is not available right now ," +
-                        "please check again later", Snackbar.LENGTH_LONG
-            ).show()
-            return
+    override fun playSong(audioSpotMediaData: MediaMetaData?) {
+        audioSpotMediaData?.let {
+            if (it.mediaUrl == null || it.mediaUrl.equals("")) {
+                Snackbar.make(
+                    activity!!.findViewById(android.R.id.content),
+                    "Audio is not available right now ," +
+                            "please check again later",
+                    Snackbar.LENGTH_LONG
+                ).show()
+                return
+            }
+            jcPlayerManager.kill()
+
+            val audio = JcAudio.createFromURL(
+                it.mediaId.toInt(), it.mediaTitle,
+                it.mediaUrl, null
+            )
+
+            val playlist = ArrayList<JcAudio>()
+            playlist.add(audio)
+
+            jcPlayerManager.playlist = playlist
+            jcPlayerManager.jcPlayerManagerListener = this
+
+            jcPlayerManager.playAudio(audio)
+            jcPlayerManager.createNewNotification(R.mipmap.ic_launcher)
         }
-        jcPlayerManager.kill()
-
-        var audio = JcAudio.createFromURL(
-            mediaData.mediaId.toInt(), mediaData.mediaTitle,
-            mediaData.mediaUrl, null
-        )
-
-        var playlist = ArrayList<JcAudio>()
-        playlist.add(audio)
-
-        jcPlayerManager.playlist = playlist
-        jcPlayerManager.jcPlayerManagerListener = this
-
-        jcPlayerManager.playAudio(audio)
-        jcPlayerManager.createNewNotification(R.mipmap.ic_launcher)
-
     }
 
     override fun viewRateBookScreen() {
@@ -145,7 +145,11 @@ class BookDetailsFragment : BaseFragment(), BookDetailsContract.View, JcPlayerMa
 
     override fun showLoginMessage(message: String) {
         if (activity != null)
-            Snackbar.make(activity!!.findViewById(android.R.id.content), message, Snackbar.LENGTH_LONG).show()
+            Snackbar.make(
+                activity!!.findViewById(android.R.id.content),
+                message,
+                Snackbar.LENGTH_LONG
+            ).show()
         Handler().postDelayed({
             val mainIntent = Intent(activity!!, LoginActivity::class.java)
             activity!!.startActivity(mainIntent)
@@ -154,7 +158,11 @@ class BookDetailsFragment : BaseFragment(), BookDetailsContract.View, JcPlayerMa
 
     override fun showMessage(message: String) {
         if (activity != null)
-            Snackbar.make(activity!!.findViewById(android.R.id.content), message, Snackbar.LENGTH_LONG).show()
+            Snackbar.make(
+                activity!!.findViewById(android.R.id.content),
+                message,
+                Snackbar.LENGTH_LONG
+            ).show()
     }
 
     override fun setBookReviews(reviews: List<Review>) {
@@ -279,7 +287,11 @@ class BookDetailsFragment : BaseFragment(), BookDetailsContract.View, JcPlayerMa
 
         tvPrice.text = result!!.data.price.toString() + " EGP."
 
-        ImageUtils.setImageFromUrlIntoImageViewUsingPicasso(result.data.cover, activity!!.applicationContext, ivBook)
+        ImageUtils.setImageFromUrlIntoImageViewUsingPicasso(
+            result.data.cover,
+            activity!!.applicationContext,
+            ivBook
+        )
     }
 
     companion object {

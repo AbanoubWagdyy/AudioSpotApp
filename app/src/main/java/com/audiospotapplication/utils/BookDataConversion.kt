@@ -1,7 +1,6 @@
 package com.audiospotapplication.utils
 
 import com.audiospot.DataLayer.Model.Book
-import com.audiospotapplication.DataLayer.Model.ChaptersData
 import com.example.jean.jcplayer.model.JcAudio
 import dm.audiostreamer.MediaMetaData
 

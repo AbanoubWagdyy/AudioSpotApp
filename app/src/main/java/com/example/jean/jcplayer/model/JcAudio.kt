@@ -48,18 +48,16 @@ data class JcAudio constructor(
         fun createFromURL(id: Int, title: String, url: String, paragraphs: List<Paragraph>?): JcAudio {
             return JcAudio(id = id, title = title, path = url, origin = Origin.URL, paragraphs = paragraphs)
         }
-
-        @JvmStatic
-        fun createFromFilePath(id: Int, filePath: String, paragraphs: List<Paragraph>): JcAudio {
-            return JcAudio(
-                id = id,
-                title = filePath,
-                path = filePath,
-                origin = Origin.FILE_PATH,
-                paragraphs = paragraphs
-            )
-        }
-
+//        @JvmStatic
+//        fun createFromFilePath(id: Int, filePath: String, paragraphs: List<Paragraph>): JcAudio {
+//            return JcAudio(
+//                id = id,
+//                title = filePath,
+//                path = filePath,
+//                origin = Origin.FILE_PATH,
+//                paragraphs = paragraphs
+//            )
+//        }
         @JvmStatic
         fun createFromFilePath(id: Int, title: String, filePath: String, paragraphs: List<Paragraph>): JcAudio {
             return JcAudio(id = id, title = title, path = filePath, origin = Origin.FILE_PATH, paragraphs = paragraphs)

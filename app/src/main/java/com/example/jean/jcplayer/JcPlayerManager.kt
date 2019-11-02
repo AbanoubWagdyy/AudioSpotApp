@@ -351,9 +351,6 @@ private constructor(private val serviceConnection: JcServiceConnection) : JcPlay
         return jcPlayerService?.isPaused ?: true
     }
 
-    /**
-     * Kills the JcPlayer, including Notification and service.
-     */
     fun kill() {
         jcPlayerService?.let {
             it.stop()
@@ -363,6 +360,5 @@ private constructor(private val serviceConnection: JcServiceConnection) : JcPlay
         serviceConnection.disconnect()
         jcNotificationPlayer?.destroyNotificationIfExists()
         managerListeners.clear()
-//        INSTANCE = null
     }
 }

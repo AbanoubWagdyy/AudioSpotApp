@@ -140,5 +140,19 @@ dependencies {
 
     implementation 'com.paypal.sdk:paypal-android-sdk:2.16.0'
 
+    def lifecycle_version = "2.2.0"
+    implementation "android.arch.lifecycle:extensions:$lifecycle_version"
+    annotationProcessor "android.arch.lifecycle:compiler:$lifecycle_version"
+    testImplementation "android.arch.core:core-testing:$lifecycle_version"
+    implementation "android.arch.lifecycle:extensions:$lifecycle_version"
+
+    //Koin
+    implementation 'org.koin:koin-android:2.0.1'
+    // or Koin for Lifecycle scoping
+    implementation 'org.koin:koin-androidx-scope:2.0.1'
+    // or Koin for Android Architecture ViewModel
+    implementation 'org.koin:koin-androidx-viewmodel:2.0.1'
+    implementation "org.koin:koin-androidx-ext:2.0.1"
+
 //    implementation 'com.paypal.pyplcheckout:nativexo:3.4.8'
 }

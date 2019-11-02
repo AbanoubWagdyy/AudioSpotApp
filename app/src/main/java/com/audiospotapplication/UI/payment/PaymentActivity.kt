@@ -68,10 +68,10 @@ class PaymentActivity : AppCompatActivity(), PaymentContract.View, FawrySdkCallb
         english: Boolean
     ) {
 //        FawryPluginAppClass.enableLogging = true
-        var merchantID: String? = "wq9PvdmMBL0="
-//        var merchantID: String? = "4iZdY2gYUttKitmTMhLsqw=="
-        val serverUrl = "https://atfawry.fawrystaging.com"
-//        val serverUrl = "https://www.atfawry.com"
+//        var merchantID: String? = "wq9PvdmMBL0="
+        var merchantID: String? = "4iZdY2gYUttKitmTMhLsqw=="
+//        val serverUrl = "https://atfawry.fawrystaging.com"
+        val serverUrl = "https://www.atfawry.com"
 //        if (fawryCustomParams != null) {
 //
 //            items.add(PayableItem())
@@ -158,7 +158,7 @@ class PaymentActivity : AppCompatActivity(), PaymentContract.View, FawrySdkCallb
                     if (it != null) {
                         val config =
                             PayPalConfiguration() // Start with mock environment.  When ready, switch to sandbox (ENVIRONMENT_SANDBOX)
-                                .environment(PayPalConfiguration.ENVIRONMENT_SANDBOX)
+                                .environment(PayPalConfiguration.ENVIRONMENT_PRODUCTION)
                                 .clientId(it.key)
                                 .merchantName("AudioSpot")
                                 .merchantPrivacyPolicyUri(

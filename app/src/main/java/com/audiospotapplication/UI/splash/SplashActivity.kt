@@ -38,13 +38,6 @@ class SplashActivity : AppCompatActivity(), SplashContract.View {
         return this@SplashActivity
     }
 
-    private val REQUEST_CODE_UPDATE: Int = 1000
-    private val PERMISSION_CODE: Int = 10
-
-    private val SPLASH_DISPLAY_LENGTH = 2000
-
-    lateinit var mPresenter: SplashContract.Presenter
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_splash)
@@ -96,23 +89,25 @@ class SplashActivity : AppCompatActivity(), SplashContract.View {
     }
 
     fun forceUpdate() {
-        val appUpdateManager = AppUpdateManagerFactory.create(applicationContext)
-        val appUpdateInfoTask = appUpdateManager.appUpdateInfo
-        appUpdateInfoTask.addOnSuccessListener { appUpdateInfo ->
-            if (appUpdateInfo.updateAvailability() == UpdateAvailability.UPDATE_AVAILABLE
-                && appUpdateInfo.isUpdateTypeAllowed(AppUpdateType.FLEXIBLE)
-            ) {
-                appUpdateManager.startUpdateFlowForResult(
-                    appUpdateInfo,
-                    AppUpdateType.IMMEDIATE,
-                    this,
-                    REQUEST_CODE_UPDATE
-                )
-            } else {
-                mPresenter = SplashPresenter(this@SplashActivity)
-                mPresenter.start()
-            }
-        }
+//        val appUpdateManager = AppUpdateManagerFactory.create(applicationContext)
+//        val appUpdateInfoTask = appUpdateManager.appUpdateInfo
+//        appUpdateInfoTask.addOnSuccessListener { appUpdateInfo ->
+//            if (appUpdateInfo.updateAvailability() == UpdateAvailability.UPDATE_AVAILABLE
+//                && appUpdateInfo.isUpdateTypeAllowed(AppUpdateType.FLEXIBLE)
+//            ) {
+//                appUpdateManager.startUpdateFlowForResult(
+//                    appUpdateInfo,
+//                    AppUpdateType.IMMEDIATE,
+//                    this,
+//                    REQUEST_CODE_UPDATE
+//                )
+//            } else {
+//                mPresenter = SplashPresenter(this@SplashActivity)
+//                mPresenter.start()
+//            }
+//        }
+        mPresenter = SplashPresenter(this@SplashActivity)
+        mPresenter.start()
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -129,4 +124,11 @@ class SplashActivity : AppCompatActivity(), SplashContract.View {
             }
         }
     }
+
+    private val REQUEST_CODE_UPDATE: Int = 1000
+    private val PERMISSION_CODE: Int = 10
+
+    private val SPLASH_DISPLAY_LENGTH = 2000
+
+    lateinit var mPresenter: SplashContract.Presenter
 }

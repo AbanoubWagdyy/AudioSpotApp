@@ -3,51 +3,47 @@ package com.audiospotapplication.UI.homepage.home
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ProgressBar
-import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.Observer
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.audiospot.DataLayer.Model.Book
 
 import com.audiospotapplication.R
-import com.google.android.material.snackbar.Snackbar
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import com.audiospot.DataLayer.Model.HomepageRepsonse
 import com.audiospotapplication.BaseFragment
 import com.audiospotapplication.UI.books.Interface.onBookItemClickListener
 import com.audiospotapplication.UI.homepage.home.adapter.HomepageAdapter
 import com.audiospotapplication.UI.bookDetails.BookDetailsActivity
 import com.audiospotapplication.utils.BookDataConversion
-import com.audiospotapplication.utils.DialogUtils
 import com.example.jean.jcplayer.JcPlayerManager
-import com.example.jean.jcplayer.JcPlayerManagerListener
-import com.example.jean.jcplayer.general.JcStatus
 import dm.audiostreamer.MediaMetaData
+import kotlinx.android.synthetic.main.fragment_home.*
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
-class HomeFragment : BaseFragment(), HomeContract.View, onBookItemClickListener {
+class HomeFragment : BaseFragment(), onBookItemClickListener {
 
-    override fun setCartNumber(size: Int) {
+    override fun onItemClicked(book: Book) {
+        viewModel.saveBook(book)
+        showBookDetailsScreen()
     }
 
-    override fun showBookDetailsScreen() {
+    fun showBookDetailsScreen() {
         val intent = Intent(activity!!, BookDetailsActivity::class.java)
         startActivity(intent)
     }
 
-    override fun onItemClicked(book: Book) {
-        mPresenter.saveBook(book)
-    }
-
     override fun onPlayClicked(book: Book) {
-        var currentAudio = jcPlayerManager.currentAudio
+        val currentAudio = jcPlayerManager.currentAudio
         if (jcPlayerManager.isPlaying()) {
             if (currentAudio?.path.equals(book.sample)) {
                 jcPlayerManager.pauseAudio()
-                adapter = HomepageAdapter(this.homePageResponse, this, null)
+                adapter = HomepageAdapter(
+                    viewModel.getHomepageResponse(),
+                    this, null
+                )
                 recyclerHome.adapter = adapter
                 return
             } else {
@@ -64,71 +60,35 @@ class HomeFragment : BaseFragment(), HomeContract.View, onBookItemClickListener 
         }
     }
 
-    override fun setHomeResponse(result: HomepageRepsonse?) {
-        this.homePageResponse = result
-        recyclerHome.layoutManager = LinearLayoutManager(context)
-        recyclerHome.setHasFixedSize(true)
-        recyclerHome.isNestedScrollingEnabled = false
-        adapter = HomepageAdapter(this.homePageResponse, this, jcPlayerManager.currentAudio)
-        recyclerHome.adapter = adapter
-    }
-
-    override fun showErrorMessage(message: String) {
-        if (activity != null)
-            Snackbar.make(activity!!.findViewById(android.R.id.content), message, Snackbar.LENGTH_LONG).show()
-    }
-
-    override fun showDialog() {
-        progress.visibility = View.VISIBLE
-    }
-
-    override fun hideDialog() {
-        progress.visibility = View.GONE
-    }
-
-    override fun getContainingActivity(): AppCompatActivity {
-        return activity as AppCompatActivity
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-
         val view = inflater.inflate(R.layout.fragment_home, container, false)
         return view
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        recyclerHome = view.findViewById(R.id.recyclerHome)
-        progress = view.findViewById(R.id.progress)
-        mPresenter = HomePresenter(this)
-        mPresenter.start()
-    }
-
-    private lateinit var mPlayCallback: onItemPlayClickListener
-    lateinit var mPresenter: HomeContract.Presenter
-    lateinit var recyclerHome: RecyclerView
-    lateinit var progress: ProgressBar
-    var homePageResponse: HomepageRepsonse? = null
-    var adapter: HomepageAdapter? = null
-
-    companion object {
-
-        @JvmStatic
-        fun newInstance(): HomeFragment {
-            return HomeFragment()
-        }
+        viewModel.getHomepageBooksLiveData().observe(this, Observer {
+            if (it != null) {
+                adapter = HomepageAdapter(
+                    it,
+                    this,
+                    jcPlayerManager.currentAudio
+                )
+                recyclerHome.layoutManager = LinearLayoutManager(context!!)
+                recyclerHome.adapter = adapter
+            }
+        })
     }
 
     override fun onAttach(activity: Activity) {
         super.onAttach(activity)
-
         try {
             mPlayCallback = activity as onItemPlayClickListener
         } catch (e: ClassCastException) {
-            throw ClassCastException(activity.toString() + " must implement MyInterface ")
+            throw ClassCastException("$activity must implement MyInterface ")
         }
     }
 
@@ -138,5 +98,19 @@ class HomeFragment : BaseFragment(), HomeContract.View, onBookItemClickListener 
 
     private val jcPlayerManager: JcPlayerManager by lazy {
         JcPlayerManager.getInstance(activity!!.applicationContext).get()!!
+    }
+
+    private lateinit var mPlayCallback: onItemPlayClickListener
+    lateinit var progress: ProgressBar
+    var adapter: HomepageAdapter? = null
+
+    val viewModel: HomeViewModel by viewModel()
+
+    companion object {
+
+        @JvmStatic
+        fun newInstance(): HomeFragment {
+            return HomeFragment()
+        }
     }
 }

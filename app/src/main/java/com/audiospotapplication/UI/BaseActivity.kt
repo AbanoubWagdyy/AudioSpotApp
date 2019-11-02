@@ -127,7 +127,7 @@ abstract class BaseActivity : AppCompatActivity(),
                 if (mRepositorySource.getActiveTab() != ActiveTab.HOME) {
                     supportFragmentManager.beginTransaction()
                         .replace(R.id.container, HomeFragment.newInstance()).commitAllowingStateLoss()
-                    tvTitle.text = "AudioSpot"
+                    tvTitle.text = getString(R.string.app_name)
                     ivArrow.visibility = View.GONE
                 } else {
                     supportFragmentManager.beginTransaction()
@@ -146,7 +146,7 @@ abstract class BaseActivity : AppCompatActivity(),
                     supportFragmentManager.beginTransaction()
                         .replace(R.id.container, LibraryFragment.newInstance()).commitAllowingStateLoss()
                     ivArrow.visibility = View.GONE
-                    tvTitle.text = "Library"
+                    tvTitle.text = getString(R.string.library)
                 } else {
                     supportFragmentManager.beginTransaction()
                         .replace(R.id.container, getFragment(ivArrow)).commitAllowingStateLoss()
@@ -164,7 +164,7 @@ abstract class BaseActivity : AppCompatActivity(),
                     supportFragmentManager.beginTransaction()
                         .replace(R.id.container, MyBooksFragment.newInstance()).commitAllowingStateLoss()
                     ivArrow.visibility = View.GONE
-                    tvTitle.text = "My Books"
+                    tvTitle.text = getString(R.string.menu_my_books)
                 } else {
                     supportFragmentManager.beginTransaction()
                         .replace(R.id.container, getFragment(ivArrow)).commitAllowingStateLoss()
@@ -182,7 +182,7 @@ abstract class BaseActivity : AppCompatActivity(),
                     supportFragmentManager.beginTransaction()
                         .replace(R.id.container, MenuFragment.newInstance()).commitAllowingStateLoss()
                     ivArrow.visibility = View.GONE
-                    tvTitle.text = "Menu"
+                    tvTitle.text = getString(R.string.menu)
                 } else {
                     supportFragmentManager.beginTransaction()
                         .replace(R.id.container, getFragment(ivArrow)).commitAllowingStateLoss()
