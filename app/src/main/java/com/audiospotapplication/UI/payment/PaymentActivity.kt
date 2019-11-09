@@ -255,6 +255,5 @@ class PaymentActivity : AppCompatActivity(), PaymentContract.View, FawrySdkCallb
         }
     }
 
-
     var uuid = UUID(1, 2)
 }

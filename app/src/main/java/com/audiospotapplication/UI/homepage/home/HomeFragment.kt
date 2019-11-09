@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ProgressBar
+import androidx.core.view.ViewCompat
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.audiospot.DataLayer.Model.Book
@@ -70,6 +71,8 @@ class HomeFragment : BaseFragment(), onBookItemClickListener {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        ViewCompat.setNestedScrollingEnabled(recyclerHome, false)
+
         viewModel.getHomepageBooksLiveData().observe(this, Observer {
             if (it != null) {
                 adapter = HomepageAdapter(
@@ -88,7 +91,7 @@ class HomeFragment : BaseFragment(), onBookItemClickListener {
         try {
             mPlayCallback = activity as onItemPlayClickListener
         } catch (e: ClassCastException) {
-            throw ClassCastException("$activity must implement MyInterface ")
+            throw ClassCastException("$activity must implement onItemPlayClickListener ")
         }
     }
 

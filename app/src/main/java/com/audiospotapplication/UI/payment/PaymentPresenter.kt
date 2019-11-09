@@ -1,6 +1,5 @@
 package com.audiospotapplication.UI.payment
 
-import android.net.Uri
 import android.os.Bundle
 import com.audiospot.DataLayer.Model.BookDetailsResponse
 import com.audiospotapplication.DataLayer.DataRepository
@@ -8,7 +7,6 @@ import com.audiospotapplication.DataLayer.Model.*
 import com.audiospotapplication.DataLayer.Retrofit.RetrofitCallbacks
 import com.audiospotapplication.DataLayer.Retrofit.RetrofitResponseHandler
 import com.emeint.android.fawryplugin.Plugininterfacing.PayableItem
-import com.paypal.android.sdk.payments.PayPalConfiguration
 import com.visionvalley.letuno.DataLayer.RepositorySource
 import retrofit2.Call
 import java.util.*
