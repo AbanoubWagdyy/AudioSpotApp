@@ -19,6 +19,7 @@ public class KeyHashGenerator {
     /**
      * To generate the key hash to add in the facebook account
      * https://developers.facebook.com/apps/
+     *
      * @param activity the instance of the activity, where you gonna place the facebook login.
      * @return
      */

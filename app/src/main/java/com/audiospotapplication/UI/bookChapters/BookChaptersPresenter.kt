@@ -230,29 +230,29 @@ class BookChaptersPresenter(val mView: BookChaptersContract.View) : BookChapters
                     result?.let {
                         mRepoSource.setMediaItems(it.data)
                         mView.setChapters(it.data)
-                        if (extras == null) {
-                            if (isToPlayFirstChapter) {
-                                mView.onChapterClicked(it.data[0])
-                                mRepoSource.setIsPlayFirstChapter(false)
-                            } else if (status == RetrofitResponseHandler.Companion.Status.UNAUTHORIZED) {
-                                mView!!.showLoginPage()
-                            }
-
-                            if (bookmark != null) {
-                                var chapterData = it.data.filter {
-                                    it.id == bookmark!!.chapter_id
-                                }[0]
-                                mView.setBookmark(bookmark)
-                                mView.onChapterClicked(chapterData)
-                            } else {
-                                mView.playAllChapters(it)
-                            }
-                        } else {
-                            var chapterData = it.data.filter {
-                                it.id == currentAudioId
-                            }[0]
-                            mView.onChapterClicked(chapterData, currentAudioStatus)
-                        }
+//                        if (extras == null) {
+//                            if (isToPlayFirstChapter) {
+//                                mView.onChapterClicked(it.data[0])
+//                                mRepoSource.setIsPlayFirstChapter(false)
+//                            } else if (status == RetrofitResponseHandler.Companion.Status.UNAUTHORIZED) {
+//                                mView!!.showLoginPage()
+//                            }
+//
+//                            if (bookmark != null) {
+//                                var chapterData = it.data.filter {
+//                                    it.id == bookmark!!.chapter_id
+//                                }[0]
+//                                mView.setBookmark(bookmark)
+//                                mView.onChapterClicked(chapterData)
+//                            } else {
+//                                mView.playAllChapters(it)
+//                            }
+//                        } else {
+//                            var chapterData = it.data.filter {
+//                                it.id == currentAudioId
+//                            }[0]
+//                            mView.onChapterClicked(chapterData, currentAudioStatus)
+//                        }
                     }
                 } else {
                     mView.showHomepageScreen()

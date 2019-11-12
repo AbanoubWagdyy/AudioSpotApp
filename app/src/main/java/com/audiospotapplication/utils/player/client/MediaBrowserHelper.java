@@ -80,7 +80,6 @@ public class MediaBrowserHelper {
         mMediaBrowser.subscribe(newPlatlistId, mMediaBrowserSubscriptionCallback);
     }
 
-
     public void onStart(boolean wasConfigurationChange) {
         mWasConfigurationChange = wasConfigurationChange;
         if (mMediaBrowser == null) {

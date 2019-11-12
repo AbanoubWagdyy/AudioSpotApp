@@ -956,6 +956,9 @@ class DataRepository private constructor(context: Context) : RepositorySource {
                 mTreeMap[it.description.mediaId.toString()] = it
             }
         }
+
+        Log.d("MediaItems", mMediaItems.toString())
+        Log.d("Map", mTreeMap.toString())
     }
 
     private fun getMediaItemFromChapterData(data: ChaptersData): MediaMetadataCompat? {

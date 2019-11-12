@@ -72,7 +72,6 @@ public abstract class PlayerAdapter {
 
     public abstract void setVolume(float volume);
 
-
     /**
      *  NOISY broadcast receiver stuff
      */
@@ -159,16 +158,3 @@ public abstract class PlayerAdapter {
         }
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-

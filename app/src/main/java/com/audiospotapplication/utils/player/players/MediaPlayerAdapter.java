@@ -31,7 +31,6 @@ public class MediaPlayerAdapter extends PlayerAdapter {
 
     private static final String TAG = "MediaPlayerAdapter";
 
-
     private final Context mContext;
     private MediaMetadataCompat mCurrentMedia;
     private boolean mCurrentMediaPlayedToCompletion;
@@ -328,5 +327,4 @@ public class MediaPlayerAdapter extends PlayerAdapter {
 
         }
     }
-
 }

@@ -269,7 +269,6 @@ class MediaService : MediaBrowserServiceCompat(), KoinComponent {
         }
 
         override fun onSeekTo(progress: Long, max: Long) {
-            //            Log.d(TAG, "onSeekTo: CALLED: updating seekbar: " + progress + ", max: " + max);
             val intent = Intent()
             intent.action = getString(R.string.broadcast_seekbar_update)
             intent.putExtra(SEEK_BAR_PROGRESS, progress)

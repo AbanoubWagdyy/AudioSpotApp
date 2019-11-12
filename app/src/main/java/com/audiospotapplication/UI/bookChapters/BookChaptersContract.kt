@@ -40,6 +40,5 @@ interface BookChaptersContract {
         fun dismissDownloadingDialog()
         fun playAllChapters(result: ChaptersResponse)
         fun showHomepageScreen()
-        fun onChapterClicked(chapterData: ChaptersData, currentAudioStatus: JcStatus?)
     }
 }
