@@ -4,7 +4,6 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -86,7 +85,7 @@ class GiveGiftFragment : BaseFragment(), GiveGiftContract.View {
             email5.visibility = View.GONE
         }
 
-        ImageUtils.setImageFromUrlIntoImageViewUsingPicasso(result.cover, activity!!.applicationContext, ivBook)
+        ImageUtils.setImageFromUrlIntoImageViewUsingGlide(result.cover, activity!!.applicationContext, ivBook)
     }
 
     override fun onCreateView(

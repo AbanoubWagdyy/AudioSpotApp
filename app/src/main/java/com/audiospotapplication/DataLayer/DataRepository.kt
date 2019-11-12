@@ -1,6 +1,9 @@
 package com.audiospotapplication.DataLayer
 
 import android.content.Context
+import android.support.v4.media.MediaBrowserCompat
+import android.support.v4.media.MediaMetadataCompat
+import android.util.Log
 
 import com.audiospot.DataLayer.Model.*
 import com.audiospotapplication.DataLayer.BusinessInterceptors.authors.AuthorItemInterceptor
@@ -21,8 +24,34 @@ import com.audiospotapplication.UI.ActiveTab
 import com.audiospotapplication.UI.giftSelection.GiftSelection
 import com.visionvalley.letuno.DataLayer.RepositorySource
 import retrofit2.Call
+import java.util.*
+import kotlin.collections.ArrayList
 
 class DataRepository private constructor(context: Context) : RepositorySource {
+
+    private val mMediaItems = java.util.ArrayList<MediaBrowserCompat.MediaItem>()
+    private val mTreeMap = TreeMap<String, MediaMetadataCompat>()
+
+    private var isToPlayFirstChapter: Boolean = false
+    private val TAG = javaClass.simpleName
+    private val mRetrofitService: RemoteDataSourceUsingRetrofit
+    private val mCacheDataSource: CacheDataSource
+    internal var lang = ""
+    private val mAuthorItemInterceptor: AuthorItemInterceptor
+    private val mCategoryListInterceptor: CategoryListInterceptor
+    private val mPublisherListInterceptor: PublisherItemInterceptor
+    private val mBookItemInterceptor: BookItemInterceptor
+    private var authResponse: AuthResponse? = null
+    private var myBooks: ArrayList<Book>? = null
+    private var bookmarkBody: BookmarkBody? = null
+    private var bookmark: Bookmark? = null
+    private var promoCode = ""
+    private var promoCodeResponse: PromoCodeResponse? = null
+    private var voucherBook: Book? = null
+    private var activeTab: ActiveTab? = null
+
+    lateinit var giftSelection: GiftSelection
+    internal var quantity = 0
 
     override fun createOrder(
         orderBody: CreateOrderBody,
@@ -74,27 +103,6 @@ class DataRepository private constructor(context: Context) : RepositorySource {
         myBooks = ArrayList()
         myBooks = listMyBooks
     }
-
-    private var isToPlayFirstChapter: Boolean = false
-    private val TAG = javaClass.simpleName
-    private val mRetrofitService: RemoteDataSourceUsingRetrofit
-    private val mCacheDataSource: CacheDataSource
-    internal var lang = ""
-    private val mAuthorItemInterceptor: AuthorItemInterceptor
-    private val mCategoryListInterceptor: CategoryListInterceptor
-    private val mPublisherListInterceptor: PublisherItemInterceptor
-    private val mBookItemInterceptor: BookItemInterceptor
-    private var authResponse: AuthResponse? = null
-    private var myBooks: ArrayList<Book>? = null
-    private var bookmarkBody: BookmarkBody? = null
-    private var bookmark: Bookmark? = null
-    private var promoCode = ""
-    private var promoCodeResponse: PromoCodeResponse? = null
-    private var voucherBook: Book? = null
-    private var activeTab: ActiveTab? = null
-
-    lateinit var giftSelection: GiftSelection
-    internal var quantity = 0
 
     init {
         mCacheDataSource = cacheDataSourceUsingSharedPreferences.getINSTANCE(context)
@@ -545,7 +553,8 @@ class DataRepository private constructor(context: Context) : RepositorySource {
             return false
 
         if (mBookItemInterceptor.getSavedBook() != null &&
-            mBookItemInterceptor.getSavedBook()?.price == 0) {
+            mBookItemInterceptor.getSavedBook()?.price == 0
+        ) {
             return true
         }
 
@@ -923,6 +932,71 @@ class DataRepository private constructor(context: Context) : RepositorySource {
                     callback.onSuccess(null)
                 }
             })
+    }
+
+    override fun getMediaItems(): List<MediaBrowserCompat.MediaItem> {
+        return mMediaItems
+    }
+
+    override fun getTreeMap(): TreeMap<String, MediaMetadataCompat> {
+        return mTreeMap
+    }
+
+    override fun setMediaItems(mediaItems: List<ChaptersData>) {
+        mMediaItems.clear()
+        for (item in mediaItems) {
+            Log.d(TAG, "setMediaItems: called: adding media item: " + item.title)
+            val convertedItem = getMediaItemFromChapterData(item)
+            convertedItem?.let {
+                mMediaItems.add(
+                    MediaBrowserCompat.MediaItem(
+                        it.description, MediaBrowserCompat.MediaItem.FLAG_PLAYABLE
+                    )
+                )
+                mTreeMap[it.description.mediaId.toString()] = it
+            }
+        }
+    }
+
+    private fun getMediaItemFromChapterData(data: ChaptersData): MediaMetadataCompat? {
+
+        val book = getSavedBook()
+
+        book?.let {
+            return MediaMetadataCompat.Builder()
+                .putString(
+                    MediaMetadataCompat.METADATA_KEY_MEDIA_ID,
+                    data.id.toString()
+                )
+                .putString(
+                    MediaMetadataCompat.METADATA_KEY_ARTIST,
+                    it.author
+                )
+                .putString(
+                    MediaMetadataCompat.METADATA_KEY_TITLE,
+                    data.title
+                )
+                .putString(
+                    MediaMetadataCompat.METADATA_KEY_MEDIA_URI,
+                    data.sound_file
+                )
+                .putString(
+                    MediaMetadataCompat.METADATA_KEY_DISPLAY_DESCRIPTION,
+                    ""
+                )
+                .putString(
+                    MediaMetadataCompat.METADATA_KEY_DATE,
+                    it.release_date
+                )
+                .putString(MediaMetadataCompat.METADATA_KEY_DISPLAY_ICON_URI, it.cover)
+                .build()
+        }
+
+        return null
+    }
+
+    fun getMediaItem(mediaId: String): MediaMetadataCompat? {
+        return mTreeMap[mediaId]
     }
 
     companion object {

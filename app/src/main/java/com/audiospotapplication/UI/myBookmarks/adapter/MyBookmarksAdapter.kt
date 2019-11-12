@@ -40,7 +40,7 @@ class MyBookmarksAdapter(
         holder.bookName.text = bookmark.book_name
         holder.chapterName.text = bookmark.chapter_name
 
-        ImageUtils.setImageFromUrlIntoImageViewUsingPicasso(
+        ImageUtils.setImageFromUrlIntoImageViewUsingGlide(
             bookmark.book_cover, context, holder.ivBook,
             false
         )

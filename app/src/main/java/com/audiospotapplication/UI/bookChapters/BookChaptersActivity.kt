@@ -1,11 +1,19 @@
 package com.audiospotapplication.UI.bookChapters
 
 import android.app.ProgressDialog
+import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
+import android.content.res.Configuration
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.support.v4.media.MediaMetadataCompat
+import android.support.v4.media.session.MediaControllerCompat
+import android.support.v4.media.session.PlaybackStateCompat
+import android.util.Log
 import android.view.View
+import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.audiospotapplication.DataLayer.Model.Bookmark
 import com.audiospotapplication.DataLayer.Model.ChaptersData
@@ -16,8 +24,14 @@ import com.audiospotapplication.UI.bookChapters.Interface.OnChapterCLickListener
 import com.audiospotapplication.UI.bookChapters.adapter.ChaptersAdapter
 import com.audiospotapplication.UI.homepage.HomepageActivity
 import com.audiospotapplication.UI.login.LoginActivity
+import com.audiospotapplication.utils.Constants.*
 import com.audiospotapplication.utils.DialogUtils
 import com.audiospotapplication.utils.ImageUtils
+import com.audiospotapplication.utils.TimeUtils
+import com.audiospotapplication.utils.player.MyPreferenceManager
+import com.audiospotapplication.utils.player.client.MediaBrowserHelper
+import com.audiospotapplication.utils.player.client.MediaBrowserHelperCallback
+import com.audiospotapplication.utils.player.services.MediaService
 import com.example.jean.jcplayer.JcPlayerManagerListener
 import com.example.jean.jcplayer.general.JcStatus
 import com.google.android.material.snackbar.Snackbar
@@ -33,13 +47,33 @@ import kotlinx.android.synthetic.main.include_slidepanelchildtwo_bottomview.*
 import me.rohanpeshkar.filterablelistdialog.FilterableListDialog
 
 class BookChaptersActivity : AppCompatActivity(), View.OnClickListener,
-    BookChaptersContract.View, OnChapterCLickListener, JcPlayerManagerListener,
-    JcPlayerManagerListener.PlayerFunctionsListener {
+    BookChaptersContract.View, OnChapterCLickListener, MediaBrowserHelperCallback {
+
+    override fun onMetadataChanged(metadata: MediaMetadataCompat?) {
+        text_songName.setText(metadata?.getDescription()?.getTitle())
+    }
+
+    override fun onPlaybackStateChanged(state: PlaybackStateCompat?) {
+        mIsPlaying = state != null && state.state == PlaybackStateCompat.STATE_PLAYING
+        if (mIsPlaying) {
+            btnPlay.setImageDrawable(getDrawable(R.drawable.ic_pause))
+            btn_play_bottom.setImageResource(R.drawable.play_bottom)
+        } else {
+            btnPlay.setImageDrawable(getDrawable(R.drawable.ic_play))
+            btn_play_bottom.setImageResource(R.drawable.pause_bottom)
+        }
+    }
+
+    override fun onMediaControllerConnected(mediaController: MediaControllerCompat?) {
+        seekBar.setMediaController(mediaController)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_chapters)
         uiInitialization()
+
+        mMyPrefManager = MyPreferenceManager(this)
 
         mPresenter = BookChaptersPresenter(this)
         mPresenter.start(intent.extras)
@@ -47,7 +81,6 @@ class BookChaptersActivity : AppCompatActivity(), View.OnClickListener,
 
     private fun uiInitialization() {
 
-        btn_play_bottom.setOnClickListener(this)
         ivParagraphs.setOnClickListener(this)
         back.setOnClickListener(this)
         tvClose.setOnClickListener(this)
@@ -86,10 +119,32 @@ class BookChaptersActivity : AppCompatActivity(), View.OnClickListener,
                 }
             }
         })
-
         downloadProgressDialog = ProgressDialog(this)
         downloadProgressDialog!!.setMessage("Downloading(0 %) ....")
         downloadProgressDialog!!.setCancelable(false)
+
+        mMediaBrowserHelper = MediaBrowserHelper(this, MediaService::class.java)
+        mMediaBrowserHelper!!.setMediaBrowserHelperCallback(this)
+
+        btnPlay.setOnClickListener {
+            if (mIsPlaying) {
+                mMediaBrowserHelper?.transportControls?.pause()
+                mIsPlaying = false
+            } else {
+                mMediaBrowserHelper?.transportControls?.play()
+                mIsPlaying = true
+            }
+        }
+
+        btn_play_bottom.setOnClickListener {
+            if (mIsPlaying) {
+                mMediaBrowserHelper?.transportControls?.pause()
+                mIsPlaying = false
+            } else {
+                mMediaBrowserHelper?.transportControls?.play()
+                mIsPlaying = true
+            }
+        }
     }
 
     override fun getAppContext(): Context? {
@@ -109,8 +164,18 @@ class BookChaptersActivity : AppCompatActivity(), View.OnClickListener,
     }
 
     override fun setBookImage(cover: String) {
-        ImageUtils.setImageFromUrlIntoImageViewUsingPicasso(cover, applicationContext, image_songAlbumArt, false)
-        ImageUtils.setImageFromUrlIntoImageViewUsingPicasso(cover, applicationContext, bookCover, false)
+        ImageUtils.setImageFromUrlIntoImageViewUsingGlide(
+            cover,
+            applicationContext,
+            image_songAlbumArt,
+            false
+        )
+        ImageUtils.setImageFromUrlIntoImageViewUsingGlide(
+            cover,
+            applicationContext,
+            bookCover,
+            false
+        )
     }
 
     override fun playAllChapters(result: ChaptersResponse) {
@@ -120,15 +185,29 @@ class BookChaptersActivity : AppCompatActivity(), View.OnClickListener,
             for (data in result.data) {
                 var isDownloadedPath = mPresenter.validateChapterDownloaded(data)
                 if (!isDownloadedPath.equals("")) {
-                    jcAudios.add(JcAudio.createFromFilePath(data.id, data.title, isDownloadedPath, data.paragraphs))
+                    jcAudios.add(
+                        JcAudio.createFromFilePath(
+                            data.id,
+                            data.title,
+                            isDownloadedPath,
+                            data.paragraphs
+                        )
+                    )
                 } else {
-                    jcAudios.add(JcAudio.createFromURL(data.id, data.title, data.sound_file, data.paragraphs))
+                    jcAudios.add(
+                        JcAudio.createFromURL(
+                            data.id,
+                            data.title,
+                            data.sound_file,
+                            data.paragraphs
+                        )
+                    )
                 }
             }
 
-            player.initPlaylist(jcAudios, this, this)
-            player.playAudio(player.myPlaylist!![0])
-            player.createNotification(R.mipmap.ic_launcher)
+//            player.initPlaylist(jcAudios, this, this)
+//            player.playAudio(player.myPlaylist!![0])
+//            player.createNotification(R.mipmap.ic_launcher)
             sliding_layout.panelState = SlidingUpPanelLayout.PanelState.EXPANDED
         }
     }
@@ -140,23 +219,71 @@ class BookChaptersActivity : AppCompatActivity(), View.OnClickListener,
             val isDownloadedPath = mPresenter.validateChapterDownloaded(data)
             val jcAudios = ArrayList<JcAudio>()
             if (!isDownloadedPath.equals("")) {
-                jcAudios.add(JcAudio.createFromFilePath(data.id, data.title, isDownloadedPath, data.paragraphs))
+                jcAudios.add(
+                    JcAudio.createFromFilePath(
+                        data.id,
+                        data.title,
+                        isDownloadedPath,
+                        data.paragraphs
+                    )
+                )
             } else {
-                jcAudios.add(JcAudio.createFromURL(data.id, data.title, data.sound_file, data.paragraphs))
+                playChapter(data)
             }
-            player.initPlaylist(jcAudios, this, this)
-            player.playAudio(player.myPlaylist!![0])
-            player.createNotification(R.mipmap.ic_launcher)
             sliding_layout.panelState = SlidingUpPanelLayout.PanelState.EXPANDED
-            if (currentBookmark != null) {
-                player.setBookmarkTime(currentBookmark!!.time)
-            }
+//            if (currentBookmark != null) {
+//                player.setBookmarkTime(currentBookmark!!.time)
+//            }
         } else {
             Snackbar.make(
                 findViewById(android.R.id.content),
                 applicationContext.getString(R.string.you_should_own), Snackbar.LENGTH_SHORT
             ).show()
         }
+    }
+
+    private fun playChapter(data: ChaptersData) {
+        val mediaItem = mPresenter.getMediaItem(data)
+
+//        val currentPlaylistId = mMyPrefManager?.playlistId
+//
+        val bundle = Bundle()
+//
+        bundle.putInt(MEDIA_QUEUE_POSITION, 0)
+//
+//        if (mPresenter.getSavedBookId().equals(currentPlaylistId)) {
+//            mMediaBrowserHelper?.getTransportControls()
+//                ?.playFromMediaId(mediaItem?.getDescription()?.getMediaId(), bundle)
+//        } else {
+//            bundle.putBoolean(
+//                QUEUE_NEW_PLAYLIST,
+//                true
+//            )
+//            mMediaBrowserHelper?.subscribeToNewPlaylist(
+//                currentPlaylistId,
+//                mPresenter.getSavedBookId()
+//            )
+//            mMediaBrowserHelper?.getTransportControls()
+//                ?.playFromMediaId(mediaItem?.getDescription()?.mediaId, bundle)
+//
+//            mMyPrefManager?.savePlaylistId(mPresenter.getSavedBookId())
+//        }
+
+
+        bundle.putBoolean(
+            QUEUE_NEW_PLAYLIST,
+            true
+        )
+        mMediaBrowserHelper?.subscribeToNewPlaylist(
+            "",
+            mPresenter.getSavedBookId()
+        )
+        mMediaBrowserHelper?.getTransportControls()
+            ?.playFromMediaId(mediaItem?.getDescription()?.mediaId, bundle)
+
+        mMyPrefManager?.savePlaylistId(mPresenter.getSavedBookId())
+
+        mOnAppOpen = true
     }
 
     override fun setChapters(data: List<ChaptersData>) {
@@ -166,18 +293,18 @@ class BookChaptersActivity : AppCompatActivity(), View.OnClickListener,
             recyclerChapters.isNestedScrollingEnabled = false
             recyclerChapters.adapter = ChaptersAdapter(data!!, this)
             if (mPresenter.isBookMine()) {
-                val jcAudios = ArrayList<JcAudio>()
-                for (chapter in data) {
-                    jcAudios.add(
-                        JcAudio.createFromURL(
-                            chapter.id,
-                            chapter.title,
-                            chapter.sound_file,
-                            chapter.paragraphs
-                        )
-                    )
-                }
-                player.initPlaylist(jcAudios, this, this)
+//                val jcAudios = ArrayList<JcAudio>()
+//                for (chapter in data) {
+//                    jcAudios.add(
+//                        JcAudio.createFromURL(
+//                            chapter.id,
+//                            chapter.title,
+//                            chapter.sound_file,
+//                            chapter.paragraphs
+//                        )
+//                    )
+//                }
+//                player.initPlaylist(jcAudios, this, this)
             }
         } else {
             Snackbar.make(
@@ -201,7 +328,7 @@ class BookChaptersActivity : AppCompatActivity(), View.OnClickListener,
         this.chapterData = data
         text_songName.text = data.title
         sliding_layout.panelState = SlidingUpPanelLayout.PanelState.EXPANDED
-        player.seekTo(currentAudioStatus!!.currentPosition.toInt())
+//        player.seekTo(currentAudioStatus!!.currentPosition.toInt())
     }
 
     override fun showHomepageScreen() {
@@ -239,52 +366,52 @@ class BookChaptersActivity : AppCompatActivity(), View.OnClickListener,
         downloadProgressDialog!!.show()
     }
 
-    override fun onBookmarkClicked() {
-        var audio = player.currentAudio
-        mPresenter.handleBookmarkClicked(player.getCurrentTimeString(), audio!!.id, audio.title)
-    }
-
-    override fun onDownloadClicked() {
-        var audio = player.currentAudio
-        if (audio != null)
-            mPresenter.handleDownloadPressed(audio)
-    }
-
-    override fun onSpeedClicked() {
-
-    }
-
-    override fun onTimerClicked() {
-
-    }
-
-    override fun onPreparedAudio(status: JcStatus) {
-        btn_play_bottom.setBackgroundResource(R.drawable.play_bottom)
-    }
-
-    override fun onCompletedAudio() {
-    }
-
-    override fun onPaused(status: JcStatus) {
-        btn_play_bottom.setBackgroundResource(R.drawable.pause_bottom)
-    }
-
-    override fun onContinueAudio(status: JcStatus) {
-        btn_play_bottom.setBackgroundResource(R.drawable.play_bottom)
-    }
-
-    override fun onPlaying(status: JcStatus) {
-        btn_play_bottom.setBackgroundResource(R.drawable.play_bottom)
-    }
-
-    override fun onTimeChanged(status: JcStatus) {
-    }
-
-    override fun onStopped(status: JcStatus) {
-    }
-
-    override fun onJcpError(throwable: Throwable) {
-    }
+//    override fun onBookmarkClicked() {
+//        var audio = player.currentAudio
+//        mPresenter.handleBookmarkClicked(player.getCurrentTimeString(), audio!!.id, audio.title)
+//    }
+//
+//    override fun onDownloadClicked() {
+//        var audio = player.currentAudio
+//        if (audio != null)
+//            mPresenter.handleDownloadPressed(audio)
+//    }
+//
+//    override fun onSpeedClicked() {
+//
+//    }
+//
+//    override fun onTimerClicked() {
+//
+//    }
+//
+//    override fun onPreparedAudio(status: JcStatus) {
+//        btn_play_bottom.setBackgroundResource(R.drawable.play_bottom)
+//    }
+//
+//    override fun onCompletedAudio() {
+//    }
+//
+//    override fun onPaused(status: JcStatus) {
+//        btn_play_bottom.setBackgroundResource(R.drawable.pause_bottom)
+//    }
+//
+//    override fun onContinueAudio(status: JcStatus) {
+//        btn_play_bottom.setBackgroundResource(R.drawable.play_bottom)
+//    }
+//
+//    override fun onPlaying(status: JcStatus) {
+//        btn_play_bottom.setBackgroundResource(R.drawable.play_bottom)
+//    }
+//
+//    override fun onTimeChanged(status: JcStatus) {
+//    }
+//
+//    override fun onStopped(status: JcStatus) {
+//    }
+//
+//    override fun onJcpError(throwable: Throwable) {
+//    }
 
     override fun onClick(view: View?) {
         when (view!!.id) {
@@ -309,16 +436,10 @@ class BookChaptersActivity : AppCompatActivity(), View.OnClickListener,
             }
 
             R.id.tvClose -> {
-                player.kill()
+//                player.kill()
+                mMediaBrowserHelper?.transportControls?.stop()
                 include_sliding_panel_childtwo.visibility = View.GONE
             }
-            R.id.btn_play_bottom ->
-                if (player.isPlaying) {
-                    btn_play_bottom.setBackgroundResource(R.drawable.pause_bottom)
-                    player.pause()
-                } else {
-                    player.continueAudio()
-                }
 
             R.id.back -> {
                 finish()
@@ -331,7 +452,7 @@ class BookChaptersActivity : AppCompatActivity(), View.OnClickListener,
             str.equals(it.title)
         }[0]
 
-        player.seekToParagraph(selectedParagraph)
+//        player.seekToParagraph(selectedParagraph)
     }
 
     private fun getListItems(): ArrayList<String>? {
@@ -358,7 +479,7 @@ class BookChaptersActivity : AppCompatActivity(), View.OnClickListener,
 
     override fun setBookmark(bookmark: Bookmark) {
         this.currentBookmark = bookmark
-        player.stopCurrentPlayingAudio()
+//        player.stopCurrentPlayingAudio()
     }
 
     override fun showAddBookmarkScreen() {
@@ -366,10 +487,77 @@ class BookChaptersActivity : AppCompatActivity(), View.OnClickListener,
         startActivityForResult(intent, 1)
     }
 
+    private inner class SeekBarBroadcastReceiver : BroadcastReceiver() {
+        override fun onReceive(context: Context, intent: Intent) {
+            val seekProgress = intent.getLongExtra(SEEK_BAR_PROGRESS, 0)
+            val seekMax = intent.getLongExtra(SEEK_BAR_MAX, 0)
+            if (!seekBar.isTracking()) {
+                seekBar.setProgress(seekProgress.toInt())
+                seekBar.setMax(seekMax.toInt())
+                txtCurrentDuration.text = TimeUtils.toTimeFormat(seekProgress.toInt())
+                txtDuration.text = TimeUtils.toTimeFormat(seekMax.toInt())
+            }
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        initSeekBarBroadcastReceiver()
+//        initUpdateUIBroadcastReceiver()
+    }
+
+    private fun initSeekBarBroadcastReceiver() {
+        val intentFilter = IntentFilter()
+        intentFilter.addAction(getString(R.string.broadcast_seekbar_update))
+        mSeekbarBroadcastReceiver = SeekBarBroadcastReceiver()
+        registerReceiver(mSeekbarBroadcastReceiver, intentFilter)
+    }
+
+    override fun onPause() {
+        super.onPause()
+        if (mSeekbarBroadcastReceiver != null) {
+            unregisterReceiver(mSeekbarBroadcastReceiver)
+        }
+//        if (mUpdateUIBroadcastReceiver != null) {
+//            unregisterReceiver(mUpdateUIBroadcastReceiver)
+//        }
+    }
+
+    override fun onStart() {
+        super.onStart()
+        mMediaBrowserHelper?.onStart(mWasConfigurationChange)
+    }
+
+    override fun onStop() {
+        super.onStop()
+        mMediaBrowserHelper?.onStop()
+        seekBar.disconnectController()
+    }
+
+    override fun onConfigurationChanged(newConfig: Configuration) {
+        super.onConfigurationChanged(newConfig)
+        mWasConfigurationChange = true
+    }
+
     private lateinit var chapterData: ChaptersData
+
     private var isExpand = false
+
     var currentBookmark: Bookmark? = null
+
     lateinit var mPresenter: BookChaptersContract.Presenter
 
     private var downloadProgressDialog: ProgressDialog? = null
+
+    private var mMediaBrowserHelper: MediaBrowserHelper? = null
+
+    private var mSeekbarBroadcastReceiver: SeekBarBroadcastReceiver? = null
+
+    private var mMyPrefManager: MyPreferenceManager? = null
+
+    private var mIsPlaying: Boolean = false
+
+    private var mOnAppOpen: Boolean = false
+
+    private var mWasConfigurationChange = true
 }

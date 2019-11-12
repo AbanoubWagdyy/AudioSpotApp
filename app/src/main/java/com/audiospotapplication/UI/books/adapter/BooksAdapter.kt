@@ -86,7 +86,7 @@ class BooksAdapter() : RecyclerView.Adapter<BooksAdapter.ViewHolder>() {
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         var book = books!![position]
         holder.ivBook.setBackgroundResource(R.mipmap.login_icon)
-        ImageUtils.setImageFromUrlIntoImageViewUsingPicasso(book.cover, context, holder.ivBook)
+        ImageUtils.setImageFromUrlIntoImageViewUsingGlide(book.cover, context, holder.ivBook)
         holder.tvAuthor.text = book.author
         holder.tvPublisher.text = book.publisher
 

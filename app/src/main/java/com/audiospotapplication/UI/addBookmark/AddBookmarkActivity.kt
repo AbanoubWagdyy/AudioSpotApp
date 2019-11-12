@@ -54,7 +54,7 @@ class AddBookmarkActivity : AppCompatActivity(), AddBookmarkContract.View {
     }
 
     override fun setBookImage(bookName: String) {
-        ImageUtils.setImageFromUrlIntoImageViewUsingPicasso(bookName, applicationContext, ivBook, false)
+        ImageUtils.setImageFromUrlIntoImageViewUsingGlide(bookName, applicationContext, ivBook, false)
     }
 
     override fun setChapterName(chapterNameStr: String) {

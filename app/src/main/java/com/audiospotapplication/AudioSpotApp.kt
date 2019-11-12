@@ -1,10 +1,8 @@
 package com.audiospotapplication
 
 import android.app.Application
-import android.content.Context
 import com.audiospotapplication.DataLayer.DataRepository
 import com.audiospotapplication.DataLayer.Model.BaseViewModel
-import com.audiospotapplication.DataLayer.Retrofit.RestClient
 import com.audiospotapplication.UI.homepage.HomepageViewModel
 import com.audiospotapplication.UI.homepage.home.HomeViewModel
 import com.visionvalley.letuno.DataLayer.RepositorySource
@@ -34,4 +32,6 @@ class AudioSpotApp : Application() {
             modules(listOf(appModule, viewModelModule))
         }
     }
+
+
 }

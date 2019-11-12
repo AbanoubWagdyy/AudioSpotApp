@@ -4,7 +4,6 @@ package com.audiospotapplication.UI.giftSelection
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,7 +11,6 @@ import com.audiospot.DataLayer.Model.Book
 import com.audiospotapplication.BaseFragment
 
 import com.audiospotapplication.R
-import com.audiospotapplication.UI.cart.CartActivity
 import com.audiospotapplication.UI.giveAgift.GiveGiftActivity
 import com.audiospotapplication.UI.payment.PaymentActivity
 import com.audiospotapplication.utils.DialogUtils
@@ -60,7 +58,7 @@ class GiftSelectionFragment : BaseFragment(), GiftSelectionContract.View {
             }
             tvNarrator.text = builder.toString().substring(0, builder.toString().length - 1)
         }
-        ImageUtils.setImageFromUrlIntoImageViewUsingPicasso(
+        ImageUtils.setImageFromUrlIntoImageViewUsingGlide(
             bookDetailsData.cover,
             activity!!.applicationContext,
             ivBook

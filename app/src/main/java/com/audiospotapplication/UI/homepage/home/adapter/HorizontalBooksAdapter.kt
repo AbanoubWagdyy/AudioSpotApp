@@ -13,7 +13,6 @@ import com.audiospotapplication.UI.books.Interface.onBookItemClickListener
 import com.audiospotapplication.utils.ImageUtils
 import com.example.jean.jcplayer.model.JcAudio
 import com.willy.ratingbar.ScaleRatingBar
-import dm.audiostreamer.MediaMetaData
 
 
 class HorizontalBooksAdapter(
@@ -39,7 +38,7 @@ class HorizontalBooksAdapter(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         var book = books!![position]
         holder.ivBook.setBackgroundResource(R.mipmap.login_icon)
-        ImageUtils.setImageFromUrlIntoImageViewUsingPicasso(book.cover, context, holder.ivBook)
+        ImageUtils.setImageFromUrlIntoImageViewUsingGlide(book.cover, context, holder.ivBook)
         holder.tvBookName.text = book.title
         holder.rating.rating = book.rate.toFloat()
 

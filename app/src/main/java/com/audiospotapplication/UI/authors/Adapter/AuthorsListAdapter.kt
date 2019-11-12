@@ -32,7 +32,7 @@ class AuthorsListAdapter(
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val data = response.data[position]
-        ImageUtils.setImageFromUrlIntoImageViewUsingPicasso(data.photo, context, holder.ivAuthor, false)
+        ImageUtils.setImageFromUrlIntoImageViewUsingGlide(data.photo, context, holder.ivAuthor)
         holder.tvAuthor.text = data.name
     }
 
@@ -49,5 +49,4 @@ class AuthorsListAdapter(
             mOnItemClickListener.onAuthorItemClicked(response.data!![position])
         }
     }
-
 }

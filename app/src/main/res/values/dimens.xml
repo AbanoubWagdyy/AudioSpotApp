@@ -28,4 +28,6 @@
     <dimen name="spacing_large">16dp</dimen>
     <dimen name="spacing_larger">24dp</dimen>
     <dimen name="spacing_xlarge">32dp</dimen>
+
+    <dimen name="mediaControllerSize">50dp</dimen>
 </resources>

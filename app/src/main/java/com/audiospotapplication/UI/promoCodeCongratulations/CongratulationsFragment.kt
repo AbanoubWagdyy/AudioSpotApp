@@ -4,7 +4,6 @@ package com.audiospotapplication.UI.promoCodeCongratulations
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -64,7 +63,7 @@ class CongratulationsFragment : BaseFragment() {
             }
             tvNarrator.text = builder.toString().substring(0, builder.toString().length - 1)
         }
-        ImageUtils.setImageFromUrlIntoImageViewUsingPicasso(result.cover, activity!!.applicationContext, ivBook)
+        ImageUtils.setImageFromUrlIntoImageViewUsingGlide(result.cover, activity!!.applicationContext, ivBook)
 
         val listMyBooks = ArrayList<Book>()
         mRepositorySource.getMyBooks()?.let { listMyBooks.addAll(it) }

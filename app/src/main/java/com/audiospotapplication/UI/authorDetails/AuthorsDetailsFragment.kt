@@ -3,7 +3,6 @@ package com.audiospotapplication.UI.authorDetails
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -133,7 +132,7 @@ class AuthorsDetailsFragment : BaseFragment(), AuthorDetailsContract.View, onBoo
     }
 
     override fun setAuthorImage(photo: String) {
-        ImageUtils.setImageFromUrlIntoImageViewUsingPicasso(
+        ImageUtils.setImageFromUrlIntoImageViewUsingGlide(
             photo, activity!!.applicationContext,
             ivAuthor, false
         )

@@ -1,6 +1,7 @@
 package com.audiospotapplication.UI.bookChapters
 
 import android.os.Bundle
+import android.support.v4.media.MediaBrowserCompat
 import android.util.Log
 import com.audiospotapplication.DataLayer.DataRepository
 import com.audiospotapplication.DataLayer.Model.BookmarkBody
@@ -19,7 +20,23 @@ import retrofit2.Call
 import java.io.File
 
 
-class BookChaptersPresenter(val mView: BookChaptersContract.View) : BookChaptersContract.Presenter, FetchListener {
+class BookChaptersPresenter(val mView: BookChaptersContract.View) : BookChaptersContract.Presenter,
+    FetchListener {
+
+    override fun getSavedBookId(): String {
+        return mRepoSource.getSavedBook()?.id.toString()
+    }
+
+    override fun getMediaItem(data: ChaptersData): MediaBrowserCompat.MediaItem? {
+        val items = mRepoSource.getMediaItems().filter {
+            it.description.mediaId.equals(data.id.toString())
+        }
+        if (items.isNotEmpty())
+            return items[0]
+        else
+            return null
+    }
+
     override fun resetRepo() {
         mRepoSource.clear()
     }
@@ -67,7 +84,11 @@ class BookChaptersPresenter(val mView: BookChaptersContract.View) : BookChapters
         Log.d("onDeleted", "onDeleted")
     }
 
-    override fun onDownloadBlockUpdated(download: Download, downloadBlock: DownloadBlock, totalBlocks: Int) {
+    override fun onDownloadBlockUpdated(
+        download: Download,
+        downloadBlock: DownloadBlock,
+        totalBlocks: Int
+    ) {
         Log.d("Blocked", "Blocked")
     }
 
@@ -88,7 +109,11 @@ class BookChaptersPresenter(val mView: BookChaptersContract.View) : BookChapters
         Log.d("onPaused", "onPaused")
     }
 
-    override fun onProgress(download: Download, etaInMilliSeconds: Long, downloadedBytesPerSecond: Long) {
+    override fun onProgress(
+        download: Download,
+        etaInMilliSeconds: Long,
+        downloadedBytesPerSecond: Long
+    ) {
         mView.updateProgress(download.progress)
     }
 
@@ -104,7 +129,11 @@ class BookChaptersPresenter(val mView: BookChaptersContract.View) : BookChapters
         Log.d("onResumed", "onResumed")
     }
 
-    override fun onStarted(download: Download, downloadBlocks: List<DownloadBlock>, totalBlocks: Int) {
+    override fun onStarted(
+        download: Download,
+        downloadBlocks: List<DownloadBlock>,
+        totalBlocks: Int
+    ) {
     }
 
     override fun onWaitingNetwork(download: Download) {
@@ -172,13 +201,15 @@ class BookChaptersPresenter(val mView: BookChaptersContract.View) : BookChapters
 
         var currentAudioId = 0
         if (JcPlayerManager.getInstance(mView.getAppContext()!!).get()!!.currentAudio != null) {
-            currentAudioId = JcPlayerManager.getInstance(mView.getAppContext()!!).get()!!.currentAudio!!.id
+            currentAudioId =
+                JcPlayerManager.getInstance(mView.getAppContext()!!).get()!!.currentAudio!!.id
         }
 
         var currentAudioStatus: JcStatus? = null
 
         if (JcPlayerManager.getInstance(mView.getAppContext()!!).get()!!.currentStatus != null) {
-            currentAudioStatus = JcPlayerManager.getInstance(mView.getAppContext()!!).get()!!.currentStatus!!
+            currentAudioStatus =
+                JcPlayerManager.getInstance(mView.getAppContext()!!).get()!!.currentStatus!!
         }
 
         var book = mRepoSource.getSavedBook()
@@ -196,30 +227,32 @@ class BookChaptersPresenter(val mView: BookChaptersContract.View) : BookChapters
                 mView.dismissLoading()
                 val status = RetrofitResponseHandler.validateResponseStatus(result)
                 if (status == RetrofitResponseHandler.Companion.Status.VALID) {
-                    mView.setChapters(result!!.data)
-                    if (extras == null) {
-                        if (isToPlayFirstChapter) {
-                            mView.onChapterClicked(result.data[0])
-                            mRepoSource.setIsPlayFirstChapter(false)
-                        } else if (status == RetrofitResponseHandler.Companion.Status.UNAUTHORIZED) {
-                            mView!!.showLoginPage()
-                        }
+                    result?.let {
+                        mRepoSource.setMediaItems(it.data)
+                        mView.setChapters(it.data)
+                        if (extras == null) {
+                            if (isToPlayFirstChapter) {
+                                mView.onChapterClicked(it.data[0])
+                                mRepoSource.setIsPlayFirstChapter(false)
+                            } else if (status == RetrofitResponseHandler.Companion.Status.UNAUTHORIZED) {
+                                mView!!.showLoginPage()
+                            }
 
-                        if (bookmark != null) {
-                            var chapterData = result!!.data.filter {
-                                it.id == bookmark!!.chapter_id
-                            }[0]
-                            mView.setBookmark(bookmark)
-                            mView.onChapterClicked(chapterData)
+                            if (bookmark != null) {
+                                var chapterData = it.data.filter {
+                                    it.id == bookmark!!.chapter_id
+                                }[0]
+                                mView.setBookmark(bookmark)
+                                mView.onChapterClicked(chapterData)
+                            } else {
+                                mView.playAllChapters(it)
+                            }
                         } else {
-                            mView.playAllChapters(result)
+                            var chapterData = it.data.filter {
+                                it.id == currentAudioId
+                            }[0]
+                            mView.onChapterClicked(chapterData, currentAudioStatus)
                         }
-                    } else {
-                        var chapterData = result!!.data.filter {
-                            it.id == currentAudioId
-                        }[0]
-
-                        mView.onChapterClicked(chapterData, currentAudioStatus)
                     }
                 } else {
                     mView.showHomepageScreen()
@@ -236,7 +269,7 @@ class BookChaptersPresenter(val mView: BookChaptersContract.View) : BookChapters
             .setDownloadConcurrentLimit(1)
             .build()
 
-        fetch = Fetch.Impl.getInstance(fetchConfiguration);
+        fetch = Fetch.Impl.getInstance(fetchConfiguration)
     }
 
     private lateinit var currentPath: String

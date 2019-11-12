@@ -3,7 +3,6 @@ package com.audiospotapplication.UI.publisherDetails
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -146,7 +145,7 @@ class PublisherDetailsFragment : BaseFragment(), PublisherDetailsContract.View, 
     }
 
     override fun setPublisherImage(photo: String) {
-        ImageUtils.setImageFromUrlIntoImageViewUsingPicasso(photo, activity!!.applicationContext, ivPublisher, false)
+        ImageUtils.setImageFromUrlIntoImageViewUsingGlide(photo, activity!!.applicationContext, ivPublisher, false)
     }
 
     override fun setBookList(result: BookListResponse?) {

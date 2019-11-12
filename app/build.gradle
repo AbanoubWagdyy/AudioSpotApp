@@ -100,9 +100,6 @@ dependencies {
     implementation "io.reactivex.rxjava2:rxandroid:$rxandroid_version"
     implementation "io.reactivex.rxjava2:rxkotlin:$rxkotlin_version"
 
-    //Image Loading
-    implementation 'com.squareup.picasso:picasso:2.71828'
-
     implementation 'com.jakewharton.rxbinding2:rxbinding-kotlin:2.1.1'
 
 
@@ -158,6 +155,13 @@ dependencies {
     // or Koin for Android Architecture ViewModel
     implementation 'org.koin:koin-androidx-viewmodel:2.0.1'
     implementation "org.koin:koin-androidx-ext:2.0.1"
+
+    // ExoPlayer
+    implementation 'com.google.android.exoplayer:exoplayer:2.8.4'
+
+    def glideVersion = "4.8.0"
+    implementation "com.github.bumptech.glide:glide:$glideVersion"
+    annotationProcessor "com.github.bumptech.glide:compiler:$glideVersion"
 
 //    implementation 'com.paypal.pyplcheckout:nativexo:3.4.8'
 }

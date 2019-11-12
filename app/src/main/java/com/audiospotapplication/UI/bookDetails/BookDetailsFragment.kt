@@ -287,7 +287,7 @@ class BookDetailsFragment : BaseFragment(), BookDetailsContract.View, JcPlayerMa
 
         tvPrice.text = result!!.data.price.toString() + " EGP."
 
-        ImageUtils.setImageFromUrlIntoImageViewUsingPicasso(
+        ImageUtils.setImageFromUrlIntoImageViewUsingGlide(
             result.data.cover,
             activity!!.applicationContext,
             ivBook

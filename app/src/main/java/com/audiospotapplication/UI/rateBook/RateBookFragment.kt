@@ -1,9 +1,7 @@
 package com.audiospotapplication.UI.rateBook
 
 import android.content.Context
-import android.content.Intent
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,7 +9,6 @@ import com.audiospot.DataLayer.Model.Book
 import com.audiospotapplication.BaseFragment
 
 import com.audiospotapplication.R
-import com.audiospotapplication.UI.homepage.HomepageActivity
 import com.audiospotapplication.utils.DialogUtils
 import com.audiospotapplication.utils.ImageUtils
 import com.google.android.material.snackbar.Snackbar
@@ -43,7 +40,7 @@ class RateBookFragment : BaseFragment(), RateBookContract.View {
             }
             tvNarrator.text = builder.toString().substring(0, builder.toString().length - 1)
         }
-        ImageUtils.setImageFromUrlIntoImageViewUsingPicasso(
+        ImageUtils.setImageFromUrlIntoImageViewUsingGlide(
             bookDetailsData.cover,
             activity!!.applicationContext,
             ivBook

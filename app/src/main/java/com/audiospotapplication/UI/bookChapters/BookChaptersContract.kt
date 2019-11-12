@@ -2,6 +2,7 @@ package com.audiospotapplication.UI.bookChapters
 
 import android.content.Context
 import android.os.Bundle
+import android.support.v4.media.MediaBrowserCompat
 import com.audiospotapplication.BaseView
 import com.audiospotapplication.DataLayer.Model.Bookmark
 import com.audiospotapplication.DataLayer.Model.ChaptersData
@@ -18,6 +19,8 @@ interface BookChaptersContract {
         fun handleDownloadPressed(currentSong: JcAudio?)
         fun validateChapterDownloaded(mediaData: ChaptersData): String
         fun resetRepo()
+        fun getMediaItem(data: ChaptersData): MediaBrowserCompat.MediaItem?
+        fun getSavedBookId(): String
     }
 
     interface View : BaseView {

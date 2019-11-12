@@ -5,7 +5,6 @@ import android.content.Context
 import android.os.Bundle
 import android.text.SpannableString
 import android.text.style.UnderlineSpan
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -18,7 +17,7 @@ import kotlinx.android.synthetic.main.fragment_profile.*
 
 class ProfileFragment : BaseFragment(), ProfileContract.View {
     override fun setUserImage(profile_photo: String?) {
-        ImageUtils.setImageFromUrlIntoImageViewUsingPicasso(
+        ImageUtils.setImageFromUrlIntoImageViewUsingGlide(
             profile_photo, context, profile_image
             , false
         )

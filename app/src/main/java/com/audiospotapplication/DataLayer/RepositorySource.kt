@@ -1,5 +1,7 @@
 package com.visionvalley.letuno.DataLayer
 
+import android.support.v4.media.MediaBrowserCompat
+import android.support.v4.media.MediaMetadataCompat
 import com.audiospot.DataLayer.Model.AuthResponse
 import com.audiospot.DataLayer.Model.Book
 import com.audiospot.DataLayer.Model.CategoriesListData
@@ -9,7 +11,7 @@ import com.audiospotapplication.DataLayer.Retrofit.RetrofitCallbacks
 import com.audiospotapplication.UI.ActiveTab
 import com.audiospotapplication.UI.giftSelection.GiftSelection
 import dm.audiostreamer.MediaMetaData
-import java.util.ArrayList
+import java.util.*
 
 interface RepositorySource : CacheDataSource {
 
@@ -201,6 +203,12 @@ interface RepositorySource : CacheDataSource {
     fun getIsPlayFirstChapter(): Boolean
 
     fun getPaypalArguments(callback: RetrofitCallbacks.PaypalArgumentCallback)
+
+    fun setMediaItems(mediaItems: List<ChaptersData>)
+
+    fun getMediaItems(): List<MediaBrowserCompat.MediaItem>
+
+    fun getTreeMap(): TreeMap<String, MediaMetadataCompat>
 
     fun reset()
 }
