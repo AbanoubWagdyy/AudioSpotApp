@@ -29,6 +29,10 @@ import kotlin.collections.ArrayList
 
 class DataRepository private constructor(context: Context) : RepositorySource {
 
+    override fun getCurrentBookChapters(): List<ChaptersData> {
+        return mBookItemInterceptor.getBookChapters()
+    }
+
     private val mMediaItems = java.util.ArrayList<MediaBrowserCompat.MediaItem>()
     private val mTreeMap = TreeMap<String, MediaMetadataCompat>()
 
@@ -944,6 +948,7 @@ class DataRepository private constructor(context: Context) : RepositorySource {
 
     override fun setMediaItems(mediaItems: List<ChaptersData>) {
         mMediaItems.clear()
+        mBookItemInterceptor.saveBookChapters(mediaItems)
         for (item in mediaItems) {
             Log.d(TAG, "setMediaItems: called: adding media item: " + item.title)
             val convertedItem = getMediaItemFromChapterData(item)

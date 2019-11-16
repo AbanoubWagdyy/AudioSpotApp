@@ -48,7 +48,7 @@
 
         </RelativeLayout>
 
-        <com.audiospotapplication.utils.player.MediaSeekBar
+        <com.ps.pexoplayer.widget.MediaSeekBar
                 android:id="@+id/seekBar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

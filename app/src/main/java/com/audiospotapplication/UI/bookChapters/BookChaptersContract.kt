@@ -7,7 +7,6 @@ import com.audiospotapplication.BaseView
 import com.audiospotapplication.DataLayer.Model.Bookmark
 import com.audiospotapplication.DataLayer.Model.ChaptersData
 import com.audiospotapplication.DataLayer.Model.ChaptersResponse
-import com.example.jean.jcplayer.general.JcStatus
 import com.example.jean.jcplayer.model.JcAudio
 
 interface BookChaptersContract {
@@ -21,6 +20,11 @@ interface BookChaptersContract {
         fun resetRepo()
         fun getMediaItem(data: ChaptersData): MediaBrowserCompat.MediaItem?
         fun getSavedBookId(): String
+
+        fun getBookByID(mediaId: String?): ChaptersData?
+        fun getBookAuthor(): String
+        fun getBookReleasedDate(): String
+        fun getBookIcon(): String
     }
 
     interface View : BaseView {
@@ -32,13 +36,11 @@ interface BookChaptersContract {
         fun setBookImage(cover: String)
         fun showAddBookmarkScreen()
         fun setBookmark(bookmark: Bookmark)
-        fun onChapterClicked(chapterData: ChaptersData)
         fun showDownloadComplete(message: String, currentPath: String)
         fun showMessage(s: String)
         fun showDownloadingDialog()
         fun updateProgress(progress: Int)
         fun dismissDownloadingDialog()
-        fun playAllChapters(result: ChaptersResponse)
         fun showHomepageScreen()
     }
 }

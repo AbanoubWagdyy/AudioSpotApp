@@ -4,5 +4,8 @@ import com.audiospotapplication.DataLayer.Model.ChaptersData
 
 interface OnChapterCLickListener {
 
-    fun onChapterClicked(data: ChaptersData)
+    fun onChapterClicked(
+        data: ChaptersData,
+        position: Int
+    )
 }

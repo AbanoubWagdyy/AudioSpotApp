@@ -4,12 +4,13 @@
         package="com.audiospotapplication">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+
     <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
-    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
 
     <application
             android:name=".AudioSpotApp"
@@ -17,8 +18,9 @@
             android:icon="@mipmap/ic_launcher"
             android:label="@string/app_name"
             android:supportsRtl="true"
-            android:theme="@style/AppTheme"
             android:usesCleartextTraffic="true"
+            android:theme="@style/AppTheme"
+            tools:ignore="GoogleAppIndexingWarning"
             tools:replace="android:name">
 
         <meta-data
@@ -82,6 +84,8 @@
                 android:screenOrientation="portrait" />
         <activity
                 android:name=".UI.bookChapters.BookChaptersActivity"
+                android:configChanges="orientation"
+                android:windowSoftInputMode="adjustPan"
                 android:screenOrientation="portrait" />
         <activity
                 android:name=".UI.bookReviews.BookReviewsActivity"
@@ -151,22 +155,22 @@
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
-        <service
-                android:name="dm.audiostreamer.AudioStreamingService"
-                android:enabled="true"
-                android:exported="true" />
+<!--        <service-->
+<!--                android:name="dm.audiostreamer.AudioStreamingService"-->
+<!--                android:enabled="true"-->
+<!--                android:exported="true" />-->
 
-        <receiver android:name="dm.audiostreamer.AudioStreamingReceiver">
-            <intent-filter>
-                <action android:name="dm.audiostreamer.close" />
-                <action android:name="dm.audiostreamer.pause" />
-                <action android:name="dm.audiostreamer.next" />
-                <action android:name="dm.audiostreamer.play" />
-                <action android:name="dm.audiostreamer.previous" />
-                <action android:name="android.intent.action.MEDIA_BUTTON" />
-                <action android:name="android.media.AUDIO_BECOMING_NOISY" />
-            </intent-filter>
-        </receiver>
+<!--        <receiver android:name="dm.audiostreamer.AudioStreamingReceiver">-->
+<!--            <intent-filter>-->
+<!--                <action android:name="dm.audiostreamer.close" />-->
+<!--                <action android:name="dm.audiostreamer.pause" />-->
+<!--                <action android:name="dm.audiostreamer.next" />-->
+<!--                <action android:name="dm.audiostreamer.play" />-->
+<!--                <action android:name="dm.audiostreamer.previous" />-->
+<!--                <action android:name="android.intent.action.MEDIA_BUTTON" />-->
+<!--                <action android:name="android.media.AUDIO_BECOMING_NOISY" />-->
+<!--            </intent-filter>-->
+<!--        </receiver>-->
 
         <receiver android:name=".CallReceiver">
             <intent-filter>
@@ -177,14 +181,14 @@
             </intent-filter>
         </receiver>
 
-        <service android:name="com.example.jean.jcplayer.service.JcPlayerService" />
+        <!--        <service android:name="com.example.jean.jcplayer.service.JcPlayerService" />-->
 
-        <receiver
-                android:name="com.example.jean.jcplayer.service.notification.JcPlayerNotificationReceiver"
-                android:enabled="true"
-                android:exported="false" />
+        <!--        <receiver-->
+        <!--                android:name="com.example.jean.jcplayer.service.notification.JcPlayerNotificationReceiver"-->
+        <!--                android:enabled="true"-->
+        <!--                android:exported="false" />-->
 
-        <service android:name=".utils.player.services.MediaService">
+        <service android:name="com.ps.pexoplayer.services.MediaService">
             <intent-filter>
                 <action android:name="android.media.browse.MediaBrowserService" />
             </intent-filter>
@@ -196,5 +200,4 @@
             </intent-filter>
         </receiver>
     </application>
-
 </manifest>

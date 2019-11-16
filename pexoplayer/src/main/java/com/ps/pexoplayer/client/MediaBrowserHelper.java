@@ -1,4 +1,4 @@
-package com.audiospotapplication.utils.player.client;
+package com.ps.pexoplayer.client;
 
 import android.content.ComponentName;
 import android.content.Context;
@@ -31,7 +31,6 @@ public class MediaBrowserHelper {
     private MediaBrowserHelperCallback mMediaBrowserCallback;
     private boolean mWasConfigurationChange;
 
-
     public MediaBrowserHelper(Context context, Class<? extends MediaBrowserServiceCompat> serviceClass) {
         mContext = context;
         mMediaBrowserServiceClass = serviceClass;
@@ -41,18 +40,20 @@ public class MediaBrowserHelper {
         mMediaControllerCallback = new MediaControllerCallback();
     }
 
-    public void setMediaBrowserHelperCallback(MediaBrowserHelperCallback callback){
+    public void setMediaBrowserHelperCallback(MediaBrowserHelperCallback callback) {
         mMediaBrowserCallback = callback;
     }
 
-    // Receives callbacks from the MediaController and updates the UI state,
-    // i.e.: Which is the current item, whether it's playing or paused, etc.
+    /**
+     * Receives callbacks from the MediaController and updates the UI state,
+     * i.e.: Which is the current item, whether it's playing or paused, etc.
+     */
     private class MediaControllerCallback extends MediaControllerCompat.Callback {
 
         @Override
         public void onMetadataChanged(final MediaMetadataCompat metadata) {
             Log.d(TAG, "onMetadataChanged: CALLED");
-            if(mMediaBrowserCallback != null){
+            if (mMediaBrowserCallback != null) {
                 mMediaBrowserCallback.onMetadataChanged(metadata);
             }
         }
@@ -60,8 +61,22 @@ public class MediaBrowserHelper {
         @Override
         public void onPlaybackStateChanged(@Nullable final PlaybackStateCompat state) {
             Log.d(TAG, "onPlaybackStateChanged: CALLED");
-            if(mMediaBrowserCallback != null){
+            if (mMediaBrowserCallback != null) {
                 mMediaBrowserCallback.onPlaybackStateChanged(state);
+            }
+        }
+
+        @Override
+        public void onShuffleModeChanged(int shuffleMode) {
+            if (mMediaBrowserCallback != null) {
+                mMediaBrowserCallback.onShuffleChanged(shuffleMode);
+            }
+        }
+
+        @Override
+        public void onRepeatModeChanged(int repeatMode) {
+            if (mMediaBrowserCallback != null) {
+                mMediaBrowserCallback.onRepeatChanged(repeatMode);
             }
         }
 
@@ -71,13 +86,16 @@ public class MediaBrowserHelper {
         public void onSessionDestroyed() {
             onPlaybackStateChanged(null);
         }
+
     }
 
-    public void subscribeToNewPlaylist(String currentPlaylistId, String newPlatlistId){
-        if(!currentPlaylistId.equals("")){
-            mMediaBrowser.unsubscribe(currentPlaylistId);
+    public void subscribeToNewPlaylist(String currentPlaylistId, String newPlaylistId) {
+        if (mMediaBrowser != null) {
+            if (!currentPlaylistId.equals("")) {
+                mMediaBrowser.unsubscribe(currentPlaylistId);
+            }
+            mMediaBrowser.subscribe(newPlaylistId, mMediaBrowserSubscriptionCallback);
         }
-        mMediaBrowser.subscribe(newPlatlistId, mMediaBrowserSubscriptionCallback);
     }
 
     public void onStart(boolean wasConfigurationChange) {
@@ -106,8 +124,10 @@ public class MediaBrowserHelper {
         Log.d(TAG, "onStop: CALLED: Releasing MediaController, Disconnecting from MediaBrowser");
     }
 
-    // Receives callbacks from the MediaBrowser when it has successfully connected to the
-    // MediaBrowserService (MusicService).
+    /**
+     * Receives callbacks from the MediaBrowser when it has successfully connected to the
+     * MediaBrowserService (MusicService).
+     */
     private class MediaBrowserConnectionCallback extends MediaBrowserCompat.ConnectionCallback {
 
         // Happens as a result of onStart().
@@ -120,6 +140,9 @@ public class MediaBrowserHelper {
                         new MediaControllerCompat(mContext, mMediaBrowser.getSessionToken());
                 mMediaController.registerCallback(mMediaControllerCallback);
 
+                //Sync with MediaSession
+                mMediaBrowserCallback.onMetadataChanged(mMediaController.getMetadata());
+                mMediaBrowserCallback.onPlaybackStateChanged(mMediaController.getPlaybackState());
             } catch (RemoteException e) {
                 Log.d(TAG, String.format("onConnected: Problem: %s", e.toString()));
                 throw new RuntimeException(e);
@@ -132,10 +155,10 @@ public class MediaBrowserHelper {
         }
     }
 
-
-
-    // Receives callbacks from the MediaBrowser when the MediaBrowserService has loaded new media
-    // that is ready for playback.
+    /**
+     * Receives callbacks from the MediaBrowser when the MediaBrowserService has loaded new media
+     * that is ready for playback.
+     */
     public class MediaBrowserSubscriptionCallback extends MediaBrowserCompat.SubscriptionCallback {
 
         @Override
@@ -143,7 +166,7 @@ public class MediaBrowserHelper {
                                      @NonNull List<MediaBrowserCompat.MediaItem> children) {
             Log.d(TAG, "onChildrenLoaded: CALLED: " + parentId + ", " + children.toString());
 
-            if(!mWasConfigurationChange){
+            if (!mWasConfigurationChange) {
                 for (final MediaBrowserCompat.MediaItem mediaItem : children) {
                     Log.d(TAG, "onChildrenLoaded: CALLED: queue item: " + mediaItem.getMediaId());
                     mMediaController.addQueueItem(mediaItem.getDescription());
@@ -152,6 +175,9 @@ public class MediaBrowserHelper {
         }
     }
 
+    /**
+     * @return MediaControllerCompat.TransportControls
+     */
     public MediaControllerCompat.TransportControls getTransportControls() {
         if (mMediaController == null) {
             Log.d(TAG, "getTransportControls: MediaController is null!");
@@ -159,4 +185,35 @@ public class MediaBrowserHelper {
         }
         return mMediaController.getTransportControls();
     }
+
+    public MediaControllerCompat getMediaController() {
+        return mMediaController;
+    }
+
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

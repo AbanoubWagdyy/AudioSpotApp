@@ -1,4 +1,4 @@
-package com.audiospotapplication.utils.player.client;
+package com.ps.pexoplayer.client;
 
 import android.support.v4.media.MediaMetadataCompat;
 import android.support.v4.media.session.MediaControllerCompat;
@@ -10,7 +10,12 @@ public interface MediaBrowserHelperCallback {
 
     void onPlaybackStateChanged(PlaybackStateCompat state);
 
+    void onShuffleChanged(int state);
+
+    void onRepeatChanged(int state);
+
     void onMediaControllerConnected(MediaControllerCompat mediaController);
+
 }
 
 

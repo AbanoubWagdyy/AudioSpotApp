@@ -1,4 +1,4 @@
-package com.audiospotapplication.utils.player.notifications;
+package com.ps.pexoplayer.notifications;
 
 import android.app.Notification;
 import android.app.NotificationChannel;
@@ -20,28 +20,34 @@ import androidx.core.app.NotificationCompat;
 import androidx.core.content.ContextCompat;
 import androidx.media.session.MediaButtonReceiver;
 
-import com.audiospotapplication.R;
-import com.audiospotapplication.UI.splash.SplashActivity;
-import com.audiospotapplication.utils.player.services.MediaService;
+import com.ps.pexoplayer.PexoMediaInstance;
+import com.ps.pexoplayer.R;
+import com.ps.pexoplayer.services.MediaService;
 
 public class MediaNotificationManager {
 
-    private static final String TAG = "MediaNotificationManage";
+    private static final String TAG = "NotificationManager";
+
+    public static final String PEXO_PENDING_INTENT_KEY = "MediaNotificationManager";
+
+    private static final String CHANNEL_ID = "com.audiospotapplication.channel";
+    private static final int REQUEST_CODE = 101;
+    public static final int NOTIFICATION_ID = 201;
+
+    private static final String GROUP_KEY_MUSIC = "com.audiospotapplication.channel.group";
+    private static final String GROUP_MUSIC_SUMMARY ="com.ps.pexoplayer.channel.summary";
 
     private final MediaService mMediaService;
     private final NotificationManager mNotificationManager;
-    private static final String CHANNEL_ID = "com.codingwithmitch.spotifyclone.musicplayer.channel";
-    private static final int REQUEST_CODE = 101;
-    public static final int NOTIFICATION_ID = 201;
 
     private final NotificationCompat.Action mPlayAction;
     private final NotificationCompat.Action mPauseAction;
     private final NotificationCompat.Action mNextAction;
     private final NotificationCompat.Action mPrevAction;
 
+
     public MediaNotificationManager(MediaService mediaService) {
         mMediaService = mediaService;
-
 
         mNotificationManager = (NotificationManager) mMediaService.getSystemService(Context.NOTIFICATION_SERVICE);
 
@@ -78,11 +84,26 @@ public class MediaNotificationManager {
         mNotificationManager.cancelAll();
     }
 
+    /**
+     * @return NotificationManager
+     */
     public NotificationManager getNotificationManager() {
         return mNotificationManager;
     }
 
-    // Does nothing on versions of Android earlier than O.
+    /**
+     * Checks if grater than Android O or Higher
+     *
+     * @return True/False
+     */
+    private boolean isAndroidOorHigher() {
+        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.O;
+    }
+
+    /**
+     * Create the (mandatory) notification channel when running on Android Oreo.
+     * Does nothing on versions of Android earlier than O.
+     */
     @RequiresApi(Build.VERSION_CODES.O)
     private void createChannel() {
         if (mNotificationManager.getNotificationChannel(CHANNEL_ID) == null) {
@@ -108,32 +129,29 @@ public class MediaNotificationManager {
         }
     }
 
-    private boolean isAndroidOOrHigher() {
-        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.O;
-    }
-
-
+    /**
+     * @param state       PlaybackStateCompat
+     * @param token       MediaSessionCompat.Token
+     * @param description MediaDescriptionCompat
+     * @param bitmap      Bitmap
+     * @return Notification
+     */
     public Notification buildNotification(@NonNull PlaybackStateCompat state,
-                                           MediaSessionCompat.Token token,
-//                                           boolean isPlaying,
-                                           final MediaDescriptionCompat description,
-                                           Bitmap bitmap) {
+                                          MediaSessionCompat.Token token,
+                                          final MediaDescriptionCompat description,
+                                          Bitmap bitmap) {
 
         boolean isPlaying = state.getState() == PlaybackStateCompat.STATE_PLAYING;
 
-        // Create the (mandatory) notification channel when running on Android Oreo.
-        if (isAndroidOOrHigher()) {
+        if (isAndroidOorHigher()) {
             createChannel();
         }
 
-
         NotificationCompat.Builder builder = new NotificationCompat.Builder(mMediaService, CHANNEL_ID);
-        builder.setStyle(
-                new androidx.media.app.NotificationCompat.MediaStyle()
-                        .setMediaSession(token)
-                        .setShowActionsInCompactView(0, 1, 2)
-        )
-                .setColor(ContextCompat.getColor(mMediaService, R.color.colorPrimary))
+        builder.setStyle(new androidx.media.app.NotificationCompat.MediaStyle()
+                .setMediaSession(token)
+                .setShowActionsInCompactView(0, 1, 2))
+                .setColor(ContextCompat.getColor(mMediaService, R.color.notification_bg))
                 .setSmallIcon(R.drawable.ic_audiotrack_grey_24dp)
                 // Pending intent that is fired when user clicks on notification.
                 .setContentIntent(createContentIntent())
@@ -146,6 +164,8 @@ public class MediaNotificationManager {
                 // deleted) fire MediaButtonPendingIntent with ACTION_STOP.
                 .setDeleteIntent(MediaButtonReceiver.buildMediaButtonPendingIntent(
                         mMediaService, PlaybackStateCompat.ACTION_STOP))
+                .setGroup(GROUP_KEY_MUSIC)
+                .setGroupSummary(true)
                 // Show controls on lock screen even when user hides sensitive content.
                 .setVisibility(NotificationCompat.VISIBILITY_PUBLIC);
 
@@ -164,10 +184,17 @@ public class MediaNotificationManager {
         return builder.build();
     }
 
+    /**
+     * Creates a pending intent where the notification should redirect after clicking it
+     *
+     * @return PendingIntent
+     */
     private PendingIntent createContentIntent() {
-        Intent openUI = new Intent(mMediaService, SplashActivity.class);
-        openUI.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        Intent intent = new Intent(mMediaService, PexoMediaInstance.getInstance().getMainActivity());
+        intent.putExtra(PEXO_PENDING_INTENT_KEY, true);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
         return PendingIntent.getActivity(
-                mMediaService, REQUEST_CODE, openUI, PendingIntent.FLAG_CANCEL_CURRENT);
+                mMediaService, REQUEST_CODE, intent, PendingIntent.FLAG_UPDATE_CURRENT);
     }
+
 }

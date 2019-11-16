@@ -22,6 +22,27 @@ import java.io.File
 
 class BookChaptersPresenter(val mView: BookChaptersContract.View) : BookChaptersContract.Presenter,
     FetchListener {
+    override fun getBookAuthor(): String {
+        return mRepoSource.getSavedBook()?.author!!
+    }
+
+    override fun getBookReleasedDate(): String {
+        return mRepoSource.getSavedBook()?.release_date!!
+    }
+
+    override fun getBookIcon(): String {
+        return mRepoSource.getSavedBook()?.cover!!
+    }
+
+    override fun getBookByID(mediaId: String?): ChaptersData? {
+        val items = chapters.filter {
+            it.id == mediaId?.toInt()
+        }
+        if (items.isNullOrEmpty())
+            return null
+
+        return items[0]
+    }
 
     override fun getSavedBookId(): String {
         return mRepoSource.getSavedBook()?.id.toString()
@@ -221,15 +242,8 @@ class BookChaptersPresenter(val mView: BookChaptersContract.View) : BookChapters
             mView.setBookImage(book.cover)
         }
 
-        mView.showLoadingDialog()
-        mRepoSource.getBookChapters(object : RetrofitCallbacks.ChaptersResponseCallback {
-            override fun onSuccess(result: ChaptersResponse?) {
-                mView.dismissLoading()
-                val status = RetrofitResponseHandler.validateResponseStatus(result)
-                if (status == RetrofitResponseHandler.Companion.Status.VALID) {
-                    result?.let {
-                        mRepoSource.setMediaItems(it.data)
-                        mView.setChapters(it.data)
+        chapters = mRepoSource.getCurrentBookChapters()
+        mView.setChapters(chapters)
 //                        if (extras == null) {
 //                            if (isToPlayFirstChapter) {
 //                                mView.onChapterClicked(it.data[0])
@@ -253,16 +267,6 @@ class BookChaptersPresenter(val mView: BookChaptersContract.View) : BookChapters
 //                            }[0]
 //                            mView.onChapterClicked(chapterData, currentAudioStatus)
 //                        }
-                    }
-                } else {
-                    mView.showHomepageScreen()
-                }
-            }
-
-            override fun onFailure(call: Call<ChaptersResponse>?, t: Throwable?) {
-                mView.dismissLoading()
-            }
-        })
 
 
         var fetchConfiguration = FetchConfiguration.Builder(mView.getAppContext()!!)
@@ -272,6 +276,7 @@ class BookChaptersPresenter(val mView: BookChaptersContract.View) : BookChapters
         fetch = Fetch.Impl.getInstance(fetchConfiguration)
     }
 
+    private lateinit var chapters: List<ChaptersData>
     private lateinit var currentPath: String
     lateinit var mRepoSource: RepositorySource
     lateinit var fetch: Fetch

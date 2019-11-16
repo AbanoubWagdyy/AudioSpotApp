@@ -44,7 +44,7 @@ class ChaptersAdapter(
         }
 
         override fun onClick(v: View) {
-            mListener.onChapterClicked(data!![position])
+            mListener.onChapterClicked(data!![position], position)
         }
     }
 }

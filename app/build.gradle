@@ -73,7 +73,7 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation 'androidx.appcompat:appcompat:1.1.0'
     implementation 'androidx.core:core-ktx:1.1.0'
-    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+
     implementation 'com.google.firebase:firebase-core:17.2.0'
     implementation 'com.google.firebase:firebase-iid:20.0.0'
     implementation 'com.google.firebase:firebase-messaging:20.0.0'
@@ -156,12 +156,11 @@ dependencies {
     implementation 'org.koin:koin-androidx-viewmodel:2.0.1'
     implementation "org.koin:koin-androidx-ext:2.0.1"
 
-    // ExoPlayer
-    implementation 'com.google.android.exoplayer:exoplayer:2.8.4'
-
     def glideVersion = "4.8.0"
     implementation "com.github.bumptech.glide:glide:$glideVersion"
     annotationProcessor "com.github.bumptech.glide:compiler:$glideVersion"
 
+    implementation project(path: ':pexoplayer')
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
 //    implementation 'com.paypal.pyplcheckout:nativexo:3.4.8'
 }

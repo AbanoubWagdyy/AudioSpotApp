@@ -1,4 +1,4 @@
-package com.audiospotapplication.utils.player.players;
+package com.ps.pexoplayer.players;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -10,24 +10,32 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 
+/**
+ * Abstract player implementation that handles playing music with proper handling of headphones
+ * and audio focus.
+ */
+
 public abstract class PlayerAdapter {
 
     private static final String TAG = "PlayerAdapter";
 
-
     private static final float MEDIA_VOLUME_DEFAULT = 1.0f;
     private static final float MEDIA_VOLUME_DUCK = 0.2f;
 
-    private final Context mApplicationContext;
+    private final Context mContext;
     private final AudioManager mAudioManager;
     private final AudioFocusHelper mAudioFocusHelper;
     private boolean mPlayOnAudioFocus = false;
 
     public PlayerAdapter(@NonNull Context context) {
-        mApplicationContext = context.getApplicationContext();
-        mAudioManager = (AudioManager) mApplicationContext.getSystemService(Context.AUDIO_SERVICE);
+        mContext = context.getApplicationContext();
+        mAudioManager = (AudioManager) mContext.getSystemService(Context.AUDIO_SERVICE);
         mAudioFocusHelper = new AudioFocusHelper();
     }
+
+    /**
+     * Public methods for handle the NOISY broadcast and AudioFocus
+     */
 
     public final void play() {
         if (mAudioFocusHelper.requestAudioFocus()) {
@@ -42,19 +50,16 @@ public abstract class PlayerAdapter {
         onStop();
     }
 
-
     public final void pause() {
         if (!mPlayOnAudioFocus) {
             mAudioFocusHelper.abandonAudioFocus();
         }
-
         unregisterAudioNoisyReceiver();
         onPause();
     }
 
-
     /**
-     *  Abstract methods for responding to playback changes in the class that extends this one
+     * Abstract methods for responding to playback changes in the class that extends this one
      */
     protected abstract void onPlay();
 
@@ -73,7 +78,7 @@ public abstract class PlayerAdapter {
     public abstract void setVolume(float volume);
 
     /**
-     *  NOISY broadcast receiver stuff
+     * NOISY broadcast receiver stuff
      */
     private static final IntentFilter AUDIO_NOISY_INTENT_FILTER =
             new IntentFilter(AudioManager.ACTION_AUDIO_BECOMING_NOISY);
@@ -91,21 +96,19 @@ public abstract class PlayerAdapter {
                 }
             };
 
-
     private void registerAudioNoisyReceiver() {
         if (!mAudioNoisyReceiverRegistered) {
-            mApplicationContext.registerReceiver(mAudioNoisyReceiver, AUDIO_NOISY_INTENT_FILTER);
+            mContext.registerReceiver(mAudioNoisyReceiver, AUDIO_NOISY_INTENT_FILTER);
             mAudioNoisyReceiverRegistered = true;
         }
     }
 
     private void unregisterAudioNoisyReceiver() {
         if (mAudioNoisyReceiverRegistered) {
-            mApplicationContext.unregisterReceiver(mAudioNoisyReceiver);
+            mContext.unregisterReceiver(mAudioNoisyReceiver);
             mAudioNoisyReceiverRegistered = false;
         }
     }
-
 
     /**
      * Helper class for managing audio focus related tasks.
@@ -151,10 +154,24 @@ public abstract class PlayerAdapter {
                     Log.d(TAG, "onAudioFocusChange: AUDIOFOCUS_LOSS");
                     mAudioManager.abandonAudioFocus(this);
                     mPlayOnAudioFocus = false;
-//                    stop(); // stop will 'hard-close' everything
+                    //stop(); // stop will 'hard-close' everything
                     pause();
                     break;
             }
         }
     }
+
 }
+
+
+
+
+
+
+
+
+
+
+
+
+

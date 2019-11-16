@@ -1,11 +1,17 @@
-package com.audiospotapplication.utils.player;
+package com.ps.pexoplayer.widget;
 
 import android.content.Context;
 import android.support.v4.media.session.MediaControllerCompat;
+import android.support.v4.media.session.MediaSessionCompat;
 import android.util.AttributeSet;
 import android.widget.SeekBar;
 
 import androidx.appcompat.widget.AppCompatSeekBar;
+
+/**
+ * SeekBar that can be used with a {@link MediaSessionCompat} to track and seek in playing
+ * media.
+ */
 
 public class MediaSeekBar extends AppCompatSeekBar {
 
@@ -14,10 +20,9 @@ public class MediaSeekBar extends AppCompatSeekBar {
     private MediaControllerCompat mMediaController;
     private boolean mIsTracking = false;
 
-    private SeekBar.OnSeekBarChangeListener mOnSeekBarChangeListener = new SeekBar.OnSeekBarChangeListener() {
+    private OnSeekBarChangeListener mOnSeekBarChangeListener = new OnSeekBarChangeListener() {
         @Override
         public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-//            mMediaController.getTransportControls().seekTo(getProgress());
         }
 
         @Override
@@ -32,7 +37,7 @@ public class MediaSeekBar extends AppCompatSeekBar {
         }
     };
 
-    public boolean isTracking(){
+    public boolean isTracking() {
         return mIsTracking;
     }
 
@@ -52,7 +57,7 @@ public class MediaSeekBar extends AppCompatSeekBar {
     }
 
     @Override
-    public final void setOnSeekBarChangeListener(SeekBar.OnSeekBarChangeListener l) {
+    public final void setOnSeekBarChangeListener(OnSeekBarChangeListener l) {
         // Prohibit adding seek listeners to this subclass.
         throw new UnsupportedOperationException("Cannot add listeners to a MediaSeekBar");
     }
@@ -66,4 +71,20 @@ public class MediaSeekBar extends AppCompatSeekBar {
             mMediaController = null;
         }
     }
+
+
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+

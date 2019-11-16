@@ -3,10 +3,7 @@ package com.audiospotapplication.UI.bookDetails
 import com.audiospot.DataLayer.Model.Book
 import com.audiospot.DataLayer.Model.BookDetailsResponse
 import com.audiospotapplication.DataLayer.DataRepository
-import com.audiospotapplication.DataLayer.Model.BookListResponse
-import com.audiospotapplication.DataLayer.Model.Response
-import com.audiospotapplication.DataLayer.Model.Review
-import com.audiospotapplication.DataLayer.Model.ReviewListResponse
+import com.audiospotapplication.DataLayer.Model.*
 import com.audiospotapplication.DataLayer.Retrofit.RetrofitCallbacks
 import com.audiospotapplication.DataLayer.Retrofit.RetrofitResponseHandler
 import com.audiospotapplication.R
@@ -52,7 +49,23 @@ class BookDetailsPresenter(val mView: BookDetailsContract.View) : BookDetailsCon
     }
 
     override fun handleViewBookChaptersClicked() {
-        mView.viewBookChaptersScreen()
+        mView.showLoadingDialog()
+        mRepositorySource.getBookChapters(object : RetrofitCallbacks.ChaptersResponseCallback {
+            override fun onSuccess(result: ChaptersResponse?) {
+                mView.dismissLoading()
+                val status = RetrofitResponseHandler.validateResponseStatus(result)
+                if (status == RetrofitResponseHandler.Companion.Status.VALID) {
+                    result?.let {
+                        mRepositorySource.setMediaItems(it.data)
+                        mView.viewBookChaptersScreen()
+                    }
+                }
+            }
+
+            override fun onFailure(call: Call<ChaptersResponse>?, t: Throwable?) {
+                mView.dismissLoading()
+            }
+        })
     }
 
     override fun handleGiveGiftClicked() {
@@ -77,7 +90,8 @@ class BookDetailsPresenter(val mView: BookDetailsContract.View) : BookDetailsCon
                         mRepositorySource.getMyCart(object : RetrofitCallbacks.BookListCallback {
                             override fun onSuccess(result: BookListResponse?) {
                                 mView.dismissLoading()
-                                val status = RetrofitResponseHandler.validateAuthResponseStatus(result)
+                                val status =
+                                    RetrofitResponseHandler.validateAuthResponseStatus(result)
                                 if (status == RetrofitResponseHandler.Companion.Status.VALID) {
                                     mView.setCartNumber(result?.data?.size)
                                 } else if (status == RetrofitResponseHandler.Companion.Status.UNAUTHORIZED) {

@@ -79,6 +79,8 @@ interface RepositorySource : CacheDataSource {
 
     fun saveBook(book: Book?)
 
+    fun getCurrentBookChapters(): List<ChaptersData>
+
     fun getSavedBook(): Book?
 
     fun clearSavedBook()

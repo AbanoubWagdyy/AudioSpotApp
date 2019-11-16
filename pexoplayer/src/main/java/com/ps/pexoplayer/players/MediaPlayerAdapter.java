@@ -1,4 +1,4 @@
-package com.audiospotapplication.utils.player.players;
+package com.ps.pexoplayer.players;
 
 import android.content.Context;
 import android.net.Uri;
@@ -28,7 +28,6 @@ import com.google.android.exoplayer2.util.Util;
 
 public class MediaPlayerAdapter extends PlayerAdapter {
 
-
     private static final String TAG = "MediaPlayerAdapter";
 
     private final Context mContext;
@@ -44,7 +43,12 @@ public class MediaPlayerAdapter extends PlayerAdapter {
     private DefaultRenderersFactory mRenderersFactory;
     private DataSource.Factory mDataSourceFactory;
     private ExoPlayerEventListener mExoPlayerEventListener;
+    private Handler handler = new Handler();
+    private Runnable runnable;
 
+    private boolean trackUpdated = false;
+    private boolean isRepeatEnabled = false;
+    private boolean isShuffleEnabled = false;
 
     public MediaPlayerAdapter(Context context, PlaybackInfoListener playbackInfoListener) {
         super(context);
@@ -52,26 +56,17 @@ public class MediaPlayerAdapter extends PlayerAdapter {
         mPlaybackInfoListener = playbackInfoListener;
     }
 
-
-    private void initializeExoPlayer(){
+    private void initializeExoPlayer() {
         if (mExoPlayer == null) {
             mTrackSelector = new DefaultTrackSelector();
             mRenderersFactory = new DefaultRenderersFactory(mContext);
             mDataSourceFactory = new DefaultDataSourceFactory(mContext, Util.getUserAgent(mContext, "AudioStreamer"));
-            mExoPlayer = ExoPlayerFactory.newSimpleInstance(mRenderersFactory, mTrackSelector, new DefaultLoadControl());
+            mExoPlayer = ExoPlayerFactory.newSimpleInstance(mContext, mRenderersFactory, mTrackSelector, new DefaultLoadControl());
 
-            if(mExoPlayerEventListener == null){
+            if (mExoPlayerEventListener == null) {
                 mExoPlayerEventListener = new ExoPlayerEventListener();
             }
             mExoPlayer.addListener(mExoPlayerEventListener);
-        }
-    }
-
-
-    private void release() {
-        if (mExoPlayer!= null) {
-            mExoPlayer.release();
-            mExoPlayer = null;
         }
     }
 
@@ -91,8 +86,21 @@ public class MediaPlayerAdapter extends PlayerAdapter {
         }
     }
 
+    public final void setRepeat(int repeatMode) {
+        isRepeatEnabled = (repeatMode == PlaybackStateCompat.REPEAT_MODE_ONE);
+    }
+
+    public final void setShuffle(int shuffleMode) {
+        isShuffleEnabled = (shuffleMode == PlaybackStateCompat.SHUFFLE_MODE_ALL);
+    }
+
     @Override
     public void playFromMedia(MediaMetadataCompat metadata) {
+        trackUpdated = true;
+        if (runnable != null) {
+            handler.removeCallbacks(runnable);
+        }
+        handler.removeCallbacksAndMessages(null);
         startTrackingPlayback();
         playFile(metadata);
     }
@@ -111,7 +119,7 @@ public class MediaPlayerAdapter extends PlayerAdapter {
     protected void onStop() {
         // Regardless of whether or not the ExoPlayer has been created / started, the state must
         // be updated, so that MediaNotificationManager can take down the notification.
-        Log.d(TAG, "onStop: stopped");
+        // Log.d(TAG, "onStop: stopped");
         setNewState(PlaybackStateCompat.STATE_STOPPED);
         release();
     }
@@ -134,23 +142,41 @@ public class MediaPlayerAdapter extends PlayerAdapter {
         }
     }
 
+    private void release() {
+        if (mExoPlayer != null) {
+            mExoPlayer.release();
+            mExoPlayer = null;
+        }
+    }
+
+    /**
+     * Plays a file from MediaMetadataCompat
+     *
+     * @param metaData MediaMetadataCompat
+     */
     private void playFile(MediaMetadataCompat metaData) {
         String mediaId = metaData.getDescription().getMediaId();
-        boolean mediaChanged = (mCurrentMedia == null || !mediaId.equals(mCurrentMedia.getDescription().getMediaId()));
+        boolean mediaChanged = (mCurrentMedia == null
+                || !mediaId.equals(mCurrentMedia.getDescription().getMediaId()));
+
         if (mCurrentMediaPlayedToCompletion) {
             // Last audio file was played to completion, the resourceId hasn't changed, but the
             // player was released, so force a reload of the media file for playback.
             mediaChanged = true;
             mCurrentMediaPlayedToCompletion = false;
         }
-        if (!mediaChanged) {
-            if (!isPlaying()) {
-                play();
-            }
-            return;
-        }
-        else {
+
+        if (isRepeatEnabled && !mediaChanged) {
             release();
+        } else {
+            if (!mediaChanged) {
+                if (!isPlaying()) {
+                    play();
+                }
+                return;
+            } else {
+                release();
+            }
         }
 
         mCurrentMedia = metaData;
@@ -162,37 +188,53 @@ public class MediaPlayerAdapter extends PlayerAdapter {
                     new ExtractorMediaSource.Factory(mDataSourceFactory)
                             .createMediaSource(Uri.parse(metaData.getString(MediaMetadataCompat.METADATA_KEY_MEDIA_URI)));
             mExoPlayer.prepare(audioSource);
-            Log.d(TAG, "onPlayerStateChanged: PREPARE");
-
+            //  Log.d(TAG, "onPlayerStateChanged: PREPARE");
         } catch (Exception e) {
             throw new RuntimeException("Failed to play media uri: "
                     + metaData.getString(MediaMetadataCompat.METADATA_KEY_MEDIA_URI), e);
         }
+
         play();
     }
 
-    public void startTrackingPlayback(){
-        final Handler handler = new Handler();
-        final Runnable runnable = new Runnable(){
+    /**
+     * Sends onSeekTo() and onPlaybackComplete()
+     * event updates in "PlaybackInfoListener" interface
+     */
+    public void startTrackingPlayback() {
+        Log.d(TAG, "startTrackingPlayback ");
+        runnable = new Runnable() {
             @Override
             public void run() {
-                if(isPlaying()){
-                    mPlaybackInfoListener.onSeekTo(
-                            mExoPlayer.getContentPosition(), mExoPlayer.getDuration()
-                    );
-                    handler.postDelayed(this, 100);
-                }
-                if(mExoPlayer.getContentPosition() >= mExoPlayer.getDuration()
-                        && mExoPlayer.getDuration() > 0){
-                    mPlaybackInfoListener.onPlaybackComplete();
+                if (mExoPlayer != null) {
+                    if (isPlaying()) {
+                        mPlaybackInfoListener.onBufferedTo(
+                                mExoPlayer.getBufferedPosition()
+                        );
+                        mPlaybackInfoListener.onSeekTo(
+                                mExoPlayer.getContentPosition(), mExoPlayer.getDuration()
+                        );
+                        handler.postDelayed(this, 100);
+                    }
+
+                    if (mExoPlayer.getContentPosition() >= mExoPlayer.getDuration()
+                            && mExoPlayer.getDuration() > 0) {
+                        if (trackUpdated) {
+                            trackUpdated = false;
+                            mPlaybackInfoListener.onPlaybackComplete();
+                        }
+                    }
                 }
             }
         };
         handler.postDelayed(runnable, 100);
     }
 
-
-    // This is the main reducer for the player state machine.
+    /**
+     * This is the main reducer for the player state machine.
+     *
+     * @param newPlayerState @PlaybackStateCompat.State
+     */
     private void setNewState(@PlaybackStateCompat.State int newPlayerState) {
         mState = newPlayerState;
 
@@ -208,8 +250,13 @@ public class MediaPlayerAdapter extends PlayerAdapter {
         publishStateBuilder(reportPosition);
     }
 
-
-    private void publishStateBuilder(long reportPosition){
+    /**
+     * Sends onPlaybackStateChange() and updatePlayerView()
+     * event updates in "PlaybackInfoListener" interface
+     *
+     * @param reportPosition long reportPosition
+     */
+    private void publishStateBuilder(long reportPosition) {
         final PlaybackStateCompat.Builder stateBuilder = new PlaybackStateCompat.Builder();
         stateBuilder.setActions(getAvailableActions());
         stateBuilder.setState(mState,
@@ -217,7 +264,9 @@ public class MediaPlayerAdapter extends PlayerAdapter {
                 1.0f,
                 SystemClock.elapsedRealtime());
         mPlaybackInfoListener.onPlaybackStateChange(stateBuilder.build());
-        mPlaybackInfoListener.updateUI(mCurrentMedia.getDescription().getMediaId());
+        if (mCurrentMedia != null) {
+            mPlaybackInfoListener.updateUI(mCurrentMedia.getDescription().getMediaId());
+        }
     }
 
     /**
@@ -232,6 +281,7 @@ public class MediaPlayerAdapter extends PlayerAdapter {
                 | PlaybackStateCompat.ACTION_PLAY_FROM_SEARCH
                 | PlaybackStateCompat.ACTION_SKIP_TO_NEXT
                 | PlaybackStateCompat.ACTION_SKIP_TO_PREVIOUS;
+
         switch (mState) {
             case PlaybackStateCompat.STATE_STOPPED:
                 actions |= PlaybackStateCompat.ACTION_PLAY
@@ -255,8 +305,7 @@ public class MediaPlayerAdapter extends PlayerAdapter {
         return actions;
     }
 
-
-    private class ExoPlayerEventListener implements Player.EventListener{
+    private class ExoPlayerEventListener implements Player.EventListener {
 
         @Override
         public void onTimelineChanged(Timeline timeline, Object manifest, int reason) {
@@ -275,23 +324,25 @@ public class MediaPlayerAdapter extends PlayerAdapter {
 
         @Override
         public void onPlayerStateChanged(boolean playWhenReady, int playbackState) {
-            switch (playbackState){
-                case Player.STATE_ENDED:{
+            switch (playbackState) {
+                case Player.STATE_ENDED: {
                     setNewState(PlaybackStateCompat.STATE_PAUSED);
                     break;
                 }
-                case Player.STATE_BUFFERING:{
-                    Log.d(TAG, "onPlayerStateChanged: BUFFERING");
+                case Player.STATE_BUFFERING: {
+                    // Log.d(TAG, "onPlayerStateChanged: BUFFERING");
+                    setNewState(PlaybackStateCompat.STATE_BUFFERING);
                     mStartTime = System.currentTimeMillis();
                     break;
                 }
-                case Player.STATE_IDLE:{
-
+                case Player.STATE_IDLE: {
+                    setNewState(PlaybackStateCompat.STATE_NONE);
                     break;
                 }
-                case Player.STATE_READY:{
-                    Log.d(TAG, "onPlayerStateChanged: READY");
-                    Log.d(TAG, "onPlayerStateChanged: TIME ELAPSED: " + (System.currentTimeMillis() - mStartTime));
+                case Player.STATE_READY: {
+                    setNewState(PlaybackStateCompat.STATE_PLAYING);
+                    // Log.d(TAG, "onPlayerStateChanged: READY");
+                    // Log.d(TAG, "onPlayerStateChanged: TIME ELAPSED: " + (System.currentTimeMillis() - mStartTime));
                     break;
                 }
             }
@@ -299,12 +350,12 @@ public class MediaPlayerAdapter extends PlayerAdapter {
 
         @Override
         public void onRepeatModeChanged(int repeatMode) {
-
+            //   Log.e(TAG, "onRepeatModeChanged: " + repeatMode);
         }
 
         @Override
-        public void onShuffleModeEnabledChanged(boolean shuffleModeEnabled) {
-
+        public void onShuffleModeEnabledChanged(boolean onShuffleModeEnabledChanged) {
+            //   Log.e(TAG, "onShuffleModeEnabledChanged: " + onShuffleModeEnabledChanged);
         }
 
         @Override
@@ -327,4 +378,30 @@ public class MediaPlayerAdapter extends PlayerAdapter {
 
         }
     }
+
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
