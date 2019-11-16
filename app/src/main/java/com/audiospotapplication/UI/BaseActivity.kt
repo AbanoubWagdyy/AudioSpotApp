@@ -29,6 +29,7 @@ import com.example.jean.jcplayer.JcPlayerManager
 import com.example.jean.jcplayer.JcPlayerManagerListener
 import com.example.jean.jcplayer.general.JcStatus
 import com.example.jean.jcplayer.model.JcAudio
+import com.ps.pexoplayer.model.PexoMediaMetadata
 import com.visionvalley.letuno.DataLayer.RepositorySource
 import dm.audiostreamer.MediaMetaData
 import kotlinx.android.synthetic.main.audio_spot_activity_base.*
@@ -275,7 +276,7 @@ abstract class BaseActivity : AppCompatActivity(),
         }
     }
 
-    override fun OnItemPlayed(mediaData: MediaMetaData) {
+    override fun OnItemPlayed(mediaData: PexoMediaMetadata) {
 //        listOfSongs = ArrayList()
 //        listOfSongs.add(mediaData)
 //        configAudioStreamer()
@@ -289,7 +290,7 @@ abstract class BaseActivity : AppCompatActivity(),
         if (jcPlayerManager.currentAudio == null) {
             if (mediaData != null && mediaData.mediaUrl != null && !mediaData.mediaUrl.equals("")) {
                 var audio = JcAudio.createFromURL(
-                    mediaData.mediaId.toInt(), mediaData.mediaTitle,
+                    mediaData.mediaId.toInt(), mediaData.title,
                     mediaData.mediaUrl, null
                 )
 //

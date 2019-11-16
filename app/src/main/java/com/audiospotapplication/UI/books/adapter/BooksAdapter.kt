@@ -20,17 +20,23 @@ class BooksAdapter() : RecyclerView.Adapter<BooksAdapter.ViewHolder>() {
     private lateinit var books: List<Book>
     private lateinit var mOnItemClickListener: onBookItemClickListener
     private lateinit var mDeleteListener: onBookItemClickListener.onCartBookDeleteClickListener
-    var jcAudio: JcAudio? = null
+
+    var currentPlayListId: String = ""
+    var IsPlaying: Boolean = false
 
     constructor(
         books: List<Book>,
-        mOnItemClickListener: onBookItemClickListener
+        mOnItemClickListener: onBookItemClickListener,
+        currentPlayListId: String,
+        IsPlaying: Boolean
     ) : this() {
         this.books = books
         this.mOnItemClickListener = mOnItemClickListener
         for (book in this.books) {
             book.isToShowDelete = false
         }
+        this.currentPlayListId = currentPlayListId
+        this.IsPlaying = IsPlaying
     }
 
     constructor(
@@ -43,7 +49,6 @@ class BooksAdapter() : RecyclerView.Adapter<BooksAdapter.ViewHolder>() {
         for (book in this.books) {
             book.isToShowDelete = false
         }
-        this.jcAudio = jcAudio
     }
 
     constructor(
@@ -71,7 +76,6 @@ class BooksAdapter() : RecyclerView.Adapter<BooksAdapter.ViewHolder>() {
         for (book in this.books) {
             book.isToShowDelete = false
         }
-        this.jcAudio = jcAudio
     }
 
     private var context: Context? = null
@@ -121,30 +125,20 @@ class BooksAdapter() : RecyclerView.Adapter<BooksAdapter.ViewHolder>() {
             holder.delete.visibility = View.GONE
         }
 
-        if (jcAudio != null) {
-            if (jcAudio!!.path.equals(book.sample)) {
-                holder.ivPlay.setBackgroundResource(R.mipmap.homepage_play)
-                holder.ivPlay.setTag(R.mipmap.homepage_play)
+        if (!currentPlayListId.equals("")) {
+            val id = book.id.toString() + book.id.toString()
+            if (currentPlayListId.equals(id)) {
+                if (IsPlaying) {
+                    holder.ivPlay.setBackgroundResource(R.mipmap.homepage_play)
+                } else {
+                    holder.ivPlay.setBackgroundResource(R.mipmap.play)
+                }
             } else {
                 holder.ivPlay.setBackgroundResource(R.mipmap.play)
-                holder.ivPlay.setTag(R.mipmap.play)
             }
-        } else {
-            holder.ivPlay.setBackgroundResource(R.mipmap.play)
-            holder.ivPlay.setTag(R.mipmap.play)
         }
 
         holder.ivPlay.setOnClickListener {
-            if (holder.ivPlay.getTag() != null) {
-                val resourceID = holder.ivPlay.getTag() as Int
-                if (resourceID == R.mipmap.homepage_play) {
-                    holder.ivPlay.setBackgroundResource(R.mipmap.play)
-                    holder.ivPlay.setTag(R.mipmap.play)
-                } else {
-                    holder.ivPlay.setBackgroundResource(R.mipmap.homepage_play)
-                    holder.ivPlay.setTag(R.mipmap.homepage_play)
-                }
-            }
             mOnItemClickListener.onPlayClicked(book)
         }
     }
@@ -158,6 +152,11 @@ class BooksAdapter() : RecyclerView.Adapter<BooksAdapter.ViewHolder>() {
             book.isToShowDelete = true
         }
         notifyDataSetChanged()
+    }
+
+    fun updatePlaylistId(it: String?, playing: Boolean) {
+        currentPlayListId = it!!
+        this.IsPlaying = IsPlaying
     }
 
     inner class ViewHolder(val mView: View) : RecyclerView.ViewHolder(mView), View.OnClickListener {

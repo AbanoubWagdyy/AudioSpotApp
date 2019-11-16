@@ -5,14 +5,9 @@ import android.widget.ImageView
 import androidx.fragment.app.Fragment
 import com.audiospotapplication.UI.BaseActivity
 import com.audiospotapplication.UI.onItemPlayClickListener
-import dm.audiostreamer.MediaMetaData
 import kotlinx.android.synthetic.main.back_header.*
 
 class MyFavouriteBooksActivity : BaseActivity(), onItemPlayClickListener {
-
-    override fun OnItemPlayed(mediaData: MediaMetaData) {
-        super.OnItemPlayed(mediaData)
-    }
 
     override fun getHeaderTitle(): String {
         return "My Favorites"

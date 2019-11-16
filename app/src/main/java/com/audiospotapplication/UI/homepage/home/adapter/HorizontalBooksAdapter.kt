@@ -11,22 +11,17 @@ import com.audiospot.DataLayer.Model.Book
 import com.audiospotapplication.R
 import com.audiospotapplication.UI.books.Interface.onBookItemClickListener
 import com.audiospotapplication.utils.ImageUtils
-import com.example.jean.jcplayer.model.JcAudio
 import com.willy.ratingbar.ScaleRatingBar
 
 
 class HorizontalBooksAdapter(
     private var books: List<Book>?,
     private var mOnItemClickListener: onBookItemClickListener,
-    currentSong: JcAudio?
+    private var mPlaylistId: String?,
+    private var playing: Boolean
 ) : RecyclerView.Adapter<HorizontalBooksAdapter.ViewHolder>() {
 
     private var context: Context? = null
-    private var currentSong: JcAudio? = null
-
-    init {
-        this.currentSong = currentSong
-    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context)
@@ -36,7 +31,7 @@ class HorizontalBooksAdapter(
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        var book = books!![position]
+        val book = books!![position]
         holder.ivBook.setBackgroundResource(R.mipmap.login_icon)
         ImageUtils.setImageFromUrlIntoImageViewUsingGlide(book.cover, context, holder.ivBook)
         holder.tvBookName.text = book.title
@@ -45,13 +40,16 @@ class HorizontalBooksAdapter(
         holder.rating.setOnRatingChangeListener(null)
         holder.rating.setOnTouchListener { p0, p1 -> true }
 
-        if (currentSong != null) {
-            if (book.id == currentSong!!.id) {
-                holder.ivPlay.setBackgroundResource(R.mipmap.homepage_play)
-                holder.ivPlay.setTag(R.mipmap.homepage_play)
+        if (!mPlaylistId.equals("")) {
+            val id = book.id.toString() + book.id.toString()
+            if (mPlaylistId.equals(id)) {
+                if (playing) {
+                    holder.ivPlay.setBackgroundResource(R.mipmap.homepage_play)
+                } else {
+                    holder.ivPlay.setBackgroundResource(R.mipmap.play)
+                }
             } else {
                 holder.ivPlay.setBackgroundResource(R.mipmap.play)
-                holder.ivPlay.setTag(R.mipmap.play)
             }
         }
 
@@ -60,16 +58,6 @@ class HorizontalBooksAdapter(
         }
 
         holder.ivPlay.setOnClickListener {
-            if (holder.ivPlay.getTag() != null) {
-                val resourceID = holder.ivPlay.getTag() as Int
-                if (resourceID == R.mipmap.homepage_play) {
-                    holder.ivPlay.setBackgroundResource(R.mipmap.play)
-                    holder.ivPlay.setTag(R.mipmap.play)
-                } else {
-                    holder.ivPlay.setBackgroundResource(R.mipmap.homepage_play)
-                    holder.ivPlay.setTag(R.mipmap.homepage_play)
-                }
-            }
             mOnItemClickListener.onPlayClicked(book)
         }
     }

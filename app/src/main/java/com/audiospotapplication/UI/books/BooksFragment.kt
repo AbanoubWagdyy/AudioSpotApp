@@ -26,7 +26,8 @@ import com.github.zawadz88.materialpopupmenu.popupMenu
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.fragment_books.*
 
-class BooksFragment(var ivArrow: ImageView) : BaseFragment(), BooksContract.View, onBookItemClickListener,
+class BooksFragment(var ivArrow: ImageView) : BaseFragment(), BooksContract.View,
+    onBookItemClickListener,
     JcPlayerManagerListener {
     override fun onPreparedAudio(status: JcStatus) {
 
@@ -78,65 +79,14 @@ class BooksFragment(var ivArrow: ImageView) : BaseFragment(), BooksContract.View
     }
 
     override fun onPlayClicked(book: Book) {
-        var currentAudio = jcPlayerManager.currentAudio
-        if (jcPlayerManager.isPlaying()) {
-            if (currentAudio?.path.equals(book.sample)) {
-                jcPlayerManager.pauseAudio()
-                adapter = BooksAdapter(listMyBooks, this)
-                recyclerBooks.adapter = adapter
-                return
-            } else {
-                playAudio(book)
-            }
-        } else {
-            if (currentAudio != null && currentAudio?.path.equals(book.sample)) {
-                jcPlayerManager.continueAudio()
-                adapter = BooksAdapter(
-                    listMyBooks, this,
-                    jcPlayerManager.currentAudio
-                )
-                recyclerBooks.adapter = adapter
-            } else {
-                playAudio(book)
-            }
+        if (playBookSample(book) == R.drawable.ic_pause) {
+            handlePlayPause()
         }
-    }
-
-    private fun playAudio(book: Book) {
-
-        if (book == null || book.sample == null || book.sample.equals("")) {
-            Snackbar.make(
-                activity!!.findViewById(android.R.id.content), "Audio is not available right now ," +
-                        "please check again later", Snackbar.LENGTH_LONG
-            ).show()
-
-            adapter = BooksAdapter(listMyBooks, this)
-            recyclerBooks.adapter = adapter
-            return
-        }
-
-        jcPlayerManager.kill()
-
-        var audio = JcAudio.createFromURL(
-            book.id, book.title,
-            book.sample, null
-        )
-        var playlist = ArrayList<JcAudio>()
-        playlist.add(audio)
-
-        jcPlayerManager.playlist = playlist
-        jcPlayerManager.jcPlayerManagerListener = this
-
-        jcPlayerManager.playAudio(audio)
-        jcPlayerManager.createNewNotification(R.mipmap.ic_launcher)
-
-        adapter = BooksAdapter(listMyBooks, this, jcPlayerManager.currentAudio)
-        recyclerBooks.adapter = adapter
     }
 
     override fun setBooksList(result: BookListResponse?) {
-        this.listMyBooks = result!!.data
-        if (result != null) {
+        result?.let {
+            this.listMyBooks = it.data
             recyclerBooks.layoutManager = LinearLayoutManager(context)
             recyclerBooks.setHasFixedSize(true)
             recyclerBooks.isNestedScrollingEnabled = false
@@ -146,14 +96,15 @@ class BooksFragment(var ivArrow: ImageView) : BaseFragment(), BooksContract.View
                     jcPlayerManager.currentAudio
                 )
             } else {
-                BooksAdapter(listMyBooks, this)
+                BooksAdapter(listMyBooks, this, getPlaylistIdObserver().value!!, isPlaying)
             }
             recyclerBooks.adapter = adapter
         }
     }
 
     override fun showErrorMessage(message: String) {
-        Snackbar.make(activity!!.findViewById(android.R.id.content), message, Snackbar.LENGTH_SHORT).show()
+        Snackbar.make(activity!!.findViewById(android.R.id.content), message, Snackbar.LENGTH_SHORT)
+            .show()
     }
 
     override fun getAppContext(): Context? {
@@ -164,7 +115,11 @@ class BooksFragment(var ivArrow: ImageView) : BaseFragment(), BooksContract.View
 
     lateinit var mPresenter: BooksContract.Presenter
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         val view = inflater.inflate(R.layout.fragment_books, container, false)
         return view
     }

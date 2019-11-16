@@ -17,9 +17,7 @@ import com.audiospotapplication.BaseFragment
 import com.audiospotapplication.UI.books.Interface.onBookItemClickListener
 import com.audiospotapplication.UI.homepage.home.adapter.HomepageAdapter
 import com.audiospotapplication.UI.bookDetails.BookDetailsActivity
-import com.audiospotapplication.utils.BookDataConversion
-import com.example.jean.jcplayer.JcPlayerManager
-import dm.audiostreamer.MediaMetaData
+import com.ps.pexoplayer.model.PexoMediaMetadata
 import kotlinx.android.synthetic.main.fragment_home.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -37,27 +35,8 @@ class HomeFragment : BaseFragment(), onBookItemClickListener {
     }
 
     override fun onPlayClicked(book: Book) {
-        val currentAudio = jcPlayerManager.currentAudio
-        if (jcPlayerManager.isPlaying()) {
-            if (currentAudio?.path.equals(book.sample)) {
-                jcPlayerManager.pauseAudio()
-                adapter = HomepageAdapter(
-                    viewModel.getHomepageResponse(),
-                    this, null
-                )
-                recyclerHome.adapter = adapter
-                return
-            } else {
-                jcPlayerManager.kill()
-                mPlayCallback.OnItemPlayed(BookDataConversion.convertBookToMediaMetaData(book))
-            }
-        } else {
-            if (currentAudio != null && currentAudio?.path.equals(book.sample)) {
-                jcPlayerManager.continueAudio()
-            } else {
-                jcPlayerManager.kill()
-                mPlayCallback.OnItemPlayed(BookDataConversion.convertBookToMediaMetaData(book))
-            }
+        if (playBookSample(book) == R.drawable.ic_pause) {
+            handlePlayPause()
         }
     }
 
@@ -77,11 +56,20 @@ class HomeFragment : BaseFragment(), onBookItemClickListener {
             if (it != null) {
                 adapter = HomepageAdapter(
                     it,
-                    this,
-                    jcPlayerManager.currentAudio
+                    this
                 )
                 recyclerHome.layoutManager = LinearLayoutManager(context!!)
                 recyclerHome.adapter = adapter
+
+                getPlaylistIdObserver().observe(this, Observer {
+                    if (adapter != null && !it.equals(""))
+                        adapter!!.updatePlaylistId(it, isPlaying)
+                })
+
+                getPlayingObserver().observe(this, Observer {
+                    if (adapter != null)
+                        adapter!!.updatePlaylistId(getPlaylistIdObserver().value, it)
+                })
             }
         })
     }
@@ -96,11 +84,7 @@ class HomeFragment : BaseFragment(), onBookItemClickListener {
     }
 
     interface onItemPlayClickListener {
-        fun OnItemPlayed(mediaData: MediaMetaData)
-    }
-
-    private val jcPlayerManager: JcPlayerManager by lazy {
-        JcPlayerManager.getInstance(activity!!.applicationContext).get()!!
+        fun OnItemPlayed(mediaData: PexoMediaMetadata)
     }
 
     private lateinit var mPlayCallback: onItemPlayClickListener

@@ -8,13 +8,10 @@ import android.content.IntentFilter
 import android.content.res.Configuration
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.os.Handler
 import android.support.v4.media.session.MediaControllerCompat
 import android.support.v4.media.session.PlaybackStateCompat
 import android.util.Log
-import android.view.KeyEvent
 import android.view.View
-import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.audiospotapplication.DataLayer.Model.Bookmark
 import com.audiospotapplication.DataLayer.Model.ChaptersData
@@ -35,7 +32,6 @@ import kotlinx.android.synthetic.main.activity_chapters_content.*
 import kotlinx.android.synthetic.main.include_slidepanelchildtwo_topviewtwo.*
 import kotlinx.android.synthetic.main.include_slidingpanel_childtwo.*
 import java.util.ArrayList
-import com.example.jean.jcplayer.model.JcAudio
 import com.ps.pexoplayer.PexoEventListener
 import com.ps.pexoplayer.PexoPlayerManager
 import com.ps.pexoplayer.model.PexoMediaMetadata
@@ -171,6 +167,7 @@ class BookChaptersActivity : AppCompatActivity(), View.OnClickListener,
                 }
             }
         })
+
         downloadProgressDialog = ProgressDialog(this)
         downloadProgressDialog!!.setMessage("Downloading(0 %) ....")
         downloadProgressDialog!!.setCancelable(false)
@@ -223,6 +220,7 @@ class BookChaptersActivity : AppCompatActivity(), View.OnClickListener,
     ) {
         if (mPresenter?.isBookMine()!!) {
             pexoPlayerManager.startPlayback(position)
+            sliding_layout.panelState = SlidingUpPanelLayout.PanelState.EXPANDED
         } else {
             Snackbar.make(
                 findViewById(android.R.id.content),

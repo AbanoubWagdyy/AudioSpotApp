@@ -19,68 +19,22 @@ import com.audiospotapplication.utils.DialogUtils
 import com.example.jean.jcplayer.JcPlayerManager
 import com.example.jean.jcplayer.JcPlayerManagerListener
 import com.example.jean.jcplayer.general.JcStatus
-import com.example.jean.jcplayer.model.JcAudio
 import com.google.android.material.snackbar.Snackbar
-import dm.audiostreamer.MediaMetaData
+import com.ps.pexoplayer.model.PexoMediaMetadata
 import kotlinx.android.synthetic.main.activity_homepage.*
 import kotlinx.android.synthetic.main.header.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.KoinComponent
 
 class HomepageActivity : AppCompatActivity(), HomeFragment.onItemPlayClickListener,
-    MyBooksFragment.onItemPlayClickListener, JcPlayerManagerListener, KoinComponent {
+    MyBooksFragment.onItemPlayClickListener, KoinComponent {
 
-    override fun onPreparedAudio(status: JcStatus) {
-
-    }
-
-    override fun onCompletedAudio() {
-
-    }
-
-    override fun onPaused(status: JcStatus) {
-
-    }
-
-    override fun onContinueAudio(status: JcStatus) {
-
-    }
-
-    override fun onPlaying(status: JcStatus) {
-
-    }
-
-    override fun onTimeChanged(status: JcStatus) {
-        DialogUtils.dismissPlayingProgressDialog()
-    }
-
-    override fun onStopped(status: JcStatus) {
-
-    }
-
-    override fun onJcpError(throwable: Throwable) {
-
-    }
-
-    override fun OnItemPlayed(mediaData: MediaMetaData) {
+    override fun OnItemPlayed(mediaData: PexoMediaMetadata) {
         DialogUtils.showPlayingProgressDialog(this)
         playAudio(mediaData)
     }
 
-    private fun playAudio(mediaData: MediaMetaData) {
-        jcPlayerManager.kill()
-        val audio = JcAudio.createFromURL(
-            mediaData.mediaId.toInt(), mediaData.mediaTitle,
-            mediaData.mediaUrl, null
-        )
-        val playlist = ArrayList<JcAudio>()
-        playlist.add(audio)
-
-        jcPlayerManager.playlist = playlist
-        jcPlayerManager.jcPlayerManagerListener = this
-
-        jcPlayerManager.playAudio(audio)
-        jcPlayerManager.createNewNotification(R.mipmap.ic_launcher)
+    private fun playAudio(mediaData: PexoMediaMetadata) {
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

@@ -162,5 +162,6 @@ dependencies {
 
     implementation project(path: ':pexoplayer')
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+
 //    implementation 'com.paypal.pyplcheckout:nativexo:3.4.8'
 }

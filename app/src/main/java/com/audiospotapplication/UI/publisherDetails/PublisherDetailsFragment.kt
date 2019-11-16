@@ -70,58 +70,9 @@ class PublisherDetailsFragment : BaseFragment(), PublisherDetailsContract.View, 
     }
 
     override fun onPlayClicked(book: Book) {
-        var currentAudio = jcPlayerManager.currentAudio
-        if (jcPlayerManager.isPlaying()) {
-            if (currentAudio?.path.equals(book.sample)) {
-                jcPlayerManager.pauseAudio()
-                adapter = BooksAdapter(listMyBooks, this)
-                recyclerBooks.adapter = adapter
-                return
-            } else {
-                playAudio(book)
-            }
-        } else {
-            if (currentAudio != null && currentAudio?.path.equals(book.sample)) {
-                jcPlayerManager.continueAudio()
-                adapter = BooksAdapter(
-                    listMyBooks, this,
-                    jcPlayerManager.currentAudio
-                )
-                recyclerBooks.adapter = adapter
-            } else {
-                playAudio(book)
-            }
+        if (playBookSample(book) == R.drawable.ic_pause) {
+            handlePlayPause()
         }
-    }
-
-    private fun playAudio(book: Book) {
-        if (book == null || book.sample == null || book.sample.equals("")) {
-            if (activity != null)
-                Snackbar.make(
-                    activity!!.findViewById(android.R.id.content), "Audio is not available right now ," +
-                            "please check again later", Snackbar.LENGTH_LONG
-                ).show()
-
-            adapter = BooksAdapter(listMyBooks, this)
-            recyclerBooks.adapter = adapter
-            return
-        }
-
-        var audio = JcAudio.createFromURL(
-            book.id, book.title,
-            book.sample, null
-        )
-        var playlist = ArrayList<JcAudio>()
-        playlist.add(audio)
-
-        jcPlayerManager.playlist = playlist
-        jcPlayerManager.jcPlayerManagerListener = this
-
-        jcPlayerManager.playAudio(audio)
-        jcPlayerManager.createNewNotification(R.mipmap.ic_launcher)
-
-        adapter = BooksAdapter(listMyBooks, this, jcPlayerManager.currentAudio)
-        recyclerBooks.adapter = adapter
     }
 
     override fun getAppContext(): Context? {
@@ -149,13 +100,15 @@ class PublisherDetailsFragment : BaseFragment(), PublisherDetailsContract.View, 
     }
 
     override fun setBookList(result: BookListResponse?) {
-        this.listMyBooks = result?.data!!
-        if (result != null) {
+        result?.let {
+            this.listMyBooks = it.data
             recyclerBooks.layoutManager = LinearLayoutManager(context)
             recyclerBooks.setHasFixedSize(true)
             recyclerBooks.isNestedScrollingEnabled = false
-            recyclerBooks.adapter = BooksAdapter(result!!.data, this)
+            recyclerBooks.adapter = BooksAdapter(it.data, this,
+                getPlaylistIdObserver().value!!, isPlaying)
         }
+
     }
 
     override fun showErrorMessage(message: String) {
