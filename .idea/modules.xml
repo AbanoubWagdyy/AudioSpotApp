@@ -6,6 +6,7 @@
       <module fileurl="file://$PROJECT_DIR$/FawrySDK_1.0.20_17032019/FawrySDK_1.0.20_17032019.iml" filepath="$PROJECT_DIR$/FawrySDK_1.0.20_17032019/FawrySDK_1.0.20_17032019.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
       <module fileurl="file://$PROJECT_DIR$/dmaudiostreamer/dmaudiostreamer.iml" filepath="$PROJECT_DIR$/dmaudiostreamer/dmaudiostreamer.iml" />
+      <module fileurl="file://$PROJECT_DIR$/pexoplayer/pexoplayer.iml" filepath="$PROJECT_DIR$/pexoplayer/pexoplayer.iml" />
     </modules>
   </component>
 </project>
