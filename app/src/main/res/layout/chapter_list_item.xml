@@ -28,6 +28,7 @@
 
         <RelativeLayout
                 android:layout_width="match_parent"
+                android:layout_marginStart="15dp"
                 android:layout_height="match_parent">
 
             <ImageView android:id="@+id/download"
@@ -39,15 +40,16 @@
 
             <TextView
                     android:id="@+id/chapterDuration"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:textSize="15.3sp"
                     android:textColor="@color/white"
                     android:layout_marginEnd="15dp"
                     android:letterSpacing="0.07"
                     android:textStyle="bold"
+                    android:text="fmeifemofoei"
                     android:layout_gravity="center_vertical"
-                    android:gravity="center_vertical"
+                    android:gravity="end|center_vertical"
                     android:lineSpacingExtra="71.8sp"
                     android:layout_toStartOf="@+id/download"/>
 

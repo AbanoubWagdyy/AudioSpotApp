@@ -39,6 +39,10 @@ import me.rohanpeshkar.filterablelistdialog.FilterableListDialog
 
 class BookChaptersActivity : AppCompatActivity(), View.OnClickListener,
     BookChaptersContract.View, OnChapterCLickListener, PexoEventListener {
+    override fun onItemDownloadPressed(data: ChaptersData) {
+        mPresenter?.setCurrentChapterID(data.id)
+        mPresenter?.handleDownloadPressed()
+    }
 
     override fun onPlayerMediaControllerConnected(mediaController: MediaControllerCompat?) {
         this.mediaController = mediaController

@@ -67,10 +67,10 @@ class BookChaptersPresenter(val mView: BookChaptersContract.View) : BookChapters
 
         val newDir = path + File.separator + "AudioSpotDownloadsCache"
 
-        val fileNameStr = data.sound_file.split("/")
+        val fileNameStr = data.id
 
-        if (storage.isFileExist(newDir + "/" + fileNameStr[fileNameStr.size - 1])) {
-            currentPath = newDir + "/" + fileNameStr[fileNameStr.size - 1]
+        if (storage.isFileExist(newDir + "/" + fileNameStr)) {
+            currentPath = "$newDir/$fileNameStr"
             return currentPath
         } else {
             return ""
@@ -157,8 +157,6 @@ class BookChaptersPresenter(val mView: BookChaptersContract.View) : BookChapters
 
     override fun handleDownloadPressed() {
 
-        mView.showDownloadingDialog()
-
         val storage = Storage(mView.getAppContext())
         val path = storage.internalCacheDirectory
 
@@ -176,6 +174,8 @@ class BookChaptersPresenter(val mView: BookChaptersContract.View) : BookChapters
             mView.showMessage("Already Downloaded")
             return
         }
+
+        mView.showDownloadingDialog()
 
         val request = Request(chapter.sound_file, currentPath)
         request.priority = Priority.HIGH

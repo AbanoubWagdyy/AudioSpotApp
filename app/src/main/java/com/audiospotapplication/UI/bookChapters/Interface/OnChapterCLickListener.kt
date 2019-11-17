@@ -8,4 +8,6 @@ interface OnChapterCLickListener {
         data: ChaptersData,
         position: Int
     )
+
+    fun onItemDownloadPressed(data: ChaptersData)
 }
