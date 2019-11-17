@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.audiospot.DataLayer.Model.Book
 import com.audiospotapplication.BaseFragment
@@ -17,48 +18,13 @@ import com.audiospotapplication.UI.books.Interface.onBookItemClickListener
 import com.audiospotapplication.UI.books.adapter.BooksAdapter
 import com.audiospotapplication.utils.DialogUtils
 import com.audiospotapplication.utils.ImageUtils
-import com.example.jean.jcplayer.JcPlayerManager
-import com.example.jean.jcplayer.JcPlayerManagerListener
-import com.example.jean.jcplayer.general.JcStatus
-import com.example.jean.jcplayer.model.JcAudio
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.fragment_publisher_details.*
 import kotlinx.android.synthetic.main.fragment_publisher_details.recyclerBooks
 import kotlinx.android.synthetic.main.fragment_publisher_details.tvAbout
 
-class PublisherDetailsFragment : BaseFragment(), PublisherDetailsContract.View, onBookItemClickListener,
-    JcPlayerManagerListener {
-    override fun onPreparedAudio(status: JcStatus) {
-
-    }
-
-    override fun onCompletedAudio() {
-
-    }
-
-    override fun onPaused(status: JcStatus) {
-
-    }
-
-    override fun onContinueAudio(status: JcStatus) {
-
-    }
-
-    override fun onPlaying(status: JcStatus) {
-
-    }
-
-    override fun onTimeChanged(status: JcStatus) {
-
-    }
-
-    override fun onStopped(status: JcStatus) {
-
-    }
-
-    override fun onJcpError(throwable: Throwable) {
-
-    }
+class PublisherDetailsFragment : BaseFragment(), PublisherDetailsContract.View,
+    onBookItemClickListener {
 
     override fun showBookDetailsScreen() {
         val intent = Intent(activity!!, BookDetailsActivity::class.java)
@@ -96,24 +62,53 @@ class PublisherDetailsFragment : BaseFragment(), PublisherDetailsContract.View, 
     }
 
     override fun setPublisherImage(photo: String) {
-        ImageUtils.setImageFromUrlIntoImageViewUsingGlide(photo, activity!!.applicationContext, ivPublisher, false)
+        ImageUtils.setImageFromUrlIntoImageViewUsingGlide(
+            photo,
+            activity!!.applicationContext,
+            ivPublisher,
+            false
+        )
     }
 
     override fun setBookList(result: BookListResponse?) {
         result?.let {
-            this.listMyBooks = it.data
-            recyclerBooks.layoutManager = LinearLayoutManager(context)
-            recyclerBooks.setHasFixedSize(true)
-            recyclerBooks.isNestedScrollingEnabled = false
-            recyclerBooks.adapter = BooksAdapter(it.data, this,
-                getPlaylistIdObserver().value!!, isPlaying)
-        }
+            this.listMyBooks = listMyBooks
+            if (listMyBooks.isEmpty()) {
+                recyclerBooks.visibility = View.GONE
+            } else {
 
+                recyclerBooks.layoutManager = LinearLayoutManager(context)
+                recyclerBooks.setHasFixedSize(true)
+                recyclerBooks.isNestedScrollingEnabled = false
+
+                adapter = BooksAdapter(
+                    listMyBooks, this,
+                    getPlaylistIdObserver().value!!, isPlaying
+                )
+                recyclerBooks.adapter = adapter
+
+                getPlaylistIdObserver().observe(this, Observer {
+                    if (adapter != null && !it.equals(""))
+                        adapter!!.updatePlaylistId(it, isPlaying)
+                })
+
+                getPlayingObserver().observe(this, Observer {
+                    if (adapter != null)
+                        adapter!!.updatePlaylistId(getPlaylistIdObserver().value, it)
+                })
+            }
+
+
+        }
     }
 
     override fun showErrorMessage(message: String) {
         if (activity != null)
-            Snackbar.make(activity!!.findViewById(android.R.id.content), message, Snackbar.LENGTH_LONG).show()
+            Snackbar.make(
+                activity!!.findViewById(android.R.id.content),
+                message,
+                Snackbar.LENGTH_LONG
+            ).show()
     }
 
     lateinit var mPresenter: PublisherDetailsContract.Presenter
@@ -139,10 +134,6 @@ class PublisherDetailsFragment : BaseFragment(), PublisherDetailsContract.View, 
             PublisherDetailsFragment()
     }
 
-    private val jcPlayerManager: JcPlayerManager by lazy {
-        JcPlayerManager.getInstance(activity!!.applicationContext).get()!!
-    }
-
     private lateinit var listMyBooks: List<Book>
-    private lateinit var adapter: BooksAdapter
+    private var adapter: BooksAdapter? = null
 }

@@ -5,7 +5,6 @@ import com.audiospot.DataLayer.Model.Book
 import com.audiospot.DataLayer.Model.BookDetailsResponse
 import com.audiospotapplication.BaseView
 import com.audiospotapplication.DataLayer.Model.Review
-import dm.audiostreamer.MediaMetaData
 
 interface BookDetailsContract {
 
@@ -17,8 +16,8 @@ interface BookDetailsContract {
         fun handleViewBookChaptersClicked()
         fun handleSeeAllReviewsClicked()
         fun handlePlayClicked()
-        fun getSavedBook(): Book?
         fun isBookMine(): Boolean
+        fun getCurrentSampleBookPlaylistId(): String
     }
 
     interface View : BaseView {
@@ -35,8 +34,7 @@ interface BookDetailsContract {
         fun hideAddFavoritesButton()
         fun setAddToCartText(s: String)
         fun viewRateBookScreen()
-        fun playSong(mediaMetaData: MediaMetaData?)
-        fun validatePlayResouce(result1: BookDetailsResponse)
+        fun playSong(mediaMetaData: Book?)
         fun setCartNumber(size: Int?)
     }
 }

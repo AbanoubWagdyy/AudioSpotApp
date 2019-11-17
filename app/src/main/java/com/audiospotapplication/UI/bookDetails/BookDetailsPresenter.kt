@@ -7,81 +7,73 @@ import com.audiospotapplication.DataLayer.Model.*
 import com.audiospotapplication.DataLayer.Retrofit.RetrofitCallbacks
 import com.audiospotapplication.DataLayer.Retrofit.RetrofitResponseHandler
 import com.audiospotapplication.R
-import com.audiospotapplication.utils.BookDataConversion
 import com.visionvalley.letuno.DataLayer.RepositorySource
 import retrofit2.Call
 
-class BookDetailsPresenter(val mView: BookDetailsContract.View) : BookDetailsContract.Presenter {
+class BookDetailsPresenter(val mView: BookDetailsContract.View?) : BookDetailsContract.Presenter {
+    override fun getCurrentSampleBookPlaylistId(): String {
+        return currentSamplePlaylistId
+    }
 
     override fun isBookMine(): Boolean {
         return mRepositorySource.isBookMine()
     }
 
-    override fun getSavedBook(): Book? {
-        return mRepositorySource.getSavedBook()
-    }
-
     override fun handlePlayClicked() {
-
         if (isBookMine()) {
             mRepositorySource.setIsPlayFirstChapter(true)
-        } else {
-            val mediaMetaData = mRepositorySource.getSavedBook()?.let {
-                BookDataConversion.convertBookToMediaMetaData(
-                    it
-                )
-            }
-            mView.playSong(mediaMetaData)
         }
+
+        mView?.playSong(mRepositorySource.getSavedBook())
     }
 
     override fun handleSeeAllReviewsClicked() {
         val authResponse = mRepositorySource.getAuthResponse()
         if (authResponse == null) {
-            mView.showLoginMessage("You have to be Logged In First !.")
+            mView?.showLoginMessage("You have to be Logged In First !.")
         } else {
             if (reviews != null && reviews.isNotEmpty()) {
-                mView.viewAllReviewsScreen()
+                mView?.viewAllReviewsScreen()
             } else {
-                mView.showMessage("No Reviews detected !.")
+                mView?.showMessage("No Reviews detected !.")
             }
         }
     }
 
     override fun handleViewBookChaptersClicked() {
-        mView.showLoadingDialog()
+        mView?.showLoadingDialog()
         mRepositorySource.getBookChapters(object : RetrofitCallbacks.ChaptersResponseCallback {
             override fun onSuccess(result: ChaptersResponse?) {
-                mView.dismissLoading()
+                mView?.dismissLoading()
                 val status = RetrofitResponseHandler.validateResponseStatus(result)
                 if (status == RetrofitResponseHandler.Companion.Status.VALID) {
                     result?.let {
                         mRepositorySource.setMediaItems(it.data)
-                        mView.viewBookChaptersScreen()
+                        mView?.viewBookChaptersScreen()
                     }
                 }
             }
 
             override fun onFailure(call: Call<ChaptersResponse>?, t: Throwable?) {
-                mView.dismissLoading()
+                mView?.dismissLoading()
             }
         })
     }
 
     override fun handleGiveGiftClicked() {
-        mView.showGiveGiftScreen()
+        mView?.showGiveGiftScreen()
     }
 
     override fun addToCart() {
         if (mRepositorySource.isBookMine()) {
-            mView.viewRateBookScreen()
+            mView?.viewRateBookScreen()
         } else {
-            mView.showLoadingDialog()
+            mView?.showLoadingDialog()
             mRepositorySource.addBookToCart(object : RetrofitCallbacks.ResponseCallback {
 
                 override fun onAuthFailure() {
-                    mView.dismissLoading()
-                    mView.showLoginMessage("You have to be Logged In First !.")
+                    mView?.dismissLoading()
+                    mView?.showLoginMessage("You have to be Logged In First !.")
                 }
 
                 override fun onSuccess(result: Response?) {
@@ -89,92 +81,91 @@ class BookDetailsPresenter(val mView: BookDetailsContract.View) : BookDetailsCon
                     if (status == RetrofitResponseHandler.Companion.Status.VALID) {
                         mRepositorySource.getMyCart(object : RetrofitCallbacks.BookListCallback {
                             override fun onSuccess(result: BookListResponse?) {
-                                mView.dismissLoading()
+                                mView?.dismissLoading()
                                 val status =
                                     RetrofitResponseHandler.validateAuthResponseStatus(result)
                                 if (status == RetrofitResponseHandler.Companion.Status.VALID) {
-                                    mView.setCartNumber(result?.data?.size)
+                                    mView?.setCartNumber(result?.data?.size)
                                 } else if (status == RetrofitResponseHandler.Companion.Status.UNAUTHORIZED) {
-                                    mView!!.showLoginPage()
+                                    mView?.showLoginPage()
                                 } else {
-                                    mView!!.showMessage(result!!.message)
+                                    mView?.showMessage(result!!.message)
                                 }
                             }
 
                             override fun onFailure(call: Call<BookListResponse>?, t: Throwable?) {
-                                mView.dismissLoading()
+                                mView?.dismissLoading()
                             }
                         })
                     } else if (status == RetrofitResponseHandler.Companion.Status.UNAUTHORIZED) {
-                        mView!!.showLoginPage()
+                        mView?.showLoginPage()
                     } else {
-                        mView!!.showMessage(result!!.message)
+                        mView?.showMessage(result!!.message)
                     }
                 }
 
                 override fun onFailure(call: Call<Response>?, t: Throwable?) {
-                    mView.dismissLoading()
-                    mView!!.showMessage("Please try again later")
+                    mView?.dismissLoading()
+                    mView?.showMessage("Please try again later")
                 }
             })
         }
     }
 
     override fun addToFavorites() {
-        mView.showLoadingDialog()
+        mView?.showLoadingDialog()
         mRepositorySource.addBookToFavorites(object : RetrofitCallbacks.ResponseCallback {
             override fun onAuthFailure() {
-                mView.dismissLoading()
-                mView.showLoginMessage("You have to be Logged In First !.")
+                mView?.dismissLoading()
+                mView?.showLoginMessage("You have to be Logged In First !.")
             }
 
             override fun onSuccess(result: Response?) {
-                mView.dismissLoading()
-                mView.showMessage(result!!.message)
+                mView?.dismissLoading()
+                mView?.showMessage(result!!.message)
             }
 
             override fun onFailure(call: Call<Response>?, t: Throwable?) {
-                mView.dismissLoading()
-                mView!!.showMessage("Please try again later")
+                mView?.dismissLoading()
+                mView?.showMessage("Please try again later")
             }
         })
     }
 
-    lateinit var mRepositorySource: RepositorySource
-    lateinit var bookDetails: Book
-
     override fun start() {
-        mRepositorySource = DataRepository.getInstance(mView.getAppContext()!!)
-        mView.showLoadingDialog()
+        mRepositorySource = DataRepository.getInstance(mView?.getAppContext()!!)
+        mView?.showLoadingDialog()
 
         if (mRepositorySource.isBookMine()) {
-            mView.hideAddFavoritesButton()
-            mView.setAddToCartText(mView.getAppContext()!!.getString(R.string.rate_book))
+            mView?.hideAddFavoritesButton()
+            mView?.setAddToCartText(mView?.getAppContext()!!.getString(R.string.rate_book))
         }
+
+        currentSamplePlaylistId =
+            mRepositorySource.getSavedBook()?.id.toString() + mRepositorySource.getSavedBook()?.id.toString()
 
         mRepositorySource.getBookDetails(object : RetrofitCallbacks.BookDetailsResponseCallback {
             override fun onSuccess(result1: BookDetailsResponse?) {
-                mView.dismissLoading()
+                mView?.dismissLoading()
                 if (result1 != null) {
                     var status = RetrofitResponseHandler.validateAuthResponseStatus(result1)
-                    if (status == RetrofitResponseHandler.Companion.Status.VALID) {
-                        bookDetails = result1.data
-                        mView.bindResponse(result1)
-                        mView.validatePlayResouce(result1)
-                    } else if (status == RetrofitResponseHandler.Companion.Status.UNAUTHORIZED) {
-                        mView!!.showLoginPage()
-                    } else {
-                        mView.showMessage(result1.message)
+                    when (status) {
+                        RetrofitResponseHandler.Companion.Status.VALID -> {
+                            bookDetails = result1.data
+                            mView?.bindResponse(result1)
+                        }
+                        RetrofitResponseHandler.Companion.Status.UNAUTHORIZED -> mView?.showLoginPage()
+                        else -> mView?.showMessage(result1.message)
                     }
                 } else {
-                    mView.dismissLoading()
-                    mView.showMessage("Please try again later")
+                    mView?.dismissLoading()
+                    mView?.showMessage("Please try again later")
                 }
             }
 
             override fun onFailure(call: Call<BookDetailsResponse>?, t: Throwable?) {
-                mView.dismissLoading()
-                mView.showMessage("Please try again later")
+                mView?.dismissLoading()
+                mView?.showMessage("Please try again later")
             }
         })
 
@@ -182,23 +173,25 @@ class BookDetailsPresenter(val mView: BookDetailsContract.View) : BookDetailsCon
             override fun onSuccess(result: ReviewListResponse?) {
                 if (result != null) {
                     val status = RetrofitResponseHandler.validateAuthResponseStatus(result)
-                    if (status == RetrofitResponseHandler.Companion.Status.VALID) {
-                        reviews = result!!.data
-                        mView.setBookReviews(result!!.data)
-                    } else if (status == RetrofitResponseHandler.Companion.Status.UNAUTHORIZED) {
-                        mView!!.showLoginPage()
-                    } else {
-                        mView.showMessage(result.message)
+                    when (status) {
+                        RetrofitResponseHandler.Companion.Status.VALID -> {
+                            reviews = result!!.data
+                            mView?.setBookReviews(result!!.data)
+                        }
+                        RetrofitResponseHandler.Companion.Status.UNAUTHORIZED -> mView?.showLoginPage()
+                        else -> mView?.showMessage(result.message)
                     }
-                } else {
                 }
             }
 
             override fun onFailure(call: Call<ReviewListResponse>?, t: Throwable?) {
-                mView.showMessage("Please try again later")
+                mView?.showMessage("Please try again later")
             }
         })
     }
 
+    private lateinit var currentSamplePlaylistId: String
     lateinit var reviews: List<Review>
+    lateinit var mRepositorySource: RepositorySource
+    lateinit var bookDetails: Book
 }

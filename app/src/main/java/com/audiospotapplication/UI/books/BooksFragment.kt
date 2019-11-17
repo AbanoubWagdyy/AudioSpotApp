@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.audiospot.DataLayer.Model.Book
 import com.audiospotapplication.BaseFragment
@@ -90,15 +91,23 @@ class BooksFragment(var ivArrow: ImageView) : BaseFragment(), BooksContract.View
             recyclerBooks.layoutManager = LinearLayoutManager(context)
             recyclerBooks.setHasFixedSize(true)
             recyclerBooks.isNestedScrollingEnabled = false
-            adapter = if (jcPlayerManager.isPlaying()) {
-                BooksAdapter(
-                    listMyBooks, this,
-                    jcPlayerManager.currentAudio
-                )
-            } else {
-                BooksAdapter(listMyBooks, this, getPlaylistIdObserver().value!!, isPlaying)
-            }
+
+            adapter = BooksAdapter(
+                listMyBooks, this,
+                getPlaylistIdObserver().value!!, isPlaying
+            )
+
             recyclerBooks.adapter = adapter
+
+            getPlaylistIdObserver().observe(this, Observer {
+                if (adapter != null && !it.equals(""))
+                    adapter!!.updatePlaylistId(it, isPlaying)
+            })
+
+            getPlayingObserver().observe(this, Observer {
+                if (adapter != null)
+                    adapter!!.updatePlaylistId(getPlaylistIdObserver().value, it)
+            })
         }
     }
 

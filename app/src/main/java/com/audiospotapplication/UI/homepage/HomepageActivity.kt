@@ -17,8 +17,6 @@ import com.audiospotapplication.UI.homepage.myBooks.MyBooksFragment
 import com.audiospotapplication.UI.login.LoginActivity
 import com.audiospotapplication.utils.DialogUtils
 import com.example.jean.jcplayer.JcPlayerManager
-import com.example.jean.jcplayer.JcPlayerManagerListener
-import com.example.jean.jcplayer.general.JcStatus
 import com.google.android.material.snackbar.Snackbar
 import com.ps.pexoplayer.model.PexoMediaMetadata
 import kotlinx.android.synthetic.main.activity_homepage.*

@@ -4,10 +4,10 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.audiospot.DataLayer.Model.Book
 import com.audiospotapplication.BaseFragment
@@ -17,16 +17,15 @@ import com.audiospotapplication.UI.bookDetails.BookDetailsActivity
 import com.audiospotapplication.UI.books.Interface.onBookItemClickListener
 import com.audiospotapplication.UI.books.adapter.BooksAdapter
 import com.audiospotapplication.UI.onItemPlayClickListener
-import com.audiospotapplication.utils.BookDataConversion
 import com.audiospotapplication.utils.DialogUtils
 import com.example.jean.jcplayer.JcPlayerManager
 import com.example.jean.jcplayer.JcPlayerManagerListener
 import com.example.jean.jcplayer.general.JcStatus
-import com.example.jean.jcplayer.model.JcAudio
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.fragment_my_favourite_books.*
 
-class MyFavouriteBooksFragment : BaseFragment(), myFavouriteBooksContract.View, onBookItemClickListener,
+class MyFavouriteBooksFragment : BaseFragment(), myFavouriteBooksContract.View,
+    onBookItemClickListener,
     onBookItemClickListener.onCartBookDeleteClickListener, JcPlayerManagerListener {
 
     override fun onPreparedAudio(status: JcStatus) {
@@ -79,60 +78,9 @@ class MyFavouriteBooksFragment : BaseFragment(), myFavouriteBooksContract.View, 
     }
 
     override fun onPlayClicked(book: Book) {
-        var currentAudio = jcPlayerManager.currentAudio
-        if (jcPlayerManager.isPlaying()) {
-            if (currentAudio?.path.equals(book.sample)) {
-                jcPlayerManager.pauseAudio()
-                adapter = BooksAdapter(listMyBooks, this, this)
-                recyclerBooks.adapter = adapter
-                return
-            } else {
-                playAudio(book)
-            }
-        } else {
-            if (currentAudio != null && currentAudio?.path.equals(book.sample)) {
-                jcPlayerManager.continueAudio()
-                adapter = BooksAdapter(
-                    listMyBooks, this, this,
-                    jcPlayerManager.currentAudio
-                )
-                recyclerBooks.adapter = adapter
-            } else {
-                playAudio(book)
-            }
+        if (playBookSample(book) == R.drawable.ic_pause) {
+            handlePlayPause()
         }
-    }
-
-    private fun playAudio(book: Book) {
-
-        if (book == null || book.sample == null || book.sample.equals("")) {
-            Snackbar.make(
-                activity!!.findViewById(android.R.id.content), "Audio is not available right now ," +
-                        "please check again later", Snackbar.LENGTH_LONG
-            ).show()
-
-            adapter = BooksAdapter(listMyBooks, this, this)
-            recyclerBooks.adapter = adapter
-            return
-        }
-
-        var audio = JcAudio.createFromURL(
-            book.id, book.title,
-            book.sample, null
-        )
-        var playlist = ArrayList<JcAudio>()
-        playlist.add(audio)
-
-        jcPlayerManager.playlist = playlist
-        jcPlayerManager.jcPlayerManagerListener = this
-
-        jcPlayerManager.playAudio(audio)
-        jcPlayerManager.createNewNotification(R.mipmap.ic_launcher)
-        adapter = BooksAdapter(
-            listMyBooks, this, this,
-            jcPlayerManager.currentAudio
-        )
-        recyclerBooks.adapter = adapter
     }
 
     override fun getAppContext(): Context? {
@@ -158,17 +106,26 @@ class MyFavouriteBooksFragment : BaseFragment(), myFavouriteBooksContract.View, 
     override fun setBookList(listMyBooks: List<Book>) {
         this.listMyBooks = listMyBooks
         if (listMyBooks.isNotEmpty()) {
+            this.listMyBooks = listMyBooks
             recyclerBooks.layoutManager = LinearLayoutManager(context)
             recyclerBooks.setHasFixedSize(true)
             recyclerBooks.isNestedScrollingEnabled = false
-            adapter = if (jcPlayerManager.isPlaying()) {
-                BooksAdapter(
-                    listMyBooks, this, this,
-                    jcPlayerManager.currentAudio
-                )
-            } else {
-                BooksAdapter(listMyBooks, this, this)
-            }
+
+            adapter = BooksAdapter(
+                listMyBooks, this,
+                getPlaylistIdObserver().value!!, isPlaying
+            )
+            recyclerBooks.adapter = adapter
+
+            getPlaylistIdObserver().observe(this, Observer {
+                if (adapter != null && !it.equals(""))
+                    adapter!!.updatePlaylistId(it, isPlaying)
+            })
+
+            getPlayingObserver().observe(this, Observer {
+                if (adapter != null)
+                    adapter!!.updatePlaylistId(getPlaylistIdObserver().value, it)
+            })
         } else {
             relativeEmptyBooks.visibility = View.VISIBLE
             emptyBooks.text = "You have no favorite books yet"
@@ -211,11 +168,11 @@ class MyFavouriteBooksFragment : BaseFragment(), myFavouriteBooksContract.View, 
     }
 
     fun onEditCartClicked() {
-        adapter.showDeleteIcon()
+        adapter?.showDelete()
     }
 
     private lateinit var listMyBooks: List<Book>
-    private lateinit var adapter: BooksAdapter
+    private var adapter: BooksAdapter? = null
     private lateinit var mPlayCallback: onItemPlayClickListener
     lateinit var mPresenter: myFavouriteBooksContract.Presenter
     private val jcPlayerManager: JcPlayerManager by lazy {

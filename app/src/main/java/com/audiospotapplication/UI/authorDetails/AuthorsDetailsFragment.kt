@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.audiospot.DataLayer.Model.Book
 import com.audiospotapplication.BaseFragment
@@ -17,47 +18,10 @@ import com.audiospotapplication.UI.books.Interface.onBookItemClickListener
 import com.audiospotapplication.UI.books.adapter.BooksAdapter
 import com.audiospotapplication.utils.DialogUtils
 import com.audiospotapplication.utils.ImageUtils
-import com.example.jean.jcplayer.JcPlayerManager
-import com.example.jean.jcplayer.JcPlayerManagerListener
-import com.example.jean.jcplayer.general.JcStatus
-import com.example.jean.jcplayer.model.JcAudio
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.fragment_authors_details.*
 
-class AuthorsDetailsFragment : BaseFragment(), AuthorDetailsContract.View, onBookItemClickListener,
-    JcPlayerManagerListener {
-
-    override fun onPreparedAudio(status: JcStatus) {
-
-    }
-
-    override fun onCompletedAudio() {
-
-    }
-
-    override fun onPaused(status: JcStatus) {
-
-    }
-
-    override fun onContinueAudio(status: JcStatus) {
-
-    }
-
-    override fun onPlaying(status: JcStatus) {
-
-    }
-
-    override fun onTimeChanged(status: JcStatus) {
-
-    }
-
-    override fun onStopped(status: JcStatus) {
-
-    }
-
-    override fun onJcpError(throwable: Throwable) {
-
-    }
+class AuthorsDetailsFragment : BaseFragment(), AuthorDetailsContract.View, onBookItemClickListener {
 
     override fun showBookDetailsScreen() {
         val intent = Intent(activity!!, BookDetailsActivity::class.java)
@@ -90,20 +54,29 @@ class AuthorsDetailsFragment : BaseFragment(), AuthorDetailsContract.View, onBoo
     }
 
     override fun setBookList(result: BookListResponse?) {
-        this.listMyBooks = result?.data!!
-        recyclerBooks.layoutManager = LinearLayoutManager(context)
-        recyclerBooks.setHasFixedSize(true)
-        recyclerBooks.isNestedScrollingEnabled = false
-        adapter = if (jcPlayerManager.isPlaying()) {
-            BooksAdapter(
+        result?.let {
+            this.listMyBooks = it.data
+            recyclerBooks.layoutManager = LinearLayoutManager(context)
+            recyclerBooks.setHasFixedSize(true)
+            recyclerBooks.isNestedScrollingEnabled = false
+
+            adapter = BooksAdapter(
                 listMyBooks, this,
-                jcPlayerManager.currentAudio
+                getPlaylistIdObserver().value!!, isPlaying
             )
-        } else {
-            BooksAdapter(listMyBooks, this,
-                getPlaylistIdObserver().value!!, isPlaying)
+
+            recyclerBooks.adapter = adapter
+
+            getPlaylistIdObserver().observe(this, Observer {
+                if (adapter != null && !it.equals(""))
+                    adapter!!.updatePlaylistId(it, isPlaying)
+            })
+
+            getPlayingObserver().observe(this, Observer {
+                if (adapter != null)
+                    adapter!!.updatePlaylistId(getPlaylistIdObserver().value, it)
+            })
         }
-        recyclerBooks.adapter = adapter
     }
 
     override fun showErrorMessage(message: String) {
@@ -148,11 +121,6 @@ class AuthorsDetailsFragment : BaseFragment(), AuthorDetailsContract.View, onBoo
             AuthorsDetailsFragment()
     }
 
-
-    private val jcPlayerManager: JcPlayerManager by lazy {
-        JcPlayerManager.getInstance(activity!!.applicationContext).get()!!
-    }
-
     private lateinit var listMyBooks: List<Book>
-    private lateinit var adapter: BooksAdapter
+    private var adapter: BooksAdapter? = null
 }

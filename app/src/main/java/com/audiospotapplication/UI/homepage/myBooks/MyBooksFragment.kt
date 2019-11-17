@@ -73,8 +73,10 @@ class MyBooksFragment : BaseFragment(), MyBooksContract.View, onBookItemClickLis
             recyclerMyBooks.setHasFixedSize(true)
             recyclerMyBooks.isNestedScrollingEnabled = false
 
-            adapter = BooksAdapter(listMyBooks, this,
-                getPlaylistIdObserver().value!!, isPlaying)
+            adapter = BooksAdapter(
+                listMyBooks, this,
+                getPlaylistIdObserver().value!!, isPlaying
+            )
             recyclerMyBooks.adapter = adapter
 
             getPlaylistIdObserver().observe(this, Observer {
@@ -130,7 +132,7 @@ class MyBooksFragment : BaseFragment(), MyBooksContract.View, onBookItemClickLis
         fun OnItemPlayed(mediaData: PexoMediaMetadata)
     }
 
-    private lateinit var adapter: BooksAdapter
+    private var adapter: BooksAdapter? = null
     lateinit var mPresenter: MyBooksContract.Presenter
     private lateinit var mPlayCallback: onItemPlayClickListener
 

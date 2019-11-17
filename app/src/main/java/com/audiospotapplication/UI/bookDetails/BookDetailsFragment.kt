@@ -12,7 +12,9 @@ import com.audiospotapplication.R
 import kotlinx.android.synthetic.main.fragment_book_details.*
 import android.text.style.UnderlineSpan
 import android.text.SpannableString
+import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.audiospot.DataLayer.Model.Book
 import com.audiospot.DataLayer.Model.BookDetailsResponse
 import com.audiospotapplication.BaseFragment
 import com.audiospotapplication.DataLayer.Model.Review
@@ -26,91 +28,19 @@ import com.audiospotapplication.UI.rateBook.RateBookActivity
 
 import com.audiospotapplication.utils.DialogUtils
 import com.audiospotapplication.utils.ImageUtils
-import com.example.jean.jcplayer.JcPlayerManager
-import com.example.jean.jcplayer.JcPlayerManagerListener
-import com.example.jean.jcplayer.general.JcStatus
-import com.example.jean.jcplayer.model.JcAudio
 import com.google.android.material.snackbar.Snackbar
-import dm.audiostreamer.MediaMetaData
 
-class BookDetailsFragment : BaseFragment(), BookDetailsContract.View, JcPlayerManagerListener {
+class BookDetailsFragment : BaseFragment(), BookDetailsContract.View {
 
     override fun setCartNumber(size: Int?) {
         (activity as BaseActivity).setCartNumber(size)
     }
 
-    override fun onPreparedAudio(status: JcStatus) {
-
-    }
-
-    override fun onCompletedAudio() {
-
-    }
-
-    override fun onPaused(status: JcStatus) {
-
-    }
-
-    override fun onContinueAudio(status: JcStatus) {
-
-    }
-
-    override fun onPlaying(status: JcStatus) {
-
-    }
-
-    override fun onTimeChanged(status: JcStatus) {
-
-    }
-
-    override fun onStopped(status: JcStatus) {
-
-    }
-
-    override fun onJcpError(throwable: Throwable) {
-
-    }
-
-    override fun validatePlayResouce(result1: BookDetailsResponse) {
-        if (jcPlayerManager.isPlaying()) {
-            var currentAudio = jcPlayerManager.currentAudio
-
-            if (result1.data.sample.equals(currentAudio!!.path)) {
-                ivPlay.setBackgroundResource(R.mipmap.homepage_play)
-                ivPlay.setTag(R.mipmap.homepage_play)
-            } else {
-                ivPlay.setBackgroundResource(R.mipmap.play)
-                ivPlay.setTag(R.mipmap.play)
+    override fun playSong(sampledBook: Book?) {
+        sampledBook?.let {
+            if (playBookSample(sampledBook) == R.drawable.ic_pause) {
+                handlePlayPause()
             }
-        }
-    }
-
-    override fun playSong(audioSpotMediaData: MediaMetaData?) {
-        audioSpotMediaData?.let {
-            if (it.mediaUrl == null || it.mediaUrl.equals("")) {
-                Snackbar.make(
-                    activity!!.findViewById(android.R.id.content),
-                    "Audio is not available right now ," +
-                            "please check again later",
-                    Snackbar.LENGTH_LONG
-                ).show()
-                return
-            }
-            jcPlayerManager.kill()
-
-            val audio = JcAudio.createFromURL(
-                it.mediaId.toInt(), it.mediaTitle,
-                it.mediaUrl, null
-            )
-
-            val playlist = ArrayList<JcAudio>()
-            playlist.add(audio)
-
-            jcPlayerManager.playlist = playlist
-            jcPlayerManager.jcPlayerManagerListener = this
-
-            jcPlayerManager.playAudio(audio)
-            jcPlayerManager.createNewNotification(R.mipmap.ic_launcher)
         }
     }
 
@@ -123,8 +53,8 @@ class BookDetailsFragment : BaseFragment(), BookDetailsContract.View, JcPlayerMa
         relativeAddToFavourites.visibility = View.GONE
     }
 
-    override fun setAddToCartText(addToCartStr: String) {
-        tvAddToCart.text = addToCartStr
+    override fun setAddToCartText(s: String) {
+        tvAddToCart.text = s
         ivAddToCart.visibility = View.GONE
     }
 
@@ -198,7 +128,7 @@ class BookDetailsFragment : BaseFragment(), BookDetailsContract.View, JcPlayerMa
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        var content = SpannableString("See All Reviews")
+        val content = SpannableString("See All Reviews")
         content.setSpan(UnderlineSpan(), 0, content.length, 0)
         tvSeeAllReviews.text = content
 
@@ -223,84 +153,65 @@ class BookDetailsFragment : BaseFragment(), BookDetailsContract.View, JcPlayerMa
         }
 
         ivPlay.setOnClickListener {
-
-            if (mPresenter.isBookMine()) {
-                if (jcPlayerManager.isPlaying()) {
-                    jcPlayerManager.kill()
-                }
-                mPresenter.handlePlayClicked()
-            } else {
-                var currentAudio = jcPlayerManager.currentAudio
-                if (jcPlayerManager.isPlaying()) {
-                    if (currentAudio?.path.equals(mPresenter.getSavedBook()!!.sample)) {
-                        jcPlayerManager.pauseAudio()
-                        ivPlay.setBackgroundResource(R.mipmap.play)
-                        ivPlay.setTag(R.mipmap.play)
-                    } else {
-                        mPresenter.handlePlayClicked()
-                    }
-                } else {
-                    if (currentAudio?.path.equals(mPresenter.getSavedBook()!!.sample)) {
-                        jcPlayerManager.continueAudio()
-                        ivPlay.setBackgroundResource(R.mipmap.homepage_play)
-                        ivPlay.setTag(R.mipmap.homepage_play)
-                    } else {
-                        mPresenter.handlePlayClicked()
-                    }
-                }
-            }
+            mPresenter.handlePlayClicked()
         }
 
         mPresenter = BookDetailsPresenter(this)
         mPresenter.start()
 
-        ivPlay.setBackgroundResource(R.mipmap.play)
-        ivPlay.setTag(R.mipmap.play)
+        getPlayingObserver().observe(this, Observer {
+            val id =
+                mPresenter.getCurrentSampleBookPlaylistId()
+            if (it && id.equals(getPlaylistIdObserver().value)) {
+                ivPlay.setImageResource(R.mipmap.homepage_play)
+            } else {
+                ivPlay.setImageResource(R.mipmap.play)
+            }
+        })
     }
 
     override fun bindResponse(result: BookDetailsResponse?) {
 
-        ratingBar.rating = result!!.data.rate.toFloat()
+        result?.let {
+            ratingBar.rating = it.data.rate.toFloat()
 
-        ratingBar.setOnRatingChangeListener(null)
-        ratingBar.setOnTouchListener { p0, p1 -> true }
+            ratingBar.setOnRatingChangeListener(null)
+            ratingBar.setOnTouchListener { p0, p1 -> true }
 
-        ratingBar.setOnRatingChangeListener { ratingBar, rating, fromUser ->
-            ratingBar.rating = result.data.rate.toFloat()
-        }
-
-        tvBookTitle.text = result!!.data.title
-        tvNumberOfReviews.text = "(" + result!!.data.reviews.toString() + " reviews" + ")"
-        tvAuthor.text = result!!.data.author
-        if (result.data.narators.isNotEmpty()) {
-            val builder = StringBuilder()
-            for (narator in result.data.narators) {
-                builder.append(narator.name).append(",")
+            ratingBar.setOnRatingChangeListener { ratingBar, rating, fromUser ->
+                ratingBar.rating = it.data.rate.toFloat()
             }
-            tvNarrator.text = builder.toString().substring(0, builder.toString().length - 1)
+
+            tvBookTitle.text = it.data.title
+            tvNumberOfReviews.text = "(" + it.data.reviews.toString() + " reviews" + ")"
+            tvAuthor.text = it.data.author
+            if (it.data.narators.isNotEmpty()) {
+                val builder = StringBuilder()
+                for (narator in it.data.narators) {
+                    builder.append(narator.name).append(",")
+                }
+                tvNarrator.text = builder.toString().substring(0, builder.toString().length - 1)
+            }
+
+            tvCategory.text = it.data.category
+            tvPublisher.text = it.data.publisher
+            tvAbout.text = it.data.about_book
+
+            tvLength.text = it.data.total_time_trt + " Hours."
+
+            tvPrice.text = it.data.price.toString() + " EGP."
+
+            ImageUtils.setImageFromUrlIntoImageViewUsingGlide(
+                it.data.cover,
+                activity!!.applicationContext,
+                ivBook
+            )
         }
-        tvCategory.text = result!!.data.category
-        tvPublisher.text = result!!.data.publisher
-        tvAbout.text = result!!.data.about_book
-
-        tvLength.text = result!!.data.total_time_trt + " Hours."
-
-        tvPrice.text = result!!.data.price.toString() + " EGP."
-
-        ImageUtils.setImageFromUrlIntoImageViewUsingGlide(
-            result.data.cover,
-            activity!!.applicationContext,
-            ivBook
-        )
     }
 
     companion object {
         @JvmStatic
         fun newInstance() =
             BookDetailsFragment()
-    }
-
-    private val jcPlayerManager: JcPlayerManager by lazy {
-        JcPlayerManager.getInstance(activity!!.applicationContext).get()!!
     }
 }
