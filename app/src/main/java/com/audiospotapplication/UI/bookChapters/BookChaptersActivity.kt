@@ -218,6 +218,14 @@ class BookChaptersActivity : AppCompatActivity(), View.OnClickListener,
         download.setOnClickListener {
             mPresenter?.handleDownloadPressed()
         }
+
+        btnPrev.setOnClickListener {
+            pexoPlayerManager.updateProgress(seekBarProgress - 30000)
+        }
+
+        btnNext.setOnClickListener {
+            pexoPlayerManager.updateProgress(seekBarProgress + 30000)
+        }
     }
 
     override fun getAppContext(): Context? {

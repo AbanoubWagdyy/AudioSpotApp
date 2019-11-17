@@ -56,9 +56,9 @@ class ChaptersAdapter(
 
         override fun onClick(v: View) {
             if (v == download) {
-                mListener.onChapterClicked(data!![position], position)
-            } else {
                 mListener.onItemDownloadPressed(data!![position])
+            } else {
+                mListener.onChapterClicked(data!![position], position)
             }
         }
     }
