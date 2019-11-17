@@ -23,7 +23,7 @@ class BookChaptersPresenter(val mView: BookChaptersContract.View) : BookChapters
         this.currentChapterId = id
     }
 
-    override fun getCurrentChapterParagraphs(): List<Paragraph> {
+    override fun getCurrentChapterParagraphs(): List<Paragraph>? {
         return currentParagraphs
     }
 
@@ -258,7 +258,7 @@ class BookChaptersPresenter(val mView: BookChaptersContract.View) : BookChapters
 
     private var currentChapterId: Int = 0
     private var currentChapterT: String = ""
-    private lateinit var currentParagraphs: List<Paragraph>
+    private var currentParagraphs: List<Paragraph>? = null
     private lateinit var chapters: List<ChaptersData>
     private lateinit var currentPath: String
     lateinit var mRepoSource: RepositorySource

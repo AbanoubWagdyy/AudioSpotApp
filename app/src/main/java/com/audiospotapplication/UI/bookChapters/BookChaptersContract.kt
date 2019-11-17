@@ -23,7 +23,7 @@ interface BookChaptersContract {
         fun getBookReleasedDate(): String
         fun getBookIcon(): String
         fun setCurrentChapterParagraphs(paragraphs: List<Paragraph>)
-        fun getCurrentChapterParagraphs(): List<Paragraph>
+        fun getCurrentChapterParagraphs(): List<Paragraph>?
         fun setCurrentChapterID(id: Int)
         fun setCurrentChapterTitle(title: String)
     }

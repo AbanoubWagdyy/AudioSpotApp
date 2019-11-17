@@ -33,12 +33,17 @@ public class PexoPlayerManager implements MediaBrowserHelperCallback, PexoCallba
     private static final String TAG = PexoPlayerManager.class.getSimpleName();
 
     private Context mContext;
+
     private PexoMediaInstance mPexoInstance;
+
     private MediaBrowserHelper mMediaBrowserHelper;
+
     private PexoPreferenceManager mPexoPrefManager;
 
     private BufferBroadcastReceiver mBufferBroadcastReceiver;
+
     private SeekBarBroadcastReceiver mSeekbarBroadcastReceiver;
+
     private UpdateUIBroadcastReceiver mUpdateUIBroadcastReceiver;
 
     private PexoEventListener mPexoEventListener;
@@ -119,6 +124,10 @@ public class PexoPlayerManager implements MediaBrowserHelperCallback, PexoCallba
         mContext.registerReceiver(mUpdateUIBroadcastReceiver, intentFilter);
     }
 
+    public void updateProgress(int progress) {
+        mMediaBrowserHelper.getTransportControls().seekTo(progress);
+    }
+
     private class UpdateUIBroadcastReceiver extends BroadcastReceiver {
 
         @Override
@@ -164,16 +173,7 @@ public class PexoPlayerManager implements MediaBrowserHelperCallback, PexoCallba
             //Log.d(TAG, "onReceive: " + seekMax + " - " + seekMax);
             mPexoEventListener.updatePlayerSeekBar((int) seekProgress, (int) seekMax);
         }
-
     }
-
-    /**
-     * Broadcast Receiver initialization end
-     */
-
-    /**
-     * Helper Methods start
-     */
 
     public void setupNewPlaylist(String playlistId, List<?> songList, List<PexoMediaMetadata> mediaItemList, int position) {
         if (!playlistId.isEmpty() && mediaItemList != null && mediaItemList.size() > 0) {
@@ -400,6 +400,7 @@ public class PexoPlayerManager implements MediaBrowserHelperCallback, PexoCallba
 
     @Override
     public void shuffleTrack() {
+
         int shuffle = mMediaBrowserHelper.getMediaController().getShuffleMode();
         switch (shuffle) {
             case PlaybackStateCompat.SHUFFLE_MODE_ALL:
@@ -465,8 +466,7 @@ public class PexoPlayerManager implements MediaBrowserHelperCallback, PexoCallba
         return mPexoPrefManager;
     }
 
-    public void setToAppOpen(boolean mm){
+    public void setToAppOpen(boolean mm) {
         this.mOnAppOpen = mm;
     }
-
 }

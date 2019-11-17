@@ -91,13 +91,17 @@ class BookChaptersActivity : AppCompatActivity(), View.OnClickListener,
     }
 
     private fun getParagraph(progress: Int): CharSequence? {
-        for (paragraph in mPresenter?.getCurrentChapterParagraphs()!!) {
-            val fromTime = paragraph.from_time.toInt() * 1000
-            val toTime = paragraph.to_time.toInt() * 1000
+        mPresenter?.getCurrentChapterParagraphs()?.let {
+            for (paragraph in mPresenter?.getCurrentChapterParagraphs()!!) {
+                val fromTime = paragraph.from_time.toInt() * 1000
+                val toTime = paragraph.to_time.toInt() * 1000
 
-            if (progress in fromTime..toTime) {
-                return paragraph.title
+                if (progress in fromTime..toTime) {
+                    return paragraph.title
+                }
             }
+
+            return ""
         }
         return ""
     }

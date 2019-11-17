@@ -71,20 +71,4 @@ public class MediaSeekBar extends AppCompatSeekBar {
             mMediaController = null;
         }
     }
-
-
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
