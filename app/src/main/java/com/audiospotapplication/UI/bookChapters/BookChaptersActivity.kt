@@ -6,6 +6,7 @@ import android.content.Intent
 import android.content.res.Configuration
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.Handler
 import android.support.v4.media.session.MediaControllerCompat
 import android.support.v4.media.session.PlaybackStateCompat
 import android.util.Log
@@ -253,6 +254,12 @@ class BookChaptersActivity : AppCompatActivity(), View.OnClickListener,
         if (mPresenter?.isBookMine()!!) {
             pexoPlayerManager.startPlayback(position)
             sliding_layout.panelState = SlidingUpPanelLayout.PanelState.EXPANDED
+
+            Handler().postDelayed({
+                if (currentBookmark != null) {
+                    pexoPlayerManager.updateProgress(currentBookmark!!.time * 1000)
+                }
+            }, 1300)
         } else {
             Snackbar.make(
                 findViewById(android.R.id.content),

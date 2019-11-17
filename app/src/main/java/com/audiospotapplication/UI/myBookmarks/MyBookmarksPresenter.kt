@@ -3,6 +3,7 @@ package com.audiospotapplication.UI.myBookmarks
 import com.audiospot.DataLayer.Model.BookDetailsResponse
 import com.audiospotapplication.DataLayer.DataRepository
 import com.audiospotapplication.DataLayer.Model.Bookmark
+import com.audiospotapplication.DataLayer.Model.ChaptersResponse
 import com.audiospotapplication.DataLayer.Model.MyBookmarksResponse
 import com.audiospotapplication.DataLayer.Retrofit.RetrofitCallbacks
 import com.audiospotapplication.DataLayer.Retrofit.RetrofitResponseHandler
@@ -46,15 +47,33 @@ class MyBookmarksPresenter(val mView: MyBookmarksContract.View) : MyBookmarksCon
                 }
 
                 override fun onSuccess(result: BookDetailsResponse?) {
-                    mView.dismissLoading()
                     val status = RetrofitResponseHandler.validateAuthResponseStatus(result!!)
                     if (status == RetrofitResponseHandler.Companion.Status.VALID) {
                         mRepositorySource.saveBook(result.data)
                         mRepositorySource.saveBookmark(bookmark)
-                        mView.showBookChaptersScreen()
+                        mRepositorySource.getBookChapters(object :
+                            RetrofitCallbacks.ChaptersResponseCallback {
+                            override fun onSuccess(result: ChaptersResponse?) {
+                                mView.dismissLoading()
+                                if (status == RetrofitResponseHandler.Companion.Status.VALID && result != null) {
+                                    mRepositorySource.setMediaItems(result.data)
+                                    mView.showBookChaptersScreen()
+                                }else{
+                                    result?.message?.let { mView.showMessage(it) }
+                                }
+                            }
+
+                            override fun onFailure(call: Call<ChaptersResponse>?, t: Throwable?) {
+                                mView.dismissLoading()
+                                mView.showMessage("Please Check your internet connection")
+                            }
+                        })
+
                     } else if (status == RetrofitResponseHandler.Companion.Status.UNAUTHORIZED) {
+                        mView.dismissLoading()
                         mView!!.showLoginPage()
                     } else {
+                        mView.dismissLoading()
                         mView.showMessage("Please Check your internet connection")
                     }
                 }

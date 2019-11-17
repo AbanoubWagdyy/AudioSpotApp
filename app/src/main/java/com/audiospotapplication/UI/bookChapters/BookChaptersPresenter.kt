@@ -220,12 +220,12 @@ class BookChaptersPresenter(val mView: BookChaptersContract.View) : BookChapters
 
         val isToPlayFirstChapter = mRepoSource.getIsPlayFirstChapter()
 
+        chapters = mRepoSource.getCurrentBookChapters()
+
         if (book != null) {
             mView.setBookName(book.title)
             mView.setBookImage(book.cover)
         }
-
-        chapters = mRepoSource.getCurrentBookChapters()
 
         mView.setChapters(chapters)
 
@@ -243,6 +243,7 @@ class BookChaptersPresenter(val mView: BookChaptersContract.View) : BookChapters
                 val index = chapters.indexOfFirst {
                     it.id == bookmark!!.chapter_id
                 }
+
                 mView.setBookmark(bookmark)
                 mView.playChapter(chapterData, index)
             }
