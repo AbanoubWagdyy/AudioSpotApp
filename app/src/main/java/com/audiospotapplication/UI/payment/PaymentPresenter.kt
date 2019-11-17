@@ -11,27 +11,50 @@ import com.visionvalley.letuno.DataLayer.RepositorySource
 import retrofit2.Call
 import java.util.*
 
-class PaymentPresenter(val mView: PaymentContract.View, val extras: Bundle?) :
-    PaymentContract.Presenter {
+class PaymentPresenter(val mView: PaymentContract.View, val extras: Bundle?) : PaymentContract.Presenter {
 
-    override fun getPaypalItemsWholeAmount(dollarPrice: Double): String {
-        var wholeValue = 0.0
-        items.forEach {
-            wholeValue += it.fawryItemPrice.toDouble() / dollarPrice
-        }
-
-        return wholeValue.toString()
+    override fun getMerchantRefNumber(): String {
+        return createOrderBody.merchant_ref_number
     }
 
-    override fun isEnglish(): Boolean {
-        return mRepositorySource.getCurrentLanguage().equals("en")
+    override fun createOrder(
+        fawryCustomParams: FawryCustomParams?,
+        uuid: UUID,
+        createOrderResponseCallback: RetrofitCallbacks.CreateOrderResponseCallback
+    ) {
+
+        val digits = 10
+        val n = nDigitRandomNo(digits)
+
+        createOrderBody = CreateOrderBody(
+            n.toString(),
+            fawryCustomParams!!.promo_code,
+            fawryCustomParams.to,
+            fawryCustomParams.voucher)
+
+        mRepositorySource.createOrder(createOrderBody, object : RetrofitCallbacks.CreateOrderResponseCallback {
+            override fun onSuccess(result: CreateOrderResponse?) {
+
+                val status = RetrofitResponseHandler.validateAuthResponseStatus(result)
+                if (status == RetrofitResponseHandler.Companion.Status.VALID) {
+                    createOrderResponseCallback.onSuccess(result)
+                } else {
+                    createOrderResponseCallback.onFailure(null, null)
+                }
+            }
+
+            override fun onFailure(call: Call<CreateOrderResponse>?, t: Throwable?) {
+                createOrderResponseCallback.onFailure(call, t)
+            }
+        })
     }
 
-    override fun getPayItems(): MutableList<PayableItem> {
-        return items
+    override fun resetRepo() {
+        mRepositorySource.clear()
     }
 
     override fun start() {
+        val items = ArrayList<PayableItem>()
         mView.showLoadingDialog()
         mRepositorySource = DataRepository.getInstance(mView.getAppContext()!!)
 
@@ -49,6 +72,8 @@ class PaymentPresenter(val mView: PaymentContract.View, val extras: Bundle?) :
                     }
                     fawryCustomParams = FawryCustomParams("", "", "")
                     mView.setFawryCustomParams(fawryCustomParams)
+
+                    mView.setPayableItems(items, mRepositorySource.getCurrentLanguage().equals("en"))
                 }
 
                 override fun onFailure(call: Call<BookListResponse>?, t: Throwable?) {
@@ -107,8 +132,7 @@ class PaymentPresenter(val mView: PaymentContract.View, val extras: Bundle?) :
                         } else {
                             sentItems.addAll(items)
                         }
-
-                        items = sentItems
+                        mView.setPayableItems(sentItems, mRepositorySource.getCurrentLanguage().equals("en"))
                     }
 
                     override fun onFailure(call: Call<BookListResponse>?, t: Throwable?) {
@@ -116,20 +140,20 @@ class PaymentPresenter(val mView: PaymentContract.View, val extras: Bundle?) :
                     }
                 })
             } else {
-                voucher = ""
+                var voucher = ""
                 voucher = if (extras.getString("VOUCHER") != null)
                     extras.getString("VOUCHER")!!
                 else {
                     "1"
                 }
-                emails = ""
+                var emails = ""
                 emails = if (extras.getString("SENDTO") != null)
                     extras.getString("SENDTO")!!
                 else {
                     ""
                 }
 
-                promoCode = ""
+                var promoCode = ""
                 promoCode = if (extras.getString("promoCode") != null)
                     extras.getString("promoCode")!!
                 else {
@@ -140,102 +164,25 @@ class PaymentPresenter(val mView: PaymentContract.View, val extras: Bundle?) :
 
                 mView.setFawryCustomParams(fawryCustomParams)
 
-                mRepositorySource.getBookDetailsWithId(
-                    bookId,
-                    object : RetrofitCallbacks.BookDetailsResponseCallback {
-                        override fun onSuccess(result: BookDetailsResponse?) {
-                            mView.dismissLoading()
-                            items = ArrayList()
-                            val item = Item()
-                            item.setPrice(result?.data?.price.toString())
-                            item.setDescription(result?.data?.title)
-                            item.qty = voucher
-                            item.sku = result?.data?.id.toString()
-                            items.add(item)
-                        }
+                mRepositorySource.getBookDetailsWithId(bookId, object : RetrofitCallbacks.BookDetailsResponseCallback {
+                    override fun onSuccess(result: BookDetailsResponse?) {
+                        mView.dismissLoading()
+                        val items = ArrayList<PayableItem>()
+                        val item = Item()
+                        item.setPrice(result?.data?.price.toString())
+                        item.setDescription(result?.data?.title)
+                        item.qty = voucher
+                        item.sku = result?.data?.id.toString()
+                        items.add(item)
+                        mView.setPayableItems(items, mRepositorySource.getCurrentLanguage().equals("en"))
+                    }
 
-                        override fun onFailure(call: Call<BookDetailsResponse>?, t: Throwable?) {
-                            mView.dismissLoading()
-                        }
-                    })
+                    override fun onFailure(call: Call<BookDetailsResponse>?, t: Throwable?) {
+                        mView.dismissLoading()
+                    }
+                })
             }
         }
-    }
-
-    override fun getMerchantRefNumber(): String {
-        return createOrderBody.merchant_ref_number
-    }
-
-    override fun createOrder(
-        fawryCustomParams: FawryCustomParams?,
-        uuid: UUID,
-        createOrderResponseCallback: RetrofitCallbacks.CreateOrderResponseCallback
-    ) {
-
-        val digits = 10
-        val n = nDigitRandomNo(digits)
-
-        createOrderBody = CreateOrderBody(
-            n.toString(),
-            fawryCustomParams!!.promo_code,
-            fawryCustomParams.to,
-            fawryCustomParams.voucher
-        )
-
-        mRepositorySource.createOrder(
-            createOrderBody,
-            object : RetrofitCallbacks.CreateOrderResponseCallback {
-                override fun onSuccess(result: CreateOrderResponse?) {
-
-                    val status = RetrofitResponseHandler.validateAuthResponseStatus(result)
-                    if (status == RetrofitResponseHandler.Companion.Status.VALID) {
-                        createOrderResponseCallback.onSuccess(result)
-                    } else {
-                        createOrderResponseCallback.onFailure(null, null)
-                    }
-                }
-
-                override fun onFailure(call: Call<CreateOrderResponse>?, t: Throwable?) {
-                    createOrderResponseCallback.onFailure(call, t)
-                }
-            })
-    }
-
-    override fun createPaypalOrder(callback: RetrofitCallbacks.PaypalArgumentCallback) {
-        val digits = 10
-        val n = nDigitRandomNo(digits)
-
-        createOrderBody = CreateOrderBody(
-            n.toString(),
-            promoCode,
-            emails,
-            voucher
-        )
-
-        mRepositorySource.createOrder(
-            createOrderBody,
-            object : RetrofitCallbacks.CreateOrderResponseCallback {
-                override fun onSuccess(result: CreateOrderResponse?) {
-                    val status = RetrofitResponseHandler.validateAuthResponseStatus(result)
-                    if (status == RetrofitResponseHandler.Companion.Status.VALID) {
-                        mRepositorySource.getPaypalArguments(RetrofitCallbacks.PaypalArgumentCallback {
-                            it.invoiceNumber = n.toString()
-                            callback.onSuccess(it)
-                        })
-                    } else {
-                        callback.onSuccess(null)
-                    }
-                }
-
-                override fun onFailure(call: Call<CreateOrderResponse>?, t: Throwable?) {
-                    callback.onSuccess(null)
-                }
-            })
-    }
-
-
-    override fun resetRepo() {
-        mRepositorySource.clear()
     }
 
     private fun nDigitRandomNo(digits: Int): Int {
@@ -247,11 +194,7 @@ class PaymentPresenter(val mView: PaymentContract.View, val extras: Bundle?) :
         return x + min
     }
 
-    private var promoCode: String = ""
-    private var emails: String = ""
-    private var voucher: String = ""
     private lateinit var createOrderBody: CreateOrderBody
     lateinit var mRepositorySource: RepositorySource
     lateinit var fawryCustomParams: FawryCustomParams
-    var items = mutableListOf<PayableItem>()
 }

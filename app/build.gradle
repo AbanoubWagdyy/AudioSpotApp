@@ -137,7 +137,7 @@ dependencies {
 
     implementation 'com.google.android.play:core:1.6.3'
 
-    implementation 'com.paypal.sdk:paypal-android-sdk:2.16.0'
+//    implementation 'com.paypal.sdk:paypal-android-sdk:2.16.0'
 
     def lifecycle_version = "2.2.0"
     implementation "android.arch.lifecycle:extensions:$lifecycle_version"
