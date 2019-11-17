@@ -11,6 +11,7 @@ import com.visionvalley.letuno.DataLayer.RepositorySource
 import retrofit2.Call
 
 class BookDetailsPresenter(val mView: BookDetailsContract.View?) : BookDetailsContract.Presenter {
+
     override fun getCurrentSampleBookPlaylistId(): String {
         return currentSamplePlaylistId
     }
@@ -98,8 +99,10 @@ class BookDetailsPresenter(val mView: BookDetailsContract.View?) : BookDetailsCo
                             }
                         })
                     } else if (status == RetrofitResponseHandler.Companion.Status.UNAUTHORIZED) {
+                        mView?.dismissLoading()
                         mView?.showLoginPage()
                     } else {
+                        mView?.dismissLoading()
                         mView?.showMessage(result!!.message)
                     }
                 }

@@ -35,6 +35,7 @@ class HorizontalBooksAdapter(
         holder.ivBook.setBackgroundResource(R.mipmap.login_icon)
         ImageUtils.setImageFromUrlIntoImageViewUsingGlide(book.cover, context, holder.ivBook)
         holder.tvBookName.text = book.title
+        holder.tvAuthor.text = book.author
         holder.rating.rating = book.rate.toFloat()
 
         holder.rating.setOnRatingChangeListener(null)
@@ -70,6 +71,7 @@ class HorizontalBooksAdapter(
 
         val ivBook: ImageView = mView.findViewById(R.id.ivBook)
         val tvBookName: TextView = mView.findViewById(R.id.tvBookName)
+        val tvAuthor: TextView = mView.findViewById(R.id.tvAuthor)
         val ivPlay: ImageView = mView.findViewById(R.id.ivPlay)
         val rating: ScaleRatingBar = mView.findViewById(R.id.ratingBar)
 

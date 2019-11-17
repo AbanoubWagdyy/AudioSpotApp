@@ -10,7 +10,7 @@ public class GlobalKeys {
 
     public static class StoreData {
         public static final String TOKEN = "token";
-        public static final String IS_LOGGED = "is_logged";
+        public static final String IS_LOGGED = "is_logged_from_audiospot";
         public static final String Logged_In_User = "user";
     }
 
@@ -20,12 +20,6 @@ public class GlobalKeys {
         public static final String BEST_SELLER = "best-seller";
         public static final String LENGTH = "length";
         public static final String AVERAGE_REVIEW = "average-review";
-    }
-
-    public static class Extras {
-        public static final String PAYMENT_TYPE = "payment_type";
-        public static final String CART = "cart";
-        public static final String PROMO = "promo";
     }
 
     public static class Language {

@@ -1,260 +1,271 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-             xmlns:tools="http://schemas.android.com/tools"
-             android:layout_width="match_parent"
-             android:layout_height="match_parent"
-             android:padding="15dp"
-             android:background="@color/black">
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/black"
+        android:padding="15dp">
 
-    <ScrollView android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:fillViewport="true">
+    <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fillViewport="true">
 
         <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical">
 
-            <LinearLayout android:id="@+id/linearProfile"
-                          android:layout_width="match_parent"
-                          android:layout_height="40dp">
+            <LinearLayout
+                    android:id="@+id/linearProfile"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp">
 
                 <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
-                        android:background="@mipmap/profile"/>
+                        android:background="@mipmap/profile" />
 
                 <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textSize="14.5sp"
-                        android:textColor="@color/white"
+                        android:layout_gravity="center_vertical"
                         android:layout_marginStart="20dp"
-                        android:layout_gravity="center_vertical"
                         android:letterSpacing="0.07"
                         android:lineSpacingExtra="17.2sp"
-                        android:text="@string/profile"/>
+                        android:text="@string/profile"
+                        android:textColor="@color/white"
+                        android:textSize="14.5sp" />
 
             </LinearLayout>
 
 
             <LinearLayout
-                    android:layout_width="match_parent"
                     android:id="@+id/linearMyFavourite"
-                    android:layout_marginTop="10dp"
-                    android:layout_height="40dp">
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:layout_marginTop="10dp">
 
                 <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
-                        android:background="@mipmap/my_favourite"/>
+                        android:background="@mipmap/my_favourite" />
 
                 <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textSize="14.5sp"
-                        android:textColor="@color/white"
-                        android:layout_marginStart="15dp"
                         android:layout_gravity="center_vertical"
+                        android:layout_marginStart="15dp"
                         android:letterSpacing="0.07"
                         android:lineSpacingExtra="17.2sp"
-                        android:text="@string/my_favorite"/>
+                        android:text="@string/my_favorite"
+                        android:textColor="@color/white"
+                        android:textSize="14.5sp" />
 
             </LinearLayout>
 
             <LinearLayout
-                    android:layout_width="match_parent"
                     android:id="@+id/linearMyBookmarks"
-                    android:layout_marginTop="10dp"
-                    android:layout_height="40dp">
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:layout_marginTop="10dp">
 
                 <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
-                        android:background="@drawable/bookmark"/>
+                        android:background="@drawable/bookmark" />
 
                 <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textSize="14.5sp"
-                        android:textColor="@color/white"
+                        android:layout_gravity="center_vertical"
                         android:layout_marginStart="10dp"
-                        android:layout_gravity="center_vertical"
                         android:letterSpacing="0.07"
                         android:lineSpacingExtra="17.2sp"
-                        android:text="@string/my_bookmarks"/>
+                        android:text="@string/my_bookmarks"
+                        android:textColor="@color/white"
+                        android:textSize="14.5sp" />
 
             </LinearLayout>
 
-            <LinearLayout android:id="@+id/linearReceiveGift"
-                          android:layout_marginTop="10dp" android:layout_width="match_parent"
-                          android:layout_height="40dp">
+            <LinearLayout
+                    android:id="@+id/linearReceiveGift"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:layout_marginTop="10dp">
 
                 <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
-                        android:background="@mipmap/receive_a_gift"/>
+                        android:background="@mipmap/receive_a_gift" />
 
                 <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textSize="14.5sp"
-                        android:textColor="@color/white"
+                        android:layout_gravity="center_vertical"
                         android:layout_marginStart="15dp"
-                        android:layout_gravity="center_vertical"
                         android:letterSpacing="0.07"
                         android:lineSpacingExtra="17.2sp"
-                        android:text="@string/receive_a_book"/>
+                        android:text="@string/receive_a_book"
+                        android:textColor="@color/white"
+                        android:textSize="14.5sp" />
 
             </LinearLayout>
 
-            <LinearLayout android:id="@+id/linearNotifications"
-                          android:layout_marginTop="10dp"
-                          android:visibility="gone"
-                          android:layout_width="match_parent"
-                          android:layout_height="40dp">
+            <LinearLayout
+                    android:id="@+id/linearNotifications"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:layout_marginTop="10dp"
+                    android:visibility="gone">
 
                 <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
-                        android:background="@mipmap/notifications"/>
+                        android:background="@mipmap/notifications" />
 
                 <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textSize="14.5sp"
-                        android:textColor="@color/white"
+                        android:layout_gravity="center_vertical"
                         android:layout_marginStart="15dp"
-                        android:layout_gravity="center_vertical"
                         android:letterSpacing="0.07"
                         android:lineSpacingExtra="17.2sp"
-                        android:text="Notifications"/>
+                        android:text="Notifications"
+                        android:textColor="@color/white"
+                        android:textSize="14.5sp" />
 
             </LinearLayout>
 
-            <LinearLayout android:id="@+id/linearSettings"
-                          android:layout_marginTop="10dp"
-                          android:layout_width="match_parent"
-                          android:layout_height="40dp">
+            <LinearLayout
+                    android:id="@+id/linearSettings"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:layout_marginTop="10dp">
 
                 <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
-                        android:background="@mipmap/settings"/>
+                        android:background="@mipmap/settings" />
 
                 <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textSize="14.5sp"
-                        android:textColor="@color/white"
+                        android:layout_gravity="center_vertical"
                         android:layout_marginStart="16dp"
-                        android:layout_gravity="center_vertical"
                         android:letterSpacing="0.07"
                         android:lineSpacingExtra="17.2sp"
-                        android:text="@string/settings"/>
+                        android:text="@string/settings"
+                        android:textColor="@color/white"
+                        android:textSize="14.5sp" />
 
             </LinearLayout>
 
-            <LinearLayout android:id="@+id/linearAboutUs"
-                          android:layout_marginTop="10dp" android:layout_width="match_parent"
-                          android:layout_height="40dp">
+            <LinearLayout
+                    android:id="@+id/linearAboutUs"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:visibility="gone"
+                    android:layout_marginTop="10dp">
 
                 <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
-                        android:background="@mipmap/about_us"/>
+                        android:background="@mipmap/about_us" />
 
                 <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textSize="14.5sp"
-                        android:textColor="@color/white"
+                        android:layout_gravity="center_vertical"
                         android:layout_marginStart="15dp"
-                        android:layout_gravity="center_vertical"
                         android:letterSpacing="0.07"
                         android:lineSpacingExtra="17.2sp"
-                        android:text="@string/about_us"/>
+                        android:text="@string/about_us"
+                        android:textColor="@color/white"
+                        android:textSize="14.5sp" />
 
             </LinearLayout>
 
-            <LinearLayout android:id="@+id/linearContactUs"
-                          android:layout_marginTop="10dp"
-                          android:layout_width="match_parent"
-                          android:layout_height="40dp">
+            <LinearLayout
+                    android:id="@+id/linearContactUs"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:layout_marginTop="10dp">
 
                 <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
-                        android:background="@mipmap/contact_us"/>
+                        android:background="@mipmap/contact_us" />
 
                 <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textSize="14.5sp"
-                        android:textColor="@color/white"
-                        android:layout_marginStart="12dp"
                         android:layout_gravity="center_vertical"
+                        android:layout_marginStart="12dp"
                         android:letterSpacing="0.07"
                         android:lineSpacingExtra="17.2sp"
-                        android:text="@string/contact_us"/>
+                        android:text="@string/contact_us"
+                        android:textColor="@color/white"
+                        android:textSize="14.5sp" />
 
             </LinearLayout>
 
             <LinearLayout
                     android:id="@+id/linearTermsAndConditions"
-                    android:layout_marginTop="10dp"
                     android:layout_width="match_parent"
-                    android:layout_height="40dp">
+                    android:layout_height="40dp"
+                    android:visibility="gone"
+                    android:layout_marginTop="10dp">
 
                 <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
-                        android:background="@mipmap/terms_and_conditions"/>
+                        android:background="@mipmap/terms_and_conditions" />
 
                 <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textSize="14.5sp"
-                        android:textColor="@color/white"
-                        android:layout_marginStart="14dp"
                         android:layout_gravity="center_vertical"
+                        android:layout_marginStart="14dp"
                         android:letterSpacing="0.07"
                         android:lineSpacingExtra="17.2sp"
-                        android:text="@string/t_c"/>
+                        android:text="@string/t_c"
+                        android:textColor="@color/white"
+                        android:textSize="14.5sp" />
 
             </LinearLayout>
 
             <LinearLayout
                     android:id="@+id/linearSignOut"
-                    android:layout_marginTop="10dp"
                     android:layout_width="match_parent"
-                    android:layout_height="40dp">
+                    android:layout_height="40dp"
+                    android:layout_marginTop="10dp">
 
                 <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
-                        android:background="@mipmap/sign_out"/>
+                        android:background="@mipmap/sign_out" />
 
                 <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textSize="14.5sp"
-                        android:textColor="@color/white"
-                        android:layout_marginStart="20dp"
                         android:layout_gravity="center_vertical"
+                        android:layout_marginStart="20dp"
                         android:letterSpacing="0.07"
                         android:lineSpacingExtra="17.2sp"
-                        android:text="@string/sign_out"/>
+                        android:text="@string/sign_out"
+                        android:textColor="@color/white"
+                        android:textSize="14.5sp" />
 
             </LinearLayout>
 
