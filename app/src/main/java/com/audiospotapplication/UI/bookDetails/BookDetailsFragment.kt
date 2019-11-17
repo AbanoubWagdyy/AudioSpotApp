@@ -29,6 +29,8 @@ import com.audiospotapplication.UI.rateBook.RateBookActivity
 import com.audiospotapplication.utils.DialogUtils
 import com.audiospotapplication.utils.ImageUtils
 import com.google.android.material.snackbar.Snackbar
+import android.graphics.Paint
+
 
 class BookDetailsFragment : BaseFragment(), BookDetailsContract.View {
 
@@ -199,7 +201,15 @@ class BookDetailsFragment : BaseFragment(), BookDetailsContract.View {
 
             tvLength.text = it.data.total_time_trt + " Hours."
 
-            tvPrice.text = it.data.price.toString() + " EGP."
+            if (it.data.price_after_sale != 0) {
+                tvPriceLabel.setPaintFlags(tvPriceLabel.getPaintFlags() or Paint.STRIKE_THRU_TEXT_FLAG)
+                tvPrice.setPaintFlags(tvPriceLabel.getPaintFlags() or Paint.STRIKE_THRU_TEXT_FLAG)
+                tvPrice.text = it.data.price.toString() + " EGP."
+                tvPriceAfterSale.text = it.data.price_after_sale.toString() + " EGP."
+            } else {
+                tvPrice.text = it.data.price.toString() + " EGP."
+                linearPriceAfterSale.visibility = View.GONE
+            }
 
             ImageUtils.setImageFromUrlIntoImageViewUsingGlide(
                 it.data.cover,

@@ -129,5 +129,6 @@
     <string name="select_language">اختر اللغه:-</string>
     <string name="menu_my_books">My Books</string>
     <string name="loading">Loading ...</string>
+    <string name="price_after_sale">Price After Sale</string>
 
 </resources>
