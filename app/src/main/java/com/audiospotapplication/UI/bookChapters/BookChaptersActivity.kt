@@ -1,10 +1,8 @@
 package com.audiospotapplication.UI.bookChapters
 
 import android.app.ProgressDialog
-import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import android.content.IntentFilter
 import android.content.res.Configuration
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -21,7 +19,6 @@ import com.audiospotapplication.UI.bookChapters.Interface.OnChapterCLickListener
 import com.audiospotapplication.UI.bookChapters.adapter.ChaptersAdapter
 import com.audiospotapplication.UI.homepage.HomepageActivity
 import com.audiospotapplication.UI.login.LoginActivity
-import com.audiospotapplication.utils.Constants.*
 import com.audiospotapplication.utils.DialogUtils
 import com.audiospotapplication.utils.ImageUtils
 import com.audiospotapplication.utils.TimeUtils
@@ -43,6 +40,7 @@ class BookChaptersActivity : AppCompatActivity(), View.OnClickListener,
     BookChaptersContract.View, OnChapterCLickListener, PexoEventListener {
 
     override fun onPlayerMediaControllerConnected(mediaController: MediaControllerCompat?) {
+        this.mediaController = mediaController
         seekBar.setMediaController(mediaController)
     }
 
@@ -72,19 +70,39 @@ class BookChaptersActivity : AppCompatActivity(), View.OnClickListener,
     }
 
     override fun onControllerDisconnect() {
-
+        Log.d("onControllerDisconnect", "onControllerDisconnect")
     }
 
     override fun updatePlayerBuffer(progress: Int) {
-
+        Log.d("updatePlayerBuffer", "updatePlayerBuffer")
     }
 
     override fun updatePlayerSeekBar(progress: Int, max: Int) {
+        this.seekBarProgress = progress
+        this.seekBarProgressMax = progress
+        if (!seekBar.isTracking()) {
+            seekBar.progress = progress
+            seekBar.max = max
+            txtCurrentDuration.text = TimeUtils.toTimeFormat((progress / 1000))
+            txtDuration.text = TimeUtils.toTimeFormat((max / 1000))
+        }
+        txtCurrentMusic.text = getParagraph(progress)
+    }
 
+    private fun getParagraph(progress: Int): CharSequence? {
+        for (paragraph in mPresenter?.getCurrentChapterParagraphs()!!) {
+            val fromTime = paragraph.from_time.toInt() * 1000
+            val toTime = paragraph.to_time.toInt() * 1000
+
+            if (progress in fromTime..toTime) {
+                return paragraph.title
+            }
+        }
+        return ""
     }
 
     override fun updateShuffle(state: Int) {
-
+        Log.d("updateShuffle", "updateShuffle")
     }
 
     override fun updateRepeat(state: Int) {
@@ -117,14 +135,16 @@ class BookChaptersActivity : AppCompatActivity(), View.OnClickListener,
         setContentView(R.layout.activity_chapters)
 
         pexoPlayerManager = PexoPlayerManager(this)
+
         pexoPlayerManager.setPendingIntentClass(BookChaptersActivity::class.java)
+
         pexoPlayerManager.setPexoEventListener(this)
 
         uiInitialization()
 
         mPresenter = BookChaptersPresenter(this)
 
-        mPresenter?.start(intent.extras)
+        mPresenter?.start()
     }
 
     private fun uiInitialization() {
@@ -181,6 +201,14 @@ class BookChaptersActivity : AppCompatActivity(), View.OnClickListener,
             pexoPlayerManager.setToAppOpen(true)
             pexoPlayerManager.onTogglePlayPause()
         }
+
+        bookmark.setOnClickListener {
+            mPresenter?.handleBookmarkClicked(txtCurrentDuration.text.toString())
+        }
+
+        download.setOnClickListener {
+            mPresenter?.handleDownloadPressed()
+        }
     }
 
     override fun getAppContext(): Context? {
@@ -214,10 +242,14 @@ class BookChaptersActivity : AppCompatActivity(), View.OnClickListener,
         )
     }
 
-    override fun onChapterClicked(
-        data: ChaptersData,
-        position: Int
-    ) {
+    override fun playChapter(chaptersData: ChaptersData, index: Int) {
+        onChapterClicked(chaptersData, position = index)
+    }
+
+    override fun onChapterClicked(data: ChaptersData, position: Int) {
+        mPresenter?.setCurrentChapterParagraphs(data.paragraphs)
+        mPresenter?.setCurrentChapterID(data.id)
+        mPresenter?.setCurrentChapterTitle(data.title)
         if (mPresenter?.isBookMine()!!) {
             pexoPlayerManager.startPlayback(position)
             sliding_layout.panelState = SlidingUpPanelLayout.PanelState.EXPANDED
@@ -231,14 +263,17 @@ class BookChaptersActivity : AppCompatActivity(), View.OnClickListener,
 
     override fun setChapters(data: List<ChaptersData>) {
 
-        mediaItemList = ArrayList<PexoMediaMetadata>()
+        mediaItemList = ArrayList()
 
         for (chapter in data) {
+            var path = mPresenter?.validateChapterDownloaded(chapter)
+            if (path.equals(""))
+                path = chapter.sound_file
             val pexoMediaMetadata = PexoMediaMetadata(
                 chapter.id.toString(),
                 mPresenter?.getBookAuthor(),
                 chapter.title,
-                chapter.sound_file,
+                path,
                 "",
                 mPresenter?.getBookReleasedDate(),
                 mPresenter?.getBookIcon(),
@@ -315,12 +350,7 @@ class BookChaptersActivity : AppCompatActivity(), View.OnClickListener,
 //        var audio = player.currentAudio
 //        mPresenter.handleBookmarkClicked(player.getCurrentTimeString(), audio!!.id, audio.title)
 //    }
-//
-//    override fun onDownloadClicked() {
-//        var audio = player.currentAudio
-//        if (audio != null)
-//            mPresenter.handleDownloadPressed(audio)
-//    }
+
 //
 //    override fun onSpeedClicked() {
 //
@@ -329,42 +359,14 @@ class BookChaptersActivity : AppCompatActivity(), View.OnClickListener,
 //    override fun onTimerClicked() {
 //
 //    }
-//
-//    override fun onPreparedAudio(status: JcStatus) {
-//        btn_play_bottom.setBackgroundResource(R.drawable.play_bottom)
-//    }
-//
-//    override fun onCompletedAudio() {
-//    }
-//
-//    override fun onPaused(status: JcStatus) {
-//        btn_play_bottom.setBackgroundResource(R.drawable.pause_bottom)
-//    }
-//
-//    override fun onContinueAudio(status: JcStatus) {
-//        btn_play_bottom.setBackgroundResource(R.drawable.play_bottom)
-//    }
-//
-//    override fun onPlaying(status: JcStatus) {
-//        btn_play_bottom.setBackgroundResource(R.drawable.play_bottom)
-//    }
-//
-//    override fun onTimeChanged(status: JcStatus) {
-//    }
-//
-//    override fun onStopped(status: JcStatus) {
-//    }
-//
-//    override fun onJcpError(throwable: Throwable) {
-//    }
 
     override fun onClick(view: View?) {
         when (view!!.id) {
             R.id.ivParagraphs -> {
-                if (getListItems()!!.size > 0) {
+                if (getParagraphListItems()!!.size > 0) {
                     FilterableListDialog.create(
                         this,
-                        getListItems()
+                        getParagraphListItems()
                     ) {
                         validateParagraphClicked(it)
                     }.show()
@@ -391,16 +393,25 @@ class BookChaptersActivity : AppCompatActivity(), View.OnClickListener,
     }
 
     private fun validateParagraphClicked(str: String) {
-        var selectedParagraph = chapterData!!.paragraphs.filter {
-            str.equals(it.title)
-        }[0]
+        if (mPresenter?.getCurrentChapterParagraphs() == null) {
+            return
+        }
 
-//        player.seekToParagraph(selectedParagraph)
+        val selectedParagraph =
+            mPresenter?.getCurrentChapterParagraphs()!!.filter {
+                str.equals(it.title)
+            }
+
+        if (selectedParagraph.isNullOrEmpty()) {
+            return
+        }
+
+        pexoPlayerManager.updateProgress(selectedParagraph[0].from_time.toInt() * 1000)
     }
 
-    private fun getListItems(): ArrayList<String>? {
-        var items = ArrayList<String>()
-        for (paragraph in chapterData!!.paragraphs) {
+    private fun getParagraphListItems(): ArrayList<String>? {
+        val items = ArrayList<String>()
+        for (paragraph in mPresenter?.getCurrentChapterParagraphs()!!) {
             items.add(paragraph.title)
         }
         return items
@@ -422,7 +433,6 @@ class BookChaptersActivity : AppCompatActivity(), View.OnClickListener,
 
     override fun setBookmark(bookmark: Bookmark) {
         this.currentBookmark = bookmark
-//        player.stopCurrentPlayingAudio()
     }
 
     override fun showAddBookmarkScreen() {
@@ -430,66 +440,20 @@ class BookChaptersActivity : AppCompatActivity(), View.OnClickListener,
         startActivityForResult(intent, 1)
     }
 
-    private inner class SeekBarBroadcastReceiver : BroadcastReceiver() {
-        override fun onReceive(context: Context, intent: Intent) {
-            val seekProgress = intent.getLongExtra(SEEK_BAR_PROGRESS, 0)
-            val seekMax = intent.getLongExtra(SEEK_BAR_MAX, 0)
-            if (!seekBar.isTracking()) {
-                seekBar.progress = seekProgress.toInt()
-                seekBar.max = seekMax.toInt()
-                txtCurrentDuration.text = TimeUtils.toTimeFormat((seekProgress / 1000).toInt())
-                txtDuration.text = TimeUtils.toTimeFormat((seekMax / 1000).toInt())
-            }
-        }
-    }
-
-//    private inner class UpdateUIBroadcastReceiver : BroadcastReceiver() {
-//
-//        override fun onReceive(context: Context, intent: Intent) {
-//            val newMediaId = intent.getStringExtra(getString(R.string.broadcast_new_media_id))
-//            val chapter = mPresenter?.getBookByID(newMediaId)
-//            if (chapter != null)
-//                text_songName.setText(chapter?.title)
-//        }
-//    }
-
     override fun onStart() {
         pexoPlayerManager.subscribeCallBack()
         super.onStart()
     }
 
-    override fun onResume() {
-        initSeekBarBroadcastReceiver()
-//        initUpdateUIBroadcastReceiver()
-        super.onResume()
-    }
-
     override fun onPause() {
+        seekBar.disconnectController()
         super.onPause()
-        if (mSeekbarBroadcastReceiver != null) {
-            unregisterReceiver(mSeekbarBroadcastReceiver)
-        }
-//        if (mUpdateUIBroadcastReceiver != null) {
-//            unregisterReceiver(mUpdateUIBroadcastReceiver)
-//        }
     }
 
-    private fun initSeekBarBroadcastReceiver() {
-        val intentFilter = IntentFilter()
-        intentFilter.addAction(getString(R.string.broadcast_seekbar_update))
-        mSeekbarBroadcastReceiver = SeekBarBroadcastReceiver()
-        registerReceiver(mSeekbarBroadcastReceiver, intentFilter)
-    }
-
-//    private fun initUpdateUIBroadcastReceiver() {
-//        val intentFilter = IntentFilter()
-//        intentFilter.addAction(getString(R.string.broadcast_update_ui))
-//        mUpdateUIBroadcastReceiver = UpdateUIBroadcastReceiver()
-//        registerReceiver(mUpdateUIBroadcastReceiver, intentFilter)
-//    }
-
+    private var seekBarProgress: Int = 0
+    private var seekBarProgressMax: Int = 0
+    private var mediaController: MediaControllerCompat? = null
     private lateinit var mediaItemList: ArrayList<PexoMediaMetadata>
-    private var chapterData: ChaptersData? = null
 
     private var isExpand = false
 
@@ -498,10 +462,6 @@ class BookChaptersActivity : AppCompatActivity(), View.OnClickListener,
     var mPresenter: BookChaptersContract.Presenter? = null
 
     private var downloadProgressDialog: ProgressDialog? = null
-
-    private var mSeekbarBroadcastReceiver: SeekBarBroadcastReceiver? = null
-
-//    private var mUpdateUIBroadcastReceiver: UpdateUIBroadcastReceiver? = null
 
     private lateinit var pexoPlayerManager: PexoPlayerManager
 

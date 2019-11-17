@@ -10,7 +10,6 @@ import com.audiospotapplication.DataLayer.Model.*
 import com.audiospotapplication.DataLayer.Retrofit.RetrofitCallbacks
 import com.audiospotapplication.UI.ActiveTab
 import com.audiospotapplication.UI.giftSelection.GiftSelection
-import dm.audiostreamer.MediaMetaData
 import java.util.*
 
 interface RepositorySource : CacheDataSource {

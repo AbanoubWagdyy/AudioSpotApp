@@ -1,30 +1,31 @@
 package com.audiospotapplication.UI.bookChapters
 
 import android.content.Context
-import android.os.Bundle
 import android.support.v4.media.MediaBrowserCompat
 import com.audiospotapplication.BaseView
 import com.audiospotapplication.DataLayer.Model.Bookmark
 import com.audiospotapplication.DataLayer.Model.ChaptersData
-import com.audiospotapplication.DataLayer.Model.ChaptersResponse
-import com.example.jean.jcplayer.model.JcAudio
+import com.audiospotapplication.DataLayer.Model.Paragraph
 
 interface BookChaptersContract {
 
     interface Presenter {
-        fun start(extras: Bundle?)
-        fun handleBookmarkClicked(timeString: String, id: Int, title: String)
+
+        fun start()
+        fun handleBookmarkClicked(timeString: String)
+        fun handleDownloadPressed()
         fun isBookMine(): Boolean
-        fun handleDownloadPressed(currentSong: JcAudio?)
         fun validateChapterDownloaded(mediaData: ChaptersData): String
         fun resetRepo()
-        fun getMediaItem(data: ChaptersData): MediaBrowserCompat.MediaItem?
         fun getSavedBookId(): String
-
         fun getBookByID(mediaId: String?): ChaptersData?
         fun getBookAuthor(): String
         fun getBookReleasedDate(): String
         fun getBookIcon(): String
+        fun setCurrentChapterParagraphs(paragraphs: List<Paragraph>)
+        fun getCurrentChapterParagraphs(): List<Paragraph>
+        fun setCurrentChapterID(id: Int)
+        fun setCurrentChapterTitle(title: String)
     }
 
     interface View : BaseView {
@@ -42,5 +43,6 @@ interface BookChaptersContract {
         fun updateProgress(progress: Int)
         fun dismissDownloadingDialog()
         fun showHomepageScreen()
+        fun playChapter(chaptersData: ChaptersData, index: Int)
     }
 }

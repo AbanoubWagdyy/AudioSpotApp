@@ -32,7 +32,7 @@ class MyBookmarksAdapter(
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        var bookmark = bookmarks[position]
+        val bookmark = bookmarks[position]
 
         holder.bookmarkTime.text = TimeUtils.toTimeFormat(bookmark.time)
 

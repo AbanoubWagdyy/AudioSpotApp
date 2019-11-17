@@ -15,25 +15,13 @@ import com.audiospotapplication.UI.homepage.Library.LibraryFragment
 import com.audiospotapplication.UI.homepage.menu.MenuFragment
 import com.audiospotapplication.UI.homepage.myBooks.MyBooksFragment
 import com.audiospotapplication.UI.login.LoginActivity
-import com.audiospotapplication.utils.DialogUtils
-import com.example.jean.jcplayer.JcPlayerManager
 import com.google.android.material.snackbar.Snackbar
-import com.ps.pexoplayer.model.PexoMediaMetadata
 import kotlinx.android.synthetic.main.activity_homepage.*
 import kotlinx.android.synthetic.main.header.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.KoinComponent
 
-class HomepageActivity : AppCompatActivity(), HomeFragment.onItemPlayClickListener,
-    MyBooksFragment.onItemPlayClickListener, KoinComponent {
-
-    override fun OnItemPlayed(mediaData: PexoMediaMetadata) {
-        DialogUtils.showPlayingProgressDialog(this)
-        playAudio(mediaData)
-    }
-
-    private fun playAudio(mediaData: PexoMediaMetadata) {
-    }
+class HomepageActivity : AppCompatActivity(), KoinComponent {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -171,10 +159,6 @@ class HomepageActivity : AppCompatActivity(), HomeFragment.onItemPlayClickListen
         super.onResume()
     }
 
-    private val jcPlayerManager: JcPlayerManager by lazy {
-        JcPlayerManager.getInstance(applicationContext).get()!!
-    }
-
     var tabShown = ActiveTab.HOME
-    val viewModel: HomepageViewModel by viewModel()
+    private val viewModel: HomepageViewModel by viewModel()
 }

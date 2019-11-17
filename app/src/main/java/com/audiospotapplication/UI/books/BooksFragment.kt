@@ -3,7 +3,6 @@ package com.audiospotapplication.UI.books
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -19,48 +18,12 @@ import com.audiospotapplication.UI.bookDetails.BookDetailsActivity
 import com.audiospotapplication.UI.books.adapter.BooksAdapter
 import com.audiospotapplication.UI.books.Interface.onBookItemClickListener
 import com.audiospotapplication.utils.DialogUtils
-import com.example.jean.jcplayer.JcPlayerManager
-import com.example.jean.jcplayer.JcPlayerManagerListener
-import com.example.jean.jcplayer.general.JcStatus
-import com.example.jean.jcplayer.model.JcAudio
 import com.github.zawadz88.materialpopupmenu.popupMenu
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.fragment_books.*
 
 class BooksFragment(var ivArrow: ImageView) : BaseFragment(), BooksContract.View,
-    onBookItemClickListener,
-    JcPlayerManagerListener {
-    override fun onPreparedAudio(status: JcStatus) {
-
-    }
-
-    override fun onCompletedAudio() {
-
-    }
-
-    override fun onPaused(status: JcStatus) {
-
-    }
-
-    override fun onContinueAudio(status: JcStatus) {
-
-    }
-
-    override fun onPlaying(status: JcStatus) {
-
-    }
-
-    override fun onTimeChanged(status: JcStatus) {
-
-    }
-
-    override fun onStopped(status: JcStatus) {
-
-    }
-
-    override fun onJcpError(throwable: Throwable) {
-
-    }
+    onBookItemClickListener {
 
     override fun showBookDetailsScreen() {
         val intent = Intent(activity!!, BookDetailsActivity::class.java)
@@ -120,7 +83,7 @@ class BooksFragment(var ivArrow: ImageView) : BaseFragment(), BooksContract.View
         return activity!!.applicationContext
     }
 
-    private lateinit var adapter: BooksAdapter
+    private var adapter: BooksAdapter? = null
 
     lateinit var mPresenter: BooksContract.Presenter
 
@@ -196,10 +159,6 @@ class BooksFragment(var ivArrow: ImageView) : BaseFragment(), BooksContract.View
         @JvmStatic
         fun newInstance(ivArrow: ImageView) =
             BooksFragment(ivArrow)
-    }
-
-    private val jcPlayerManager: JcPlayerManager by lazy {
-        JcPlayerManager.getInstance(activity!!.applicationContext).get()!!
     }
 
     private lateinit var listMyBooks: List<Book>

@@ -1,6 +1,5 @@
 package com.audiospotapplication.UI.myFavourite
 
-import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -16,49 +15,13 @@ import com.audiospotapplication.R
 import com.audiospotapplication.UI.bookDetails.BookDetailsActivity
 import com.audiospotapplication.UI.books.Interface.onBookItemClickListener
 import com.audiospotapplication.UI.books.adapter.BooksAdapter
-import com.audiospotapplication.UI.onItemPlayClickListener
 import com.audiospotapplication.utils.DialogUtils
-import com.example.jean.jcplayer.JcPlayerManager
-import com.example.jean.jcplayer.JcPlayerManagerListener
-import com.example.jean.jcplayer.general.JcStatus
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.fragment_my_favourite_books.*
 
 class MyFavouriteBooksFragment : BaseFragment(), myFavouriteBooksContract.View,
     onBookItemClickListener,
-    onBookItemClickListener.onCartBookDeleteClickListener, JcPlayerManagerListener {
-
-    override fun onPreparedAudio(status: JcStatus) {
-
-    }
-
-    override fun onCompletedAudio() {
-
-    }
-
-    override fun onPaused(status: JcStatus) {
-
-    }
-
-    override fun onContinueAudio(status: JcStatus) {
-
-    }
-
-    override fun onPlaying(status: JcStatus) {
-
-    }
-
-    override fun onTimeChanged(status: JcStatus) {
-
-    }
-
-    override fun onStopped(status: JcStatus) {
-
-    }
-
-    override fun onJcpError(throwable: Throwable) {
-
-    }
+    onBookItemClickListener.onCartBookDeleteClickListener {
 
     override fun showMessage(message: String) {
         if (activity != null)
@@ -158,24 +121,13 @@ class MyFavouriteBooksFragment : BaseFragment(), myFavouriteBooksContract.View,
             MyFavouriteBooksFragment()
     }
 
-    override fun onAttach(activity: Activity) {
-        super.onAttach(activity)
-        try {
-            mPlayCallback = activity as onItemPlayClickListener
-        } catch (e: ClassCastException) {
-            throw ClassCastException("$activity must implement MyInterface ")
-        }
-    }
-
     fun onEditCartClicked() {
         adapter?.showDelete()
     }
 
     private lateinit var listMyBooks: List<Book>
+
     private var adapter: BooksAdapter? = null
-    private lateinit var mPlayCallback: onItemPlayClickListener
+
     lateinit var mPresenter: myFavouriteBooksContract.Presenter
-    private val jcPlayerManager: JcPlayerManager by lazy {
-        JcPlayerManager.getInstance(activity!!.applicationContext).get()!!
-    }
 }

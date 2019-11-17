@@ -1,6 +1,5 @@
 package com.audiospotapplication.UI.homepage.myBooks
 
-import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -104,7 +103,7 @@ class MyBooksFragment : BaseFragment(), MyBooksContract.View, onBookItemClickLis
             mPresenter.start()
         }
 
-
+        mPresenter = MyBooksPresenter(this)
     }
 
     companion object {
@@ -113,28 +112,13 @@ class MyBooksFragment : BaseFragment(), MyBooksContract.View, onBookItemClickLis
             MyBooksFragment()
     }
 
-    override fun onAttach(activity: Activity) {
-        super.onAttach(activity)
-        try {
-            mPlayCallback = activity as onItemPlayClickListener
-            mPresenter = MyBooksPresenter(this)
-        } catch (e: ClassCastException) {
-            throw ClassCastException(activity.toString() + " must implement MyInterface ")
-        }
-    }
-
     override fun onResume() {
         super.onResume()
         mPresenter.start()
     }
 
-    interface onItemPlayClickListener {
-        fun OnItemPlayed(mediaData: PexoMediaMetadata)
-    }
-
     private var adapter: BooksAdapter? = null
     lateinit var mPresenter: MyBooksContract.Presenter
-    private lateinit var mPlayCallback: onItemPlayClickListener
 
     private lateinit var listMyBooks: List<Book>
 }

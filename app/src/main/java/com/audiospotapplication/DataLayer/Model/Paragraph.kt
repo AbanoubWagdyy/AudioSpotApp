@@ -1,4 +1,4 @@
-package com.example.jean.jcplayer
+package com.audiospotapplication.DataLayer.Model
 
 import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize

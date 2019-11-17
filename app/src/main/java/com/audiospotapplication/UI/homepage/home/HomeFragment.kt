@@ -1,6 +1,5 @@
 package com.audiospotapplication.UI.homepage.home
 
-import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -17,10 +16,8 @@ import com.audiospotapplication.BaseFragment
 import com.audiospotapplication.UI.books.Interface.onBookItemClickListener
 import com.audiospotapplication.UI.homepage.home.adapter.HomepageAdapter
 import com.audiospotapplication.UI.bookDetails.BookDetailsActivity
-import com.ps.pexoplayer.model.PexoMediaMetadata
 import kotlinx.android.synthetic.main.fragment_home.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
-
 
 class HomeFragment : BaseFragment(), onBookItemClickListener {
 
@@ -74,24 +71,10 @@ class HomeFragment : BaseFragment(), onBookItemClickListener {
         })
     }
 
-    override fun onAttach(activity: Activity) {
-        super.onAttach(activity)
-        try {
-            mPlayCallback = activity as onItemPlayClickListener
-        } catch (e: ClassCastException) {
-            throw ClassCastException("$activity must implement onItemPlayClickListener ")
-        }
-    }
-
-    interface onItemPlayClickListener {
-        fun OnItemPlayed(mediaData: PexoMediaMetadata)
-    }
-
-    private lateinit var mPlayCallback: onItemPlayClickListener
     lateinit var progress: ProgressBar
     var adapter: HomepageAdapter? = null
 
-    val viewModel: HomeViewModel by viewModel()
+    private val viewModel: HomeViewModel by viewModel()
 
     companion object {
 
