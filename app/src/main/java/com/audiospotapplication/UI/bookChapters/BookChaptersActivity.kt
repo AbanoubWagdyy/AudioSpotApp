@@ -147,8 +147,6 @@ class BookChaptersActivity : AppCompatActivity(), View.OnClickListener,
 
         pexoPlayerManager.setPendingIntentClass(BookChaptersActivity::class.java)
 
-        pexoPlayerManager.setPexoEventListener(this)
-
         uiInitialization()
 
         mPresenter = BookChaptersPresenter(this)
@@ -204,7 +202,13 @@ class BookChaptersActivity : AppCompatActivity(), View.OnClickListener,
         btnPlay.setOnClickListener {
             if (mPresenter?.isBookMine()!!) {
                 pexoPlayerManager.setToAppOpen(true)
-                pexoPlayerManager.onTogglePlayPause()
+                if (mPresenter!!.getSavedBookId().equals(pexoPlayerManager.pexoInstance.playlistId)) {
+                    pexoPlayerManager.onTogglePlayPause()
+                } else {
+                    val chapters = mPresenter!!.getChapters()
+                    generateMediaItems(chapters)
+                    pexoPlayerManager.startPlayback()
+                }
             } else {
                 Snackbar.make(
                     findViewById(android.R.id.content),
@@ -216,7 +220,16 @@ class BookChaptersActivity : AppCompatActivity(), View.OnClickListener,
         btn_play_bottom.setOnClickListener {
             if (mPresenter?.isBookMine()!!) {
                 pexoPlayerManager.setToAppOpen(true)
-                pexoPlayerManager.onTogglePlayPause()
+                if (mPresenter!!.getSavedBookId().equals(pexoPlayerManager.pexoInstance.playlistId)) {
+                    pexoPlayerManager.onTogglePlayPause()
+                } else {
+                    val chapters = mPresenter!!.getChapters()
+                    generateMediaItems(chapters)
+                    Handler().postDelayed({
+                        pexoPlayerManager.startPlayback()
+
+                    }, 1300)
+                }
             } else {
                 Snackbar.make(
                     findViewById(android.R.id.content),
@@ -280,14 +293,18 @@ class BookChaptersActivity : AppCompatActivity(), View.OnClickListener,
     }
 
     override fun onChapterClicked(data: ChaptersData, position: Int) {
-        mPresenter?.setCurrentChapterParagraphs(data.paragraphs)
-        mPresenter?.setCurrentChapterID(data.id)
-        mPresenter?.setCurrentChapterTitle(data.title)
         if (mPresenter?.isBookMine()!!) {
-            pexoPlayerManager.startPlayback(position)
+            generateMediaItems(mPresenter!!.getChapters())
+
+            mPresenter?.setCurrentChapterParagraphs(data.paragraphs)
+            mPresenter?.setCurrentChapterID(data.id)
+            mPresenter?.setCurrentChapterTitle(data.title)
+
             sliding_layout.panelState = SlidingUpPanelLayout.PanelState.EXPANDED
 
             Handler().postDelayed({
+                pexoPlayerManager.startPlayback(position)
+
                 if (currentBookmark != null) {
                     pexoPlayerManager.updateProgress(currentBookmark!!.time * 1000)
                 }
@@ -300,9 +317,35 @@ class BookChaptersActivity : AppCompatActivity(), View.OnClickListener,
         }
     }
 
-    override fun setChapters(data: List<ChaptersData>) {
+    override fun setChapters(
+        data: List<ChaptersData>,
+        id: Int
+    ) {
 
+        if (id.toString().equals(pexoPlayerManager.pexoInstance.playlistId)) {
+            pexoPlayerManager.setPexoEventListener(this)
+            pexoPlayerManager.subscribeCallBack()
+        }
+
+        if (data.isNotEmpty()) {
+            recyclerChapters.layoutManager = LinearLayoutManager(applicationContext)
+            recyclerChapters.setHasFixedSize(true)
+            recyclerChapters.isNestedScrollingEnabled = false
+            recyclerChapters.adapter = ChaptersAdapter(data, this, mPresenter?.isBookMine())
+        } else {
+            Snackbar.make(
+                findViewById(android.R.id.content), "Chapters not Found",
+                Snackbar.LENGTH_SHORT
+            ).show()
+        }
+    }
+
+    private fun generateMediaItems(data: List<ChaptersData>) {
         mediaItemList = ArrayList()
+
+        pexoPlayerManager.setPexoEventListener(this)
+
+        pexoPlayerManager.subscribeCallBack()
 
         for (chapter in data) {
             var path = mPresenter?.validateChapterDownloaded(chapter)
@@ -326,18 +369,6 @@ class BookChaptersActivity : AppCompatActivity(), View.OnClickListener,
             mPresenter?.getSavedBookId(), ArrayList<PexoMediaMetadata>(),
             mediaItemList, 0
         )
-
-        if (data.isNotEmpty()) {
-            recyclerChapters.layoutManager = LinearLayoutManager(applicationContext)
-            recyclerChapters.setHasFixedSize(true)
-            recyclerChapters.isNestedScrollingEnabled = false
-            recyclerChapters.adapter = ChaptersAdapter(data!!, this, mPresenter?.isBookMine())
-        } else {
-            Snackbar.make(
-                findViewById(android.R.id.content), "Chapters not Found",
-                Snackbar.LENGTH_SHORT
-            ).show()
-        }
     }
 
     override fun onBackPressed() {
@@ -450,10 +481,13 @@ class BookChaptersActivity : AppCompatActivity(), View.OnClickListener,
 
     private fun getParagraphListItems(): ArrayList<String>? {
         val items = ArrayList<String>()
-        for (paragraph in mPresenter?.getCurrentChapterParagraphs()!!) {
-            items.add(paragraph.title)
+        mPresenter?.getCurrentChapterParagraphs()?.let {
+            for (paragraph in it) {
+                items.add(paragraph.title)
+            }
+            return items
         }
-        return items
+        return ArrayList()
     }
 
     override fun showMessage(s: String) {
@@ -477,11 +511,6 @@ class BookChaptersActivity : AppCompatActivity(), View.OnClickListener,
     override fun showAddBookmarkScreen() {
         val intent = Intent(this, AddBookmarkActivity::class.java)
         startActivityForResult(intent, 1)
-    }
-
-    override fun onStart() {
-        pexoPlayerManager.subscribeCallBack()
-        super.onStart()
     }
 
     override fun onPause() {

@@ -149,7 +149,7 @@ open class BaseFragment : Fragment(), BaseView, PexoEventListener {
             mediaItemList.add(pexoMediaMetadata)
 
             pexoPlayerManager.setupNewPlaylist(
-                book.id.toString(), java.util.ArrayList<PexoMediaMetadata>(),
+                book.id.toString() + book.id.toString(), java.util.ArrayList<PexoMediaMetadata>(),
                 mediaItemList, 0
             )
 

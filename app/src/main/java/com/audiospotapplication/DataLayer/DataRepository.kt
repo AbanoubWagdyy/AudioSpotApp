@@ -947,23 +947,23 @@ class DataRepository private constructor(context: Context) : RepositorySource {
     }
 
     override fun setMediaItems(mediaItems: List<ChaptersData>) {
-        mMediaItems.clear()
+//        mMediaItems.clear()
         mBookItemInterceptor.saveBookChapters(mediaItems)
-        for (item in mediaItems) {
-            Log.d(TAG, "setMediaItems: called: adding media item: " + item.title)
-            val convertedItem = getMediaItemFromChapterData(item)
-            convertedItem?.let {
-                mMediaItems.add(
-                    MediaBrowserCompat.MediaItem(
-                        it.description, MediaBrowserCompat.MediaItem.FLAG_PLAYABLE
-                    )
-                )
-                mTreeMap[it.description.mediaId.toString()] = it
-            }
-        }
-
-        Log.d("MediaItems", mMediaItems.toString())
-        Log.d("Map", mTreeMap.toString())
+//        for (item in mediaItems) {
+//            Log.d(TAG, "setMediaItems: called: adding media item: " + item.title)
+//            val convertedItem = getMediaItemFromChapterData(item)
+//            convertedItem?.let {
+//                mMediaItems.add(
+//                    MediaBrowserCompat.MediaItem(
+//                        it.description, MediaBrowserCompat.MediaItem.FLAG_PLAYABLE
+//                    )
+//                )
+//                mTreeMap[it.description.mediaId.toString()] = it
+//            }
+//        }
+//
+//        Log.d("MediaItems", mMediaItems.toString())
+//        Log.d("Map", mTreeMap.toString())
     }
 
     private fun getMediaItemFromChapterData(data: ChaptersData): MediaMetadataCompat? {

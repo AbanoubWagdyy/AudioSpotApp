@@ -19,6 +19,10 @@ class BookChaptersPresenter(val mView: BookChaptersContract.View) : BookChapters
         currentChapterT = title
     }
 
+    override fun getChapters(): List<ChaptersData> {
+        return mRepoSource.getCurrentBookChapters()
+    }
+
     override fun setCurrentChapterID(id: Int) {
         this.currentChapterId = id
     }
@@ -225,9 +229,8 @@ class BookChaptersPresenter(val mView: BookChaptersContract.View) : BookChapters
         if (book != null) {
             mView.setBookName(book.title)
             mView.setBookImage(book.cover)
+            mView.setChapters(chapters,book.id)
         }
-
-        mView.setChapters(chapters)
 
         Handler().postDelayed({
             if (isToPlayFirstChapter) {

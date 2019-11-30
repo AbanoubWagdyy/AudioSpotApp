@@ -41,7 +41,6 @@ class HomepageAdapter(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val homepageData = response!!.data[position]
         holder.tvTitle.text = homepageData.title
-
         val layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
         holder.recyclerBooks.layoutManager = layoutManager
         holder.recyclerBooks.setHasFixedSize(true)

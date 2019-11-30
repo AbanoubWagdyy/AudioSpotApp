@@ -453,7 +453,9 @@ public class PexoPlayerManager implements MediaBrowserHelperCallback, PexoCallba
         }
 
         mMediaBrowserHelper.onStop();
-        mPexoEventListener.onControllerDisconnect();
+
+        if (mPexoEventListener != null)
+            mPexoEventListener.onControllerDisconnect();
     }
 
     @Override

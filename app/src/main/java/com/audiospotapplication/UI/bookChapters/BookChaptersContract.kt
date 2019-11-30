@@ -1,7 +1,6 @@
 package com.audiospotapplication.UI.bookChapters
 
 import android.content.Context
-import android.support.v4.media.MediaBrowserCompat
 import com.audiospotapplication.BaseView
 import com.audiospotapplication.DataLayer.Model.Bookmark
 import com.audiospotapplication.DataLayer.Model.ChaptersData
@@ -26,13 +25,17 @@ interface BookChaptersContract {
         fun getCurrentChapterParagraphs(): List<Paragraph>?
         fun setCurrentChapterID(id: Int)
         fun setCurrentChapterTitle(title: String)
+        fun getChapters(): List<ChaptersData>
     }
 
     interface View : BaseView {
         fun getAppContext(): Context?
         fun showLoadingDialog()
         fun dismissLoading()
-        fun setChapters(data: List<ChaptersData>)
+        fun setChapters(
+            data: List<ChaptersData>,
+            id: Int
+        )
         fun setBookName(title: String)
         fun setBookImage(cover: String)
         fun showAddBookmarkScreen()

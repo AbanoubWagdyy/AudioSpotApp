@@ -93,7 +93,7 @@
                     android:gravity="center_horizontal"
                     android:letterSpacing="0.07"
                     android:lineSpacingExtra="75.3sp"
-                    android:text="fneifeninfe"
+                    android:text=""
                     android:textColor="@color/white"
                     android:textSize="14sp"
                     android:textStyle="bold" />
