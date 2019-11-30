@@ -69,7 +69,7 @@ class BookChaptersPresenter(val mView: BookChaptersContract.View) : BookChapters
 
         val fileNameStr = data.id
 
-        if (storage.isFileExist(newDir + "/" + fileNameStr)) {
+        if (storage.isFileExist("$newDir/$fileNameStr")) {
             currentPath = "$newDir/$fileNameStr"
             return currentPath
         } else {
@@ -237,13 +237,11 @@ class BookChaptersPresenter(val mView: BookChaptersContract.View) : BookChapters
 
             if (bookmark != null) {
                 val chapterData = chapters.filter {
-                    it.id == bookmark!!.chapter_id
+                    it.id == bookmark.chapter_id
                 }[0]
-
                 val index = chapters.indexOfFirst {
-                    it.id == bookmark!!.chapter_id
+                    it.id == bookmark.chapter_id
                 }
-
                 mView.setBookmark(bookmark)
                 mView.playChapter(chapterData, index)
             }

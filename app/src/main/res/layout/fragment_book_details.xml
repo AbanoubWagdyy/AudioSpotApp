@@ -188,64 +188,69 @@
                             android:orientation="horizontal"
                             android:visibility="visible">
 
-                        <RelativeLayout
+                        <LinearLayout
                                 android:id="@+id/relativeAddToFavourites"
-                                android:layout_width="170dp"
-                                android:layout_height="wrap_content"
-                                android:layout_marginStart="10dp"
+                                android:layout_width="fill_parent"
+                                android:layout_height="fill_parent"
+                                android:layout_marginStart="15dp"
                                 android:layout_marginEnd="15dp"
-                                android:background="@mipmap/red_background">
+                                android:layout_weight="1"
+                                android:background="@mipmap/red_background"
+                                android:orientation="horizontal">
 
-                            <TextView
+                            <ImageView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:layout_alignParentEnd="true"
-                                    android:layout_centerVertical="true"
+                                    android:layout_gravity="center_vertical"
+                                    android:layout_marginStart="10dp"
+                                    android:background="@mipmap/my_favourite"
+                                    android:scaleType="center" />
+
+                            <TextView
+                                    android:layout_width="fill_parent"
+                                    android:layout_height="fill_parent"
+                                    android:layout_marginStart="15dp"
                                     android:layout_marginEnd="15dp"
-                                    android:gravity="center_horizontal"
+                                    android:gravity="center"
                                     android:letterSpacing="0.07"
                                     android:lineSpacingExtra="8.5sp"
                                     android:text="@string/add_to_favorite"
                                     android:textColor="@color/white"
-                                    android:textSize="14sp" />
+                                    android:textSize="12sp" />
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                                android:id="@+id/relativeGiveAGift"
+                                android:layout_width="fill_parent"
+                                android:layout_height="fill_parent"
+                                android:layout_marginStart="15dp"
+                                android:layout_marginEnd="15dp"
+                                android:layout_weight="1"
+                                android:background="@mipmap/green_background"
+                                android:orientation="horizontal">
 
                             <ImageView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:layout_centerVertical="true"
+                                    android:layout_gravity="center_vertical"
                                     android:layout_marginStart="10dp"
-                                    android:background="@mipmap/my_favourite" />
-
-                        </RelativeLayout>
-
-                        <RelativeLayout
-                                android:id="@+id/relativeGiveAGift"
-                                android:layout_width="170dp"
-                                android:layout_height="wrap_content"
-                                android:layout_marginStart="10dp"
-                                android:background="@mipmap/green_background">
+                                    android:background="@mipmap/gift"
+                                    android:scaleType="center" />
 
                             <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_alignParentEnd="true"
-                                    android:layout_centerVertical="true"
-                                    android:layout_marginEnd="20dp"
-                                    android:gravity="center_horizontal"
+                                    android:layout_width="fill_parent"
+                                    android:layout_height="fill_parent"
+                                    android:layout_marginStart="15dp"
+                                    android:layout_marginEnd="15dp"
+                                    android:gravity="center"
                                     android:letterSpacing="0.07"
                                     android:lineSpacingExtra="8.5sp"
                                     android:text="@string/give_as_gift"
                                     android:textColor="@color/white"
-                                    android:textSize="14sp" />
+                                    android:textSize="12sp" />
 
-                            <ImageView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_centerVertical="true"
-                                    android:layout_marginStart="10dp"
-                                    android:background="@mipmap/gift" />
-
-                        </RelativeLayout>
+                        </LinearLayout>
                     </LinearLayout>
 
                     <RelativeLayout
@@ -403,11 +408,11 @@
                                     android:id="@+id/tvPrice"
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
+                                    android:layout_marginStart="3dp"
                                     android:layout_marginTop="12dp"
                                     android:letterSpacing="0.07"
                                     android:lineSpacingExtra="12sp"
                                     android:text=""
-                                    android:layout_marginStart="3dp"
                                     android:textColor="@color/white"
                                     android:textSize="12sp"
                                     android:textStyle="bold" />
@@ -436,9 +441,9 @@
                                     android:id="@+id/tvPriceAfterSale"
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
+                                    android:layout_marginStart="3dp"
                                     android:layout_marginTop="12dp"
                                     android:letterSpacing="0.07"
-                                    android:layout_marginStart="3dp"
                                     android:lineSpacingExtra="12sp"
                                     android:text=""
                                     android:textColor="@color/white"

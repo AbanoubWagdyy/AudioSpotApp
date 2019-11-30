@@ -202,13 +202,27 @@ class BookChaptersActivity : AppCompatActivity(), View.OnClickListener,
         downloadProgressDialog!!.setCancelable(false)
 
         btnPlay.setOnClickListener {
-            pexoPlayerManager.setToAppOpen(true)
-            pexoPlayerManager.onTogglePlayPause()
+            if (mPresenter?.isBookMine()!!) {
+                pexoPlayerManager.setToAppOpen(true)
+                pexoPlayerManager.onTogglePlayPause()
+            } else {
+                Snackbar.make(
+                    findViewById(android.R.id.content),
+                    applicationContext.getString(R.string.you_should_own), Snackbar.LENGTH_SHORT
+                ).show()
+            }
         }
 
         btn_play_bottom.setOnClickListener {
-            pexoPlayerManager.setToAppOpen(true)
-            pexoPlayerManager.onTogglePlayPause()
+            if (mPresenter?.isBookMine()!!) {
+                pexoPlayerManager.setToAppOpen(true)
+                pexoPlayerManager.onTogglePlayPause()
+            } else {
+                Snackbar.make(
+                    findViewById(android.R.id.content),
+                    applicationContext.getString(R.string.you_should_own), Snackbar.LENGTH_SHORT
+                ).show()
+            }
         }
 
         bookmark.setOnClickListener {
@@ -216,7 +230,9 @@ class BookChaptersActivity : AppCompatActivity(), View.OnClickListener,
         }
 
         download.setOnClickListener {
-            mPresenter?.handleDownloadPressed()
+            if (mPresenter?.isBookMine()!!) {
+                mPresenter?.handleDownloadPressed()
+            }
         }
 
         btnPrev.setOnClickListener {
@@ -315,7 +331,7 @@ class BookChaptersActivity : AppCompatActivity(), View.OnClickListener,
             recyclerChapters.layoutManager = LinearLayoutManager(applicationContext)
             recyclerChapters.setHasFixedSize(true)
             recyclerChapters.isNestedScrollingEnabled = false
-            recyclerChapters.adapter = ChaptersAdapter(data!!, this)
+            recyclerChapters.adapter = ChaptersAdapter(data!!, this, mPresenter?.isBookMine())
         } else {
             Snackbar.make(
                 findViewById(android.R.id.content), "Chapters not Found",

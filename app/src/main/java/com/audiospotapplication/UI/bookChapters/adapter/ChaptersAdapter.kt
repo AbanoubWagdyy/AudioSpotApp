@@ -16,7 +16,8 @@ import java.io.File
 
 class ChaptersAdapter(
     private var data: List<ChaptersData>,
-    private var mListener: OnChapterCLickListener
+    private var mListener: OnChapterCLickListener,
+    private var mBookMine: Boolean?
 ) : RecyclerView.Adapter<ChaptersAdapter.ViewHolder>() {
 
     private var context: Context? = null
@@ -37,10 +38,15 @@ class ChaptersAdapter(
         holder.chapterName.text = chapterData.title
         holder.chapterDuration.text = TimeUtils.toTimeFormat(chapterData.duration.toInt())
 
-        if (validateChapterDownloaded(chapterData))
-            holder.download.visibility = View.GONE
-        else
-            holder.download.visibility = View.VISIBLE
+        mBookMine?.let {
+            if (it) {
+                if (validateChapterDownloaded(chapterData))
+                    holder.download.visibility = View.GONE
+                else
+                    holder.download.visibility = View.VISIBLE
+            } else
+                holder.download.visibility = View.GONE
+        }
     }
 
     inner class ViewHolder(val mView: View) : RecyclerView.ViewHolder(mView), View.OnClickListener {
@@ -56,9 +62,9 @@ class ChaptersAdapter(
 
         override fun onClick(v: View) {
             if (v == download) {
-                mListener.onItemDownloadPressed(data!![position])
+                mListener.onItemDownloadPressed(data[position])
             } else {
-                mListener.onChapterClicked(data!![position], position)
+                mListener.onChapterClicked(data[position], position)
             }
         }
     }

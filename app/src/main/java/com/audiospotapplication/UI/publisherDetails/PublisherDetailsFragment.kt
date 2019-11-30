@@ -71,9 +71,8 @@ class PublisherDetailsFragment : BaseFragment(), PublisherDetailsContract.View,
     }
 
     override fun setBookList(result: BookListResponse?) {
-        result?.let {
-            this.listMyBooks = listMyBooks
-            if (listMyBooks.isEmpty()) {
+        result?.data?.let {
+            if (it.isEmpty()) {
                 recyclerBooks.visibility = View.GONE
             } else {
 
@@ -82,7 +81,7 @@ class PublisherDetailsFragment : BaseFragment(), PublisherDetailsContract.View,
                 recyclerBooks.isNestedScrollingEnabled = false
 
                 adapter = BooksAdapter(
-                    listMyBooks, this,
+                    it, this,
                     getPlaylistIdObserver().value!!, isPlaying
                 )
                 recyclerBooks.adapter = adapter
@@ -134,6 +133,5 @@ class PublisherDetailsFragment : BaseFragment(), PublisherDetailsContract.View,
             PublisherDetailsFragment()
     }
 
-    private lateinit var listMyBooks: List<Book>
     private var adapter: BooksAdapter? = null
 }

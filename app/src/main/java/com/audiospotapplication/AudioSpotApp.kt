@@ -32,6 +32,4 @@ class AudioSpotApp : Application() {
             modules(listOf(appModule, viewModelModule))
         }
     }
-
-
 }

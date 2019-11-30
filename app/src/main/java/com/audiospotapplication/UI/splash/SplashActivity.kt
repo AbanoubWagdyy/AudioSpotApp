@@ -89,25 +89,23 @@ class SplashActivity : AppCompatActivity(), SplashContract.View {
     }
 
     fun forceUpdate() {
-//        val appUpdateManager = AppUpdateManagerFactory.create(applicationContext)
-//        val appUpdateInfoTask = appUpdateManager.appUpdateInfo
-//        appUpdateInfoTask.addOnSuccessListener { appUpdateInfo ->
-//            if (appUpdateInfo.updateAvailability() == UpdateAvailability.UPDATE_AVAILABLE
-//                && appUpdateInfo.isUpdateTypeAllowed(AppUpdateType.FLEXIBLE)
-//            ) {
-//                appUpdateManager.startUpdateFlowForResult(
-//                    appUpdateInfo,
-//                    AppUpdateType.IMMEDIATE,
-//                    this,
-//                    REQUEST_CODE_UPDATE
-//                )
-//            } else {
-//                mPresenter = SplashPresenter(this@SplashActivity)
-//                mPresenter.start()
-//            }
-//        }
-        mPresenter = SplashPresenter(this@SplashActivity)
-        mPresenter.start()
+        val appUpdateManager = AppUpdateManagerFactory.create(applicationContext)
+        val appUpdateInfoTask = appUpdateManager.appUpdateInfo
+        appUpdateInfoTask.addOnSuccessListener { appUpdateInfo ->
+            if (appUpdateInfo.updateAvailability() == UpdateAvailability.UPDATE_AVAILABLE
+                && appUpdateInfo.isUpdateTypeAllowed(AppUpdateType.FLEXIBLE)
+            ) {
+                appUpdateManager.startUpdateFlowForResult(
+                    appUpdateInfo,
+                    AppUpdateType.IMMEDIATE,
+                    this,
+                    REQUEST_CODE_UPDATE
+                )
+            } else {
+                mPresenter = SplashPresenter(this@SplashActivity)
+                mPresenter.start()
+            }
+        }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
