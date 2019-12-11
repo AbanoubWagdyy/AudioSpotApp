@@ -29,7 +29,7 @@ import kotlin.collections.ArrayList
 
 class DataRepository private constructor(context: Context) : RepositorySource {
 
-    override fun getCurrentBookChapters(): List<ChaptersData> {
+    override fun getCurrentBookChapters(): List<ChaptersData>? {
         return mBookItemInterceptor.getBookChapters()
     }
 
@@ -629,7 +629,7 @@ class DataRepository private constructor(context: Context) : RepositorySource {
             })
     }
 
-    override fun getCurrentBookReviews(): List<Review> {
+    override fun getCurrentBookReviews(): List<Review>? {
         return mBookItemInterceptor.getBookReviews()
     }
 

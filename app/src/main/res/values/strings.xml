@@ -80,7 +80,7 @@
     <string name="will_present_as_voucher">I will present it as a voucher</string>
     <string name="quantity">Quantity</string>
     <string name="you_are_close_to_make">
-        <![CDATA[You are close to making a difference in\n someone&apos;s life]]></string>
+        You are close to making a difference in\nsomeones life</string>
     <string name="please_enter_audiospot_account_email">Please enter the AudioSpot account email</string>
     <string name="profile">Profile</string>
     <string name="my_favorite">My favorite</string>
@@ -149,5 +149,6 @@
     <string name="label_previous" translatable="false">Previous track</string>
     <string name="label_next" translatable="false">Next track</string>
     <string name="price_after_sale">Price After Sale:</string>
+    <string name="you_will_receive_voucher_as_email">( You will receive the vouchers on your email immediately )</string>
 
 </resources>

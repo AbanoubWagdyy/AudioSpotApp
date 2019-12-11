@@ -206,8 +206,10 @@ class BookChaptersActivity : AppCompatActivity(), View.OnClickListener,
                     pexoPlayerManager.onTogglePlayPause()
                 } else {
                     val chapters = mPresenter!!.getChapters()
-                    generateMediaItems(chapters)
-                    pexoPlayerManager.startPlayback()
+                    if (chapters != null) {
+                        generateMediaItems(chapters)
+                        pexoPlayerManager.startPlayback()
+                    }
                 }
             } else {
                 Snackbar.make(
@@ -224,7 +226,9 @@ class BookChaptersActivity : AppCompatActivity(), View.OnClickListener,
                     pexoPlayerManager.onTogglePlayPause()
                 } else {
                     val chapters = mPresenter!!.getChapters()
-                    generateMediaItems(chapters)
+                    if (chapters != null) {
+                        generateMediaItems(chapters)
+                    }
                     Handler().postDelayed({
                         pexoPlayerManager.startPlayback()
 
@@ -294,8 +298,9 @@ class BookChaptersActivity : AppCompatActivity(), View.OnClickListener,
 
     override fun onChapterClicked(data: ChaptersData, position: Int) {
         if (mPresenter?.isBookMine()!!) {
-            generateMediaItems(mPresenter!!.getChapters())
-
+            if (mPresenter!!.getChapters() != null) {
+                generateMediaItems(mPresenter!!.getChapters()!!)
+            }
             mPresenter?.setCurrentChapterParagraphs(data.paragraphs)
             mPresenter?.setCurrentChapterID(data.id)
             mPresenter?.setCurrentChapterTitle(data.title)

@@ -78,7 +78,7 @@ interface RepositorySource : CacheDataSource {
 
     fun saveBook(book: Book?)
 
-    fun getCurrentBookChapters(): List<ChaptersData>
+    fun getCurrentBookChapters(): List<ChaptersData>?
 
     fun getSavedBook(): Book?
 
@@ -137,7 +137,7 @@ interface RepositorySource : CacheDataSource {
 
     fun getMyBooks(): List<Book>?
 
-    fun getCurrentBookReviews(): List<Review>
+    fun getCurrentBookReviews(): List<Review>?
 
     fun removeBookFromCart(book_id: Int, callback: RetrofitCallbacks.ResponseCallback)
 

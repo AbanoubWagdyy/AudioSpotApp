@@ -25,7 +25,7 @@ interface BookChaptersContract {
         fun getCurrentChapterParagraphs(): List<Paragraph>?
         fun setCurrentChapterID(id: Int)
         fun setCurrentChapterTitle(title: String)
-        fun getChapters(): List<ChaptersData>
+        fun getChapters(): List<ChaptersData>?
     }
 
     interface View : BaseView {

@@ -13,11 +13,11 @@ interface BookItemInterceptor {
 
     fun clearSavedBook()
 
-    fun saveBookReviews(data: List<Review>)
+    fun saveBookReviews(data: List<Review>?)
 
-    fun getBookReviews(): List<Review>
+    fun getBookReviews(): List<Review>?
 
-    fun saveBookChapters(mediaItems: List<ChaptersData>)
+    fun saveBookChapters(mediaItems: List<ChaptersData>?)
 
-    fun getBookChapters(): List<ChaptersData>
+    fun getBookChapters(): List<ChaptersData>?
 }

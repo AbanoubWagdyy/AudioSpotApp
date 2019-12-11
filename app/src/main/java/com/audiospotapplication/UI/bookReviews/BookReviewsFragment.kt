@@ -28,12 +28,19 @@ class BookReviewsFragment : BaseFragment() {
         super.onViewCreated(view, savedInstanceState)
         mRepositorySource = DataRepository.getInstance(context!!)
 
-        recyclerReviews.layoutManager = LinearLayoutManager(context!!)
-        recyclerReviews.setHasFixedSize(true)
-        recyclerReviews.isNestedScrollingEnabled = false
+        if (mRepositorySource.getCurrentBookReviews() != null) {
+            recyclerReviews.layoutManager = LinearLayoutManager(context!!)
+            recyclerReviews.setHasFixedSize(true)
+            recyclerReviews.isNestedScrollingEnabled = false
 
-        recyclerReviews.adapter =
-            ReviewListAdapter(mRepositorySource.getCurrentBookReviews(), ReviewListAdapter.Display.FULL)
+            recyclerReviews.adapter =
+                ReviewListAdapter(
+                    mRepositorySource.getCurrentBookReviews()!!,
+                    ReviewListAdapter.Display.FULL
+                )
+        }
+
+
     }
 
 
