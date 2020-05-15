@@ -1,10 +1,10 @@
 package com.audiospotapplication
 
 import android.app.Application
-import com.audiospotapplication.DataLayer.DataRepository
-import com.audiospotapplication.DataLayer.Model.BaseViewModel
-import com.audiospotapplication.UI.homepage.HomepageViewModel
-import com.audiospotapplication.UI.homepage.home.HomeViewModel
+import com.audiospotapplication.data.DataRepository
+import com.audiospotapplication.data.model.BaseViewModel
+import com.audiospotapplication.ui.homepage.HomepageViewModel
+import com.audiospotapplication.ui.homepage.home.HomeViewModel
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.visionvalley.letuno.DataLayer.RepositorySource
 import org.koin.android.ext.koin.androidContext

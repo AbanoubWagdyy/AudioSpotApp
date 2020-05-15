@@ -7,7 +7,7 @@
         android:orientation="vertical"
         android:background="@color/black"
         android:layout_height="match_parent"
-        tools:context=".UI.addBookmark.AddBookmarkActivity">
+        tools:context=".ui.addBookmark.AddBookmarkActivity">
 
     <include layout="@layout/header"/>
 

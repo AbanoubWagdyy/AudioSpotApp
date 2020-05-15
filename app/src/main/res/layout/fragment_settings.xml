@@ -5,7 +5,7 @@
              android:layout_height="match_parent"
              android:background="@color/black"
              android:padding="20dp"
-             tools:context=".UI.settings.SettingsFragment">
+             tools:context=".ui.settings.SettingsFragment">
 
     <LinearLayout
             android:orientation="vertical"

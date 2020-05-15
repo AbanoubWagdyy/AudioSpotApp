@@ -1,7 +1,7 @@
 package com.audiospotapplication.utils
 
 import com.audiospot.DataLayer.Model.Book
-import com.audiospotapplication.DataLayer.Model.ChaptersData
+import com.audiospotapplication.data.model.ChaptersData
 import java.text.SimpleDateFormat
 import java.util.*
 

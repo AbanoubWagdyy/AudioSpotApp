@@ -4,7 +4,7 @@
              android:layout_width="match_parent"
              android:layout_height="match_parent"
              android:background="@color/black"
-             tools:context=".UI.bookReviews.BookReviewsFragment">
+             tools:context=".ui.bookReviews.BookReviewsFragment">
 
 
     <androidx.recyclerview.widget.RecyclerView
