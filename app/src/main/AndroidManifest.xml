@@ -48,12 +48,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name="com.facebook.FacebookActivity"
-            android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
-            android:label="@string/app_name"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar"
-            tools:replace="android:theme" />
 
         <activity
             android:name=".ui.login.LoginActivity"
@@ -61,42 +55,101 @@
             android:windowSoftInputMode="stateHidden|stateAlwaysHidden" />
         <activity
             android:name=".ui.homepage.HomepageActivity"
+            android:configChanges="orientation"
             android:windowSoftInputMode="stateHidden|stateAlwaysHidden" />
         <activity
             android:name=".ui.forgetPassword.ForgetPasswordActivity"
+            android:configChanges="orientation"
             android:windowSoftInputMode="stateHidden|stateAlwaysHidden" />
         <activity
             android:name=".ui.register.RegisterActivity"
+            android:configChanges="orientation"
             android:windowSoftInputMode="stateHidden|stateAlwaysHidden" />
-        <activity android:name=".ui.authors.AuthorsActivity" />
-        <activity android:name=".ui.books.BooksActivity" />
-        <activity android:name=".ui.cart.CartActivity" />
-        <activity android:name=".ui.giveAgift.GiveGiftActivity" />
+        <activity
+            android:name=".ui.authors.AuthorsActivity"
+            android:configChanges="orientation" />
+        <activity
+            android:name=".ui.books.BooksActivity"
+            android:configChanges="orientation" />
+        <activity
+            android:name=".ui.cart.CartActivity"
+            android:configChanges="orientation" />
+        <activity
+            android:name=".ui.giveAgift.GiveGiftActivity"
+            android:configChanges="orientation" />
         <activity
             android:name=".ui.bookChapters.BookChaptersActivity"
             android:configChanges="orientation"
             android:windowSoftInputMode="adjustPan" />
-        <activity android:name=".ui.bookReviews.BookReviewsActivity" />
-        <activity android:name=".ui.changePassword.ChangePasswordActivity" />
-        <activity android:name=".ui.updateProfile.UpdateProfileActivity" />
-        <activity android:name=".ui.profile.ProfileActivity" />
-        <activity android:name=".ui.bookDetails.BookDetailsActivity" />
-        <activity android:name=".ui.publisherDetails.PublisherDetailsActivity" />
-        <activity android:name=".ui.authorDetails.AuthorDetailsActivity" />
-        <activity android:name=".ui.publishers.PublishersActivity" />
-        <activity android:name=".ui.categories.CategoriesActivity" />
-        <activity android:name=".ui.settings.SettingsActivity" />
-        <activity android:name=".ui.contactUs.ContactUsActivity" />
-        <activity android:name=".ui.myFavourite.MyFavouriteBooksActivity" />
-        <activity android:name=".ui.rateBook.RateBookActivity" />
-        <activity android:name=".ui.myBookmarks.MyBookmarksActivity" />
-        <activity android:name=".ui.addBookmark.AddBookmarkActivity" />
-        <activity android:name=".ui.promoCodeCongratulations.CongratulationsActivity" />
-        <activity android:name=".ui.voucher.VoucherActivity" />
-        <activity android:name=".ui.promoCode.PromoCodeActivity" />
-        <activity android:name=".ui.payment.PaymentActivity" />
-        <activity android:name=".ui.giftSelection.GiftSelectionActivity" />
-        <activity android:name=".ui.search.SearchActivity" />
+        <activity
+            android:name=".ui.bookReviews.BookReviewsActivity"
+            android:configChanges="orientation" />
+        <activity
+            android:name=".ui.changePassword.ChangePasswordActivity"
+            android:configChanges="orientation" />
+        <activity
+            android:name=".ui.updateProfile.UpdateProfileActivity"
+            android:configChanges="orientation" />
+        <activity
+            android:name=".ui.profile.ProfileActivity"
+            android:configChanges="orientation" />
+        <activity
+            android:name=".ui.bookDetails.BookDetailsActivity"
+            android:configChanges="orientation" />
+        <activity
+            android:name=".ui.publisherDetails.PublisherDetailsActivity"
+            android:configChanges="orientation" />
+        <activity
+            android:name=".ui.authorDetails.AuthorDetailsActivity"
+            android:configChanges="orientation" />
+        <activity
+            android:name=".ui.publishers.PublishersActivity"
+            android:configChanges="orientation" />
+        <activity
+            android:name=".ui.categories.CategoriesActivity"
+            android:configChanges="orientation" />
+        <activity
+            android:name=".ui.settings.SettingsActivity"
+            android:configChanges="orientation" />
+        <activity
+            android:name=".ui.contactUs.ContactUsActivity"
+            android:configChanges="orientation" />
+        <activity
+            android:name=".ui.myFavourite.MyFavouriteBooksActivity"
+            android:configChanges="orientation" />
+        <activity
+            android:name=".ui.rateBook.RateBookActivity"
+            android:configChanges="orientation" />
+        <activity
+            android:name=".ui.myBookmarks.MyBookmarksActivity"
+            android:configChanges="orientation" />
+        <activity
+            android:name=".ui.addBookmark.AddBookmarkActivity"
+            android:configChanges="orientation" />
+        <activity
+            android:name=".ui.promoCodeCongratulations.CongratulationsActivity"
+            android:configChanges="orientation" />
+        <activity
+            android:name=".ui.voucher.VoucherActivity"
+            android:configChanges="orientation" />
+        <activity
+            android:name=".ui.promoCode.PromoCodeActivity"
+            android:configChanges="orientation" />
+        <activity
+            android:name=".ui.payment.PaymentActivity"
+            android:configChanges="orientation" />
+        <activity
+            android:name=".ui.giftSelection.GiftSelectionActivity"
+            android:configChanges="orientation" />
+        <activity
+            android:name=".ui.search.SearchActivity"
+            android:configChanges="orientation" />
+        <activity
+            android:name="com.facebook.FacebookActivity"
+            android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
+            android:label="@string/app_name"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"
+            tools:replace="android:theme" />
 
         <service
             android:name=".data.firebase.MyFirebaseMessagingService"

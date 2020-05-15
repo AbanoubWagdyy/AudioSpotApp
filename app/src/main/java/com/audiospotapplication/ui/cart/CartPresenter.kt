@@ -30,14 +30,17 @@ class CartPresenter(val mView: CartContract.View) : CartContract.Presenter {
         mView.showLoading()
         mRepositorySource.removeBookFromCart(book.id, object : RetrofitCallbacks.ResponseCallback {
             override fun onSuccess(result: Response?) {
-                val status = RetrofitResponseHandler.validateAuthResponseStatus(result)
-                if (status == RetrofitResponseHandler.Companion.Status.VALID) {
-                    start()
-                } else if (status == RetrofitResponseHandler.Companion.Status.UNAUTHORIZED) {
-                    mView!!.showLoginPage()
-                } else {
-                    mView.dismissLoading()
-                    mView.showMessage(result!!.message)
+                when (RetrofitResponseHandler.validateAuthResponseStatus(result)) {
+                    RetrofitResponseHandler.Companion.Status.VALID -> {
+                        start()
+                    }
+                    RetrofitResponseHandler.Companion.Status.UNAUTHORIZED -> {
+                        mView.showLoginPage()
+                    }
+                    else -> {
+                        mView.dismissLoading()
+                        mView.showMessage(result!!.message)
+                    }
                 }
             }
 
@@ -58,14 +61,17 @@ class CartPresenter(val mView: CartContract.View) : CartContract.Presenter {
         mRepositorySource.getMyCart(object : RetrofitCallbacks.BookListCallback {
             override fun onSuccess(result: BookListResponse?) {
                 mView.dismissLoading()
-                val status = RetrofitResponseHandler.validateAuthResponseStatus(result)
-                if (status == RetrofitResponseHandler.Companion.Status.VALID) {
-                    mView.setBookList(result!!.data)
-                    mView.setCartCount(result.data.size)
-                } else if (status == RetrofitResponseHandler.Companion.Status.UNAUTHORIZED) {
-                    mView!!.showLoginPage()
-                } else {
-                    result?.message?.let { mView.showMessage(it) }
+                when (RetrofitResponseHandler.validateAuthResponseStatus(result)) {
+                    RetrofitResponseHandler.Companion.Status.VALID -> {
+                        mView.setBookList(result!!.data)
+                        mView.setCartCount(result.data.size)
+                    }
+                    RetrofitResponseHandler.Companion.Status.UNAUTHORIZED -> {
+                        mView.showLoginPage()
+                    }
+                    else -> {
+                        result?.message?.let { mView.showMessage(it) }
+                    }
                 }
             }
 
