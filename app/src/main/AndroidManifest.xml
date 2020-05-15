@@ -20,7 +20,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
-        tools:ignore="GoogleAppIndexingWarning"
+        tools:ignore="AllowBackup,GoogleAppIndexingWarning"
         tools:replace="android:name">
 
         <meta-data
@@ -159,7 +159,9 @@
             </intent-filter>
         </service>
 
-        <service android:name="com.ps.pexoplayer.services.MediaService">
+        <service
+            android:name="com.ps.pexoplayer.services.MediaService"
+            android:exported="false">
             <intent-filter>
                 <action android:name="android.media.browse.MediaBrowserService" />
             </intent-filter>
