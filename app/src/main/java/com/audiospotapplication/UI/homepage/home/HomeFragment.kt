@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ProgressBar
 import androidx.core.view.ViewCompat
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -41,8 +40,7 @@ class HomeFragment : BaseFragment(), onBookItemClickListener {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val view = inflater.inflate(R.layout.fragment_home, container, false)
-        return view
+        return inflater.inflate(R.layout.fragment_home, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -50,6 +48,8 @@ class HomeFragment : BaseFragment(), onBookItemClickListener {
         ViewCompat.setNestedScrollingEnabled(recyclerHome, false)
 
         viewModel.getHomepageBooksLiveData().observe(viewLifecycleOwner, Observer {
+            progress.visibility = View.GONE
+
             if (it != null) {
                 adapter = HomepageAdapter(
                     it,
@@ -69,9 +69,22 @@ class HomeFragment : BaseFragment(), onBookItemClickListener {
                 })
             }
         })
+
+        viewModel.getErrorObserverLiveData().observe(viewLifecycleOwner, Observer {
+            progress.visibility = View.GONE
+            recyclerHome.visibility = View.GONE
+            relativeError.visibility = View.VISIBLE
+            tvError.text = it
+        })
+
+        retry.setOnClickListener {
+            recyclerHome.visibility = View.VISIBLE
+            relativeError.visibility = View.GONE
+            progress.visibility = View.VISIBLE
+            viewModel.getHomepageBooks()
+        }
     }
 
-    lateinit var progress: ProgressBar
     var adapter: HomepageAdapter? = null
 
     private val viewModel: HomeViewModel by viewModel()

@@ -14,7 +14,7 @@ class HomeViewModel : BaseViewModel() {
         getHomepageBooks()
     }
 
-    private fun getHomepageBooks() {
+    fun getHomepageBooks() {
         loadingObserver.value = true
         mRepositorySource.getHomepage(object : RetrofitCallbacks.HomepageResponseCallback {
             override fun onSuccess(result: HomepageRepsonse?) {
@@ -39,6 +39,11 @@ class HomeViewModel : BaseViewModel() {
 
     fun getHomepageBooksLiveData(): MutableLiveData<HomepageRepsonse> {
         return homepageResponseObserver
+    }
+
+
+    fun getErrorObserverLiveData(): MutableLiveData<String> {
+        return errorObserver
     }
 
     fun saveBook(book: Book) {
