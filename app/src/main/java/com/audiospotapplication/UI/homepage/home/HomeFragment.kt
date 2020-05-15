@@ -49,21 +49,21 @@ class HomeFragment : BaseFragment(), onBookItemClickListener {
         super.onViewCreated(view, savedInstanceState)
         ViewCompat.setNestedScrollingEnabled(recyclerHome, false)
 
-        viewModel.getHomepageBooksLiveData().observe(this, Observer {
+        viewModel.getHomepageBooksLiveData().observe(viewLifecycleOwner, Observer {
             if (it != null) {
                 adapter = HomepageAdapter(
                     it,
                     this
                 )
-                recyclerHome.layoutManager = LinearLayoutManager(context!!)
+                recyclerHome.layoutManager = LinearLayoutManager(requireActivity())
                 recyclerHome.adapter = adapter
 
-                getPlaylistIdObserver().observe(this, Observer {
+                getPlaylistIdObserver().observe(viewLifecycleOwner, Observer {
                     if (adapter != null && !it.equals(""))
                         adapter!!.updatePlaylistId(it, isPlaying)
                 })
 
-                getPlayingObserver().observe(this, Observer {
+                getPlayingObserver().observe(viewLifecycleOwner, Observer {
                     if (adapter != null)
                         adapter!!.updatePlaylistId(getPlaylistIdObserver().value, it)
                 })

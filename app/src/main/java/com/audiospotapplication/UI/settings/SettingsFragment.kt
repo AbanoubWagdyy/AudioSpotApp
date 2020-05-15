@@ -30,7 +30,7 @@ class SettingsFragment : BaseFragment(), SettingsContract.View {
 
         val builderSingle = AlertDialog.Builder(requireActivity())
         builderSingle.setIcon(R.mipmap.ic_launcher)
-        builderSingle.setTitle(context!!.getString(R.string.select_language))
+        builderSingle.setTitle(requireContext().getString(R.string.select_language))
 
         val arrayAdapter = ArrayAdapter<String>(requireActivity(), android.R.layout.simple_list_item_1)
         arrayAdapter.add(GlobalKeys.Language.ENGLISH)
