@@ -2,11 +2,10 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/AudioSpotProject.iml" filepath="$PROJECT_DIR$/AudioSpotProject.iml" />
-      <module fileurl="file://$PROJECT_DIR$/FawrySDK_1.0.20_17032019/FawrySDK_1.0.20_17032019.iml" filepath="$PROJECT_DIR$/FawrySDK_1.0.20_17032019/FawrySDK_1.0.20_17032019.iml" />
-      <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
-      <module fileurl="file://$PROJECT_DIR$/dmaudiostreamer/dmaudiostreamer.iml" filepath="$PROJECT_DIR$/dmaudiostreamer/dmaudiostreamer.iml" />
-      <module fileurl="file://$PROJECT_DIR$/pexoplayer/pexoplayer.iml" filepath="$PROJECT_DIR$/pexoplayer/pexoplayer.iml" />
+      <module fileurl="file://$PROJECT_DIR$/AudioSpot.iml" filepath="$PROJECT_DIR$/AudioSpot.iml" group="AudioSpot" />
+      <module fileurl="file://$PROJECT_DIR$/FawrySDK_1.0.20_17032019/FawrySDK_1.0.20_17032019.iml" filepath="$PROJECT_DIR$/FawrySDK_1.0.20_17032019/FawrySDK_1.0.20_17032019.iml" group="AudioSpot/FawrySDK_1.0.20_17032019" />
+      <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" group="AudioSpot/app" />
+      <module fileurl="file://$PROJECT_DIR$/pexoplayer/pexoplayer.iml" filepath="$PROJECT_DIR$/pexoplayer/pexoplayer.iml" group="AudioSpot/pexoplayer" />
     </modules>
   </component>
 </project>

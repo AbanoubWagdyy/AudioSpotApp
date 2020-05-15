@@ -74,7 +74,7 @@ dependencies {
 
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation 'androidx.appcompat:appcompat:1.1.0'
-    implementation 'androidx.core:core-ktx:1.1.0'
+    implementation 'androidx.core:core-ktx:1.2.0'
 
     implementation 'com.google.firebase:firebase-core:17.2.0'
     implementation 'com.google.firebase:firebase-iid:20.0.0'
@@ -112,7 +112,6 @@ dependencies {
 
     //Nice Spinner
     implementation 'com.github.arcadefire:nice-spinner:1.4.3'
-//    implementation project(path: ':dmaudiostreamer')
     implementation 'com.nineoldandroids:library:2.4.0'
     implementation 'com.github.hannesa2:AndroidSlidingUpPanel:3.5.0'
 
