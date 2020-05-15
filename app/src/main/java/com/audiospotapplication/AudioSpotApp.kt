@@ -5,6 +5,7 @@ import com.audiospotapplication.DataLayer.DataRepository
 import com.audiospotapplication.DataLayer.Model.BaseViewModel
 import com.audiospotapplication.UI.homepage.HomepageViewModel
 import com.audiospotapplication.UI.homepage.home.HomeViewModel
+import com.google.firebase.analytics.FirebaseAnalytics
 import com.visionvalley.letuno.DataLayer.RepositorySource
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
@@ -31,5 +32,7 @@ class AudioSpotApp : Application() {
             androidContext(this@AudioSpotApp.applicationContext)
             modules(listOf(appModule, viewModelModule))
         }
+
+        FirebaseAnalytics.getInstance(this).setAnalyticsCollectionEnabled(true)
     }
 }

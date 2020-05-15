@@ -20,8 +20,6 @@ import com.google.android.material.snackbar.Snackbar
 import com.ps.pexoplayer.PexoEventListener
 import com.ps.pexoplayer.PexoPlayerManager
 import com.ps.pexoplayer.model.PexoMediaMetadata
-import com.visionvalley.letuno.DataLayer.RepositorySource
-import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 open class BaseFragment : Fragment(), BaseView, PexoEventListener {
@@ -83,30 +81,30 @@ open class BaseFragment : Fragment(), BaseView, PexoEventListener {
     override fun showLoginPage() {
         baseViewModel.clearData()
 
-        val intent = Intent(activity!!, LoginActivity::class.java)
+        val intent = Intent(requireActivity(), LoginActivity::class.java)
         intent.addFlags(
             Intent.FLAG_ACTIVITY_CLEAR_TOP or
                     Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         )
         startActivity(intent)
-        activity!!.finish()
+        requireActivity().finish()
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        baseViewModel.getObserverForError().observe(this, Observer {
-            Snackbar.make(activity!!.findViewById(android.R.id.content), it, Snackbar.LENGTH_SHORT)
+        baseViewModel.getObserverForError().observe(viewLifecycleOwner, Observer {
+            Snackbar.make(requireActivity().findViewById(android.R.id.content), it, Snackbar.LENGTH_SHORT)
                 .show()
         })
 
-        baseViewModel.getProgressLoadingObserver().observe(this, Observer {
+        baseViewModel.getProgressLoadingObserver().observe(viewLifecycleOwner, Observer {
             if (it) {
-                DialogUtils.showProgressDialog(activity!!, context!!.getString(R.string.loading))
+                DialogUtils.showProgressDialog(requireActivity(), requireContext().getString(R.string.loading))
             }
         })
 
-        baseViewModel.getErrorAuthenticationObserver().observe(this, Observer {
+        baseViewModel.getErrorAuthenticationObserver().observe(viewLifecycleOwner, Observer {
             if (it == RetrofitResponseHandler.Companion.Status.UNAUTHORIZED) {
                 showLoginPage()
             }
@@ -119,7 +117,7 @@ open class BaseFragment : Fragment(), BaseView, PexoEventListener {
         getPlaylistIdObserver().value = pexoPlayerManager.pexoInstance.playlistId
     }
 
-    override fun onAttach(context: Context?) {
+    override fun onAttach(context: Context) {
         pexoPlayerManager = PexoPlayerManager(context)
         pexoPlayerManager.setPendingIntentClass(BookChaptersActivity::class.java)
         pexoPlayerManager.setPexoEventListener(this)

@@ -42,7 +42,8 @@ class SplashActivity : AppCompatActivity(), SplashContract.View {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_splash)
 
-        forceUpdate()
+//        forceUpdate()
+        startHomepageScreen()
     }
 
     override fun startHomepageScreen() {
