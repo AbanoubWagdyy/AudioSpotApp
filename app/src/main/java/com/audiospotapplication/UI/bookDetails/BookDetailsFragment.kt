@@ -16,7 +16,7 @@ import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.audiospot.DataLayer.Model.Book
 import com.audiospot.DataLayer.Model.BookDetailsResponse
-import com.audiospotapplication.BaseFragment
+import com.audiospotapplication.UI.BaseFragment
 import com.audiospotapplication.DataLayer.Model.Review
 import com.audiospotapplication.UI.BaseActivity
 import com.audiospotapplication.UI.bookChapters.BookChaptersActivity
@@ -47,7 +47,7 @@ class BookDetailsFragment : BaseFragment(), BookDetailsContract.View {
     }
 
     override fun viewRateBookScreen() {
-        val intent = Intent(activity!!, RateBookActivity::class.java)
+        val intent = Intent(requireActivity(), RateBookActivity::class.java)
         startActivity(intent)
     }
 
@@ -61,37 +61,37 @@ class BookDetailsFragment : BaseFragment(), BookDetailsContract.View {
     }
 
     override fun viewAllReviewsScreen() {
-        val intent = Intent(activity!!, BookReviewsActivity::class.java)
+        val intent = Intent(requireActivity(), BookReviewsActivity::class.java)
         startActivity(intent)
     }
 
     override fun viewBookChaptersScreen() {
-        val intent = Intent(activity!!, BookChaptersActivity::class.java)
+        val intent = Intent(requireActivity(), BookChaptersActivity::class.java)
         startActivity(intent)
     }
 
     override fun showGiveGiftScreen() {
-        val intent = Intent(activity!!, GiftSelectionActivity::class.java)
+        val intent = Intent(requireActivity(), GiftSelectionActivity::class.java)
         startActivity(intent)
     }
 
     override fun showLoginMessage(message: String) {
         if (activity != null)
             Snackbar.make(
-                activity!!.findViewById(android.R.id.content),
+                requireActivity().findViewById(android.R.id.content),
                 message,
                 Snackbar.LENGTH_LONG
             ).show()
         Handler().postDelayed({
-            val mainIntent = Intent(activity!!, LoginActivity::class.java)
-            activity!!.startActivity(mainIntent)
+            val mainIntent = Intent(requireActivity(), LoginActivity::class.java)
+            requireActivity().startActivity(mainIntent)
         }, 500)
     }
 
     override fun showMessage(message: String) {
         if (activity != null)
             Snackbar.make(
-                activity!!.findViewById(android.R.id.content),
+                requireActivity().findViewById(android.R.id.content),
                 message,
                 Snackbar.LENGTH_LONG
             ).show()
@@ -107,11 +107,11 @@ class BookDetailsFragment : BaseFragment(), BookDetailsContract.View {
     }
 
     override fun getAppContext(): Context? {
-        return activity!!.applicationContext
+        return requireActivity().applicationContext
     }
 
     override fun showLoadingDialog() {
-        DialogUtils.showProgressDialog(activity!!, "Loading ....")
+        DialogUtils.showProgressDialog(requireActivity(), "Loading ....")
     }
 
     override fun dismissLoading() {
@@ -213,7 +213,7 @@ class BookDetailsFragment : BaseFragment(), BookDetailsContract.View {
 
             ImageUtils.setImageFromUrlIntoImageViewUsingGlide(
                 it.data.cover,
-                activity!!.applicationContext,
+                requireActivity().applicationContext,
                 ivBook
             )
         }

@@ -4,12 +4,11 @@ package com.audiospotapplication.UI.myBookmarks
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.audiospotapplication.BaseFragment
+import com.audiospotapplication.UI.BaseFragment
 import com.audiospotapplication.DataLayer.Model.Bookmark
 
 import com.audiospotapplication.R
@@ -23,7 +22,7 @@ import kotlinx.android.synthetic.main.fragment_my_bookmarks.*
 class MyBookmarksFragment : BaseFragment(), MyBookmarksContract.View, OnBookmarkClickListener {
 
     override fun showBookChaptersScreen() {
-        val intent = Intent(activity!!, BookChaptersActivity::class.java)
+        val intent = Intent(requireActivity(), BookChaptersActivity::class.java)
         startActivity(intent)
     }
 
@@ -44,11 +43,11 @@ class MyBookmarksFragment : BaseFragment(), MyBookmarksContract.View, OnBookmark
     }
 
     override fun getAppContext(): Context? {
-        return activity!!.applicationContext
+        return requireActivity().applicationContext
     }
 
     override fun showLoading() {
-        DialogUtils.showProgressDialog(activity!!, "Loading ...")
+        DialogUtils.showProgressDialog(requireActivity(), "Loading ...")
     }
 
     override fun dismissLoading() {
@@ -56,7 +55,7 @@ class MyBookmarksFragment : BaseFragment(), MyBookmarksContract.View, OnBookmark
     }
 
     override fun showMessage(message: String) {
-        Snackbar.make(activity!!.findViewById(android.R.id.content), message, Snackbar.LENGTH_SHORT).show()
+        Snackbar.make(requireActivity().findViewById(android.R.id.content), message, Snackbar.LENGTH_SHORT).show()
     }
 
     override fun finalizeView() {

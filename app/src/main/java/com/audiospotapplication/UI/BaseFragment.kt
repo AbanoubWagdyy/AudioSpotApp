@@ -1,4 +1,4 @@
-package com.audiospotapplication
+package com.audiospotapplication.UI
 
 import android.content.Context
 import android.content.Intent
@@ -12,6 +12,7 @@ import androidx.lifecycle.Observer
 import com.audiospot.DataLayer.Model.Book
 import com.audiospotapplication.DataLayer.Model.BaseViewModel
 import com.audiospotapplication.DataLayer.Retrofit.RetrofitResponseHandler
+import com.audiospotapplication.R
 import com.audiospotapplication.UI.bookChapters.BookChaptersActivity
 
 import com.audiospotapplication.UI.login.LoginActivity
@@ -100,7 +101,9 @@ open class BaseFragment : Fragment(), BaseView, PexoEventListener {
 
         baseViewModel.getProgressLoadingObserver().observe(viewLifecycleOwner, Observer {
             if (it) {
-                DialogUtils.showProgressDialog(requireActivity(), requireContext().getString(R.string.loading))
+                DialogUtils.showProgressDialog(requireActivity(), requireContext().getString(
+                    R.string.loading
+                ))
             }
         })
 

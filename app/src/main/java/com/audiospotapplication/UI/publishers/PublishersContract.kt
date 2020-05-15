@@ -1,7 +1,7 @@
 package com.audiospotapplication.UI.publishers
 
 import android.content.Context
-import com.audiospotapplication.BaseView
+import com.audiospotapplication.UI.BaseView
 import com.audiospotapplication.DataLayer.Model.PublishersResponse
 import com.audiospotapplication.DataLayer.Model.PublishersResponseData
 

@@ -8,7 +8,6 @@ import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
-import com.audiospotapplication.BaseView
 import com.audiospotapplication.DataLayer.DataRepository
 import com.audiospotapplication.DataLayer.Model.BookListResponse
 import com.audiospotapplication.DataLayer.Retrofit.RetrofitCallbacks
@@ -30,7 +29,8 @@ import kotlinx.android.synthetic.main.back_header.*
 import kotlinx.android.synthetic.main.header.*
 import retrofit2.Call
 
-abstract class BaseActivity : AppCompatActivity(), BaseView {
+abstract class BaseActivity : AppCompatActivity(),
+    BaseView {
 
     override fun showLoginPage() {
         mRepositorySource.reset()

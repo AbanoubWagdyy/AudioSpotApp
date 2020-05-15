@@ -8,7 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.audiospot.DataLayer.Model.Book
-import com.audiospotapplication.BaseFragment
+import com.audiospotapplication.UI.BaseFragment
 
 import com.audiospotapplication.R
 import com.audiospotapplication.UI.giveAgift.GiveGiftActivity
@@ -21,24 +21,24 @@ import kotlinx.android.synthetic.main.fragment_gift_selection.*
 class GiftSelectionFragment : BaseFragment(), GiftSelectionContract.View {
 
     override fun showPayment(id: Int, quantity: Int) {
-        val intent = Intent(activity!!, PaymentActivity::class.java)
+        val intent = Intent(requireActivity(), PaymentActivity::class.java)
         intent.putExtra("BOOKID", id.toString())
         intent.putExtra("VOUCHER", quantity.toString())
         startActivity(intent)
-        activity!!.finish()
+        requireActivity().finish()
     }
 
     override fun showGiftSCreen() {
-        val intent = Intent(activity!!, GiveGiftActivity::class.java)
+        val intent = Intent(requireActivity(), GiveGiftActivity::class.java)
         startActivity(intent)
     }
 
     override fun getAppContext(): Context? {
-        return activity!!.applicationContext
+        return requireActivity().applicationContext
     }
 
     override fun showLoadingDialog() {
-        DialogUtils.showProgressDialog(activity!!, "Loading ...")
+        DialogUtils.showProgressDialog(requireActivity(), "Loading ...")
     }
 
     override fun dismissLoading() {
@@ -60,7 +60,7 @@ class GiftSelectionFragment : BaseFragment(), GiftSelectionContract.View {
         }
         ImageUtils.setImageFromUrlIntoImageViewUsingGlide(
             bookDetailsData.cover,
-            activity!!.applicationContext,
+            requireActivity().applicationContext,
             ivBook
         )
     }
@@ -68,7 +68,7 @@ class GiftSelectionFragment : BaseFragment(), GiftSelectionContract.View {
     override fun showMessage(message: String) {
         if (activity != null)
             Snackbar.make(
-                activity!!.findViewById(android.R.id.content),
+                requireActivity().findViewById(android.R.id.content),
                 message,
                 Snackbar.LENGTH_SHORT
             ).show()

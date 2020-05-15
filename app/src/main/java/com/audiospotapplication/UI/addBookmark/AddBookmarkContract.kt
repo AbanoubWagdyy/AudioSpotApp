@@ -1,7 +1,7 @@
 package com.audiospotapplication.UI.addBookmark
 
 import android.content.Context
-import com.audiospotapplication.BaseView
+import com.audiospotapplication.UI.BaseView
 
 interface AddBookmarkContract {
 
@@ -11,7 +11,7 @@ interface AddBookmarkContract {
         fun resetRepo()
     }
 
-    interface View :BaseView{
+    interface View : BaseView {
         fun getAppContext(): Context?
         fun showLoading()
         fun dismissLoading()

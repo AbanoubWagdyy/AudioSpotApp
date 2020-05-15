@@ -1,7 +1,7 @@
 package com.audiospotapplication.UI.voucher
 
 import android.content.Context
-import com.audiospotapplication.BaseView
+import com.audiospotapplication.UI.BaseView
 
 interface VoucherContract {
 

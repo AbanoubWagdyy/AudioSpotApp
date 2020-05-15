@@ -1,7 +1,7 @@
 package com.audiospotapplication.UI.contactUs
 
 import android.content.Context
-import com.audiospotapplication.BaseView
+import com.audiospotapplication.UI.BaseView
 
 interface ContactUsContract {
 
@@ -10,7 +10,7 @@ interface ContactUsContract {
         fun contactUs(message: String)
     }
 
-    interface View :BaseView{
+    interface View : BaseView {
         fun getAppContext(): Context?
         fun showLoadingDialog()
         fun dismissLoading()

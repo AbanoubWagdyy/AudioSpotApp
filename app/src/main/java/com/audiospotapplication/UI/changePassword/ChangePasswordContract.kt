@@ -1,7 +1,7 @@
 package com.audiospotapplication.UI.changePassword
 
 import android.content.Context
-import com.audiospotapplication.BaseView
+import com.audiospotapplication.UI.BaseView
 
 interface ChangePasswordContract {
 

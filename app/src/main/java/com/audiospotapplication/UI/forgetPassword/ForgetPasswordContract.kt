@@ -1,7 +1,7 @@
 package com.audiospotapplication.UI.forgetPassword
 
 import android.app.Activity
-import com.audiospotapplication.BaseView
+import com.audiospotapplication.UI.BaseView
 
 interface ForgetPasswordContract {
 

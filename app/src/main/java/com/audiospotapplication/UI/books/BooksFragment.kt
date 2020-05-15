@@ -10,7 +10,7 @@ import android.widget.ImageView
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.audiospot.DataLayer.Model.Book
-import com.audiospotapplication.BaseFragment
+import com.audiospotapplication.UI.BaseFragment
 import com.audiospotapplication.DataLayer.Model.BookListResponse
 import com.audiospotapplication.DataLayer.Retrofit.GlobalKeys
 import com.audiospotapplication.R
@@ -26,7 +26,7 @@ class BooksFragment(var ivArrow: ImageView) : BaseFragment(), BooksContract.View
     onBookItemClickListener {
 
     override fun showBookDetailsScreen() {
-        val intent = Intent(activity!!, BookDetailsActivity::class.java)
+        val intent = Intent(requireActivity(), BookDetailsActivity::class.java)
         startActivity(intent)
     }
 
@@ -35,7 +35,7 @@ class BooksFragment(var ivArrow: ImageView) : BaseFragment(), BooksContract.View
     }
 
     override fun showLoadingDialog() {
-        DialogUtils.showProgressDialog(activity!!, "Loading ...")
+        DialogUtils.showProgressDialog(requireActivity(), "Loading ...")
     }
 
     override fun onItemClicked(book: Book) {
@@ -75,12 +75,12 @@ class BooksFragment(var ivArrow: ImageView) : BaseFragment(), BooksContract.View
     }
 
     override fun showErrorMessage(message: String) {
-        Snackbar.make(activity!!.findViewById(android.R.id.content), message, Snackbar.LENGTH_SHORT)
+        Snackbar.make(requireActivity().findViewById(android.R.id.content), message, Snackbar.LENGTH_SHORT)
             .show()
     }
 
     override fun getAppContext(): Context? {
-        return activity!!.applicationContext
+        return requireActivity().applicationContext
     }
 
     private var adapter: BooksAdapter? = null
@@ -147,7 +147,7 @@ class BooksFragment(var ivArrow: ImageView) : BaseFragment(), BooksContract.View
             }
         }
 
-        popupMenu.show(activity!!, view)
+        popupMenu.show(requireActivity(), view)
     }
 
     override fun onStop() {

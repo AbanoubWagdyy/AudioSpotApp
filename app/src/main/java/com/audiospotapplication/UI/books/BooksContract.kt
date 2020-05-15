@@ -2,7 +2,7 @@ package com.audiospotapplication.UI.books
 
 import android.content.Context
 import com.audiospot.DataLayer.Model.Book
-import com.audiospotapplication.BaseView
+import com.audiospotapplication.UI.BaseView
 import com.audiospotapplication.DataLayer.Model.BookListResponse
 
 interface BooksContract {

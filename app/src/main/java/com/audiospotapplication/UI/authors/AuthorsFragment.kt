@@ -7,14 +7,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
-import androidx.fragment.app.Fragment
 import com.audiospotapplication.DataLayer.Model.AuthorsResponse
 import com.audiospotapplication.R
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.fragment_authors.*
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.audiospotapplication.BaseFragment
+import com.audiospotapplication.UI.BaseFragment
 import com.audiospotapplication.DataLayer.Model.AuthorsData
 import com.audiospotapplication.UI.authorDetails.AuthorDetailsActivity
 import com.audiospotapplication.UI.authors.Adapter.AuthorsListAdapter
@@ -24,7 +23,7 @@ import com.audiospotapplication.utils.DialogUtils
 
 class AuthorsFragment(var ivArrow: ImageView) : BaseFragment(), AuthorsContract.View, OnAuthorsItemClickListener {
     override fun showLoading() {
-        DialogUtils.showProgressDialog(activity!!,"Loading ....")
+        DialogUtils.showProgressDialog(requireActivity(),"Loading ....")
     }
 
     override fun dismissLoading() {
@@ -32,7 +31,7 @@ class AuthorsFragment(var ivArrow: ImageView) : BaseFragment(), AuthorsContract.
     }
 
     override fun showAuthorDetailsScreen() {
-        val intent = Intent(activity!!, AuthorDetailsActivity::class.java)
+        val intent = Intent(requireActivity(), AuthorDetailsActivity::class.java)
         startActivity(intent)
     }
 
@@ -41,18 +40,18 @@ class AuthorsFragment(var ivArrow: ImageView) : BaseFragment(), AuthorsContract.
     }
 
     override fun setAuthorsList(authorsResponse: AuthorsResponse?) {
-        recyclerAuthors.layoutManager = GridLayoutManager(activity!!, 2) as RecyclerView.LayoutManager?
+        recyclerAuthors.layoutManager = GridLayoutManager(requireActivity(), 2) as RecyclerView.LayoutManager?
         recyclerAuthors.setHasFixedSize(true)
         recyclerAuthors.isNestedScrollingEnabled = false
         recyclerAuthors.adapter = AuthorsListAdapter(authorsResponse!!, this)
     }
 
     override fun getAppContext(): Context? {
-        return activity!!.applicationContext
+        return requireActivity().applicationContext
     }
 
     override fun showErrorMessage(message: String) {
-        Snackbar.make(activity!!.findViewById(android.R.id.content), message, Snackbar.LENGTH_SHORT).show()
+        Snackbar.make(requireActivity().findViewById(android.R.id.content), message, Snackbar.LENGTH_SHORT).show()
     }
 
     lateinit var mPresenter: AuthorsContract.Presenter

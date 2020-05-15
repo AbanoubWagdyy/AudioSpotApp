@@ -9,14 +9,13 @@ import android.view.ViewGroup
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.audiospot.DataLayer.Model.Book
-import com.audiospotapplication.BaseFragment
+import com.audiospotapplication.UI.BaseFragment
 
 import com.audiospotapplication.R
 import com.audiospotapplication.UI.bookDetails.BookDetailsActivity
 import com.audiospotapplication.UI.books.Interface.onBookItemClickListener
 import com.audiospotapplication.UI.books.adapter.BooksAdapter
 import com.google.android.material.snackbar.Snackbar
-import com.ps.pexoplayer.model.PexoMediaMetadata
 import kotlinx.android.synthetic.main.fragment_my_books.*
 
 class MyBooksFragment : BaseFragment(), MyBooksContract.View, onBookItemClickListener {
@@ -27,7 +26,7 @@ class MyBooksFragment : BaseFragment(), MyBooksContract.View, onBookItemClickLis
     }
 
     override fun showBookDetailsScreen() {
-        val intent = Intent(activity!!, BookDetailsActivity::class.java)
+        val intent = Intent(requireActivity(), BookDetailsActivity::class.java)
         startActivity(intent)
     }
 
@@ -42,14 +41,14 @@ class MyBooksFragment : BaseFragment(), MyBooksContract.View, onBookItemClickLis
     }
 
     override fun getAppContext(): Context? {
-        return activity!!.applicationContext
+        return requireActivity().applicationContext
     }
 
     override fun showErrorMessage() {
         if (activity != null)
             Snackbar.make(
-                activity!!.findViewById(android.R.id.content),
-                activity!!.applicationContext.getString(R.string.try_again),
+                requireActivity().findViewById(android.R.id.content),
+                requireActivity().applicationContext.getString(R.string.try_again),
                 Snackbar.LENGTH_SHORT
             ).show()
     }

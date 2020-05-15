@@ -9,7 +9,7 @@ import android.view.ViewGroup
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.audiospot.DataLayer.Model.Book
-import com.audiospotapplication.BaseFragment
+import com.audiospotapplication.UI.BaseFragment
 
 import com.audiospotapplication.R
 import com.audiospotapplication.UI.BaseActivity
@@ -26,9 +26,9 @@ class CartFragment : BaseFragment(), CartContract.View, onBookItemClickListener,
     onBookItemClickListener.onCartBookDeleteClickListener {
 
     override fun showPaymentScreen() {
-        val intent = Intent(activity!!, PaymentActivity::class.java)
+        val intent = Intent(requireActivity(), PaymentActivity::class.java)
         startActivity(intent)
-        activity!!.finish()
+        requireActivity().finish()
     }
 
     override fun setCartCount(size: Int) {
@@ -36,14 +36,14 @@ class CartFragment : BaseFragment(), CartContract.View, onBookItemClickListener,
     }
 
     override fun showBookDetailsScreen() {
-        val intent = Intent(activity!!, BookDetailsActivity::class.java)
+        val intent = Intent(requireActivity(), BookDetailsActivity::class.java)
         startActivity(intent)
     }
 
     override fun showMessage(message: String) {
         if (activity != null)
             Snackbar.make(
-                activity!!.findViewById(android.R.id.content),
+                requireActivity().findViewById(android.R.id.content),
                 message,
                 Snackbar.LENGTH_SHORT
             ).show()
@@ -64,19 +64,19 @@ class CartFragment : BaseFragment(), CartContract.View, onBookItemClickListener,
     }
 
     override fun getAppContext(): Context? {
-        return activity!!.applicationContext
+        return requireActivity().applicationContext
     }
 
     override fun showErrorMessage() {
         if (activity != null)
             Snackbar.make(
-                activity!!.findViewById(android.R.id.content),
-                activity!!.applicationContext.getString(R.string.try_again), Snackbar.LENGTH_SHORT
+                requireActivity().findViewById(android.R.id.content),
+                requireActivity().applicationContext.getString(R.string.try_again), Snackbar.LENGTH_SHORT
             ).show()
     }
 
     override fun showLoading() {
-        DialogUtils.showProgressDialog(activity!!, "Loading ...")
+        DialogUtils.showProgressDialog(requireActivity(), "Loading ...")
     }
 
     override fun dismissLoading() {
@@ -131,7 +131,7 @@ class CartFragment : BaseFragment(), CartContract.View, onBookItemClickListener,
         super.onViewCreated(view, savedInstanceState)
 
         promoCode.setOnClickListener {
-            val intent = Intent(activity!!, PromoCodeActivity::class.java)
+            val intent = Intent(requireActivity(), PromoCodeActivity::class.java)
             startActivity(intent)
         }
 

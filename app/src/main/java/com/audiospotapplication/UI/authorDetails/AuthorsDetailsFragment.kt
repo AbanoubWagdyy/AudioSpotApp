@@ -9,7 +9,7 @@ import android.view.ViewGroup
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.audiospot.DataLayer.Model.Book
-import com.audiospotapplication.BaseFragment
+import com.audiospotapplication.UI.BaseFragment
 import com.audiospotapplication.DataLayer.Model.BookListResponse
 
 import com.audiospotapplication.R
@@ -24,7 +24,7 @@ import kotlinx.android.synthetic.main.fragment_authors_details.*
 class AuthorsDetailsFragment : BaseFragment(), AuthorDetailsContract.View, onBookItemClickListener {
 
     override fun showBookDetailsScreen() {
-        val intent = Intent(activity!!, BookDetailsActivity::class.java)
+        val intent = Intent(requireActivity(), BookDetailsActivity::class.java)
         startActivity(intent)
     }
 
@@ -48,7 +48,7 @@ class AuthorsDetailsFragment : BaseFragment(), AuthorDetailsContract.View, onBoo
 
     override fun setAuthorImage(photo: String) {
         ImageUtils.setImageFromUrlIntoImageViewUsingGlide(
-            photo, activity!!.applicationContext,
+            photo, requireActivity().applicationContext,
             ivAuthor, false
         )
     }
@@ -80,17 +80,17 @@ class AuthorsDetailsFragment : BaseFragment(), AuthorDetailsContract.View, onBoo
     }
 
     override fun showErrorMessage(message: String) {
-        Snackbar.make(activity!!.findViewById(android.R.id.content), message, Snackbar.LENGTH_SHORT)
+        Snackbar.make(requireActivity().findViewById(android.R.id.content), message, Snackbar.LENGTH_SHORT)
             .show()
     }
 
 
     override fun getAppContext(): Context? {
-        return activity!!.applicationContext
+        return requireActivity().applicationContext
     }
 
     override fun showLoading() {
-        DialogUtils.showProgressDialog(activity!!, "Loading ....")
+        DialogUtils.showProgressDialog(requireActivity(), "Loading ....")
     }
 
     override fun dismissLoading() {

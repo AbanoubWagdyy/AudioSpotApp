@@ -8,7 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.audiospot.DataLayer.Model.Book
-import com.audiospotapplication.BaseFragment
+import com.audiospotapplication.UI.BaseFragment
 import com.audiospotapplication.DataLayer.DataRepository
 
 import com.audiospotapplication.R
@@ -28,14 +28,14 @@ class CongratulationsFragment : BaseFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        mRepositorySource = DataRepository.getInstance(activity!!.applicationContext)
+        mRepositorySource = DataRepository.getInstance(requireActivity().applicationContext)
         mRepositorySource.getVoucherBook()?.let { bindResponse(it) }
 
         linearBook.setOnClickListener {
             mRepositorySource.saveBook(currentBook)
-            val intent = Intent(activity!!, BookDetailsActivity::class.java)
+            val intent = Intent(requireActivity(), BookDetailsActivity::class.java)
             startActivity(intent)
-            activity!!.finish()
+            requireActivity().finish()
         }
     }
 
@@ -63,7 +63,7 @@ class CongratulationsFragment : BaseFragment() {
             }
             tvNarrator.text = builder.toString().substring(0, builder.toString().length - 1)
         }
-        ImageUtils.setImageFromUrlIntoImageViewUsingGlide(result.cover, activity!!.applicationContext, ivBook)
+        ImageUtils.setImageFromUrlIntoImageViewUsingGlide(result.cover, requireActivity().applicationContext, ivBook)
 
         val listMyBooks = ArrayList<Book>()
         mRepositorySource.getMyBooks()?.let { listMyBooks.addAll(it) }

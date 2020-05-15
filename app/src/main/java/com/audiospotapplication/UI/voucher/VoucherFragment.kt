@@ -4,11 +4,10 @@ package com.audiospotapplication.UI.voucher
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.audiospotapplication.BaseFragment
+import com.audiospotapplication.UI.BaseFragment
 
 import com.audiospotapplication.R
 import com.audiospotapplication.UI.promoCodeCongratulations.CongratulationsActivity
@@ -21,24 +20,24 @@ class VoucherFragment : BaseFragment(), VoucherContract.View {
     override fun showMessage(message: String) {
         if (activity != null)
             Snackbar.make(
-                activity!!.findViewById(android.R.id.content),
+                requireActivity().findViewById(android.R.id.content),
                 message,
                 Snackbar.LENGTH_SHORT
             ).show()
     }
 
     override fun showCongratulationScreen() {
-        val intent = Intent(activity!!, CongratulationsActivity::class.java)
+        val intent = Intent(requireActivity(), CongratulationsActivity::class.java)
         startActivity(intent)
-        activity!!.finish()
+        requireActivity().finish()
     }
 
     override fun getAppContext(): Context? {
-        return activity!!.applicationContext
+        return requireActivity().applicationContext
     }
 
     override fun showLoadingDialog() {
-        DialogUtils.showProgressDialog(activity!!, "Loading ....")
+        DialogUtils.showProgressDialog(requireActivity(), "Loading ....")
     }
 
     override fun dismissLoading() {

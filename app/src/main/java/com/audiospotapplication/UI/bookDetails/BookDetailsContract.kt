@@ -3,7 +3,7 @@ package com.audiospotapplication.UI.bookDetails
 import android.content.Context
 import com.audiospot.DataLayer.Model.Book
 import com.audiospot.DataLayer.Model.BookDetailsResponse
-import com.audiospotapplication.BaseView
+import com.audiospotapplication.UI.BaseView
 import com.audiospotapplication.DataLayer.Model.Review
 
 interface BookDetailsContract {

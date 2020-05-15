@@ -1,7 +1,6 @@
 package com.audiospotapplication.UI.register
 
 import androidx.appcompat.app.AppCompatActivity
-import com.audiospotapplication.BaseView
 
 
 interface RegisterContract {

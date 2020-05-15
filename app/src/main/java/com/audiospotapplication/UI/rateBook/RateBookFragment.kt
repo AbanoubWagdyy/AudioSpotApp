@@ -6,7 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.audiospot.DataLayer.Model.Book
-import com.audiospotapplication.BaseFragment
+import com.audiospotapplication.UI.BaseFragment
 
 import com.audiospotapplication.R
 import com.audiospotapplication.utils.DialogUtils
@@ -19,12 +19,12 @@ import kotlinx.android.synthetic.main.fragment_rate_book.*
 class RateBookFragment : BaseFragment(), RateBookContract.View {
 
     override fun showHompageScreen() {
-        activity!!.finish()
+        requireActivity().finish()
     }
 
     override fun showMessage(message: String) {
         if (activity != null)
-            Snackbar.make(activity!!.findViewById(android.R.id.content), message, Snackbar.LENGTH_LONG).show()
+            Snackbar.make(requireActivity().findViewById(android.R.id.content), message, Snackbar.LENGTH_LONG).show()
     }
 
     override fun bindResponse(bookDetailsData: Book) {
@@ -42,17 +42,17 @@ class RateBookFragment : BaseFragment(), RateBookContract.View {
         }
         ImageUtils.setImageFromUrlIntoImageViewUsingGlide(
             bookDetailsData.cover,
-            activity!!.applicationContext,
+            requireActivity().applicationContext,
             ivBook
         )
     }
 
     override fun getAppContext(): Context? {
-        return activity!!.applicationContext
+        return requireActivity().applicationContext
     }
 
     override fun showLoadingDialog() {
-        DialogUtils.showProgressDialog(activity!!, "Loading ...")
+        DialogUtils.showProgressDialog(requireActivity(), "Loading ...")
     }
 
     override fun dismissLoading() {

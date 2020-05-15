@@ -3,11 +3,10 @@ package com.audiospotapplication.UI.changePassword
 
 import android.content.Context
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.audiospotapplication.BaseFragment
+import com.audiospotapplication.UI.BaseFragment
 
 import com.audiospotapplication.R
 import com.audiospotapplication.utils.DialogUtils
@@ -18,7 +17,7 @@ import kotlinx.android.synthetic.main.fragment_change_password.*
 class ChangePasswordFragment : BaseFragment(), ChangePasswordContract.View {
 
     override fun showLoading() {
-        DialogUtils.showProgressDialog(activity!!,"Loading ...")
+        DialogUtils.showProgressDialog(requireActivity(),"Loading ...")
     }
 
     override fun dismissLoading() {
@@ -26,23 +25,23 @@ class ChangePasswordFragment : BaseFragment(), ChangePasswordContract.View {
     }
 
     override fun getAppContext(): Context? {
-        return activity!!.applicationContext
+        return requireActivity().applicationContext
     }
 
     override fun showIncorrectOldPassword(s: String) {
-        Snackbar.make(activity!!.findViewById(android.R.id.content), s, Snackbar.LENGTH_SHORT).show()
+        Snackbar.make(requireActivity().findViewById(android.R.id.content), s, Snackbar.LENGTH_SHORT).show()
     }
 
     override fun showCompleteAllFieldsMessage(s: String) {
-        Snackbar.make(activity!!.findViewById(android.R.id.content), s, Snackbar.LENGTH_SHORT).show()
+        Snackbar.make(requireActivity().findViewById(android.R.id.content), s, Snackbar.LENGTH_SHORT).show()
     }
 
     override fun finalizeView() {
-        activity!!.finish()
+        requireActivity().finish()
     }
 
     override fun showErrorMessage(message: String) {
-        Snackbar.make(activity!!.findViewById(android.R.id.content), message, Snackbar.LENGTH_SHORT).show()
+        Snackbar.make(requireActivity().findViewById(android.R.id.content), message, Snackbar.LENGTH_SHORT).show()
     }
 
     lateinit var mPresenter: ChangePasswordContract.Presenter

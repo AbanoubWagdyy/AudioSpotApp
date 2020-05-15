@@ -1,7 +1,7 @@
 package com.audiospotapplication.UI.authors
 
 import android.content.Context
-import com.audiospotapplication.BaseView
+import com.audiospotapplication.UI.BaseView
 import com.audiospotapplication.DataLayer.Model.AuthorsData
 import com.audiospotapplication.DataLayer.Model.AuthorsResponse
 

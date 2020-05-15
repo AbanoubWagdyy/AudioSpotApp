@@ -2,7 +2,7 @@ package com.audiospotapplication.UI.giftSelection
 
 import android.content.Context
 import com.audiospot.DataLayer.Model.Book
-import com.audiospotapplication.BaseView
+import com.audiospotapplication.UI.BaseView
 
 interface GiftSelectionContract {
 

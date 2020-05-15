@@ -12,7 +12,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.audiospot.DataLayer.Model.Book
 
 import com.audiospotapplication.R
-import com.audiospotapplication.BaseFragment
+import com.audiospotapplication.UI.BaseFragment
 import com.audiospotapplication.UI.books.Interface.onBookItemClickListener
 import com.audiospotapplication.UI.homepage.home.adapter.HomepageAdapter
 import com.audiospotapplication.UI.bookDetails.BookDetailsActivity
@@ -27,7 +27,7 @@ class HomeFragment : BaseFragment(), onBookItemClickListener {
     }
 
     fun showBookDetailsScreen() {
-        val intent = Intent(activity!!, BookDetailsActivity::class.java)
+        val intent = Intent(requireActivity(), BookDetailsActivity::class.java)
         startActivity(intent)
     }
 

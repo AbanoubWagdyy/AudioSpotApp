@@ -8,7 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.audiospot.DataLayer.Model.Book
-import com.audiospotapplication.BaseFragment
+import com.audiospotapplication.UI.BaseFragment
 
 import com.audiospotapplication.R
 import com.audiospotapplication.UI.payment.PaymentActivity
@@ -20,36 +20,36 @@ import kotlinx.android.synthetic.main.fragment_give_agift.*
 class GiveGiftFragment : BaseFragment(), GiveGiftContract.View {
 
     override fun showPayment(emails: String, voucher: String, id: Int) {
-        val intent = Intent(activity!!, PaymentActivity::class.java)
+        val intent = Intent(requireActivity(), PaymentActivity::class.java)
         intent.putExtra("BOOKID", id.toString())
         intent.putExtra("VOUCHER", voucher)
         intent.putExtra("SENDTO", emails)
         startActivity(intent)
-        activity!!.finish()
+        requireActivity().finish()
     }
 
     override fun showMessage(message: String) {
         if (activity != null)
-            Snackbar.make(activity!!.findViewById(android.R.id.content), message, Snackbar.LENGTH_LONG).show()
+            Snackbar.make(requireActivity().findViewById(android.R.id.content), message, Snackbar.LENGTH_LONG).show()
     }
 
     override fun finalizeView() {
         Handler().postDelayed({
-            activity!!.finish()
+            requireActivity().finish()
         }, 1000)
     }
 
     override fun showInvalidEmailMessage(message: String) {
         if (activity != null)
-            Snackbar.make(activity!!.findViewById(android.R.id.content), message, Snackbar.LENGTH_LONG).show()
+            Snackbar.make(requireActivity().findViewById(android.R.id.content), message, Snackbar.LENGTH_LONG).show()
     }
 
     override fun getAppContext(): Context? {
-        return activity!!.applicationContext
+        return requireActivity().applicationContext
     }
 
     override fun showLoadingDialog() {
-        DialogUtils.showProgressDialog(activity!!, "Loading ....")
+        DialogUtils.showProgressDialog(requireActivity(), "Loading ....")
     }
 
     override fun dismissLoading() {
@@ -85,7 +85,7 @@ class GiveGiftFragment : BaseFragment(), GiveGiftContract.View {
             email5.visibility = View.GONE
         }
 
-        ImageUtils.setImageFromUrlIntoImageViewUsingGlide(result.cover, activity!!.applicationContext, ivBook)
+        ImageUtils.setImageFromUrlIntoImageViewUsingGlide(result.cover, requireActivity().applicationContext, ivBook)
     }
 
     override fun onCreateView(

@@ -3,7 +3,7 @@ package com.audiospotapplication.UI.categories
 import android.content.Context
 import com.audiospot.DataLayer.Model.CategoriesListData
 import com.audiospot.DataLayer.Model.CategoriesListResponse
-import com.audiospotapplication.BaseView
+import com.audiospotapplication.UI.BaseView
 
 interface CategoriesContract {
 

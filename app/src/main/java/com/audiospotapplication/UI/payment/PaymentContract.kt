@@ -1,7 +1,7 @@
 package com.audiospotapplication.UI.payment
 
 import android.content.Context
-import com.audiospotapplication.BaseView
+import com.audiospotapplication.UI.BaseView
 import com.audiospotapplication.DataLayer.Model.FawryCustomParams
 import com.audiospotapplication.DataLayer.Retrofit.RetrofitCallbacks
 import com.emeint.android.fawryplugin.Plugininterfacing.PayableItem

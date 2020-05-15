@@ -5,7 +5,6 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,15 +15,11 @@ import kotlinx.android.synthetic.main.fragment_contact_us.*
 import android.content.Intent.ACTION_VIEW
 import android.net.Uri
 import android.os.Handler
-import com.audiospotapplication.BaseFragment
+import com.audiospotapplication.UI.BaseFragment
 import com.audiospotapplication.DataLayer.Retrofit.GlobalKeys
 import com.audiospotapplication.UI.homepage.HomepageActivity
 import com.google.android.material.snackbar.Snackbar
-import android.content.Context.INPUT_METHOD_SERVICE
 import android.view.inputmethod.InputMethodManager
-import androidx.core.content.ContextCompat.getSystemService
-
-
 
 
 class ContactUsFragment : BaseFragment(), ContactUsContract.View {
@@ -32,22 +27,22 @@ class ContactUsFragment : BaseFragment(), ContactUsContract.View {
     override fun showHompageScreen() {
 
         Handler().postDelayed({
-            val intent = Intent(activity!!, HomepageActivity::class.java)
+            val intent = Intent(requireActivity(), HomepageActivity::class.java)
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or
                     Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
             startActivity(intent)
-            activity!!.finish()
+            requireActivity().finish()
         }, 2500)
     }
 
     override fun showMessage(message: String) {
-        Snackbar.make(activity!!.findViewById(android.R.id.content), message, Snackbar.LENGTH_SHORT).show()
+        Snackbar.make(requireActivity().findViewById(android.R.id.content), message, Snackbar.LENGTH_SHORT).show()
     }
 
-    override fun getAppContext(): Context? = activity!!.applicationContext
+    override fun getAppContext(): Context? = requireActivity().applicationContext
 
     override fun showLoadingDialog() {
-        DialogUtils.showProgressDialog(activity!!, "Loading ...")
+        DialogUtils.showProgressDialog(requireActivity(), "Loading ...")
     }
 
     override fun dismissLoading() {
@@ -55,7 +50,7 @@ class ContactUsFragment : BaseFragment(), ContactUsContract.View {
     }
 
     override fun finalizeView() {
-        activity!!.finish()
+        requireActivity().finish()
     }
 
     override fun onCreateView(
@@ -70,7 +65,7 @@ class ContactUsFragment : BaseFragment(), ContactUsContract.View {
         mPresenter = ContactUsPresenter(this)
         mPresenter.start()
         send.setOnClickListener {
-            hideKeyboard(activity!!)
+            hideKeyboard(requireActivity())
             mPresenter.contactUs(message.text.toString())
         }
 

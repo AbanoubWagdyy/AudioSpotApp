@@ -9,7 +9,7 @@ import android.view.ViewGroup
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.audiospot.DataLayer.Model.Book
-import com.audiospotapplication.BaseFragment
+import com.audiospotapplication.UI.BaseFragment
 
 import com.audiospotapplication.R
 import com.audiospotapplication.UI.bookDetails.BookDetailsActivity
@@ -26,7 +26,7 @@ class MyFavouriteBooksFragment : BaseFragment(), myFavouriteBooksContract.View,
     override fun showMessage(message: String) {
         if (activity != null)
             Snackbar.make(
-                activity!!.findViewById(android.R.id.content),
+                requireActivity().findViewById(android.R.id.content),
                 message,
                 Snackbar.LENGTH_SHORT
             ).show()
@@ -47,19 +47,19 @@ class MyFavouriteBooksFragment : BaseFragment(), myFavouriteBooksContract.View,
     }
 
     override fun getAppContext(): Context? {
-        return activity!!.applicationContext
+        return requireActivity().applicationContext
     }
 
     override fun showErrorMessage() {
         Snackbar.make(
-            activity!!.findViewById(android.R.id.content),
-            activity!!.applicationContext.getString(R.string.try_again),
+            requireActivity().findViewById(android.R.id.content),
+            requireActivity().applicationContext.getString(R.string.try_again),
             Snackbar.LENGTH_SHORT
         ).show()
     }
 
     override fun showLoading() {
-        DialogUtils.showProgressDialog(activity!!, "Loading ...")
+        DialogUtils.showProgressDialog(requireActivity(), "Loading ...")
     }
 
     override fun dismissLoading() {
@@ -96,7 +96,7 @@ class MyFavouriteBooksFragment : BaseFragment(), myFavouriteBooksContract.View,
     }
 
     override fun showBookDetailsScreen() {
-        val intent = Intent(activity!!, BookDetailsActivity::class.java)
+        val intent = Intent(requireActivity(), BookDetailsActivity::class.java)
         startActivity(intent)
     }
 

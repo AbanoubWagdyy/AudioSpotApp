@@ -1,7 +1,7 @@
 package com.audiospotapplication.UI.bookChapters
 
 import android.content.Context
-import com.audiospotapplication.BaseView
+import com.audiospotapplication.UI.BaseView
 import com.audiospotapplication.DataLayer.Model.Bookmark
 import com.audiospotapplication.DataLayer.Model.ChaptersData
 import com.audiospotapplication.DataLayer.Model.Paragraph

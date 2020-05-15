@@ -8,11 +8,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
-import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.audiospot.DataLayer.Model.CategoriesListData
 import com.audiospot.DataLayer.Model.CategoriesListResponse
-import com.audiospotapplication.BaseFragment
+import com.audiospotapplication.UI.BaseFragment
 import com.audiospotapplication.R
 import com.audiospotapplication.UI.books.BooksActivity
 import com.audiospotapplication.UI.categories.Interface.OnCategoryItemClickListener
@@ -24,7 +23,7 @@ import kotlinx.android.synthetic.main.fragment_categories.*
 class CategoriesFragment(var ivArrow: ImageView) : BaseFragment(), CategoriesContract.View, OnCategoryItemClickListener {
 
     override fun showLoadingDialog() {
-        DialogUtils.showProgressDialog(activity!!,"Loading ....")
+        DialogUtils.showProgressDialog(requireActivity(),"Loading ....")
     }
 
     override fun dismissLoadingDialog() {
@@ -32,7 +31,7 @@ class CategoriesFragment(var ivArrow: ImageView) : BaseFragment(), CategoriesCon
     }
 
     override fun showBooksScreen() {
-        val intent = Intent(activity!!, BooksActivity::class.java)
+        val intent = Intent(requireActivity(), BooksActivity::class.java)
         startActivity(intent)
     }
 
@@ -41,7 +40,7 @@ class CategoriesFragment(var ivArrow: ImageView) : BaseFragment(), CategoriesCon
     }
 
     override fun getAppContext(): Context? {
-        return activity!!.applicationContext
+        return requireActivity().applicationContext
     }
 
     override fun setCategoriesList(result: CategoriesListResponse?) {
@@ -52,7 +51,7 @@ class CategoriesFragment(var ivArrow: ImageView) : BaseFragment(), CategoriesCon
     }
 
     override fun showErrorMessage(message: String) {
-        Snackbar.make(activity!!.findViewById(android.R.id.content), message, Snackbar.LENGTH_SHORT).show()
+        Snackbar.make(requireActivity().findViewById(android.R.id.content), message, Snackbar.LENGTH_SHORT).show()
     }
 
     lateinit var mPresenter: CategoriesContract.Presenter

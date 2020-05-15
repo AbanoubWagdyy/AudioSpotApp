@@ -8,7 +8,7 @@ import android.text.style.UnderlineSpan
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.audiospotapplication.BaseFragment
+import com.audiospotapplication.UI.BaseFragment
 
 import com.audiospotapplication.R
 import com.audiospotapplication.utils.ImageUtils
@@ -26,7 +26,7 @@ class ProfileFragment : BaseFragment(), ProfileContract.View {
     lateinit var mPresenter: ProfileContract.Presenter
 
     override fun getAppContext(): Context? {
-        return activity!!.applicationContext
+        return requireActivity().applicationContext
     }
 
     override fun setFullName(full_name: String) {
@@ -45,7 +45,7 @@ class ProfileFragment : BaseFragment(), ProfileContract.View {
     }
 
     override fun showErrorMessage(s: String?) {
-        Snackbar.make(activity!!.findViewById(android.R.id.content), s!!, Snackbar.LENGTH_SHORT).show()
+        Snackbar.make(requireActivity().findViewById(android.R.id.content), s!!, Snackbar.LENGTH_SHORT).show()
     }
 
     override fun onCreateView(

@@ -6,11 +6,10 @@ import android.content.Intent
 import android.os.Bundle
 import android.text.SpannableString
 import android.text.style.UnderlineSpan
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.audiospotapplication.BaseFragment
+import com.audiospotapplication.UI.BaseFragment
 import com.audiospotapplication.R
 import com.audiospotapplication.UI.changePassword.ChangePasswordActivity
 import com.audiospotapplication.utils.DialogUtils
@@ -20,7 +19,7 @@ import kotlinx.android.synthetic.main.fragment_update_profile.*
 
 class UpdateProfileFragment : BaseFragment(), UpdateProfileContract.View {
     override fun showLoading() {
-        DialogUtils.showProgressDialog(activity!!,"Loading ...")
+        DialogUtils.showProgressDialog(requireActivity(),"Loading ...")
     }
 
     override fun dismissLoading() {
@@ -29,34 +28,34 @@ class UpdateProfileFragment : BaseFragment(), UpdateProfileContract.View {
 
     override fun disableChangePasswordClick() {
 
-        tvChangePassword.setTextColor(activity!!.resources.getColor(R.color.grey))
+        tvChangePassword.setTextColor(requireActivity().resources.getColor(R.color.grey))
         tvChangePassword.setOnClickListener {
         }
     }
 
     override fun setChangePasswordClick() {
-        val intent = Intent(activity!!.applicationContext, ChangePasswordActivity::class.java)
+        val intent = Intent(requireActivity().applicationContext, ChangePasswordActivity::class.java)
         startActivity(intent)
     }
 
     override fun showInvalidEmailMessage(s: String) {
-        Snackbar.make(activity!!.findViewById(android.R.id.content), s, Snackbar.LENGTH_SHORT).show()
+        Snackbar.make(requireActivity().findViewById(android.R.id.content), s, Snackbar.LENGTH_SHORT).show()
     }
 
     override fun finalizeView() {
-        activity!!.finish()
+        requireActivity().finish()
     }
 
     override fun showErrorMessage(message: String) {
-        Snackbar.make(activity!!.findViewById(android.R.id.content), message, Snackbar.LENGTH_SHORT).show()
+        Snackbar.make(requireActivity().findViewById(android.R.id.content), message, Snackbar.LENGTH_SHORT).show()
     }
 
     override fun showCompleteYourFieldsMessage() {
-        Snackbar.make(activity!!.findViewById(android.R.id.content), "Please Complete All Fields", Snackbar.LENGTH_SHORT).show()
+        Snackbar.make(requireActivity().findViewById(android.R.id.content), "Please Complete All Fields", Snackbar.LENGTH_SHORT).show()
     }
 
     override fun getAppContext(): Context? {
-        return activity!!.applicationContext
+        return requireActivity().applicationContext
     }
 
     lateinit var mPresenter: UpdateProfileContract.Presenter

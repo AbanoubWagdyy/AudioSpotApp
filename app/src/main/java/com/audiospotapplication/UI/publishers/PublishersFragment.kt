@@ -7,9 +7,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
-import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
-import com.audiospotapplication.BaseFragment
+import com.audiospotapplication.UI.BaseFragment
 import com.audiospotapplication.DataLayer.Model.PublishersResponse
 import com.audiospotapplication.DataLayer.Model.PublishersResponseData
 import com.audiospotapplication.R
@@ -23,7 +22,7 @@ import kotlinx.android.synthetic.main.fragment_publishers.*
 class PublishersFragment(var ivArrow: ImageView) : BaseFragment(), PublishersContract.View, OnPublishersItemClickListener {
 
     override fun showLoading() {
-        DialogUtils.showProgressDialog(activity!!,"Loading ....")
+        DialogUtils.showProgressDialog(requireActivity(),"Loading ....")
     }
 
     override fun dismissLoading() {
@@ -31,7 +30,7 @@ class PublishersFragment(var ivArrow: ImageView) : BaseFragment(), PublishersCon
     }
 
     override fun showPublishersDetailsScreen() {
-        val intent = Intent(activity!!, PublisherDetailsActivity::class.java)
+        val intent = Intent(requireActivity(), PublisherDetailsActivity::class.java)
         startActivity(intent)
     }
 
@@ -40,18 +39,18 @@ class PublishersFragment(var ivArrow: ImageView) : BaseFragment(), PublishersCon
     }
 
     override fun setPublishersList(result: PublishersResponse?) {
-        recyclerPublishers.layoutManager = GridLayoutManager(activity!!, 2)
+        recyclerPublishers.layoutManager = GridLayoutManager(requireActivity(), 2)
         recyclerPublishers.setHasFixedSize(true)
         recyclerPublishers.isNestedScrollingEnabled = false
         recyclerPublishers.adapter = PublishersListAdapter(result!!, this)
     }
 
     override fun getAppContext(): Context? {
-        return activity!!.applicationContext
+        return requireActivity().applicationContext
     }
 
     override fun showErrorMessage(message: String) {
-        Snackbar.make(activity!!.findViewById(android.R.id.content), message, Snackbar.LENGTH_SHORT).show()
+        Snackbar.make(requireActivity().findViewById(android.R.id.content), message, Snackbar.LENGTH_SHORT).show()
     }
 
     lateinit var mPresenter: PublishersContract.Presenter

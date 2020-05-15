@@ -9,7 +9,7 @@ import android.view.ViewGroup
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.audiospot.DataLayer.Model.Book
-import com.audiospotapplication.BaseFragment
+import com.audiospotapplication.UI.BaseFragment
 import com.audiospotapplication.DataLayer.Model.BookListResponse
 
 import com.audiospotapplication.R
@@ -27,7 +27,7 @@ class PublisherDetailsFragment : BaseFragment(), PublisherDetailsContract.View,
     onBookItemClickListener {
 
     override fun showBookDetailsScreen() {
-        val intent = Intent(activity!!, BookDetailsActivity::class.java)
+        val intent = Intent(requireActivity(), BookDetailsActivity::class.java)
         startActivity(intent)
     }
 
@@ -42,11 +42,11 @@ class PublisherDetailsFragment : BaseFragment(), PublisherDetailsContract.View,
     }
 
     override fun getAppContext(): Context? {
-        return activity!!.applicationContext
+        return requireActivity().applicationContext
     }
 
     override fun showLoading() {
-        DialogUtils.showProgressDialog(activity!!, "Loading ...")
+        DialogUtils.showProgressDialog(requireActivity(), "Loading ...")
     }
 
     override fun dismissLoading() {
@@ -64,7 +64,7 @@ class PublisherDetailsFragment : BaseFragment(), PublisherDetailsContract.View,
     override fun setPublisherImage(photo: String) {
         ImageUtils.setImageFromUrlIntoImageViewUsingGlide(
             photo,
-            activity!!.applicationContext,
+            requireActivity().applicationContext,
             ivPublisher,
             false
         )
@@ -104,7 +104,7 @@ class PublisherDetailsFragment : BaseFragment(), PublisherDetailsContract.View,
     override fun showErrorMessage(message: String) {
         if (activity != null)
             Snackbar.make(
-                activity!!.findViewById(android.R.id.content),
+                requireActivity().findViewById(android.R.id.content),
                 message,
                 Snackbar.LENGTH_LONG
             ).show()

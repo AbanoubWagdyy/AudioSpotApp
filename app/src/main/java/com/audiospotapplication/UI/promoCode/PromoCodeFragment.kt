@@ -4,11 +4,10 @@ package com.audiospotapplication.UI.promoCode
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.os.Handler
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.audiospotapplication.BaseFragment
+import com.audiospotapplication.UI.BaseFragment
 
 import com.audiospotapplication.R
 import com.audiospotapplication.UI.payment.PaymentActivity
@@ -19,10 +18,10 @@ import kotlinx.android.synthetic.main.fragment_promo_code.*
 class PromoCodeFragment : BaseFragment(), PromoCodeContract.View {
 
     override fun showPayment(promoCode: String) {
-        val intent = Intent(activity!!, PaymentActivity::class.java)
+        val intent = Intent(requireActivity(), PaymentActivity::class.java)
         intent.putExtra("promoCode", promoCode)
         startActivity(intent)
-        activity!!.finish()
+        requireActivity().finish()
     }
 
     override fun setSubTotal(toString: String) {
@@ -43,18 +42,18 @@ class PromoCodeFragment : BaseFragment(), PromoCodeContract.View {
     override fun showMessage(message: String) {
         if (activity != null)
             Snackbar.make(
-                activity!!.findViewById(android.R.id.content),
+                requireActivity().findViewById(android.R.id.content),
                 message,
                 Snackbar.LENGTH_SHORT
             ).show()
     }
 
     override fun getAppContext(): Context? {
-        return activity!!.applicationContext
+        return requireActivity().applicationContext
     }
 
     override fun showLoadingDialog() {
-        DialogUtils.showProgressDialog(activity!!, "Loading ...")
+        DialogUtils.showProgressDialog(requireActivity(), "Loading ...")
     }
 
     override fun dismissLoading() {
@@ -81,9 +80,9 @@ class PromoCodeFragment : BaseFragment(), PromoCodeContract.View {
             mPresenter.applyPromoCode(etPromoCode.text.toString())
         }
         proceedToPayment.setOnClickListener {
-            val intent = Intent(activity!!, PaymentActivity::class.java)
+            val intent = Intent(requireActivity(), PaymentActivity::class.java)
             startActivity(intent)
-            activity!!.finish()
+            requireActivity().finish()
         }
     }
 

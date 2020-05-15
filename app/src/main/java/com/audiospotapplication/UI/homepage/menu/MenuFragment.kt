@@ -4,11 +4,10 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.audiospotapplication.BaseFragment
+import com.audiospotapplication.UI.BaseFragment
 
 import com.audiospotapplication.R
 import com.audiospotapplication.UI.contactUs.ContactUsActivity
@@ -26,27 +25,27 @@ import kotlinx.android.synthetic.main.fragment_menu.*
 class MenuFragment : BaseFragment(), MenuContract.View {
 
     override fun showVoucherScreen() {
-        val intent = Intent(activity!!, VoucherActivity::class.java)
+        val intent = Intent(requireActivity(), VoucherActivity::class.java)
         startActivity(intent)
     }
 
     override fun showMyBookmarksScreen() {
-        val intent = Intent(activity!!, MyBookmarksActivity::class.java)
+        val intent = Intent(requireActivity(), MyBookmarksActivity::class.java)
         startActivity(intent)
     }
 
     override fun showSettingsScreen() {
-        val intent = Intent(activity!!, SettingsActivity::class.java)
+        val intent = Intent(requireActivity(), SettingsActivity::class.java)
         startActivity(intent)
     }
 
     override fun showContactUsScreen() {
-        val intent = Intent(activity!!, ContactUsActivity::class.java)
+        val intent = Intent(requireActivity(), ContactUsActivity::class.java)
         startActivity(intent)
     }
 
     override fun showLoading() {
-        DialogUtils.showProgressDialog(activity!!, "Signing Out ...")
+        DialogUtils.showProgressDialog(requireActivity(), "Signing Out ...")
     }
 
     override fun dismissLoading() {
@@ -59,23 +58,23 @@ class MenuFragment : BaseFragment(), MenuContract.View {
             "You have to be logged in first", Snackbar.LENGTH_LONG
         ).show()
         Handler().postDelayed({
-            val mainIntent = Intent(activity!!, LoginActivity::class.java)
-            activity!!.startActivity(mainIntent)
+            val mainIntent = Intent(requireActivity(), LoginActivity::class.java)
+            requireActivity().startActivity(mainIntent)
         }, 500)
     }
 
     override fun showProfilePageScreen() {
-        val intent = Intent(activity!!, ProfileActivity::class.java)
+        val intent = Intent(requireActivity(), ProfileActivity::class.java)
         startActivity(intent)
     }
 
     override fun showMyFavouriteScreen() {
-        val intent = Intent(activity!!, MyFavouriteBooksActivity::class.java)
+        val intent = Intent(requireActivity(), MyFavouriteBooksActivity::class.java)
         startActivity(intent)
     }
 
     override fun showLoginScreen() {
-        val intent = Intent(activity!!, SplashActivity::class.java)
+        val intent = Intent(requireActivity(), SplashActivity::class.java)
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         startActivity(intent)
     }
@@ -83,14 +82,14 @@ class MenuFragment : BaseFragment(), MenuContract.View {
     override fun showErrorMessage() {
         if (activity != null)
             Snackbar.make(
-                activity!!.findViewById(android.R.id.content),
+                requireActivity().findViewById(android.R.id.content),
                 "Please Check Your Internet Connection",
                 Snackbar.LENGTH_SHORT
             ).show()
     }
 
     override fun getAppContext(): Context? {
-        return activity!!.applicationContext
+        return requireActivity().applicationContext
     }
 
     lateinit var mPresenter: MenuContract.Presenter
