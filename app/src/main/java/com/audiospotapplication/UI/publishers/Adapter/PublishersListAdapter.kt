@@ -32,7 +32,7 @@ class PublishersListAdapter(
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val data = response.data[position]
-        ImageUtils.setImageFromUrlIntoImageViewUsingPicasso(data.photo, context, holder.ivAuthor, false)
+        ImageUtils.setImageFromUrlIntoImageViewUsingGlide(data.photo, context, holder.ivAuthor, false)
         holder.tvAuthor.text = data.name
     }
 

@@ -3,22 +3,22 @@
 
     <item
             android:id="@+id/navigation_homepage"
-            android:icon="@drawable/homepage"
-            android:title="Home"/>
+            android:icon="@mipmap/tab_home_inactive"
+            android:title="@string/home"/>
 
     <item
             android:id="@+id/navigation_library"
-            android:icon="@drawable/homepage"
-            android:title="Library"/>
+            android:icon="@mipmap/tab_library_inactive"
+            android:title="@string/library"/>
 
     <item
-            android:id="@+id/navigation_search"
-            android:icon="@drawable/search"
-            android:title="Search"/>
+            android:id="@+id/navigation_myBooks"
+            android:icon="@mipmap/tab_mybooks_inactive"
+            android:title="@string/my_books"/>
 
     <item
-            android:id="@+id/navigation_my_books"
-            android:icon="@drawable/homepage"
-            android:title="My Books"/>
+            android:id="@+id/navigation_Menu"
+            android:icon="@mipmap/tab_menu_inactive"
+            android:title="@string/menu"/>
 
 </menu>

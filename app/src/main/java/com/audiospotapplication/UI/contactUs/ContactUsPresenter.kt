@@ -20,6 +20,8 @@ class ContactUsPresenter(val mView: ContactUsContract.View) : ContactUsContract.
                     val status = RetrofitResponseHandler.validateAuthResponseStatus(result)
                     if (status == RetrofitResponseHandler.Companion.Status.VALID) {
                         mView.showHompageScreen()
+                    } else if (status == RetrofitResponseHandler.Companion.Status.UNAUTHORIZED) {
+                        mView!!.showLoginPage()
                     }
                 }
             }
@@ -32,7 +34,7 @@ class ContactUsPresenter(val mView: ContactUsContract.View) : ContactUsContract.
     }
 
     override fun start() {
-        mRepositorySource = DataRepository.getInstance(mView.getAppContext())
+        mRepositorySource = mView.getAppContext()?.let { DataRepository.getInstance(it) }!!
     }
 
     lateinit var mRepositorySource: RepositorySource

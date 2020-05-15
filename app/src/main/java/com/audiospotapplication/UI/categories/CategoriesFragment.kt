@@ -12,6 +12,7 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.audiospot.DataLayer.Model.CategoriesListData
 import com.audiospot.DataLayer.Model.CategoriesListResponse
+import com.audiospotapplication.BaseFragment
 import com.audiospotapplication.R
 import com.audiospotapplication.UI.books.BooksActivity
 import com.audiospotapplication.UI.categories.Interface.OnCategoryItemClickListener
@@ -20,7 +21,7 @@ import com.audiospotapplication.utils.DialogUtils
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.fragment_categories.*
 
-class CategoriesFragment(var ivArrow: ImageView) : Fragment(), CategoriesContract.View, OnCategoryItemClickListener {
+class CategoriesFragment(var ivArrow: ImageView) : BaseFragment(), CategoriesContract.View, OnCategoryItemClickListener {
 
     override fun showLoadingDialog() {
         DialogUtils.showProgressDialog(activity!!,"Loading ....")

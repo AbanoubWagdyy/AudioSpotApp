@@ -2,6 +2,7 @@ package com.audiospotapplication.UI.giveAgift
 
 import android.content.Context
 import com.audiospot.DataLayer.Model.Book
+import com.audiospotapplication.BaseView
 
 interface GiveGiftContract {
 
@@ -12,17 +13,18 @@ interface GiveGiftContract {
             email2: String,
             email3: String,
             email4: String,
-            email5: String)
+            email5: String
+        )
     }
 
-    interface View {
+    interface View : BaseView {
         fun getAppContext(): Context?
         fun showLoadingDialog()
         fun dismissLoading()
-        fun bindResponse(result: Book?)
+        fun bindResponse(result: Book?, quantity: Int)
         fun showInvalidEmailMessage(message: String)
         fun showMessage(message: String)
         fun finalizeView()
-        fun showCartScreen()
+        fun showPayment(emails: String, voucher: String, id: Int)
     }
 }

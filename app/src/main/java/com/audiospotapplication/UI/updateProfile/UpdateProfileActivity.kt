@@ -8,7 +8,7 @@ import com.audiospotapplication.UI.BaseActivity
 class UpdateProfileActivity : BaseActivity() {
 
     override fun getHeaderTitle(): String {
-        return "Profile"
+        return "Update a profile"
     }
 
     override fun getArrowHeaderVisibility(): Int {

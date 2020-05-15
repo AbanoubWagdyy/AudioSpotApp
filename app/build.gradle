@@ -3,6 +3,7 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 
 apply plugin: 'kotlin-android-extensions'
+
 apply plugin: 'com.google.gms.google-services'
 
 androidExtensions {
@@ -13,8 +14,8 @@ android {
     signingConfigs {
         config {
             storeFile file('/Users/vv/Desktop/audiospot')
-            storePassword '@udio4Aziz'
             keyAlias = 'audioSpot'
+            storePassword '@udio4Aziz'
             keyPassword '@udio4Aziz'
         }
     }
@@ -24,16 +25,18 @@ android {
         applicationId "com.audiospotapplication"
         minSdkVersion 23
         targetSdkVersion 29
-        versionCode 1
-        versionName "1.0"
+        versionCode 15
+        versionName "1.15"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        signingConfig signingConfigs.config
+        multiDexEnabled = true
     }
+
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-            debuggable = true
-            signingConfig signingConfigs.config
+            debuggable = false
         }
     }
 
@@ -60,38 +63,44 @@ android {
     }
     configurations.all {
         resolutionStrategy.force 'com.google.code.findbugs:jsr305:1.3.9'
+        resolutionStrategy {
+            force 'androidx.appcompat:appcompat:1.0.2'
+        }
     }
 }
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
+
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-    implementation 'androidx.appcompat:appcompat:1.0.2'
-    implementation 'androidx.core:core-ktx:1.0.2'
-    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
-    implementation 'com.google.firebase:firebase-core:16.0.9'
-    implementation 'com.google.firebase:firebase-iid:18.0.0'
-    implementation 'com.google.firebase:firebase-messaging:18.0.0'
-    implementation 'com.google.firebase:firebase-auth:17.0.0'
+    implementation 'androidx.appcompat:appcompat:1.1.0'
+    implementation 'androidx.core:core-ktx:1.2.0'
+
+    implementation 'com.google.firebase:firebase-core:17.2.0'
+    implementation 'com.google.firebase:firebase-iid:20.0.0'
+    implementation 'com.google.firebase:firebase-messaging:20.0.0'
+    implementation 'com.google.firebase:firebase-auth:19.0.0'
     implementation 'com.google.android.gms:play-services-auth:17.0.0'
+    implementation 'androidx.navigation:navigation-fragment:2.0.0'
+    implementation 'androidx.navigation:navigation-ui:2.0.0'
+    implementation 'androidx.lifecycle:lifecycle-extensions:2.0.0'
+    implementation 'androidx.navigation:navigation-fragment-ktx:2.0.0'
+    implementation 'androidx.navigation:navigation-ui-ktx:2.0.0'
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test:runner:1.2.0'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
-    androidTestImplementation 'com.google.code.findbugs:jsr305:1.3.9'
-    implementation 'com.android.support:multidex:1.0.1'
+    androidTestImplementation 'com.google.code.findbugs:jsr305:3.0.2'
+    implementation 'androidx.multidex:multidex:2.0.1'
     implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
     implementation 'com.google.android.material:material:1.0.0'
 
     //Retrofit
-    implementation 'com.squareup.retrofit2:retrofit:2.0.1'
-    implementation 'com.squareup.retrofit2:converter-gson:2.0.1'
-    implementation 'com.squareup.retrofit2:adapter-rxjava:2.0.1'
-    implementation 'com.squareup.okhttp3:logging-interceptor:3.4.1'
+    implementation 'com.squareup.retrofit2:retrofit:2.6.0'
+    implementation 'com.squareup.retrofit2:converter-gson:2.6.0'
+    implementation 'com.squareup.retrofit2:adapter-rxjava:2.5.0'
+    implementation 'com.squareup.okhttp3:logging-interceptor:4.0.1'
     implementation "io.reactivex.rxjava2:rxandroid:$rxandroid_version"
     implementation "io.reactivex.rxjava2:rxkotlin:$rxkotlin_version"
-
-    //Image Loading
-    implementation 'com.squareup.picasso:picasso:2.71828'
 
     implementation 'com.jakewharton.rxbinding2:rxbinding-kotlin:2.1.1'
 
@@ -103,15 +112,10 @@ dependencies {
 
     //Nice Spinner
     implementation 'com.github.arcadefire:nice-spinner:1.4.3'
-    implementation project(path: ':dmaudiostreamer')
     implementation 'com.nineoldandroids:library:2.4.0'
     implementation 'com.github.hannesa2:AndroidSlidingUpPanel:3.5.0'
 
-//    implementation 'com.github.WindSekirun:RxSocialLogin:1.2.1'
-//    // androidx
-//    implementation 'com.github.WindSekirun:RxSocialLogin:1.2.1-androidx'
-
-    implementation 'com.facebook.android:facebook-android-sdk:[5,6)'
+    implementation 'com.facebook.android:facebook-android-sdk:5.5.1'
 
     //RxKotlin
     implementation "io.reactivex.rxjava2:rxandroid:$rxandroid_version"
@@ -123,4 +127,38 @@ dependencies {
     implementation 'com.github.delight-im:Android-AdvancedWebView:v3.0.0'
     implementation "androidx.tonyodev.fetch2:xfetch2:3.1.3"
     implementation 'com.snatik:storage:2.1.0'
+//    implementation project(path: ':jcplayer')
+
+//    implementation 'com.emeint.fawrypluginclient:FawrySDK_1.0.22_01072019@aar'
+    implementation project(path: ':FawrySDK_1.0.20_17032019')
+
+    implementation 'com.daimajia.easing:library:2.0@aar'
+    implementation 'com.daimajia.androidanimations:library:2.3@aar'
+
+    implementation 'com.google.android.play:core:1.6.3'
+
+//    implementation 'com.paypal.sdk:paypal-android-sdk:2.16.0'
+
+    def lifecycle_version = "2.2.0"
+    implementation "android.arch.lifecycle:extensions:$lifecycle_version"
+    annotationProcessor "android.arch.lifecycle:compiler:$lifecycle_version"
+    testImplementation "android.arch.core:core-testing:$lifecycle_version"
+    implementation "android.arch.lifecycle:extensions:$lifecycle_version"
+
+    //Koin
+    implementation 'org.koin:koin-android:2.0.1'
+    // or Koin for Lifecycle scoping
+    implementation 'org.koin:koin-androidx-scope:2.0.1'
+    // or Koin for Android Architecture ViewModel
+    implementation 'org.koin:koin-androidx-viewmodel:2.0.1'
+    implementation "org.koin:koin-androidx-ext:2.0.1"
+
+    def glideVersion = "4.8.0"
+    implementation "com.github.bumptech.glide:glide:$glideVersion"
+    annotationProcessor "com.github.bumptech.glide:compiler:$glideVersion"
+
+    implementation project(path: ':pexoplayer')
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+
+//    implementation 'com.paypal.pyplcheckout:nativexo:3.4.8'
 }

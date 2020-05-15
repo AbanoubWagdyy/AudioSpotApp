@@ -20,4 +20,6 @@ public interface CacheDataSource {
     void setLoggedInUser(Object b);
 
     AuthResponse getLoggedInUser();
+
+    void clear();
 }

@@ -4,28 +4,33 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.audiospot.DataLayer.Model.Book
+import com.audiospotapplication.BaseFragment
 
 import com.audiospotapplication.R
-import com.audiospotapplication.UI.cart.CartActivity
+import com.audiospotapplication.UI.payment.PaymentActivity
 import com.audiospotapplication.utils.DialogUtils
 import com.audiospotapplication.utils.ImageUtils
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.fragment_give_agift.*
 
-class GiveGiftFragment : Fragment(), GiveGiftContract.View {
+class GiveGiftFragment : BaseFragment(), GiveGiftContract.View {
 
-    override fun showCartScreen() {
-        val intent = Intent(activity!!, CartActivity::class.java)
+    override fun showPayment(emails: String, voucher: String, id: Int) {
+        val intent = Intent(activity!!, PaymentActivity::class.java)
+        intent.putExtra("BOOKID", id.toString())
+        intent.putExtra("VOUCHER", voucher)
+        intent.putExtra("SENDTO", emails)
         startActivity(intent)
+        activity!!.finish()
     }
 
     override fun showMessage(message: String) {
-        Snackbar.make(activity!!.findViewById(android.R.id.content), message, Snackbar.LENGTH_LONG).show()
+        if (activity != null)
+            Snackbar.make(activity!!.findViewById(android.R.id.content), message, Snackbar.LENGTH_LONG).show()
     }
 
     override fun finalizeView() {
@@ -35,7 +40,8 @@ class GiveGiftFragment : Fragment(), GiveGiftContract.View {
     }
 
     override fun showInvalidEmailMessage(message: String) {
-        Snackbar.make(activity!!.findViewById(android.R.id.content), message, Snackbar.LENGTH_LONG).show()
+        if (activity != null)
+            Snackbar.make(activity!!.findViewById(android.R.id.content), message, Snackbar.LENGTH_LONG).show()
     }
 
     override fun getAppContext(): Context? {
@@ -50,7 +56,7 @@ class GiveGiftFragment : Fragment(), GiveGiftContract.View {
         DialogUtils.dismissProgressDialog()
     }
 
-    override fun bindResponse(result: Book?) {
+    override fun bindResponse(result: Book?, quantity: Int) {
         ratingBar.rating = result!!.rate.toFloat()
         tvBookTitle.text = result!!.title
         var numberOfReviews = result.reviews
@@ -63,7 +69,23 @@ class GiveGiftFragment : Fragment(), GiveGiftContract.View {
             }
             tvNarrator.text = builder.toString().substring(0, builder.toString().length - 1)
         }
-        ImageUtils.setImageFromUrlIntoImageViewUsingPicasso(result.cover, activity!!.applicationContext, ivBook)
+        if (quantity == 1) {
+            email2.visibility = View.GONE
+            email3.visibility = View.GONE
+            email4.visibility = View.GONE
+            email5.visibility = View.GONE
+        } else if (quantity == 2) {
+            email3.visibility = View.GONE
+            email4.visibility = View.GONE
+            email5.visibility = View.GONE
+        } else if (quantity == 3) {
+            email4.visibility = View.GONE
+            email5.visibility = View.GONE
+        } else if (quantity == 4) {
+            email5.visibility = View.GONE
+        }
+
+        ImageUtils.setImageFromUrlIntoImageViewUsingGlide(result.cover, activity!!.applicationContext, ivBook)
     }
 
     override fun onCreateView(

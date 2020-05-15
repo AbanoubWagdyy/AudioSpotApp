@@ -10,6 +10,10 @@ import retrofit2.Call
 
 class AddBookmarkPresenter(val mView: AddBookmarkContract.View) : AddBookmarkContract.Presenter {
 
+    override fun resetRepo() {
+        mRepositorySource.clear()
+    }
+
     override fun addBookmark(toString: String) {
         mView.showLoading()
         bookmarkData.comment = toString
@@ -20,6 +24,8 @@ class AddBookmarkPresenter(val mView: AddBookmarkContract.View) : AddBookmarkCon
                 mView.showMessage(response!!.message)
                 if (result == RetrofitResponseHandler.Companion.Status.VALID) {
                     mView.finalizeView()
+                } else if (result == RetrofitResponseHandler.Companion.Status.UNAUTHORIZED) {
+                    mView!!.showLoginPage()
                 }
             }
 
@@ -40,8 +46,8 @@ class AddBookmarkPresenter(val mView: AddBookmarkContract.View) : AddBookmarkCon
     lateinit var mRepositorySource: RepositorySource
 
     override fun start() {
-        mRepositorySource = DataRepository.getInstance(mView.getAppContext())
-        bookmarkData = mRepositorySource.getBookmarkData()
+        mRepositorySource = DataRepository.getInstance(mView.getAppContext()!!)
+        bookmarkData = mRepositorySource.getBookmarkData()!!
         mView.setBookName(bookmarkData.bookName)
         mView.setBookImage(bookmarkData.url)
         mView.setChapterName(bookmarkData.chapter_name)

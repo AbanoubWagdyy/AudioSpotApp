@@ -37,6 +37,8 @@ class myFavoriteBooksPresenter(val mView: myFavouriteBooksContract.View) : myFav
                                 mView.showErrorMessage()
                             }
                         })
+                    } else if (status == RetrofitResponseHandler.Companion.Status.UNAUTHORIZED) {
+                        mView!!.showLoginPage()
                     }
                 }
 
@@ -53,7 +55,7 @@ class myFavoriteBooksPresenter(val mView: myFavouriteBooksContract.View) : myFav
     }
 
     override fun start() {
-        mRepositorySource = DataRepository.getInstance(mView.getAppContext())
+        mRepositorySource = DataRepository.getInstance(mView.getAppContext()!!)
         mView.showLoading()
         mRepositorySource.getMyFavouriteBooks(object : RetrofitCallbacks.BookListCallback {
             override fun onSuccess(result: BookListResponse?) {

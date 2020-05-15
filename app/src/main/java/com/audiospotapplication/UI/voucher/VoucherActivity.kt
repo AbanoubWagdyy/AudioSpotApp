@@ -8,7 +8,7 @@ import com.audiospotapplication.UI.BaseActivity
 class VoucherActivity : BaseActivity() {
 
     override fun getHeaderTitle(): String {
-        return "Books"
+        return "Voucher"
     }
 
     override fun getArrowHeaderVisibility(): Int {

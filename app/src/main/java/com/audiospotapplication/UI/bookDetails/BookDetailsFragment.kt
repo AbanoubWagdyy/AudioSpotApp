@@ -1,12 +1,9 @@
 package com.audiospotapplication.UI.bookDetails
 
-
-import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,67 +12,38 @@ import com.audiospotapplication.R
 import kotlinx.android.synthetic.main.fragment_book_details.*
 import android.text.style.UnderlineSpan
 import android.text.SpannableString
+import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.audiospot.DataLayer.Model.Book
 import com.audiospot.DataLayer.Model.BookDetailsResponse
+import com.audiospotapplication.BaseFragment
 import com.audiospotapplication.DataLayer.Model.Review
+import com.audiospotapplication.UI.BaseActivity
 import com.audiospotapplication.UI.bookChapters.BookChaptersActivity
 import com.audiospotapplication.UI.bookDetails.adapter.ReviewListAdapter
 import com.audiospotapplication.UI.bookReviews.BookReviewsActivity
 import com.audiospotapplication.UI.giftSelection.GiftSelectionActivity
 import com.audiospotapplication.UI.login.LoginActivity
 import com.audiospotapplication.UI.rateBook.RateBookActivity
-import com.audiospotapplication.UI.splash.SplashActivity
+
 import com.audiospotapplication.utils.DialogUtils
 import com.audiospotapplication.utils.ImageUtils
 import com.google.android.material.snackbar.Snackbar
-import dm.audiostreamer.AudioStreamingManager
-import dm.audiostreamer.MediaMetaData
+import android.graphics.Paint
 
-class BookDetailsFragment : Fragment(), BookDetailsContract.View {
 
-    override fun validatePlayResouce(result1: BookDetailsResponse) {
-        if (streamingManager.isPlaying) {
-            var currentAudio = streamingManager.currentAudio
-            if (result1.data.id.toString().equals(currentAudio.mediaId)) {
-                ivPlay.setImageResource(R.mipmap.homepage_play)
-            }
-        }
+class BookDetailsFragment : BaseFragment(), BookDetailsContract.View {
+
+    override fun setCartNumber(size: Int?) {
+        (activity as BaseActivity).setCartNumber(size)
     }
 
-    override fun playSong(mediaMetaData: MediaMetaData) {
-        if (streamingManager.isPlaying) {
-            var currentAudio = streamingManager.currentAudio
-            if (mediaMetaData.mediaId.equals(currentAudio.mediaId)) {
-                ivPlay.setImageResource(R.mipmap.play)
-                streamingManager.handlePauseRequest()
-                return
-            }
-        } else {
-            if (streamingManager.currentAudio == null) {
-                streamingManager!!.isPlayMultiple = false
-
-                var list = ArrayList<MediaMetaData>()
-                list.add(mediaMetaData)
-
-                streamingManager!!.setMediaList(list)
-
-                streamingManager!!.setShowPlayerNotification(true)
-                streamingManager!!.setPendingIntentAct(getNotificationPendingIntent())
-
-                if (streamingManager != null) {
-                    streamingManager!!.onPlay(mediaMetaData)
-                }
-            } else {
-                streamingManager.handlePlayRequest()
+    override fun playSong(sampledBook: Book?) {
+        sampledBook?.let {
+            if (playBookSample(sampledBook) == R.drawable.ic_pause) {
+                handlePlayPause()
             }
         }
-    }
-
-    private fun getNotificationPendingIntent(): PendingIntent {
-        val intent = Intent(activity!!.applicationContext, SplashActivity::class.java)
-        intent.setAction("openplayer")
-        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
-        return PendingIntent.getActivity(activity!!.applicationContext, 0, intent, 0)
     }
 
     override fun viewRateBookScreen() {
@@ -87,8 +55,8 @@ class BookDetailsFragment : Fragment(), BookDetailsContract.View {
         relativeAddToFavourites.visibility = View.GONE
     }
 
-    override fun setAddToCartText(addToCartStr: String) {
-        tvAddToCart.text = addToCartStr
+    override fun setAddToCartText(s: String) {
+        tvAddToCart.text = s
         ivAddToCart.visibility = View.GONE
     }
 
@@ -108,7 +76,12 @@ class BookDetailsFragment : Fragment(), BookDetailsContract.View {
     }
 
     override fun showLoginMessage(message: String) {
-        Snackbar.make(activity!!.findViewById(android.R.id.content), message, Snackbar.LENGTH_LONG).show()
+        if (activity != null)
+            Snackbar.make(
+                activity!!.findViewById(android.R.id.content),
+                message,
+                Snackbar.LENGTH_LONG
+            ).show()
         Handler().postDelayed({
             val mainIntent = Intent(activity!!, LoginActivity::class.java)
             activity!!.startActivity(mainIntent)
@@ -116,7 +89,12 @@ class BookDetailsFragment : Fragment(), BookDetailsContract.View {
     }
 
     override fun showMessage(message: String) {
-        Snackbar.make(activity!!.findViewById(android.R.id.content), message, Snackbar.LENGTH_LONG).show()
+        if (activity != null)
+            Snackbar.make(
+                activity!!.findViewById(android.R.id.content),
+                message,
+                Snackbar.LENGTH_LONG
+            ).show()
     }
 
     override fun setBookReviews(reviews: List<Review>) {
@@ -140,7 +118,6 @@ class BookDetailsFragment : Fragment(), BookDetailsContract.View {
         DialogUtils.dismissProgressDialog()
     }
 
-    private lateinit var streamingManager: AudioStreamingManager
     lateinit var mPresenter: BookDetailsContract.Presenter
 
     override fun onCreateView(
@@ -153,20 +130,15 @@ class BookDetailsFragment : Fragment(), BookDetailsContract.View {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        streamingManager = AudioStreamingManager.getInstance(activity!!.applicationContext)
-
-        var content = SpannableString("See All Reviews")
+        val content = SpannableString("See All Reviews")
         content.setSpan(UnderlineSpan(), 0, content.length, 0)
         tvSeeAllReviews.text = content
-        content = SpannableString("View Book Chapters")
-        content.setSpan(UnderlineSpan(), 0, content.length, 0)
-        tvViewBookChapters.text = content
 
         tvSeeAllReviews.setOnClickListener {
             mPresenter.handleSeeAllReviewsClicked()
         }
 
-        tvViewBookChapters.setOnClickListener {
+        relativeViewBookChapters.setOnClickListener {
             mPresenter.handleViewBookChaptersClicked()
         }
 
@@ -188,38 +160,63 @@ class BookDetailsFragment : Fragment(), BookDetailsContract.View {
 
         mPresenter = BookDetailsPresenter(this)
         mPresenter.start()
+
+        getPlayingObserver().observe(this, Observer {
+            val id =
+                mPresenter.getCurrentSampleBookPlaylistId()
+            if (it && id.equals(getPlaylistIdObserver().value)) {
+                ivPlay.setImageResource(R.mipmap.homepage_play)
+            } else {
+                ivPlay.setImageResource(R.mipmap.play)
+            }
+        })
     }
 
     override fun bindResponse(result: BookDetailsResponse?) {
 
-        ratingBar.rating = result!!.data.rate.toFloat()
+        result?.let {
+            ratingBar.rating = it.data.rate.toFloat()
 
-        ratingBar.setOnRatingChangeListener(null)
-        ratingBar.setOnTouchListener { p0, p1 -> true }
+            ratingBar.setOnRatingChangeListener(null)
+            ratingBar.setOnTouchListener { p0, p1 -> true }
 
-        ratingBar.setOnRatingChangeListener { ratingBar, rating, fromUser ->
-            ratingBar.rating = result.data.rate.toFloat()
-        }
-
-        tvBookTitle.text = result!!.data.title
-        tvNumberOfReviews.text = "(" + result!!.data.reviews.toString() + " reviews" + ")"
-        tvAuthor.text = result!!.data.author
-        if (result.data.narators.isNotEmpty()) {
-            val builder = StringBuilder()
-            for (narator in result.data.narators) {
-                builder.append(narator.name).append(",")
+            ratingBar.setOnRatingChangeListener { ratingBar, rating, fromUser ->
+                ratingBar.rating = it.data.rate.toFloat()
             }
-            tvNarrator.text = builder.toString().substring(0, builder.toString().length - 1)
+
+            tvBookTitle.text = it.data.title
+            tvNumberOfReviews.text = "(" + it.data.reviews.toString() + " reviews" + ")"
+            tvAuthor.text = it.data.author
+            if (it.data.narators.isNotEmpty()) {
+                val builder = StringBuilder()
+                for (narator in it.data.narators) {
+                    builder.append(narator.name).append(",")
+                }
+                tvNarrator.text = builder.toString().substring(0, builder.toString().length - 1)
+            }
+
+            tvCategory.text = it.data.category
+            tvPublisher.text = it.data.publisher
+            tvAbout.text = it.data.about_book
+
+            tvLength.text = it.data.total_time_trt + " Hours."
+
+            if (it.data.price_after_sale != 0) {
+                tvPriceLabel.setPaintFlags(tvPriceLabel.getPaintFlags() or Paint.STRIKE_THRU_TEXT_FLAG)
+                tvPrice.setPaintFlags(tvPriceLabel.getPaintFlags() or Paint.STRIKE_THRU_TEXT_FLAG)
+                tvPrice.text = it.data.price.toString() + " EGP."
+                tvPriceAfterSale.text = it.data.price_after_sale.toString() + " EGP."
+            } else {
+                tvPrice.text = it.data.price.toString() + " EGP."
+                linearPriceAfterSale.visibility = View.GONE
+            }
+
+            ImageUtils.setImageFromUrlIntoImageViewUsingGlide(
+                it.data.cover,
+                activity!!.applicationContext,
+                ivBook
+            )
         }
-        tvCategory.text = result!!.data.category
-        tvPublisher.text = result!!.data.publisher
-        tvAbout.text = result!!.data.about_book
-
-        tvLength.text = result!!.data.total_time_trt + " Hours."
-
-        tvPrice.text = result!!.data.price.toString() + " EGP."
-
-        ImageUtils.setImageFromUrlIntoImageViewUsingPicasso(result.data.cover, activity!!.applicationContext, ivBook)
     }
 
     companion object {

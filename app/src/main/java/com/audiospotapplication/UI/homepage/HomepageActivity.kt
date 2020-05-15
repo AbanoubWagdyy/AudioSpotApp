@@ -1,14 +1,12 @@
 package com.audiospotapplication.UI.homepage
 
-import android.app.PendingIntent
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
-import android.util.Log
-import com.audiospotapplication.DataLayer.DataRepository
-import com.audiospotapplication.DataLayer.Model.BookListResponse
-import com.audiospotapplication.DataLayer.Retrofit.RetrofitCallbacks
+import android.view.View
+import androidx.core.content.ContextCompat
+import androidx.lifecycle.Observer
 import com.audiospotapplication.R
 import com.audiospotapplication.UI.ActiveTab
 import com.audiospotapplication.UI.cart.CartActivity
@@ -17,97 +15,29 @@ import com.audiospotapplication.UI.homepage.Library.LibraryFragment
 import com.audiospotapplication.UI.homepage.menu.MenuFragment
 import com.audiospotapplication.UI.homepage.myBooks.MyBooksFragment
 import com.audiospotapplication.UI.login.LoginActivity
-import com.audiospotapplication.utils.DialogUtils
 import com.google.android.material.snackbar.Snackbar
-import com.visionvalley.letuno.DataLayer.RepositorySource
-import dm.audiostreamer.AudioStreamingManager
-import dm.audiostreamer.MediaMetaData
-import kotlinx.android.synthetic.main.activity_homepage3.*
+import kotlinx.android.synthetic.main.activity_homepage.*
 import kotlinx.android.synthetic.main.header.*
-import retrofit2.Call
+import org.koin.androidx.viewmodel.ext.android.viewModel
+import org.koin.core.KoinComponent
 
-class HomepageActivity : AppCompatActivity(), HomeFragment.onItemPlayClickListener,
-    MyBooksFragment.onItemPlayClickListener {
-
-    private var currentSong: MediaMetaData? = null
-    private var listOfSongs: MutableList<MediaMetaData> = ArrayList()
-
-    override fun OnItemPlayed(mediaData: MediaMetaData) {
-        listOfSongs = ArrayList()
-        listOfSongs.add(mediaData)
-        configAudioStreamer()
-        playSong(mediaData)
-    }
-
-    private fun checkAlreadyPlaying() {
-        if (streamingManager!!.isPlaying) {
-            currentSong = streamingManager!!.currentAudio
-            if (currentSong != null) {
-                currentSong!!.playState = streamingManager!!.mLastPlaybackState
-            }
-        }
-    }
-
-    var tabShown = ActiveTab.HOME
-    lateinit var mRepositorySource: RepositorySource
-
-    private var streamingManager: AudioStreamingManager? = null
+class HomepageActivity : AppCompatActivity(), KoinComponent {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_homepage3)
+        setContentView(R.layout.activity_homepage)
 
-        mRepositorySource = DataRepository.getInstance(applicationContext)
-
-        configAudioStreamer()
-
-        checkAlreadyPlaying()
-
-        var authResponse = mRepositorySource.getAuthResponse()
-
-        if (authResponse != null) {
-            DialogUtils.showProgressDialog(this, "Loading ...")
-            mRepositorySource.getMyBooks(object : RetrofitCallbacks.BookListCallback {
-                override fun onSuccess(result: BookListResponse?) {
-                    DialogUtils.dismissProgressDialog()
-                    showHomePageContent()
-                }
-
-                override fun onFailure(call: Call<BookListResponse>?, t: Throwable?) {
-                    DialogUtils.dismissProgressDialog()
-                    Log.d("", "")
-                }
-            })
-
-            mRepositorySource.getMyCart(object : RetrofitCallbacks.BookListCallback {
-                override fun onSuccess(result: BookListResponse?) {
-                    tvCartCount.text = result!!.data.size.toString()
-                }
-
-                override fun onFailure(call: Call<BookListResponse>?, t: Throwable?) {
-                    Log.d("", "")
-                }
-            })
-        } else {
-            showHomePageContent()
-        }
-    }
-
-    private fun configAudioStreamer() {
-        streamingManager = AudioStreamingManager.getInstance(applicationContext)
-        streamingManager!!.isPlayMultiple = mRepositorySource.getAuthResponse() != null
-        streamingManager!!.setMediaList(listOfSongs)
-        streamingManager!!.setShowPlayerNotification(true)
-        streamingManager!!.setPendingIntentAct(getNotificationPendingIntent())
+        showHomePageContent()
     }
 
     private fun showHomePageContent() {
         linearHome.setOnClickListener {
             if (tabShown != ActiveTab.HOME) {
                 tabShown = ActiveTab.HOME
-                supportFragmentManager.beginTransaction().add(R.id.container, HomeFragment.newInstance())
+                supportFragmentManager.beginTransaction()
+                    .add(R.id.container, HomeFragment.newInstance())
                     .commitAllowingStateLoss()
-
+                tvTitle.text = getString(R.string.app_name)
                 validateTabColorVisibility(tabShown)
             }
         }
@@ -115,8 +45,10 @@ class HomepageActivity : AppCompatActivity(), HomeFragment.onItemPlayClickListen
         linearMenu.setOnClickListener {
             if (tabShown != ActiveTab.MENU) {
                 tabShown = ActiveTab.MENU
-                supportFragmentManager.beginTransaction().add(R.id.container, MenuFragment.newInstance())
+                supportFragmentManager.beginTransaction()
+                    .add(R.id.container, MenuFragment.newInstance())
                     .commitAllowingStateLoss()
+                tvTitle.text = getString(R.string.menu)
                 validateTabColorVisibility(tabShown)
             }
         }
@@ -124,9 +56,10 @@ class HomepageActivity : AppCompatActivity(), HomeFragment.onItemPlayClickListen
         linearMyBooks.setOnClickListener {
             if (tabShown != ActiveTab.MYBOOKS) {
                 tabShown = ActiveTab.MYBOOKS
-                supportFragmentManager.beginTransaction().add(R.id.container, MyBooksFragment.newInstance())
+                supportFragmentManager.beginTransaction()
+                    .add(R.id.container, MyBooksFragment.newInstance())
                     .commitAllowingStateLoss()
-
+                tvTitle.text = getString(R.string.menu_my_books)
                 validateTabColorVisibility(tabShown)
             }
         }
@@ -134,14 +67,16 @@ class HomepageActivity : AppCompatActivity(), HomeFragment.onItemPlayClickListen
         linearLibrary.setOnClickListener {
             if (tabShown != ActiveTab.LIBRARY) {
                 tabShown = ActiveTab.LIBRARY
-                supportFragmentManager.beginTransaction().add(R.id.container, LibraryFragment.newInstance())
+                supportFragmentManager.beginTransaction()
+                    .add(R.id.container, LibraryFragment.newInstance())
                     .commitAllowingStateLoss()
+                tvTitle.text = getString(R.string.library)
                 validateTabColorVisibility(tabShown)
             }
         }
 
         ivCart.setOnClickListener {
-            var authResponse = mRepositorySource.getAuthResponse()
+            val authResponse = viewModel.getAuthResponse()
             if (authResponse != null) {
                 val intent = Intent(this@HomepageActivity, CartActivity::class.java)
                 startActivity(intent)
@@ -153,12 +88,13 @@ class HomepageActivity : AppCompatActivity(), HomeFragment.onItemPlayClickListen
                 Handler().postDelayed({
                     val mainIntent = Intent(this@HomepageActivity, LoginActivity::class.java)
                     startActivity(mainIntent)
-                }, 500)
+                }, 700)
             }
         }
 
         supportFragmentManager.beginTransaction().add(R.id.container, HomeFragment.newInstance())
             .commitAllowingStateLoss()
+        tvTitle.text = getString(R.string.app_name)
         validateTabColorVisibility(tabShown)
     }
 
@@ -166,68 +102,63 @@ class HomepageActivity : AppCompatActivity(), HomeFragment.onItemPlayClickListen
         when (tabShown) {
             ActiveTab.HOME -> {
                 ivHome.setImageResource(R.mipmap.tab_home)
-                tvHome.setTextColor(resources.getColor(R.color.white))
+                tvHome.setTextColor(ContextCompat.getColor(applicationContext,R.color.white))
                 ivMenu.setImageResource(R.mipmap.tab_menu_inactive)
-                tvMenu.setTextColor(resources.getColor(R.color.grey))
+                tvMenu.setTextColor(ContextCompat.getColor(applicationContext,R.color.grey))
                 ivMyBooks.setImageResource(R.mipmap.tab_mybooks_inactive)
-                tvMyBooks.setTextColor(resources.getColor(R.color.grey))
+                tvMyBooks.setTextColor(ContextCompat.getColor(applicationContext,R.color.grey))
                 ivLibrary.setImageResource(R.mipmap.tab_library_inactive)
-                tvLibrary.setTextColor(resources.getColor(R.color.grey))
-                mRepositorySource.setActiveTab(ActiveTab.HOME)
-                tvTitle.text = "AudioSpot"
+                tvLibrary.setTextColor(ContextCompat.getColor(applicationContext,R.color.grey))
+                viewModel.setActiveTab(ActiveTab.HOME)
             }
 
             ActiveTab.LIBRARY -> {
                 ivHome.setImageResource(R.mipmap.tab_home_inactive)
-                tvHome.setTextColor(resources.getColor(R.color.grey))
+                tvHome.setTextColor(ContextCompat.getColor(applicationContext,R.color.grey))
                 ivMenu.setImageResource(R.mipmap.tab_menu_inactive)
-                tvMenu.setTextColor(resources.getColor(R.color.grey))
+                tvMenu.setTextColor(ContextCompat.getColor(applicationContext,R.color.grey))
                 ivMyBooks.setImageResource(R.mipmap.tab_mybooks_inactive)
-                tvMyBooks.setTextColor(resources.getColor(R.color.grey))
+                tvMyBooks.setTextColor(ContextCompat.getColor(applicationContext,R.color.grey))
                 ivLibrary.setImageResource(R.mipmap.tab_library)
-                tvLibrary.setTextColor(resources.getColor(R.color.white))
-                mRepositorySource.setActiveTab(ActiveTab.LIBRARY)
-                tvTitle.text = "AudioSpot"
+                tvLibrary.setTextColor(ContextCompat.getColor(applicationContext,R.color.white))
+                viewModel.setActiveTab(ActiveTab.LIBRARY)
             }
 
             ActiveTab.MYBOOKS -> {
                 ivHome.setImageResource(R.mipmap.tab_home_inactive)
-                tvHome.setTextColor(resources.getColor(R.color.grey))
+                tvHome.setTextColor(ContextCompat.getColor(applicationContext,R.color.grey))
                 ivMenu.setImageResource(R.mipmap.tab_menu_inactive)
-                tvMenu.setTextColor(resources.getColor(R.color.grey))
+                tvMenu.setTextColor(ContextCompat.getColor(applicationContext,R.color.grey))
                 ivMyBooks.setImageResource(R.mipmap.tab_mybooks)
-                tvMyBooks.setTextColor(resources.getColor(R.color.white))
+                tvMyBooks.setTextColor(ContextCompat.getColor(applicationContext,R.color.white))
                 ivLibrary.setImageResource(R.mipmap.tab_library_inactive)
-                tvLibrary.setTextColor(resources.getColor(R.color.grey))
-                mRepositorySource.setActiveTab(ActiveTab.MYBOOKS)
-                tvTitle.text = "AudioSpot"
+                tvLibrary.setTextColor(ContextCompat.getColor(applicationContext,R.color.grey))
+                viewModel.setActiveTab(ActiveTab.MYBOOKS)
             }
 
             ActiveTab.MENU -> {
                 ivHome.setImageResource(R.mipmap.tab_home_inactive)
-                tvHome.setTextColor(resources.getColor(R.color.grey))
+                tvHome.setTextColor(ContextCompat.getColor(applicationContext,R.color.grey))
                 ivMenu.setImageResource(R.mipmap.tab_menu)
-                tvMenu.setTextColor(resources.getColor(R.color.white))
+                tvMenu.setTextColor(ContextCompat.getColor(applicationContext,R.color.white))
                 ivMyBooks.setImageResource(R.mipmap.tab_mybooks_inactive)
-                tvMyBooks.setTextColor(resources.getColor(R.color.grey))
+                tvMyBooks.setTextColor(ContextCompat.getColor(applicationContext,R.color.grey))
                 ivLibrary.setImageResource(R.mipmap.tab_library_inactive)
-                tvLibrary.setTextColor(resources.getColor(R.color.grey))
-                mRepositorySource.setActiveTab(ActiveTab.MENU)
-                tvTitle.text = "AudioSpot"
+                tvLibrary.setTextColor(ContextCompat.getColor(applicationContext,R.color.grey))
+                viewModel.setActiveTab(ActiveTab.MENU)
             }
         }
     }
 
-    private fun playSong(media: MediaMetaData) {
-        if (streamingManager != null) {
-            streamingManager!!.onPlay(media)
-        }
+    override fun onResume() {
+        tvCartCount.visibility = View.GONE
+        viewModel.getCartCountObserver().observe(this, Observer {
+            tvCartCount.visibility = View.VISIBLE
+            tvCartCount.text = it.toString()
+        })
+        super.onResume()
     }
 
-    private fun getNotificationPendingIntent(): PendingIntent {
-        val intent = Intent(applicationContext, HomepageActivity::class.java)
-        intent.setAction("openplayer")
-        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
-        return PendingIntent.getActivity(applicationContext, 0, intent, 0)
-    }
+    var tabShown = ActiveTab.HOME
+    private val viewModel: HomepageViewModel by viewModel()
 }

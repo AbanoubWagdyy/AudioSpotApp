@@ -13,13 +13,19 @@ class PromoCodePresenter(val mView: PromoCodeContract.View) : PromoCodeContract.
         mRepositorySource.addPromoCode(promoCode, object : RetrofitCallbacks.PromoCodeResponseCallback {
             override fun onSuccess(result: PromoCodeResponse?) {
                 mView.dismissLoading()
+                mView.showMessage(result!!.message)
+
                 val status = RetrofitResponseHandler.validateAuthResponseStatus(result)
                 if (status == RetrofitResponseHandler.Companion.Status.VALID) {
-                    mView.setSubTotal(result!!.data.sub_total.toString())
-                    mView.setDiscount(result!!.data.discount.toString())
-                    mView.setTotal(result!!.data.total.toString())
+//                    mView.setSubTotal(result!!.data.sub_total.toString())
+//                    mView.setDiscount(result!!.data.discount.toString())
+//                    mView.setTotal(result!!.data.total.toString())
+                    mView.showPayment(promoCode)
+                } else if (status == RetrofitResponseHandler.Companion.Status.UNAUTHORIZED) {
+                    mView!!.showLoginPage()
+                } else {
+                    mView.showLoginPage()
                 }
-                mView.showMessage(result!!.message)
             }
 
             override fun onFailure(call: Call<PromoCodeResponse>?, t: Throwable?) {
@@ -30,7 +36,7 @@ class PromoCodePresenter(val mView: PromoCodeContract.View) : PromoCodeContract.
     }
 
     override fun start() {
-        mRepositorySource = DataRepository.getInstance(mView.getAppContext())
+        mRepositorySource = DataRepository.getInstance(mView.getAppContext()!!)
     }
 
     lateinit var mRepositorySource: RepositorySource

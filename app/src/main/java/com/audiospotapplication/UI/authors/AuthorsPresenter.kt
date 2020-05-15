@@ -18,13 +18,15 @@ class AuthorsPresenter(val mView: AuthorsContract.View) : AuthorsContract.Presen
 
     override fun start() {
         mView.showLoading()
-        mRepositorySource = DataRepository.getInstance(mView.getAppContext())
+        mRepositorySource = DataRepository.getInstance(mView.getAppContext()!!)
         mRepositorySource.getAllAuthors(object : RetrofitCallbacks.AuthorsResponseCallback {
             override fun onSuccess(result: AuthorsResponse?) {
                 mView.dismissLoading()
                 val status = RetrofitResponseHandler.validateAuthResponseStatus(result)
                 if (status == RetrofitResponseHandler.Companion.Status.VALID) {
                     mView.setAuthorsList(result)
+                } else if (status == RetrofitResponseHandler.Companion.Status.UNAUTHORIZED) {
+                    mView!!.showLoginPage()
                 } else {
                     mView!!.showErrorMessage(result!!.message)
                 }

@@ -32,7 +32,6 @@
 
                         <ImageView android:id="@+id/ivBook"
                                    android:layout_width="match_parent"
-                                   android:background="@drawable/sample"
                                    android:layout_height="match_parent"/>
                         <ImageView
                                 android:layout_width="wrap_content"
@@ -136,12 +135,12 @@
                     android:letterSpacing="0.07"
                     android:lineSpacingExtra="10sp"
                     android:layout_margin="10dp"
-                    android:text="Please enter the AudioSpot account email"/>
+                    android:text="@string/please_enter_audiospot_account_email"/>
 
             <EditText
                     android:layout_width="match_parent"
                     android:layout_height="40dp"
-                    android:hint="Email"
+                    android:hint="@string/email"
                     android:inputType="textEmailAddress"
                     android:paddingStart="10dp"
                     android:layout_marginTop="20dp"
@@ -156,7 +155,7 @@
             <EditText
                     android:layout_width="match_parent"
                     android:layout_height="40dp"
-                    android:hint="Email"
+                    android:hint="@string/email"
                     android:inputType="textEmailAddress"
                     android:paddingStart="10dp"
                     android:layout_marginTop="20dp"
@@ -171,7 +170,7 @@
             <EditText
                     android:layout_width="match_parent"
                     android:layout_height="40dp"
-                    android:hint="Email"
+                    android:hint="@string/email"
                     android:inputType="textEmailAddress"
                     android:paddingStart="10dp"
                     android:layout_marginTop="20dp"
@@ -186,7 +185,7 @@
             <EditText
                     android:layout_width="match_parent"
                     android:layout_height="40dp"
-                    android:hint="Email"
+                    android:hint="@string/email"
                     android:inputType="textEmailAddress"
                     android:paddingStart="10dp"
                     android:layout_marginTop="20dp"
@@ -201,7 +200,7 @@
             <EditText
                     android:layout_width="match_parent"
                     android:layout_height="40dp"
-                    android:hint="Email"
+                    android:hint="@string/email"
                     android:inputType="textEmailAddress"
                     android:paddingStart="10dp"
                     android:layout_marginTop="20dp"
@@ -237,7 +236,7 @@
                             android:layout_marginTop="10dp"
                             android:lineSpacingExtra="8.5sp"
                             android:gravity="center_horizontal"
-                            android:text="Give as a Gift"/>
+                            android:text="@string/give_as_gift"/>
 
                     <ImageView
                             android:src="@mipmap/gift"
@@ -246,8 +245,6 @@
                             android:layout_centerVertical="true"
                             android:layout_marginStart="10dp"
                             android:id="@+id/imageView11"/>
-
-
                 </RelativeLayout>
             </RelativeLayout>
         </LinearLayout>

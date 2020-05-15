@@ -19,13 +19,15 @@ class PublishersPresenter(val mView: PublishersContract.View) : PublishersContra
 
     override fun start() {
         mView.showLoading()
-        mRepositorySource = DataRepository.getInstance(mView.getAppContext())
+        mRepositorySource = mView.getAppContext()?.let { DataRepository.getInstance(it) }!!
         mRepositorySource.getAllPublishers(object : RetrofitCallbacks.PublishersResponseCallback {
             override fun onSuccess(result: PublishersResponse?) {
                 mView.dismissLoading()
                 val status = RetrofitResponseHandler.validateAuthResponseStatus(result)
                 if (status == RetrofitResponseHandler.Companion.Status.VALID) {
                     mView.setPublishersList(result)
+                } else if (status == RetrofitResponseHandler.Companion.Status.UNAUTHORIZED) {
+                    mView!!.showLoginPage()
                 } else {
                     mView!!.showErrorMessage(result!!.message)
                 }

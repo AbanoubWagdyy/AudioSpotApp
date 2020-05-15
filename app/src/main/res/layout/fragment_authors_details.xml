@@ -42,19 +42,19 @@
                     android:textSize="16.5sp"
                     android:layout_marginTop="20dp"
                     android:layout_marginStart="10dp"
-                    android:textColor="#f4b928"
+                    android:textColor="@color/colorPrimary"
                     android:layout_below="@+id/tvAuthor"
                     android:letterSpacing="0.07"
                     android:lineSpacingExtra="77.8sp"
                     android:gravity="center_horizontal"
-                    android:text="About Author"/>
+                    android:text="@string/about_author"/>
 
             <TextView
                     android:id="@+id/tvAbout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textSize="16.5sp"
-                    android:textColor="#f4b928"
+                    android:textColor="@color/white"
                     android:layout_marginTop="10dp"
                     android:layout_marginStart="20dp"
                     android:layout_marginEnd="20dp"

@@ -1,22 +1,63 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/black"
         android:orientation="vertical"
         tools:context=".UI.payment.PaymentActivity">
 
-    <include layout="@layout/header"/>
+    <include layout="@layout/header" />
 
-    <im.delight.android.webview.AdvancedWebView
-            android:id="@+id/webView"
+    <!--<com.audiospotapplication.utils.AdvancedWebView-->
+    <!--android:id="@+id/webView"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_marginTop="15dp"-->
+    <!--android:layout_height="match_parent">-->
+
+    <!--</com.audiospotapplication.utils.AdvancedWebView>-->
+
+    <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_marginTop="15dp"
+            android:gravity="center"
+            android:visibility="gone"
             android:layout_height="match_parent">
 
-    </im.delight.android.webview.AdvancedWebView>
+        <Button
+                android:id="@+id/btnPayWithPal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Pay with Paypal"
+                android:layout_marginStart="30dp"
+                android:layout_marginEnd="30dp"
+                android:textColor="@color/white"
+                android:background="@drawable/paypal_btn_background" />
 
+        <Button
+                android:id="@+id/btnPayWithFawry"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:layout_marginStart="30dp"
+                android:layout_marginEnd="30dp"
+                android:layout_below="@+id/btnPayWithPal"
+                android:text="Pay with Fawry"
+                android:textColor="@color/white"
+                android:background="@drawable/button_background" />
+
+        <TextView
+                android:id="@+id/textView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="30dp"
+                android:layout_marginStart="30dp"
+                android:layout_marginEnd="30dp"
+                android:textColor="@color/white"
+                android:textStyle="bold"
+                android:textSize="14sp"
+                android:layout_below="@+id/btnPayWithFawry"
+                android:text="Note : When choosing to pay with paypal ,extra charges will be applied according to daily dollar price" />
+
+    </RelativeLayout>
 </LinearLayout>

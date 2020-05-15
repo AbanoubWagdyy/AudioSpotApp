@@ -4,13 +4,28 @@
              android:background="@color/black"
              android:layout_height="match_parent">
 
-
-    <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recyclerMyBooks"
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+            android:id="@+id/swipeToRefresh"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+            android:layout_height="match_parent">
 
-    <RelativeLayout android:id="@+id/relativeEmptyBooks" android:visibility="gone" android:layout_width="match_parent" android:layout_height="match_parent">
+        <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerMyBooks"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+
+    <RelativeLayout android:id="@+id/relativeEmptyBooks"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+        <ProgressBar android:id="@+id/progress"
+                     android:layout_width="wrap_content"
+                     android:layout_height="wrap_content"
+                     android:visibility="gone"
+                     android:layout_centerInParent="true"/>
 
         <TextView
                 android:id="@+id/emptyBooks"
@@ -18,6 +33,7 @@
                 android:layout_height="wrap_content"
                 android:textSize="13.5sp"
                 android:textColor="@color/white"
+                android:visibility="gone"
                 android:letterSpacing="0.07"
                 android:layout_centerInParent="true"
                 android:lineSpacingExtra="10sp"

@@ -1,119 +1,173 @@
 package com.audiospotapplication.UI.bookChapters
 
-import android.app.PendingIntent
+import android.app.ProgressDialog
 import android.content.Context
 import android.content.Intent
+import android.content.res.Configuration
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.Handler
+import android.support.v4.media.session.MediaControllerCompat
 import android.support.v4.media.session.PlaybackStateCompat
-import android.text.format.DateUtils
 import android.util.Log
 import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.audiospotapplication.DataLayer.Model.Bookmark
 import com.audiospotapplication.DataLayer.Model.ChaptersData
-import com.audiospotapplication.DataLayer.Model.Paragraph
 import com.audiospotapplication.R
 import com.audiospotapplication.UI.addBookmark.AddBookmarkActivity
 import com.audiospotapplication.UI.bookChapters.Interface.OnChapterCLickListener
 import com.audiospotapplication.UI.bookChapters.adapter.ChaptersAdapter
-import com.audiospotapplication.UI.splash.SplashActivity
-import com.audiospotapplication.utils.BookMediaDataConversion
+import com.audiospotapplication.UI.homepage.HomepageActivity
+import com.audiospotapplication.UI.login.LoginActivity
 import com.audiospotapplication.utils.DialogUtils
 import com.audiospotapplication.utils.ImageUtils
 import com.audiospotapplication.utils.TimeUtils
 import com.google.android.material.snackbar.Snackbar
 import com.sothree.slidinguppanel.SlidingUpPanelLayout
-import dm.audiostreamer.AudioStreamingManager
-import dm.audiostreamer.CurrentSessionCallback
-import dm.audiostreamer.Logger
-import dm.audiostreamer.MediaMetaData
-import dm.audiostreamerdemo.widgets.Slider
 import kotlinx.android.synthetic.main.activity_chapters.*
 import kotlinx.android.synthetic.main.activity_chapters_content.*
-import kotlinx.android.synthetic.main.include_slidepanelchildtwo_bottomview.*
-import kotlinx.android.synthetic.main.include_slidepanelchildtwo_bottomview.btn_play
 import kotlinx.android.synthetic.main.include_slidepanelchildtwo_topviewtwo.*
 import kotlinx.android.synthetic.main.include_slidingpanel_childtwo.*
-import me.rohanpeshkar.filterablelistdialog.FilterableListDialog
 import java.util.ArrayList
+import com.ps.pexoplayer.PexoEventListener
+import com.ps.pexoplayer.PexoPlayerManager
+import com.ps.pexoplayer.model.PexoMediaMetadata
+import kotlinx.android.synthetic.main.header.*
+import kotlinx.android.synthetic.main.include_slidepanelchildtwo_bottomview.*
+import me.rohanpeshkar.filterablelistdialog.FilterableListDialog
 
-class BookChaptersActivity : AppCompatActivity(), CurrentSessionCallback, View.OnClickListener,
-    Slider.OnValueChangedListener, BookChaptersContract.View, OnChapterCLickListener {
-
-    override fun showMessage(s: String) {
-        Snackbar.make(
-            findViewById(android.R.id.content),
-            s, Snackbar.LENGTH_SHORT
-        ).show()
+class BookChaptersActivity : AppCompatActivity(), View.OnClickListener,
+    BookChaptersContract.View, OnChapterCLickListener, PexoEventListener {
+    override fun onItemDownloadPressed(data: ChaptersData) {
+        mPresenter?.setCurrentChapterID(data.id)
+        mPresenter?.handleDownloadPressed()
     }
 
-    override fun showDownloadComplete(message: String, currentPath: String) {
-        currentSong!!.mediaUrl = currentPath
-        Snackbar.make(
-            findViewById(android.R.id.content),
-            message, Snackbar.LENGTH_SHORT
-        ).show()
+    override fun onPlayerMediaControllerConnected(mediaController: MediaControllerCompat?) {
+        this.mediaController = mediaController
+        seekBar.setMediaController(mediaController)
     }
 
-    override fun setBookmark(bookmark: Bookmark) {
-        this.currentBookmark = bookmark
+    override fun onPlayerMetadataChanged(pexoMediaMetadata: PexoMediaMetadata?) {
+        val chapter = mPresenter?.getBookByID(pexoMediaMetadata?.mediaId)
+        if (chapter != null)
+            text_songName.text = chapter.title
     }
 
-    override fun showAddBookmarkScreen() {
-        val intent = Intent(this, AddBookmarkActivity::class.java)
-        startActivityForResult(intent, 1)
+    override fun onPlayerPlaybackStateChanged(state: PlaybackStateCompat?) {
+        if (state != null) {
+            when (state.state) {
+                PlaybackStateCompat.STATE_BUFFERING -> {
+                }
+                PlaybackStateCompat.STATE_PLAYING -> {
+                    btnPlay.setImageDrawable(getDrawable(R.drawable.ic_pause))
+                    btn_play_bottom.setImageResource(R.drawable.play_bottom)
+                }
+                PlaybackStateCompat.STATE_PAUSED -> {
+                    btnPlay.setImageDrawable(getDrawable(R.drawable.ic_play))
+                    btn_play_bottom.setImageResource(R.drawable.pause_bottom)
+                }
+                PlaybackStateCompat.STATE_ERROR -> {
+                }
+            }
+        }
+    }
+
+    override fun onControllerDisconnect() {
+        Log.d("onControllerDisconnect", "onControllerDisconnect")
+    }
+
+    override fun updatePlayerBuffer(progress: Int) {
+        Log.d("updatePlayerBuffer", "updatePlayerBuffer")
+    }
+
+    override fun updatePlayerSeekBar(progress: Int, max: Int) {
+        this.seekBarProgress = progress
+        this.seekBarProgressMax = progress
+        if (!seekBar.isTracking()) {
+            seekBar.progress = progress
+            seekBar.max = max
+            txtCurrentDuration.text = TimeUtils.toTimeFormat((progress / 1000))
+            txtDuration.text = TimeUtils.toTimeFormat((max / 1000))
+        }
+        txtCurrentMusic.text = getParagraph(progress)
+    }
+
+    private fun getParagraph(progress: Int): CharSequence? {
+        mPresenter?.getCurrentChapterParagraphs()?.let {
+            for (paragraph in mPresenter?.getCurrentChapterParagraphs()!!) {
+                val fromTime = paragraph.from_time.toInt() * 1000
+                val toTime = paragraph.to_time.toInt() * 1000
+
+                if (progress in fromTime..toTime) {
+                    return paragraph.title
+                }
+            }
+
+            return ""
+        }
+        return ""
+    }
+
+    override fun updateShuffle(state: Int) {
+        Log.d("updateShuffle", "updateShuffle")
+    }
+
+    override fun updateRepeat(state: Int) {
+        when (state) {
+            PlaybackStateCompat.SHUFFLE_MODE_ALL -> {
+            }
+            PlaybackStateCompat.SHUFFLE_MODE_NONE -> {
+            }
+        }
+    }
+
+    override fun prepareLastPlayedMedia() {
+        pexoPlayerManager.onFinishedGettingPreviousSessionData(ArrayList<PexoMediaMetadata>())
+    }
+
+    override fun onConfigurationChanged(newConfig: Configuration) {
+        super.onConfigurationChanged(newConfig)
+        Log.i(TAG, "onConfigurationChanged()")
+        pexoPlayerManager.setConfigurationChanged(newConfig)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        Log.i(TAG, "onDestroy()")
+        pexoPlayerManager.unSubscribeCallBack()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_chapters)
-        configAudioStreamer()
-        uiInitialization()
-        checkAlreadyPlaying()
-        mPresenter = BookChaptersPresenter(this)
-        mPresenter.start()
-    }
 
-    private fun checkAlreadyPlaying() {
-        if (streamingManager.isPlaying) {
-            currentSong = streamingManager.currentAudio
-            if (currentSong != null) {
-                currentSong!!.playState = streamingManager.mLastPlaybackState
-                showMediaInfo(currentSong!!)
-                btn_play.setBackgroundResource(R.drawable.play_bottom)
-                btn_play_bottom.setBackgroundResource(R.drawable.play_bottom)
-            }
-        }
+        pexoPlayerManager = PexoPlayerManager(this)
+
+        pexoPlayerManager.setPendingIntentClass(BookChaptersActivity::class.java)
+
+        uiInitialization()
+
+        mPresenter = BookChaptersPresenter(this)
+
+        mPresenter?.start()
     }
 
     private fun uiInitialization() {
 
-        btn_backward.visibility = View.VISIBLE
-        btn_forward.visibility = View.VISIBLE
-
-        btn_backward.setOnClickListener(this)
-        btn_forward.setOnClickListener(this)
-        btn_play.setOnClickListener(this)
-        btn_play_bottom.setOnClickListener(this)
         ivParagraphs.setOnClickListener(this)
         back.setOnClickListener(this)
         tvClose.setOnClickListener(this)
-        bookmark.setOnClickListener(this)
-        download.setOnClickListener(this)
-        timer.setOnClickListener(this)
-        speed.setOnClickListener(this)
+        ivParagraphs.setOnClickListener(this)
+        ivChapters.setOnClickListener(this)
 
-//        changeButtonColor(btn_backward)
-//        changeButtonColor(btn_forward)
+        tvTitle.text = applicationContext.getString(R.string.chapters)
 
         slideBottomView.visibility = View.VISIBLE
         slideBottomView.setOnClickListener(View.OnClickListener {
             sliding_layout.panelState = SlidingUpPanelLayout.PanelState.EXPANDED
         })
-
-        audio_progress_control.max = 0
-        audio_progress_control.onValueChangedListener = this
 
         sliding_layout.addPanelSlideListener(object : SlidingUpPanelLayout.PanelSlideListener {
             override fun onPanelSlide(view: View, slideOffset: Float) {
@@ -140,21 +194,72 @@ class BookChaptersActivity : AppCompatActivity(), CurrentSessionCallback, View.O
                 }
             }
         })
-    }
 
-    private fun configAudioStreamer() {
-        streamingManager = AudioStreamingManager.getInstance(applicationContext)
-        //Set PlayMultiple 'true' if want to playing sequentially one by one songs
-        // and provide the list of songs else set it 'false'
-        streamingManager.isPlayMultiple = true
-        streamingManager.setMediaList(listOfSongs)
-        //If you want to show the Player Notification then set ShowPlayerNotification as true
-        //and provide the pending intent so that after click on notification it will redirect to an activity
-        streamingManager.setShowPlayerNotification(true)
-        streamingManager.setPendingIntentAct(getNotificationPendingIntent())
-    }
+        downloadProgressDialog = ProgressDialog(this)
+        downloadProgressDialog!!.setMessage("Downloading(0 %) ....")
+        downloadProgressDialog!!.setCancelable(false)
 
-    //book details
+        btnPlay.setOnClickListener {
+            if (mPresenter?.isBookMine()!!) {
+                pexoPlayerManager.setToAppOpen(true)
+                if (mPresenter!!.getSavedBookId().equals(pexoPlayerManager.pexoInstance.playlistId)) {
+                    pexoPlayerManager.onTogglePlayPause()
+                } else {
+                    val chapters = mPresenter!!.getChapters()
+                    if (chapters != null) {
+                        generateMediaItems(chapters)
+                        pexoPlayerManager.startPlayback()
+                    }
+                }
+            } else {
+                Snackbar.make(
+                    findViewById(android.R.id.content),
+                    applicationContext.getString(R.string.you_should_own), Snackbar.LENGTH_SHORT
+                ).show()
+            }
+        }
+
+        btn_play_bottom.setOnClickListener {
+            if (mPresenter?.isBookMine()!!) {
+                pexoPlayerManager.setToAppOpen(true)
+                if (mPresenter!!.getSavedBookId().equals(pexoPlayerManager.pexoInstance.playlistId)) {
+                    pexoPlayerManager.onTogglePlayPause()
+                } else {
+                    val chapters = mPresenter!!.getChapters()
+                    if (chapters != null) {
+                        generateMediaItems(chapters)
+                    }
+                    Handler().postDelayed({
+                        pexoPlayerManager.startPlayback()
+
+                    }, 1300)
+                }
+            } else {
+                Snackbar.make(
+                    findViewById(android.R.id.content),
+                    applicationContext.getString(R.string.you_should_own), Snackbar.LENGTH_SHORT
+                ).show()
+            }
+        }
+
+        bookmark.setOnClickListener {
+            mPresenter?.handleBookmarkClicked(txtCurrentDuration.text.toString())
+        }
+
+        download.setOnClickListener {
+            if (mPresenter?.isBookMine()!!) {
+                mPresenter?.handleDownloadPressed()
+            }
+        }
+
+        btnPrev.setOnClickListener {
+            pexoPlayerManager.updateProgress(seekBarProgress - 30000)
+        }
+
+        btnNext.setOnClickListener {
+            pexoPlayerManager.updateProgress(seekBarProgress + 30000)
+        }
+    }
 
     override fun getAppContext(): Context? {
         return applicationContext
@@ -173,22 +278,42 @@ class BookChaptersActivity : AppCompatActivity(), CurrentSessionCallback, View.O
     }
 
     override fun setBookImage(cover: String) {
-        ImageUtils.setImageFromUrlIntoImageViewUsingPicasso(cover, applicationContext, image_songAlbumArt, false)
-        ImageUtils.setImageFromUrlIntoImageViewUsingPicasso(cover, applicationContext, bookCover, false)
+        ImageUtils.setImageFromUrlIntoImageViewUsingGlide(
+            cover,
+            applicationContext,
+            image_songAlbumArt,
+            false
+        )
+        ImageUtils.setImageFromUrlIntoImageViewUsingGlide(
+            cover,
+            applicationContext,
+            bookCover,
+            false
+        )
     }
 
-    override fun onChapterClicked(data: ChaptersData) {
-        if (mPresenter.isBookMine()) {
-            configAudioStreamer()
-            slidepanel_time_total.text = data.duration_str
-            paragraphs = data.paragraphs
-            chapterData = data
-            var mediaData = BookMediaDataConversion.convertBookToMediaMetaData(data)
-            var isChapterDownloaded = mPresenter.validateChapterDownloaded(mediaData)
-            if (!isChapterDownloaded.equals("")) {
-                mediaData.mediaUrl = isChapterDownloaded
+    override fun playChapter(chaptersData: ChaptersData, index: Int) {
+        onChapterClicked(chaptersData, position = index)
+    }
+
+    override fun onChapterClicked(data: ChaptersData, position: Int) {
+        if (mPresenter?.isBookMine()!!) {
+            if (mPresenter!!.getChapters() != null) {
+                generateMediaItems(mPresenter!!.getChapters()!!)
             }
-            playSong(mediaData)
+            mPresenter?.setCurrentChapterParagraphs(data.paragraphs)
+            mPresenter?.setCurrentChapterID(data.id)
+            mPresenter?.setCurrentChapterTitle(data.title)
+
+            sliding_layout.panelState = SlidingUpPanelLayout.PanelState.EXPANDED
+
+            Handler().postDelayed({
+                pexoPlayerManager.startPlayback(position)
+
+                if (currentBookmark != null) {
+                    pexoPlayerManager.updateProgress(currentBookmark!!.time * 1000)
+                }
+            }, 1300)
         } else {
             Snackbar.make(
                 findViewById(android.R.id.content),
@@ -197,12 +322,21 @@ class BookChaptersActivity : AppCompatActivity(), CurrentSessionCallback, View.O
         }
     }
 
-    override fun setChapters(data: List<ChaptersData>) {
+    override fun setChapters(
+        data: List<ChaptersData>,
+        id: Int
+    ) {
+
+        if (id.toString().equals(pexoPlayerManager.pexoInstance.playlistId)) {
+            pexoPlayerManager.setPexoEventListener(this)
+            pexoPlayerManager.subscribeCallBack()
+        }
+
         if (data.isNotEmpty()) {
             recyclerChapters.layoutManager = LinearLayoutManager(applicationContext)
             recyclerChapters.setHasFixedSize(true)
             recyclerChapters.isNestedScrollingEnabled = false
-            recyclerChapters.adapter = ChaptersAdapter(data!!, this)
+            recyclerChapters.adapter = ChaptersAdapter(data, this, mPresenter?.isBookMine())
         } else {
             Snackbar.make(
                 findViewById(android.R.id.content), "Chapters not Found",
@@ -211,122 +345,40 @@ class BookChaptersActivity : AppCompatActivity(), CurrentSessionCallback, View.O
         }
     }
 
-    override fun onValueChanged(value: Int) {
-        Log.d("SliderValue", value.toLong().toString())
-        streamingManager.onSeekTo(value.toLong())
-        streamingManager.scheduleSeekBarUpdate()
+    private fun generateMediaItems(data: List<ChaptersData>) {
+        mediaItemList = ArrayList()
 
-        var isParagraphSet = false
-        for (paragraph in paragraphs) {
-            if ((value / 1000) in paragraph.from_time.toLong()..paragraph.to_time.toLong()) {
-                paragraphTitle.text = paragraph.title
-                isParagraphSet = true
-                break
-            }
-        }
-        if (!isParagraphSet) {
-            paragraphTitle.text = ""
-        }
-    }
+        pexoPlayerManager.setPexoEventListener(this)
 
-    override fun updatePlaybackState(state: Int) {
-        Logger.e("updatePlaybackState: ", "" + state)
-        when (state) {
-            PlaybackStateCompat.STATE_PLAYING -> {
-                btn_play.setBackgroundResource(R.drawable.play_bottom)
-                btn_play_bottom.setBackgroundResource(R.drawable.play_bottom)
-                if (currentSong != null) {
-                    currentSong!!.playState = PlaybackStateCompat.STATE_PLAYING
-                }
-            }
-            PlaybackStateCompat.STATE_PAUSED -> {
-                btn_play.setBackgroundResource(R.drawable.pause_bottom)
-                btn_play_bottom.setBackgroundResource(R.drawable.pause_bottom)
-                if (currentSong != null) {
-                    currentSong!!.playState = PlaybackStateCompat.STATE_PAUSED
-                }
-            }
-            PlaybackStateCompat.STATE_NONE -> {
-                currentSong!!.playState = PlaybackStateCompat.STATE_NONE
+        pexoPlayerManager.subscribeCallBack()
 
-            }
-            PlaybackStateCompat.STATE_STOPPED -> {
-                btn_play.setBackgroundResource(R.drawable.pause_bottom)
-                btn_play_bottom.setBackgroundResource(R.drawable.pause_bottom)
-                audio_progress_control.value = 0
-                if (currentSong != null) {
-                    currentSong!!.playState = PlaybackStateCompat.STATE_NONE
-                }
-            }
-            PlaybackStateCompat.STATE_BUFFERING -> {
-                if (currentSong != null) {
-                    currentSong!!.playState = PlaybackStateCompat.STATE_NONE
-                }
-            }
-        }
-    }
+        for (chapter in data) {
+            var path = mPresenter?.validateChapterDownloaded(chapter)
+            if (path.equals(""))
+                path = chapter.sound_file
+            val pexoMediaMetadata = PexoMediaMetadata(
+                chapter.id.toString(),
+                mPresenter?.getBookAuthor(),
+                chapter.title,
+                path,
+                "",
+                mPresenter?.getBookReleasedDate(),
+                mPresenter?.getBookIcon(),
+                ""
+            )
 
-    override fun playSongComplete() {
-        val timeString = "00.00"
-        slidepanel_time_total.text = timeString
-        slidepanel_time_progress.text = timeString
-        audio_progress_control.value = 0
-    }
-
-    override fun currentSeekBarPosition(progress: Int) {
-        if (progress == 0) {
-            if (currentBookmark != null) {
-                if (!isBookmarkSlided) {
-                    audio_progress_control.value = currentBookmark!!.time * 1000
-                    streamingManager.onSeekTo((currentBookmark!!.time * 1000).toLong())
-                    streamingManager.scheduleSeekBarUpdate()
-                    isBookmarkSlided = true
-                } else {
-                    audio_progress_control.value = progress
-                }
-            } else {
-                audio_progress_control.value = progress
-            }
-
-        } else {
-            audio_progress_control.value = progress
+            mediaItemList.add(pexoMediaMetadata)
         }
 
-        setPGTime(progress)
-    }
-
-    override fun playCurrent(indexP: Int, currentAudio: MediaMetaData?) {
-        showMediaInfo(currentAudio!!)
-    }
-
-    override fun playNext(indexP: Int, currentAudio: MediaMetaData?) {
-//        showMediaInfo(currentAudio!!)
-//        for (paragraph in paragraphs) {
-//            if ((currentAudio!!.mediaDuration.toInt() / 1000) in paragraph.from_time.toLong()..paragraph.to_time.toLong()) {
-//                paragraphTitle.text = paragraph.title
-//            }
-//        }
-    }
-
-    override fun playPrevious(indexP: Int, currentAudio: MediaMetaData?) {
-//        showMediaInfo(currentAudio!!)
-//        for (paragraph in paragraphs) {
-//            if ((currentAudio!!.mediaDuration.toInt() / 1000) in paragraph.from_time.toLong()..paragraph.to_time.toLong()) {
-//                paragraphTitle.text = paragraph.title
-//            }
-//        }
-    }
-
-    private fun getNotificationPendingIntent(): PendingIntent {
-        val intent = Intent(applicationContext, SplashActivity::class.java)
-        intent.setAction("openplayer")
-        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
-        return PendingIntent.getActivity(applicationContext, 0, intent, 0)
+        pexoPlayerManager.setupNewPlaylist(
+            mPresenter?.getSavedBookId(), ArrayList<PexoMediaMetadata>(),
+            mediaItemList, 0
+        )
     }
 
     override fun onBackPressed() {
         if (isExpand) {
-            sliding_layout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED)
+            sliding_layout.panelState = SlidingUpPanelLayout.PanelState.COLLAPSED
         } else {
             super.onBackPressed()
             overridePendingTransition(0, 0)
@@ -334,188 +386,157 @@ class BookChaptersActivity : AppCompatActivity(), CurrentSessionCallback, View.O
         }
     }
 
-    public override fun onStart() {
-        super.onStart()
-        try {
-            if (streamingManager != null) {
-                streamingManager.subscribesCallBack(this)
-            }
-        } catch (e: Exception) {
-            e.printStackTrace()
+    override fun showHomepageScreen() {
+        val intent = Intent(this, HomepageActivity::class.java)
+        intent.addFlags(
+            Intent.FLAG_ACTIVITY_CLEAR_TOP or
+                    Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        )
+        startActivity(intent)
+        finish()
+    }
+
+    override fun showLoginPage() {
+        mPresenter?.resetRepo()
+        val intent = Intent(this, LoginActivity::class.java)
+        intent.addFlags(
+            Intent.FLAG_ACTIVITY_CLEAR_TOP or
+                    Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        )
+        startActivity(intent)
+        finish()
+    }
+
+    override fun dismissDownloadingDialog() {
+        downloadProgressDialog!!.dismiss()
+    }
+
+    override fun updateProgress(progress: Int) {
+        runOnUiThread {
+            downloadProgressDialog!!.setMessage("Downloading($progress %) ....")
         }
     }
 
-    public override fun onStop() {
-        try {
-            if (streamingManager != null) {
-                streamingManager.unSubscribeCallBack()
-            }
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
-
-        super.onStop()
+    override fun showDownloadingDialog() {
+        downloadProgressDialog!!.show()
     }
 
-    override fun onDestroy() {
-        try {
-            if (streamingManager != null) {
-                streamingManager.unSubscribeCallBack()
-            }
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
+//    override fun onBookmarkClicked() {
+//        var audio = player.currentAudio
+//        mPresenter.handleBookmarkClicked(player.getCurrentTimeString(), audio!!.id, audio.title)
+//    }
 
-        super.onDestroy()
-    }
-
-    private fun playPauseEvent(v: View) {
-        if (streamingManager.isPlaying) {
-            streamingManager.onPause()
-            btn_play.setBackgroundResource(R.drawable.pause_bottom)
-            btn_play_bottom.setBackgroundResource(R.drawable.pause_bottom)
-        } else {
-            streamingManager.onPlay(currentSong)
-            btn_play.setBackgroundResource(R.drawable.play_bottom)
-            btn_play_bottom.setBackgroundResource(R.drawable.play_bottom)
-        }
-    }
-
-    private fun playSong(media: MediaMetaData) {
-        include_sliding_panel_childtwo.visibility = View.VISIBLE
-        if (streamingManager != null) {
-            streamingManager.onPlay(media)
-            showMediaInfo(media)
-        }
-    }
-
-    private fun showMediaInfo(media: MediaMetaData) {
-        currentSong = media
-        audio_progress_control.min = 0
-        audio_progress_control.max = Integer.valueOf(media.mediaDuration) * 1000
-        setMaxTime()
-        loadSongDetails(media)
-    }
-
-    @Synchronized
-    private fun setPGTime(progress: Int) {
-        try {
-            timeString = "00.00"
-            currentSong = streamingManager.currentAudio
-            if (currentSong != null && progress.toLong() != java.lang.Long.parseLong(currentSong!!.mediaDuration)) {
-                timeString = TimeUtils.toTimeFormat(progress / 1000)
-//                timeString = DateUtils.formatElapsedTime((progress / 1000).toLong())
-                Log.d("timeString", timeString)
-                Log.d("MyProgress", (progress / 1000).toString())
-            }
-
-            slidepanel_time_progress.text = timeString
-
-            var isParagraphSet = false
-            for (paragraph in paragraphs) {
-                if ((progress / 1000) in paragraph.from_time.toLong()..paragraph.to_time.toLong()) {
-                    paragraphTitle.text = paragraph.title
-                    isParagraphSet = true
-                    break
-                }
-            }
-            if (!isParagraphSet) {
-                paragraphTitle.text = ""
-            }
-
-        } catch (e: NumberFormatException) {
-            e.printStackTrace()
-        }
-    }
-
-    private fun setMaxTime() {
-        try {
-            val timeString = DateUtils.formatElapsedTime(java.lang.Long.parseLong(currentSong!!.getMediaDuration()))
-            slidepanel_time_total.text = timeString
-        } catch (e: NumberFormatException) {
-            e.printStackTrace()
-        }
-    }
-
-    private fun loadSongDetails(metaData: MediaMetaData) {
-        text_songName.text = metaData.mediaTitle
-        var chapterId = metaData.mediaId
-        text_chapterNumber.text = "#Chapter $chapterId"
-    }
+//
+//    override fun onSpeedClicked() {
+//
+//    }
+//
+//    override fun onTimerClicked() {
+//
+//    }
 
     override fun onClick(view: View?) {
         when (view!!.id) {
-            R.id.btn_forward -> streamingManager.onSkipToNext()
-            R.id.btn_backward -> streamingManager.onSkipToPrevious()
-            R.id.back -> finish()
-            R.id.btn_play -> if (currentSong != null) {
-                playPauseEvent(view)
+            R.id.ivParagraphs -> {
+                if (getParagraphListItems()!!.size > 0) {
+                    FilterableListDialog.create(
+                        this,
+                        getParagraphListItems()
+                    ) {
+                        validateParagraphClicked(it)
+                    }.show()
+                } else {
+                    Snackbar.make(
+                        findViewById(android.R.id.content),
+                        "No Paragraphs Found !.", Snackbar.LENGTH_SHORT
+                    ).show()
+                }
             }
-            R.id.btn_play_bottom -> if (currentSong != null) {
-                playPauseEvent(view)
+
+            R.id.ivChapters -> {
+                sliding_layout.panelState = SlidingUpPanelLayout.PanelState.COLLAPSED
             }
+
             R.id.tvClose -> {
                 include_sliding_panel_childtwo.visibility = View.GONE
-                streamingManager.handleStopRequest(null)
             }
 
-            R.id.bookmark -> {
-                streamingManager.handlePauseRequest()
-                mPresenter.handleBookmarkClicked(timeString, chapterData.id, chapterData.title)
-            }
-
-            R.id.download -> {
-                if (currentSong != null)
-                    mPresenter.handleDownloadPressed(currentSong)
-            }
-
-            R.id.timer -> {
-
-            }
-
-            R.id.speed -> {
-
-            }
-
-            R.id.ivParagraphs -> {
-                FilterableListDialog.create(
-                    this,
-                    getListItems()
-                ) {
-                    validateParagraphClicked(it)
-                }.show()
+            R.id.back -> {
+                finish()
             }
         }
     }
 
     private fun validateParagraphClicked(str: String) {
-        var selectedParagraph = paragraphs.filter {
-            str.equals(it.title)
-        }[0]
-
-        audio_progress_control.value = selectedParagraph!!.from_time.toInt() * 1000
-        streamingManager.onSeekTo((selectedParagraph!!.from_time.toInt() * 1000).toLong())
-        streamingManager.scheduleSeekBarUpdate()
-
-        paragraphTitle.text = selectedParagraph.title
-    }
-
-    private fun getListItems(): ArrayList<String>? {
-        var items = ArrayList<String>()
-        for (paragraph in paragraphs) {
-            items.add(paragraph.title)
+        if (mPresenter?.getCurrentChapterParagraphs() == null) {
+            return
         }
-        return items
+
+        val selectedParagraph =
+            mPresenter?.getCurrentChapterParagraphs()!!.filter {
+                str.equals(it.title)
+            }
+
+        if (selectedParagraph.isNullOrEmpty()) {
+            return
+        }
+
+        pexoPlayerManager.updateProgress(selectedParagraph[0].from_time.toInt() * 1000)
     }
 
-    private lateinit var chapterData: ChaptersData
-    private lateinit var timeString: String
+    private fun getParagraphListItems(): ArrayList<String>? {
+        val items = ArrayList<String>()
+        mPresenter?.getCurrentChapterParagraphs()?.let {
+            for (paragraph in it) {
+                items.add(paragraph.title)
+            }
+            return items
+        }
+        return ArrayList()
+    }
+
+    override fun showMessage(s: String) {
+        Snackbar.make(
+            findViewById(android.R.id.content),
+            s, Snackbar.LENGTH_SHORT
+        ).show()
+    }
+
+    override fun showDownloadComplete(message: String, currentPath: String) {
+        Snackbar.make(
+            findViewById(android.R.id.content),
+            message, Snackbar.LENGTH_SHORT
+        ).show()
+    }
+
+    override fun setBookmark(bookmark: Bookmark) {
+        this.currentBookmark = bookmark
+    }
+
+    override fun showAddBookmarkScreen() {
+        val intent = Intent(this, AddBookmarkActivity::class.java)
+        startActivityForResult(intent, 1)
+    }
+
+    override fun onPause() {
+        seekBar.disconnectController()
+        super.onPause()
+    }
+
+    private var seekBarProgress: Int = 0
+    private var seekBarProgressMax: Int = 0
+    private var mediaController: MediaControllerCompat? = null
+    private lateinit var mediaItemList: ArrayList<PexoMediaMetadata>
+
     private var isExpand = false
-    private lateinit var streamingManager: AudioStreamingManager
-    private var currentSong: MediaMetaData? = null
-    private var listOfSongs: List<MediaMetaData> = ArrayList()
+
     var currentBookmark: Bookmark? = null
-    var isBookmarkSlided: Boolean = false
-    lateinit var mPresenter: BookChaptersContract.Presenter
-    lateinit var paragraphs: List<Paragraph>
+
+    var mPresenter: BookChaptersContract.Presenter? = null
+
+    private var downloadProgressDialog: ProgressDialog? = null
+
+    private lateinit var pexoPlayerManager: PexoPlayerManager
+
+    private val TAG: String = BookChaptersActivity::class.java.simpleName
 }

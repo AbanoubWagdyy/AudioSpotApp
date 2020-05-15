@@ -13,6 +13,15 @@ import retrofit2.Call
 
 class CartPresenter(val mView: CartContract.View) : CartContract.Presenter {
 
+    override fun handlePayNowPressed() {
+        mView.showPaymentScreen()
+    }
+
+    override fun saveBook(book: Book) {
+        mRepositorySource.saveBook(book)
+        mView.showBookDetailsScreen()
+    }
+
     override fun getAuthResponse(): AuthResponse? {
         return mRepositorySource.getAuthResponse()
     }
@@ -24,6 +33,8 @@ class CartPresenter(val mView: CartContract.View) : CartContract.Presenter {
                 val status = RetrofitResponseHandler.validateAuthResponseStatus(result)
                 if (status == RetrofitResponseHandler.Companion.Status.VALID) {
                     start()
+                } else if (status == RetrofitResponseHandler.Companion.Status.UNAUTHORIZED) {
+                    mView!!.showLoginPage()
                 } else {
                     mView.dismissLoading()
                     mView.showMessage(result!!.message)
@@ -42,12 +53,20 @@ class CartPresenter(val mView: CartContract.View) : CartContract.Presenter {
     }
 
     override fun start() {
-        mRepositorySource = DataRepository.getInstance(mView.getAppContext())
+        mRepositorySource = DataRepository.getInstance(mView.getAppContext()!!)
         mView.showLoading()
         mRepositorySource.getMyCart(object : RetrofitCallbacks.BookListCallback {
             override fun onSuccess(result: BookListResponse?) {
                 mView.dismissLoading()
-                mView.setBookList(result!!.data)
+                val status = RetrofitResponseHandler.validateAuthResponseStatus(result)
+                if (status == RetrofitResponseHandler.Companion.Status.VALID) {
+                    mView.setBookList(result!!.data)
+                    mView.setCartCount(result.data.size)
+                } else if (status == RetrofitResponseHandler.Companion.Status.UNAUTHORIZED) {
+                    mView!!.showLoginPage()
+                } else {
+                    result?.message?.let { mView.showMessage(it) }
+                }
             }
 
             override fun onFailure(call: Call<BookListResponse>?, t: Throwable?) {

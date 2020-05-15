@@ -1,38 +1,52 @@
 package com.audiospotapplication.UI.cart
 
-import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.audiospot.DataLayer.Model.Book
+import com.audiospotapplication.BaseFragment
 
 import com.audiospotapplication.R
+import com.audiospotapplication.UI.BaseActivity
+import com.audiospotapplication.UI.bookDetails.BookDetailsActivity
 import com.audiospotapplication.UI.books.Interface.onBookItemClickListener
 import com.audiospotapplication.UI.books.adapter.BooksAdapter
-import com.audiospotapplication.UI.homepage.HomepageActivity
 import com.audiospotapplication.UI.payment.PaymentActivity
 import com.audiospotapplication.UI.promoCode.PromoCodeActivity
-import com.audiospotapplication.utils.BookMediaDataConversion
 import com.audiospotapplication.utils.DialogUtils
 import com.google.android.material.snackbar.Snackbar
-import dm.audiostreamer.AudioStreamingManager
-import dm.audiostreamer.MediaMetaData
 import kotlinx.android.synthetic.main.fragment_cart.*
 
-class CartFragment : Fragment(), CartContract.View, onBookItemClickListener,
+class CartFragment : BaseFragment(), CartContract.View, onBookItemClickListener,
     onBookItemClickListener.onCartBookDeleteClickListener {
 
+    override fun showPaymentScreen() {
+        val intent = Intent(activity!!, PaymentActivity::class.java)
+        startActivity(intent)
+        activity!!.finish()
+    }
+
+    override fun setCartCount(size: Int) {
+        (activity as BaseActivity).setCartNumber(size)
+    }
+
+    override fun showBookDetailsScreen() {
+        val intent = Intent(activity!!, BookDetailsActivity::class.java)
+        startActivity(intent)
+    }
+
     override fun showMessage(message: String) {
-        Snackbar.make(
-            activity!!.findViewById(android.R.id.content),
-            message,
-            Snackbar.LENGTH_SHORT
-        ).show()
+        if (activity != null)
+            Snackbar.make(
+                activity!!.findViewById(android.R.id.content),
+                message,
+                Snackbar.LENGTH_SHORT
+            ).show()
     }
 
     override fun onItemDeleted(book: Book) {
@@ -40,41 +54,13 @@ class CartFragment : Fragment(), CartContract.View, onBookItemClickListener,
     }
 
     override fun onItemClicked(book: Book) {
-        var mediaMetaData = BookMediaDataConversion.convertBookToMediaMetaData(book)
-        listOfSongs.add(mediaMetaData)
-        playSong(mediaMetaData)
-    }
-
-    private fun playSong(mediaMetaData: MediaMetaData) {
-        if (streamingManager != null) {
-            streamingManager!!.onPlay(mediaMetaData)
-        }
+        mPresenter.saveBook(book)
     }
 
     override fun onPlayClicked(book: Book) {
-        configAudioStreamer()
-    }
-
-    private fun configAudioStreamer() {
-        streamingManager = AudioStreamingManager.getInstance(activity!!.applicationContext)
-        //Set PlayMultiple 'true' if want to playing sequentially one by one songs
-        // and provide the list of songs else set it 'false'
-        streamingManager!!.isPlayMultiple = mPresenter.getAuthResponse() != null
-
-        streamingManager!!.setMediaList(listOfSongs)
-
-        //If you want to show the Player Notification then set ShowPlayerNotification as true
-        //and provide the pending intent so that after click on notification it will redirect to an activity
-
-        streamingManager!!.setShowPlayerNotification(true)
-        streamingManager!!.setPendingIntentAct(getNotificationPendingIntent())
-    }
-
-    private fun getNotificationPendingIntent(): PendingIntent {
-        val intent = Intent(activity!!.applicationContext, HomepageActivity::class.java)
-        intent.setAction("openplayer")
-        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
-        return PendingIntent.getActivity(activity!!.applicationContext, 0, intent, 0)
+        if (playBookSample(book) == R.drawable.ic_pause) {
+            handlePlayPause()
+        }
     }
 
     override fun getAppContext(): Context? {
@@ -82,10 +68,11 @@ class CartFragment : Fragment(), CartContract.View, onBookItemClickListener,
     }
 
     override fun showErrorMessage() {
-        Snackbar.make(
-            activity!!.findViewById(android.R.id.content),
-            activity!!.applicationContext.getString(R.string.try_again), Snackbar.LENGTH_SHORT
-        ).show()
+        if (activity != null)
+            Snackbar.make(
+                activity!!.findViewById(android.R.id.content),
+                activity!!.applicationContext.getString(R.string.try_again), Snackbar.LENGTH_SHORT
+            ).show()
     }
 
     override fun showLoading() {
@@ -97,16 +84,32 @@ class CartFragment : Fragment(), CartContract.View, onBookItemClickListener,
     }
 
     override fun setBookList(listMyBooks: List<Book>) {
+        this.listMyBooks = listMyBooks
         if (listMyBooks.isEmpty()) {
             promoCode.visibility = View.GONE
             payNow.visibility = View.GONE
             recyclerCartBooks.visibility = View.GONE
         } else {
+
             recyclerCartBooks.layoutManager = LinearLayoutManager(context)
             recyclerCartBooks.setHasFixedSize(true)
             recyclerCartBooks.isNestedScrollingEnabled = false
-            adapter = BooksAdapter(listMyBooks, this, this)
+
+            adapter = BooksAdapter(
+                listMyBooks, this,
+                getPlaylistIdObserver().value!!, isPlaying,this
+            )
             recyclerCartBooks.adapter = adapter
+
+            getPlaylistIdObserver().observe(this, Observer {
+                if (adapter != null && !it.equals(""))
+                    adapter!!.updatePlaylistId(it, isPlaying)
+            })
+
+            getPlayingObserver().observe(this, Observer {
+                if (adapter != null)
+                    adapter!!.updatePlaylistId(getPlaylistIdObserver().value, it)
+            })
         }
 
         var priceTotal = 0
@@ -133,9 +136,7 @@ class CartFragment : Fragment(), CartContract.View, onBookItemClickListener,
         }
 
         payNow.setOnClickListener {
-            val intent = Intent(activity!!, PaymentActivity::class.java)
-            startActivity(intent)
-            activity!!.finish()
+            mPresenter.handlePayNowPressed()
         }
 
         mPresenter = CartPresenter(this)
@@ -143,7 +144,7 @@ class CartFragment : Fragment(), CartContract.View, onBookItemClickListener,
     }
 
     fun onEditCartClicked() {
-        adapter.showDeleteIcon()
+        adapter?.showDelete()
     }
 
     companion object {
@@ -153,8 +154,7 @@ class CartFragment : Fragment(), CartContract.View, onBookItemClickListener,
         }
     }
 
-    private lateinit var adapter: BooksAdapter
+    private lateinit var listMyBooks: List<Book>
+    private var adapter: BooksAdapter? = null
     lateinit var mPresenter: CartContract.Presenter
-    private var streamingManager: AudioStreamingManager? = null
-    private var listOfSongs: MutableList<MediaMetaData> = ArrayList()
 }

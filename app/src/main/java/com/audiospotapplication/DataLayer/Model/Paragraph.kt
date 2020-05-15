@@ -1,5 +1,9 @@
 package com.audiospotapplication.DataLayer.Model
 
+import android.os.Parcelable
+import kotlinx.android.parcel.Parcelize
+
+@Parcelize
 data class Paragraph(
     val id: Int,
     val title: String,
@@ -7,4 +11,4 @@ data class Paragraph(
     val to_time: String,
     val from_time_str: String,
     val to_time_str: String
-)
+) : Parcelable

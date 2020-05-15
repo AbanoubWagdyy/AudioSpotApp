@@ -2,6 +2,7 @@ package com.audiospotapplication.UI.rateBook
 
 import android.content.Context
 import com.audiospot.DataLayer.Model.Book
+import com.audiospotapplication.BaseView
 
 interface RateBookContract {
 
@@ -10,7 +11,7 @@ interface RateBookContract {
         fun rateBook(rating: Float, message: String)
     }
 
-    interface View {
+    interface View : BaseView {
         fun getAppContext(): Context?
         fun showLoadingDialog()
         fun dismissLoading()

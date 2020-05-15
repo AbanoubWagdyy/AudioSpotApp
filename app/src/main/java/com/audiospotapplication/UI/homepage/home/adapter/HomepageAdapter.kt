@@ -11,29 +11,22 @@ import com.audiospot.DataLayer.Model.Book
 import com.audiospot.DataLayer.Model.HomepageRepsonse
 import com.audiospotapplication.R
 import com.audiospotapplication.UI.books.Interface.onBookItemClickListener
-import com.audiospotapplication.utils.BookMediaDataConversion
-import dm.audiostreamer.MediaMetaData
 
 class HomepageAdapter(
     private var response: HomepageRepsonse?,
-    private var mOnItemClickListener: onBookItemClickListener,
-    currentSong: MediaMetaData?
+    private var mOnItemClickListener: onBookItemClickListener
 ) : RecyclerView.Adapter<HomepageAdapter.ViewHolder>(), onBookItemClickListener {
 
+    private var isPlaying: Boolean = false
+    private var playlistId: String? = ""
 
     private var context: Context? = null
-    private var currentSong: MediaMetaData? = null
-
-    init {
-        this.currentSong = currentSong
-    }
 
     override fun onItemClicked(book: Book) {
         mOnItemClickListener.onItemClicked(book)
     }
 
     override fun onPlayClicked(book: Book) {
-        currentSong = BookMediaDataConversion.convertBookToMediaMetaData(book)
         notifyDataSetChanged()
         mOnItemClickListener.onPlayClicked(book)
     }
@@ -46,18 +39,24 @@ class HomepageAdapter(
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        var homepageData = response!!.data[position]
+        val homepageData = response!!.data[position]
         holder.tvTitle.text = homepageData.title
-
         val layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
         holder.recyclerBooks.layoutManager = layoutManager
         holder.recyclerBooks.setHasFixedSize(true)
         holder.recyclerBooks.isNestedScrollingEnabled = false
-        holder.recyclerBooks.adapter = HorizontalBooksAdapter(homepageData.books, this, currentSong)
+        holder.recyclerBooks.adapter =
+            HorizontalBooksAdapter(homepageData.books, this, playlistId, isPlaying)
     }
 
     override fun getItemCount(): Int {
         return response!!.data.size
+    }
+
+    fun updatePlaylistId(playlistId: String?, playing: Boolean) {
+        this.playlistId = playlistId
+        this.isPlaying = playing
+        notifyDataSetChanged()
     }
 
     inner class ViewHolder(val mView: View) : RecyclerView.ViewHolder(mView) {

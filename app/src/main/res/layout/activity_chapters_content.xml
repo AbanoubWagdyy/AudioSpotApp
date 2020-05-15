@@ -8,10 +8,9 @@
     <include layout="@layout/header"/>
 
     <ImageView android:id="@+id/back"
-               android:layout_width="wrap_content"
+               android:layout_width="50dp"
                android:layout_height="wrap_content"
-               android:layout_alignParentEnd="true"
-               android:layout_marginStart="20dp"
+               android:layout_marginStart="15dp"
                android:layout_marginTop="15dp"
                android:src="@mipmap/back"
                android:layout_centerVertical="true"/>
@@ -28,14 +27,15 @@
                 android:textColor="@color/white"
                 android:letterSpacing="0.07"
                 android:lineSpacingExtra="77.8sp"
-                android:text="Book chapters"/>
+                android:text="@string/book_chapters"/>
 
         <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recyclerChapters"
                 android:layout_width="match_parent"
                 android:layout_marginTop="10dp"
                 tools:listitem="@layout/chapter_list_item"
-                android:layout_height="match_parent">
+                android:layout_height="wrap_content"
+                android:paddingBottom="120dp">
 
         </androidx.recyclerview.widget.RecyclerView>
 

@@ -42,7 +42,7 @@ class ReviewListAdapter(
         holder.username.text = review.name
         holder.date.text = review.created_at
         holder.tvReviewTitle.text = review.comment
-        holder.tvReviewBody.text = review.comment
+        holder.tvReviewBody.text = ""
     }
 
     inner class ViewHolder(val mView: View) : RecyclerView.ViewHolder(mView) {

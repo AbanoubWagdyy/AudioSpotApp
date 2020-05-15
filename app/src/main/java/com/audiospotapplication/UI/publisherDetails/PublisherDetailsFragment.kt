@@ -3,12 +3,13 @@ package com.audiospotapplication.UI.publisherDetails
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.audiospot.DataLayer.Model.Book
+import com.audiospotapplication.BaseFragment
 import com.audiospotapplication.DataLayer.Model.BookListResponse
 
 import com.audiospotapplication.R
@@ -22,7 +23,8 @@ import kotlinx.android.synthetic.main.fragment_publisher_details.*
 import kotlinx.android.synthetic.main.fragment_publisher_details.recyclerBooks
 import kotlinx.android.synthetic.main.fragment_publisher_details.tvAbout
 
-class PublisherDetailsFragment : Fragment(), PublisherDetailsContract.View, onBookItemClickListener {
+class PublisherDetailsFragment : BaseFragment(), PublisherDetailsContract.View,
+    onBookItemClickListener {
 
     override fun showBookDetailsScreen() {
         val intent = Intent(activity!!, BookDetailsActivity::class.java)
@@ -34,6 +36,9 @@ class PublisherDetailsFragment : Fragment(), PublisherDetailsContract.View, onBo
     }
 
     override fun onPlayClicked(book: Book) {
+        if (playBookSample(book) == R.drawable.ic_pause) {
+            handlePlayPause()
+        }
     }
 
     override fun getAppContext(): Context? {
@@ -53,24 +58,56 @@ class PublisherDetailsFragment : Fragment(), PublisherDetailsContract.View, onBo
     }
 
     override fun setPublisherName(name: String) {
-        tvPublisher.text = name
+        tvPublisher.text = "$name #"
     }
 
     override fun setPublisherImage(photo: String) {
-        ImageUtils.setImageFromUrlIntoImageViewUsingPicasso(photo, activity!!.applicationContext, ivPublisher, false)
+        ImageUtils.setImageFromUrlIntoImageViewUsingGlide(
+            photo,
+            activity!!.applicationContext,
+            ivPublisher,
+            false
+        )
     }
 
     override fun setBookList(result: BookListResponse?) {
-        if (result != null) {
-            recyclerBooks.layoutManager = LinearLayoutManager(context)
-            recyclerBooks.setHasFixedSize(true)
-            recyclerBooks.isNestedScrollingEnabled = false
-            recyclerBooks.adapter = BooksAdapter(result!!.data, this)
+        result?.data?.let {
+            if (it.isEmpty()) {
+                recyclerBooks.visibility = View.GONE
+            } else {
+
+                recyclerBooks.layoutManager = LinearLayoutManager(context)
+                recyclerBooks.setHasFixedSize(true)
+                recyclerBooks.isNestedScrollingEnabled = false
+
+                adapter = BooksAdapter(
+                    it, this,
+                    getPlaylistIdObserver().value!!, isPlaying
+                )
+                recyclerBooks.adapter = adapter
+
+                getPlaylistIdObserver().observe(this, Observer {
+                    if (adapter != null && !it.equals(""))
+                        adapter!!.updatePlaylistId(it, isPlaying)
+                })
+
+                getPlayingObserver().observe(this, Observer {
+                    if (adapter != null)
+                        adapter!!.updatePlaylistId(getPlaylistIdObserver().value, it)
+                })
+            }
+
+
         }
     }
 
     override fun showErrorMessage(message: String) {
-        Snackbar.make(activity!!.findViewById(android.R.id.content), message, Snackbar.LENGTH_LONG).show()
+        if (activity != null)
+            Snackbar.make(
+                activity!!.findViewById(android.R.id.content),
+                message,
+                Snackbar.LENGTH_LONG
+            ).show()
     }
 
     lateinit var mPresenter: PublisherDetailsContract.Presenter
@@ -95,4 +132,6 @@ class PublisherDetailsFragment : Fragment(), PublisherDetailsContract.View, onBo
         fun newInstance() =
             PublisherDetailsFragment()
     }
+
+    private var adapter: BooksAdapter? = null
 }

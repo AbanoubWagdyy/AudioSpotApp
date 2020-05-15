@@ -28,7 +28,6 @@
 
                     <ImageView android:id="@+id/ivBook"
                                android:layout_width="match_parent"
-                               android:src="@drawable/sample"
                                android:scaleType="fitXY"
                                android:layout_height="match_parent"/>
 
@@ -156,13 +155,13 @@
                 android:gravity="start"
                 android:layout_gravity="center_vertical"
                 android:padding="15dp"
-                android:hint="Comment"/>
+                android:hint="@string/comment"/>
 
         <RelativeLayout android:paddingBottom="20dp"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent">
             <Button
-                    android:text="Submit"
+                    android:text="@string/submit"
                     android:layout_width="200dp"
                     android:layout_height="40dp"
                     android:layout_weight="1"

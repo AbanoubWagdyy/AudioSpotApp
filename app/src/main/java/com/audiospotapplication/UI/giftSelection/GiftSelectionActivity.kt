@@ -8,7 +8,7 @@ import com.audiospotapplication.UI.BaseActivity
 class GiftSelectionActivity : BaseActivity() {
 
     override fun getHeaderTitle(): String {
-        return "Books"
+        return "Receive a book"
     }
 
     override fun getArrowHeaderVisibility(): Int {

@@ -5,6 +5,7 @@ import com.audiospot.DataLayer.Model.BookDetailsResponse;
 import com.audiospot.DataLayer.Model.CategoriesListResponse;
 import com.audiospot.DataLayer.Model.HomepageRepsonse;
 import com.audiospotapplication.DataLayer.Model.*;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -88,18 +89,18 @@ public class RemoteDataSourceUsingRetrofit {
     public void resetPassword(String api_key,
                               String lang,
                               String device_key,
-                              String email, RetrofitCallbacks.AuthResponseCallback callback) {
+                              String email, RetrofitCallbacks.ResponseCallback callback) {
 
         RestClient.getRetrofitService(api_key, lang, device_key)
                 .resetPassword(email)
-                .enqueue(new Callback<AuthResponse>() {
+                .enqueue(new Callback<com.audiospotapplication.DataLayer.Model.Response>() {
                     @Override
-                    public void onResponse(Call<AuthResponse> call, Response<AuthResponse> response) {
+                    public void onResponse(Call<com.audiospotapplication.DataLayer.Model.Response> call, Response<com.audiospotapplication.DataLayer.Model.Response> response) {
                         callback.onSuccess(response.body());
                     }
 
                     @Override
-                    public void onFailure(Call<AuthResponse> call, Throwable t) {
+                    public void onFailure(Call<com.audiospotapplication.DataLayer.Model.Response> call, Throwable t) {
                         callback.onFailure(call, t);
                     }
                 });
@@ -579,6 +580,70 @@ public class RemoteDataSourceUsingRetrofit {
                     @Override
                     public void onFailure(Call<com.audiospotapplication.DataLayer.Model.Response> call, Throwable t) {
                         responseCallback.onFailure(call, t);
+                    }
+                });
+    }
+
+    public void createOrder(String token, String apiKey, String lang, String deviceToken, CreateOrderBody body, RetrofitCallbacks.CreateOrderResponseCallback responseCallback) {
+        RestClient.getRetrofitService(token, apiKey, lang, deviceToken)
+                .createOrder(body)
+                .enqueue(new Callback<CreateOrderResponse>() {
+                    @Override
+                    public void onResponse(Call<CreateOrderResponse> call, Response<CreateOrderResponse> response) {
+                        responseCallback.onSuccess(response.body());
+                    }
+
+                    @Override
+                    public void onFailure(Call<CreateOrderResponse> call, Throwable t) {
+                        responseCallback.onFailure(call, t);
+                    }
+                });
+    }
+
+    public void getPaypalStatus(String token, String apiKey, String lang, String deviceToken, RetrofitCallbacks.PaypalStatusResponseCallback callback) {
+        RestClient.getRetrofitService(token, apiKey, lang, deviceToken)
+                .getPaypalStatus()
+                .enqueue(new Callback<PaypalStatusResponse>() {
+                    @Override
+                    public void onResponse(Call<PaypalStatusResponse> call, Response<PaypalStatusResponse> response) {
+                        callback.onSuccess(response.body());
+                    }
+
+                    @Override
+                    public void onFailure(Call<PaypalStatusResponse> call, Throwable t) {
+                        callback.onFailure(call, t);
+                    }
+                });
+    }
+
+    public void getPaypalKey(String token, String apiKey, String lang, String deviceToken, RetrofitCallbacks.PaypalStatusResponseCallback callback) {
+        RestClient.getRetrofitService(token, apiKey, lang, deviceToken)
+                .getPaypalKey()
+                .enqueue(new Callback<PaypalStatusResponse>() {
+                    @Override
+                    public void onResponse(Call<PaypalStatusResponse> call, Response<PaypalStatusResponse> response) {
+                        callback.onSuccess(response.body());
+                    }
+
+                    @Override
+                    public void onFailure(Call<PaypalStatusResponse> call, Throwable t) {
+                        callback.onFailure(call, t);
+                    }
+                });
+    }
+
+    public void getPaypalAmount(String token, String apiKey, String lang, String deviceToken, RetrofitCallbacks.PaypalStatusResponseCallback callback) {
+        RestClient.getRetrofitService(token, apiKey, lang, deviceToken)
+                .getPaypalAmount()
+                .enqueue(new Callback<PaypalStatusResponse>() {
+                    @Override
+                    public void onResponse(Call<PaypalStatusResponse> call, Response<PaypalStatusResponse> response) {
+                        callback.onSuccess(response.body());
+                    }
+
+                    @Override
+                    public void onFailure(Call<PaypalStatusResponse> call, Throwable t) {
+                        callback.onFailure(call, t);
                     }
                 });
     }

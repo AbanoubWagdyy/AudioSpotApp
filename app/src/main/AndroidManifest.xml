@@ -1,140 +1,171 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          xmlns:tools="http://schemas.android.com/tools"
-          package="com.audiospotapplication">
+        xmlns:tools="http://schemas.android.com/tools"
+        package="com.audiospotapplication">
 
-    <uses-permission android:name="android.permission.INTERNET"/>
-    <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE"/>
-    <uses-permission android:name="android.permission.GET_ACCOUNTS"/>
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+
+    <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
+    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
 
     <application
-            android:name="com.audiospotapplication.AudioSpotApp"
+            android:name=".AudioSpotApp"
             android:allowBackup="true"
             android:icon="@mipmap/ic_launcher"
             android:label="@string/app_name"
             android:supportsRtl="true"
-            android:theme="@style/AppTheme">
+            android:usesCleartextTraffic="true"
+            android:theme="@style/AppTheme"
+            tools:ignore="GoogleAppIndexingWarning"
+            tools:replace="android:name">
+
         <meta-data
                 android:name="com.facebook.sdk.ApplicationId"
-                android:value="@string/facebook_app_id"/>
+                android:value="@string/facebook_app_id" />
         <meta-data
                 android:name="com.google.firebase.messaging.default_notification_icon"
-                android:resource="@mipmap/ic_launcher"/>
+                android:resource="@mipmap/ic_launcher" />
         <meta-data
                 android:name="com.google.firebase.messaging.default_notification_color"
-                android:resource="@color/colorAccent"/>
+                android:resource="@color/colorAccent" />
         <meta-data
                 android:name="com.google.firebase.messaging.default_notification_channel_id"
-                android:value="@string/default_notification_channel_id"/>
+                android:value="@string/default_notification_channel_id" />
         <meta-data
                 android:name="com.google.android.gms.version"
-                android:value="@integer/google_play_services_version"/>
+                android:value="@integer/google_play_services_version" />
 
+        <activity
+                android:name=".UI.splash.SplashActivity"
+                android:label="@string/app_name"
+                android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
         <activity
                 android:name="com.facebook.FacebookActivity"
                 android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
                 android:label="@string/app_name"
                 android:theme="@android:style/Theme.Translucent.NoTitleBar"
-                tools:replace="android:theme"/>
+                tools:replace="android:theme" />
         <activity
-                android:name="com.audiospotapplication.UI.splash.SplashActivity"
+                android:name=".UI.login.LoginActivity"
+                android:noHistory="true"
                 android:screenOrientation="portrait"
-                android:label="@string/app_name">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
-
-                <category android:name="android.intent.category.LAUNCHER"/>
-            </intent-filter>
-        </activity>
+                android:windowSoftInputMode="stateHidden|stateAlwaysHidden" />
         <activity
-                android:name="com.audiospotapplication.UI.login.LoginActivity"
+                android:name=".UI.homepage.HomepageActivity"
+                android:screenOrientation="portrait" />
+        <activity
+                android:name=".UI.forgetPassword.ForgetPasswordActivity"
+                android:screenOrientation="portrait" />
+        <activity
+                android:name=".UI.register.RegisterActivity"
                 android:screenOrientation="portrait"
-                android:windowSoftInputMode="stateHidden|stateAlwaysHidden">
-        </activity>
-        <activity android:name="com.audiospotapplication.UI.homepage.HomepageActivity" android:screenOrientation="portrait">
-        </activity>
-        <activity android:name="com.audiospotapplication.UI.forgetPassword.ForgetPasswordActivity" android:screenOrientation="portrait">
-        </activity>
-        <activity android:name="com.audiospotapplication.UI.register.RegisterActivity" android:screenOrientation="portrait">
-        </activity>
-        <activity android:name="com.audiospotapplication.UI.authors.AuthorsActivity" android:screenOrientation="portrait">
-        </activity>
-        <activity android:name="com.audiospotapplication.UI.books.BooksActivity" android:screenOrientation="portrait">
-        </activity>
-        <activity android:name="com.audiospotapplication.UI.cart.CartActivity" android:screenOrientation="portrait">
-        </activity>
-        <activity android:name="com.audiospotapplication.UI.giveAgift.GiveGiftActivity" android:screenOrientation="portrait">
-        </activity>
-        <activity android:name="com.audiospotapplication.UI.bookChapters.BookChaptersActivity" android:screenOrientation="portrait">
-        </activity>
-        <activity android:name="com.audiospotapplication.UI.bookReviews.BookReviewsActivity" android:screenOrientation="portrait">
-        </activity>
-        <activity android:name="com.audiospotapplication.UI.changePassword.ChangePasswordActivity" android:screenOrientation="portrait">
-        </activity>
-        <activity android:name="com.audiospotapplication.UI.updateProfile.UpdateProfileActivity" android:screenOrientation="portrait">
-        </activity>
-        <activity android:name="com.audiospotapplication.UI.profile.ProfileActivity" android:screenOrientation="portrait">
-        </activity>
-        <activity android:name="com.audiospotapplication.UI.bookDetails.BookDetailsActivity" android:screenOrientation="portrait">
-        </activity>
-        <activity android:name="com.audiospotapplication.UI.publisherDetails.PublisherDetailsActivity" android:screenOrientation="portrait">
-        </activity>
-        <activity android:name="com.audiospotapplication.UI.authorDetails.AuthorDetailsActivity" android:screenOrientation="portrait">
-        </activity>
-        <activity android:name="com.audiospotapplication.UI.publishers.PublishersActivity" android:screenOrientation="portrait">
-        </activity>
-        <activity android:name="com.audiospotapplication.UI.categories.CategoriesActivity" android:screenOrientation="portrait">
-        </activity>
-        <activity android:name="com.audiospotapplication.UI.settings.SettingsActivity" android:screenOrientation="portrait">
-        </activity>
-        <activity android:name="com.audiospotapplication.UI.contactUs.ContactUsActivity" android:screenOrientation="portrait">
-        </activity>
-        <activity android:name="com.audiospotapplication.UI.myFavourite.MyFavouriteBooksActivity" android:screenOrientation="portrait">
-        </activity>
-        <activity android:name="com.audiospotapplication.UI.rateBook.RateBookActivity" android:screenOrientation="portrait">
-        </activity>
-        <activity android:name="com.audiospotapplication.UI.myBookmarks.MyBookmarksActivity" android:screenOrientation="portrait">
-        </activity>
-        <activity android:name="com.audiospotapplication.UI.addBookmark.AddBookmarkActivity" android:screenOrientation="portrait">
-        </activity>
-        <activity android:name="com.audiospotapplication.UI.promoCodeCongratulations.CongratulationsActivity"
-                  android:screenOrientation="portrait">
-        </activity>
-        <activity android:name="com.audiospotapplication.UI.voucher.VoucherActivity" android:screenOrientation="portrait">
-        </activity>
-        <activity android:name="com.audiospotapplication.UI.promoCode.PromoCodeActivity" android:screenOrientation="portrait">
-        </activity>
-        <activity android:name="com.audiospotapplication.UI.payment.PaymentActivity" android:screenOrientation="portrait">
-        </activity>
-        <activity android:name="com.audiospotapplication.UI.giftSelection.GiftSelectionActivity" android:screenOrientation="portrait">
-        </activity>
+                android:windowSoftInputMode="stateHidden|stateAlwaysHidden" />
+        <activity
+                android:name=".UI.authors.AuthorsActivity"
+                android:screenOrientation="portrait" />
+        <activity
+                android:name=".UI.books.BooksActivity"
+                android:screenOrientation="portrait" />
+        <activity
+                android:name=".UI.cart.CartActivity"
+                android:screenOrientation="portrait" />
+        <activity
+                android:name=".UI.giveAgift.GiveGiftActivity"
+                android:screenOrientation="portrait" />
+        <activity
+                android:name=".UI.bookChapters.BookChaptersActivity"
+                android:configChanges="orientation"
+                android:windowSoftInputMode="adjustPan"
+                android:screenOrientation="portrait" />
+        <activity
+                android:name=".UI.bookReviews.BookReviewsActivity"
+                android:screenOrientation="portrait" />
+        <activity
+                android:name=".UI.changePassword.ChangePasswordActivity"
+                android:screenOrientation="portrait" />
+        <activity
+                android:name=".UI.updateProfile.UpdateProfileActivity"
+                android:screenOrientation="portrait" />
+        <activity
+                android:name=".UI.profile.ProfileActivity"
+                android:screenOrientation="portrait" />
+        <activity
+                android:name=".UI.bookDetails.BookDetailsActivity"
+                android:screenOrientation="portrait" />
+        <activity
+                android:name=".UI.publisherDetails.PublisherDetailsActivity"
+                android:screenOrientation="portrait" />
+        <activity
+                android:name=".UI.authorDetails.AuthorDetailsActivity"
+                android:screenOrientation="portrait" />
+        <activity
+                android:name=".UI.publishers.PublishersActivity"
+                android:screenOrientation="portrait" />
+        <activity
+                android:name=".UI.categories.CategoriesActivity"
+                android:screenOrientation="portrait" />
+        <activity
+                android:name=".UI.settings.SettingsActivity"
+                android:screenOrientation="portrait" />
+        <activity
+                android:name=".UI.contactUs.ContactUsActivity"
+                android:screenOrientation="portrait" />
+        <activity
+                android:name=".UI.myFavourite.MyFavouriteBooksActivity"
+                android:screenOrientation="portrait" />
+        <activity
+                android:name=".UI.rateBook.RateBookActivity"
+                android:screenOrientation="portrait" />
+        <activity
+                android:name=".UI.myBookmarks.MyBookmarksActivity"
+                android:screenOrientation="portrait" />
+        <activity
+                android:name=".UI.addBookmark.AddBookmarkActivity"
+                android:screenOrientation="portrait" />
+        <activity
+                android:name=".UI.promoCodeCongratulations.CongratulationsActivity"
+                android:screenOrientation="portrait" />
+        <activity
+                android:name=".UI.voucher.VoucherActivity"
+                android:screenOrientation="portrait" />
+        <activity
+                android:name=".UI.promoCode.PromoCodeActivity"
+                android:screenOrientation="portrait" />
+        <activity
+                android:name=".UI.payment.PaymentActivity"
+                android:screenOrientation="portrait" />
+        <activity
+                android:name=".UI.giftSelection.GiftSelectionActivity"
+                android:screenOrientation="portrait" />
 
         <service
-                android:name="com.audiospotapplication.DataLayer.Firebase.MyFirebaseMessagingService"
+                android:name=".DataLayer.Firebase.MyFirebaseMessagingService"
                 android:exported="false">
             <intent-filter>
-                <action android:name="com.google.firebase.MESSAGING_EVENT"/>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
 
-        <service
-                android:name="dm.audiostreamer.AudioStreamingService"
-                android:enabled="true"
-                android:exported="true"/>
-
-        <receiver android:name="dm.audiostreamer.AudioStreamingReceiver">
+        <service android:name="com.ps.pexoplayer.services.MediaService">
             <intent-filter>
-                <action android:name="dm.audiostreamer.close"/>
-                <action android:name="dm.audiostreamer.pause"/>
-                <action android:name="dm.audiostreamer.next"/>
-                <action android:name="dm.audiostreamer.play"/>
-                <action android:name="dm.audiostreamer.previous"/>
-                <action android:name="android.intent.action.MEDIA_BUTTON"/>
-                <action android:name="android.media.AUDIO_BECOMING_NOISY"/>
+                <action android:name="android.media.browse.MediaBrowserService" />
+            </intent-filter>
+        </service>
+
+        <receiver android:name="androidx.media.session.MediaButtonReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.MEDIA_BUTTON" />
             </intent-filter>
         </receiver>
-
     </application>
 </manifest>

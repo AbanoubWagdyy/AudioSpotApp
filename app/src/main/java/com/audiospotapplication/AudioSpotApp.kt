@@ -1,43 +1,35 @@
 package com.audiospotapplication
 
 import android.app.Application
-import android.content.Context
-import android.net.ConnectivityManager
-//import com.github.windsekirun.rxsociallogin.facebook.FacebookConfig
-//import com.github.windsekirun.rxsociallogin.initSocialLogin
-import okhttp3.Cache
+import com.audiospotapplication.DataLayer.DataRepository
+import com.audiospotapplication.DataLayer.Model.BaseViewModel
+import com.audiospotapplication.UI.homepage.HomepageViewModel
+import com.audiospotapplication.UI.homepage.home.HomeViewModel
+import com.visionvalley.letuno.DataLayer.RepositorySource
+import org.koin.android.ext.koin.androidContext
+import org.koin.android.ext.koin.androidLogger
+import org.koin.androidx.viewmodel.dsl.viewModel
+import org.koin.core.context.startKoin
+import org.koin.dsl.module
 
 class AudioSpotApp : Application() {
 
-    override fun onCreate() {
-        super.onCreate()
-//        initSocialLogin {
-//            facebook(getString(R.string.facebook_app_id)) {
-//                behaviorOnCancel = true
-//                requireWritePermissions = false
-//                imageEnum = FacebookConfig.FacebookImageEnum.Large
-//                requireEmail = true
-//            }
-//            google(getString(R.string.google_api_key)) {
-//                requireEmail = true
-//            }
-//        }
+    val appModule = module {
+        single<RepositorySource> { DataRepository.getInstance((androidContext())) }
     }
 
-    companion object {
-        private val CACHE_SIZE = 20 * 1024 * 1024
-        private val context: Context? = null
-        private var instance: AudioSpotApp? = null
+    val viewModelModule = module {
+        viewModel { BaseViewModel() }
+        viewModel { HomepageViewModel() }
+        viewModel { HomeViewModel() }
+    }
 
-        val isNetworkAvailable: Boolean
-            get() {
-                val cm = instance!!.applicationContext
-                    .getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-                val activeNetwork = cm.activeNetworkInfo
-                return activeNetwork != null && activeNetwork.isConnectedOrConnecting
-            }
-
-        val networkCache: Cache
-            get() = Cache(instance!!.cacheDir, CACHE_SIZE.toLong())
+    override fun onCreate() {
+        super.onCreate()
+        startKoin {
+            androidLogger()
+            androidContext(this@AudioSpotApp.applicationContext)
+            modules(listOf(appModule, viewModelModule))
+        }
     }
 }

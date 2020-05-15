@@ -16,35 +16,31 @@ import com.willy.ratingbar.ScaleRatingBar
 
 class BooksAdapter() : RecyclerView.Adapter<BooksAdapter.ViewHolder>() {
 
-    private lateinit var books: List<Book>
-    private lateinit var mOnItemClickListener: onBookItemClickListener
-    private lateinit var mDeleteListener: onBookItemClickListener.onCartBookDeleteClickListener
-
     constructor(
         books: List<Book>,
-        mOnItemClickListener: onBookItemClickListener
+        mOnItemClickListener: onBookItemClickListener,
+        currentPlayListId: String,
+        IsPlaying: Boolean
     ) : this() {
         this.books = books
         this.mOnItemClickListener = mOnItemClickListener
-        for (book in this.books) {
-            book.isToShowDelete = false
-        }
+        this.currentPlayListId = currentPlayListId
+        this.IsPlaying = IsPlaying
     }
 
     constructor(
         books: List<Book>,
         mOnItemClickListener: onBookItemClickListener,
+        currentPlayListId: String,
+        IsPlaying: Boolean,
         mDeleteListener: onBookItemClickListener.onCartBookDeleteClickListener
     ) : this() {
         this.books = books
         this.mOnItemClickListener = mOnItemClickListener
         this.mDeleteListener = mDeleteListener
-        for (book in this.books) {
-            book.isToShowDelete = false
-        }
+        this.currentPlayListId = currentPlayListId
+        this.IsPlaying = IsPlaying
     }
-
-    private var context: Context? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context)
@@ -54,9 +50,9 @@ class BooksAdapter() : RecyclerView.Adapter<BooksAdapter.ViewHolder>() {
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        var book = books!![position]
+        val book = books[position]
         holder.ivBook.setBackgroundResource(R.mipmap.login_icon)
-        ImageUtils.setImageFromUrlIntoImageViewUsingPicasso(book.cover, context, holder.ivBook)
+        ImageUtils.setImageFromUrlIntoImageViewUsingGlide(book.cover, context, holder.ivBook)
         holder.tvAuthor.text = book.author
         holder.tvPublisher.text = book.publisher
 
@@ -68,8 +64,9 @@ class BooksAdapter() : RecyclerView.Adapter<BooksAdapter.ViewHolder>() {
             holder.tvNarrator.text = builder.toString().substring(0, builder.toString().length - 1)
         }
 
-        holder.tvLength.text =  TimeUtils.toTimeFormat(book.total_time.toInt()) + " Hours"
+        holder.tvLength.text = TimeUtils.toTimeFormat(book.total_time.toInt()) + " Hours"
         holder.tvLanguage.text = book.language
+        holder.tvBookName.text = book.title
         holder.tvPrice.text = book.price.toString() + " EGP."
 
         holder.ratingBar.rating = book.rate.toFloat()
@@ -81,13 +78,39 @@ class BooksAdapter() : RecyclerView.Adapter<BooksAdapter.ViewHolder>() {
             holder.ratingBar.rating = book.rate.toFloat()
         }
 
-        if (book.isToShowDelete) {
+        if (isToShowDelete) {
             holder.delete.visibility = View.VISIBLE
-            holder.delete.setOnClickListener {
-                mDeleteListener.onItemDeleted(book)
-            }
         } else {
             holder.delete.visibility = View.GONE
+        }
+
+        holder.delete.setOnClickListener {
+            mDeleteListener.onItemDeleted(book)
+        }
+
+        if (!currentPlayListId.equals("")) {
+            val id = book.id.toString() + book.id.toString()
+            if (currentPlayListId.equals(id)) {
+                if (IsPlaying) {
+                    holder.ivPlay.setBackgroundResource(R.mipmap.homepage_play)
+                } else {
+                    holder.ivPlay.setBackgroundResource(R.mipmap.play)
+                }
+            } else {
+                holder.ivPlay.setBackgroundResource(R.mipmap.play)
+            }
+        }
+
+        holder.ivPlay.setOnClickListener {
+            if (IsPlaying) {
+                val id = book.id.toString() + book.id.toString()
+                if (currentPlayListId.equals(id)) {
+                    holder.ivPlay.setBackgroundResource(R.mipmap.play)
+                } else {
+                    holder.ivPlay.setBackgroundResource(R.mipmap.homepage_play)
+                }
+            }
+            mOnItemClickListener.onPlayClicked(book)
         }
     }
 
@@ -95,10 +118,14 @@ class BooksAdapter() : RecyclerView.Adapter<BooksAdapter.ViewHolder>() {
         return books.size
     }
 
-    fun showDeleteIcon() {
-        for (book in books) {
-            book.isToShowDelete = true
-        }
+    fun updatePlaylistId(it: String?, playing: Boolean) {
+        currentPlayListId = it!!
+        this.IsPlaying = playing
+        notifyDataSetChanged()
+    }
+
+    fun showDelete() {
+        isToShowDelete = true
         notifyDataSetChanged()
     }
 
@@ -108,6 +135,7 @@ class BooksAdapter() : RecyclerView.Adapter<BooksAdapter.ViewHolder>() {
         val ivPlay: ImageView = mView.findViewById(R.id.ivPlay)
         val delete: ImageView = mView.findViewById(R.id.delete)
         val tvAuthor: TextView = mView.findViewById(R.id.tvAuthor)
+        val tvBookName: TextView = mView.findViewById(R.id.tvBookName)
         val tvPublisher: TextView = mView.findViewById(R.id.tvPublisher)
         val tvNarrator: TextView = mView.findViewById(R.id.tvNarrator)
         val tvLength: TextView = mView.findViewById(R.id.tvLength)
@@ -117,13 +145,24 @@ class BooksAdapter() : RecyclerView.Adapter<BooksAdapter.ViewHolder>() {
 
         init {
             mView.setOnClickListener(this)
-            ivPlay.setOnClickListener {
-                mOnItemClickListener.onPlayClicked(books!![position])
-            }
         }
 
         override fun onClick(v: View) {
-            mOnItemClickListener.onItemClicked(books!![position])
+            mOnItemClickListener.onItemClicked(books[position])
         }
     }
+
+    private lateinit var books: List<Book>
+
+    private lateinit var mOnItemClickListener: onBookItemClickListener
+
+    private lateinit var mDeleteListener: onBookItemClickListener.onCartBookDeleteClickListener
+
+    var currentPlayListId: String = ""
+
+    var IsPlaying: Boolean = false
+
+    var isToShowDelete: Boolean = false
+
+    private var context: Context? = null
 }

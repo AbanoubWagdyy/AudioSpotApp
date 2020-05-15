@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.audiospotapplication.BaseFragment
 import com.audiospotapplication.DataLayer.DataRepository
 
 import com.audiospotapplication.R
@@ -14,8 +15,7 @@ import com.audiospotapplication.UI.bookDetails.adapter.ReviewListAdapter
 import com.visionvalley.letuno.DataLayer.RepositorySource
 import kotlinx.android.synthetic.main.fragment_book_reviews.*
 
-class BookReviewsFragment : Fragment() {
-
+class BookReviewsFragment : BaseFragment() {
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -26,14 +26,21 @@ class BookReviewsFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        mRepositorySource = DataRepository.getInstance(context)
+        mRepositorySource = DataRepository.getInstance(context!!)
 
-        recyclerReviews.layoutManager = LinearLayoutManager(context)
-        recyclerReviews.setHasFixedSize(true)
-        recyclerReviews.isNestedScrollingEnabled = false
+        if (mRepositorySource.getCurrentBookReviews() != null) {
+            recyclerReviews.layoutManager = LinearLayoutManager(context!!)
+            recyclerReviews.setHasFixedSize(true)
+            recyclerReviews.isNestedScrollingEnabled = false
 
-        recyclerReviews.adapter =
-            ReviewListAdapter(mRepositorySource.getCurrentBookReviews(), ReviewListAdapter.Display.FULL)
+            recyclerReviews.adapter =
+                ReviewListAdapter(
+                    mRepositorySource.getCurrentBookReviews()!!,
+                    ReviewListAdapter.Display.FULL
+                )
+        }
+
+
     }
 
 

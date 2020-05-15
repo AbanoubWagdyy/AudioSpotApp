@@ -2,6 +2,7 @@ package com.audiospotapplication.UI.myFavourite
 
 import android.content.Context
 import com.audiospot.DataLayer.Model.Book
+import com.audiospotapplication.BaseView
 
 interface myFavouriteBooksContract {
 
@@ -11,7 +12,7 @@ interface myFavouriteBooksContract {
         fun removeFromFavorites(book: Book)
     }
 
-    interface View {
+    interface View : BaseView {
         fun getAppContext(): Context?
         fun showErrorMessage()
         fun showLoading()

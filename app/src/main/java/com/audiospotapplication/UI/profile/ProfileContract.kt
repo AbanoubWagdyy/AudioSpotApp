@@ -1,6 +1,7 @@
 package com.audiospotapplication.UI.profile
 
 import android.content.Context
+import com.audiospotapplication.BaseView
 
 interface ProfileContract {
 
@@ -8,7 +9,7 @@ interface ProfileContract {
         fun start()
     }
 
-    interface View {
+    interface View : BaseView {
         fun getAppContext(): Context?
         fun setFullName(full_name: String)
         fun setEmail(email: String?)

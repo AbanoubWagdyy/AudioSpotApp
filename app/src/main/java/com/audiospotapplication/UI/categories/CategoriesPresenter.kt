@@ -19,13 +19,15 @@ class CategoriesPresenter(val mView: CategoriesContract.View) : CategoriesContra
 
     override fun start() {
         mView.showLoadingDialog()
-        mRepositorySource = DataRepository.getInstance(mView.getAppContext())
+        mRepositorySource = DataRepository.getInstance(mView.getAppContext()!!)
         mRepositorySource.getAllCategories(object : RetrofitCallbacks.CategoriesListCallback {
             override fun onSuccess(result: CategoriesListResponse?) {
                 mView.dismissLoadingDialog()
                 val status = RetrofitResponseHandler.validateAuthResponseStatus(result)
                 if (status == RetrofitResponseHandler.Companion.Status.VALID) {
                     mView.setCategoriesList(result)
+                } else if (status == RetrofitResponseHandler.Companion.Status.UNAUTHORIZED) {
+                    mView!!.showLoginPage()
                 } else {
                     mView!!.showErrorMessage(result!!.message)
                 }

@@ -26,7 +26,7 @@
                     android:textColor="@color/white"
                     android:letterSpacing="0.07"
                     android:lineSpacingExtra="6.3sp"
-                    tools:text="Total payment: 80 LE"/>
+                    android:text=""/>
 
         </LinearLayout>
 
@@ -37,39 +37,64 @@
                 android:layout_height="50dp"
                 android:layout_alignParentBottom="true">
 
-            <Button
+            <LinearLayout
                     android:id="@+id/promoCode"
                     android:layout_marginStart="10dp"
                     android:layout_width="fill_parent"
                     android:layout_height="fill_parent"
                     android:layout_weight="1"
-                    android:drawableStart="@mipmap/percentage"
                     android:drawablePadding="10dp"
-                    android:textSize="15.7sp"
-                    android:textColor="@color/white"
-                    android:letterSpacing="0.07"
-                    android:lineSpacingExtra="7.7sp"
-                    android:gravity="center"
-                    android:layout_gravity="center"
-                    android:text="Promo code"
                     android:layout_marginEnd="10dp"
-                    android:background="@mipmap/reset_pass_back"/>
+                    android:background="@mipmap/reset_pass_back">
 
-            <Button
+                <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:layout_gravity="center_vertical"
+                        android:src="@mipmap/percentage"/>
+
+                <TextView android:layout_width="match_parent"
+                          android:layout_height="wrap_content"
+                          android:layout_marginStart="20dp"
+                          android:textSize="15.7sp"
+                          android:textColor="@color/white"
+                          android:letterSpacing="0.07"
+                          android:orientation="horizontal"
+                          android:lineSpacingExtra="7.7sp"
+                          android:layout_gravity="center"
+                          android:text="@string/promo_code"/>
+
+            </LinearLayout>
+
+            <LinearLayout
                     android:id="@+id/payNow"
                     android:layout_width="fill_parent"
                     android:layout_marginStart="10dp"
                     android:layout_marginEnd="10dp"
                     android:layout_height="fill_parent"
                     android:layout_weight="1"
-                    android:drawableStart="@mipmap/pay_now_image"
-                    android:textSize="15.5sp"
-                    android:textColor="#fcfcfc"
-                    android:letterSpacing="0.07"
-                    android:lineSpacingExtra="7.8sp"
-                    android:gravity="center"
-                    android:text="Pay Now"
-                    android:background="@mipmap/green_back"/>
+                    android:orientation="horizontal"
+                    android:background="@mipmap/green_back">
+
+                <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:layout_gravity="center_vertical"
+                        android:src="@mipmap/pay_now_image"/>
+
+                <TextView android:layout_width="match_parent"
+                          android:layout_height="wrap_content"
+                          android:textSize="15.5sp"
+                          android:textColor="#fcfcfc"
+                          android:layout_marginStart="20dp"
+                          android:layout_gravity="center_vertical"
+                          android:letterSpacing="0.07"
+                          android:lineSpacingExtra="7.8sp"
+                          android:text="@string/pay_now"/>
+
+            </LinearLayout>
 
         </LinearLayout>
 

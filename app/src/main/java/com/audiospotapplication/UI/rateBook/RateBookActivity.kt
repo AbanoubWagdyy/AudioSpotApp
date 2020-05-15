@@ -8,7 +8,7 @@ import com.audiospotapplication.UI.BaseActivity
 class RateBookActivity : BaseActivity() {
 
     override fun getHeaderTitle(): String {
-        return "Books"
+        return "Rate a book"
     }
 
     override fun getArrowHeaderVisibility(): Int {

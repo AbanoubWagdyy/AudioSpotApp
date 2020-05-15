@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:app="http://schemas.android.com/apk/res-auto"
-              xmlns:playpauseview="http://schemas.android.com/apk/res-auto"
-              android:layout_width="match_parent"
-              android:background="@color/black"
-              android:layout_height="wrap_content"
-              android:orientation="vertical">
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:background="@color/black"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
 
     <LinearLayout
             android:layout_width="match_parent"
@@ -16,27 +16,29 @@
             android:paddingEnd="15dp">
 
         <RelativeLayout android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="10dp"
-                        android:paddingBottom="10dp">
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:paddingBottom="10dp">
 
             <TextView
-                    android:id="@+id/slidepanel_time_progress"
+                    android:id="@+id/txtCurrentDuration"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textSize="10.5sp"
                     android:textColor="@color/white"
                     android:letterSpacing="0.07"
+                    android:paddingStart="10dp"
                     android:layout_alignParentStart="true"
                     android:lineSpacingExtra="83.8sp"
                     android:gravity="center_horizontal"
                     android:text="00:00:00"/>
 
             <TextView
-                    android:id="@+id/slidepanel_time_total"
+                    android:id="@+id/txtDuration"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textSize="10.5sp"
+                    android:paddingEnd="10dp"
                     android:textColor="@color/white"
                     android:letterSpacing="0.07"
                     android:layout_alignParentEnd="true"
@@ -46,23 +48,25 @@
 
         </RelativeLayout>
 
-        <dm.audiostreamerdemo.widgets.Slider
-                android:id="@+id/audio_progress_control"
+        <com.ps.pexoplayer.widget.MediaSeekBar
+                android:id="@+id/seekBar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:background="@color/white"
-                app:max="100"
-                app:min="0"/>
+                android:layout_marginEnd="@dimen/spacing_normal"
+                android:layout_marginLeft="@dimen/spacing_normal"
+                android:layout_marginRight="@dimen/spacing_normal"
+                android:layout_marginStart="@dimen/spacing_normal"
+                android:layout_marginTop="@dimen/spacing_normal"
+                app:layout_goneMarginTop="@dimen/spacing_large"/>
 
         <TextView
-                android:id="@+id/paragraphTitle"
+                android:id="@+id/txtCurrentMusic"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textSize="10.5sp"
                 android:textColor="@color/white"
                 android:layout_gravity="start"
-                android:layout_marginTop="5dp"
+                android:layout_marginTop="15dp"
                 android:paddingStart="10dp"
                 android:letterSpacing="0.07"
                 android:lineSpacingExtra="83.8sp"
@@ -73,8 +77,7 @@
     <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingTop="10dp"
-            android:paddingBottom="10dp"
+            android:layout_marginTop="15dp"
             android:orientation="horizontal">
 
         <RelativeLayout
@@ -83,7 +86,7 @@
                 android:layout_weight="1">
 
             <ImageView
-                    android:id="@+id/btn_backward"
+                    android:id="@+id/btnPrev"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerInParent="true"
@@ -95,13 +98,15 @@
                 android:layout_height="fill_parent"
                 android:layout_weight="1">
 
-            <ImageView
-                    android:id="@+id/btn_play"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+            <ImageButton
+                    android:id="@+id/btnPlay"
+                    android:layout_width="@dimen/touch_default"
+                    android:layout_height="@dimen/touch_default"
+                    android:background="@null"
                     android:layout_centerInParent="true"
-                    android:background="@drawable/pause_bottom"
-                    android:clickable="true"/>
+                    android:contentDescription="@string/play_button_description"
+                    android:scaleType="fitXY"
+                    app:srcCompat="@drawable/ic_play"/>
 
         </RelativeLayout>
 
@@ -111,7 +116,7 @@
                 android:layout_weight="1">
 
             <ImageView
-                    android:id="@+id/btn_forward"
+                    android:id="@+id/btnNext"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerInParent="true"
@@ -122,18 +127,17 @@
 
     <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingTop="15dp"
-            android:paddingBottom="15dp"
+            android:layout_height="50dp"
+            android:layout_marginTop="10dp"
             android:orientation="horizontal">
 
         <RelativeLayout
+                android:id="@+id/bookmark"
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
                 android:layout_weight="1">
 
             <ImageView
-                    android:id="@+id/bookmark"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:src="@mipmap/player_bookmark"
@@ -142,12 +146,13 @@
         </RelativeLayout>
 
         <RelativeLayout
+                android:id="@+id/download"
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
                 android:layout_weight="1">
 
             <ImageView
-                    android:id="@+id/download"
+
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:src="@mipmap/player_download"
@@ -156,12 +161,13 @@
         </RelativeLayout>
 
         <RelativeLayout
+                android:id="@+id/timer"
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
+                android:visibility="gone"
                 android:layout_weight="1">
 
             <ImageView
-                    android:id="@+id/timer"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:src="@mipmap/player_time"
@@ -170,19 +176,18 @@
         </RelativeLayout>
 
         <RelativeLayout
+                android:id="@+id/speed"
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
+                android:visibility="gone"
                 android:layout_weight="1">
 
             <ImageView
-                    android:id="@+id/speed"
+
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:src="@mipmap/player_indicator"
                     android:layout_centerInParent="true"/>
-
         </RelativeLayout>
-
     </LinearLayout>
-
 </LinearLayout>

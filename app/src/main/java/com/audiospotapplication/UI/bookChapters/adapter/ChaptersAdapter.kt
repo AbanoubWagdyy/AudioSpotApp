@@ -4,16 +4,20 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.audiospotapplication.DataLayer.Model.ChaptersData
 import com.audiospotapplication.R
 import com.audiospotapplication.UI.bookChapters.Interface.OnChapterCLickListener
 import com.audiospotapplication.utils.TimeUtils
+import com.snatik.storage.Storage
+import java.io.File
 
 class ChaptersAdapter(
     private var data: List<ChaptersData>,
-    private var mListener: OnChapterCLickListener
+    private var mListener: OnChapterCLickListener,
+    private var mBookMine: Boolean?
 ) : RecyclerView.Adapter<ChaptersAdapter.ViewHolder>() {
 
     private var context: Context? = null
@@ -30,21 +34,49 @@ class ChaptersAdapter(
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        var chapterData = data[position]
+        val chapterData = data[position]
         holder.chapterName.text = chapterData.title
         holder.chapterDuration.text = TimeUtils.toTimeFormat(chapterData.duration.toInt())
+
+        mBookMine?.let {
+            if (it) {
+                if (validateChapterDownloaded(chapterData))
+                    holder.download.visibility = View.GONE
+                else
+                    holder.download.visibility = View.VISIBLE
+            } else
+                holder.download.visibility = View.GONE
+        }
     }
 
     inner class ViewHolder(val mView: View) : RecyclerView.ViewHolder(mView), View.OnClickListener {
         val chapterName: TextView = mView.findViewById(R.id.chapterName)
         val chapterDuration: TextView = mView.findViewById(R.id.chapterDuration)
+        val download: ImageView = mView.findViewById(R.id.download)
 
         init {
-            mView.setOnClickListener(this)
+            chapterName.setOnClickListener(this)
+            chapterDuration.setOnClickListener(this)
+            download.setOnClickListener(this)
         }
 
         override fun onClick(v: View) {
-            mListener.onChapterClicked(data!![position])
+            if (v == download) {
+                mListener.onItemDownloadPressed(data[position])
+            } else {
+                mListener.onChapterClicked(data[position], position)
+            }
         }
+    }
+
+    fun validateChapterDownloaded(data: ChaptersData): Boolean {
+        val storage = Storage(context)
+        val path = storage.internalCacheDirectory
+
+        val newDir = path + File.separator + "AudioSpotDownloadsCache"
+
+        val fileNameStr = data.id
+
+        return storage.isFileExist("$newDir/$fileNameStr")
     }
 }

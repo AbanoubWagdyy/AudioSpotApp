@@ -1,35 +1,35 @@
 package com.audiospotapplication.UI.myFavourite
 
-import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.audiospot.DataLayer.Model.Book
+import com.audiospotapplication.BaseFragment
 
 import com.audiospotapplication.R
 import com.audiospotapplication.UI.bookDetails.BookDetailsActivity
 import com.audiospotapplication.UI.books.Interface.onBookItemClickListener
 import com.audiospotapplication.UI.books.adapter.BooksAdapter
-import com.audiospotapplication.UI.onItemPlayClickListener
-import com.audiospotapplication.utils.BookMediaDataConversion
 import com.audiospotapplication.utils.DialogUtils
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.fragment_my_favourite_books.*
 
-class MyFavouriteBooksFragment : Fragment(), myFavouriteBooksContract.View, onBookItemClickListener,
+class MyFavouriteBooksFragment : BaseFragment(), myFavouriteBooksContract.View,
+    onBookItemClickListener,
     onBookItemClickListener.onCartBookDeleteClickListener {
 
     override fun showMessage(message: String) {
-        Snackbar.make(
-            activity!!.findViewById(android.R.id.content),
-            message,
-            Snackbar.LENGTH_SHORT
-        ).show()
+        if (activity != null)
+            Snackbar.make(
+                activity!!.findViewById(android.R.id.content),
+                message,
+                Snackbar.LENGTH_SHORT
+            ).show()
     }
 
     override fun onItemDeleted(book: Book) {
@@ -41,8 +41,9 @@ class MyFavouriteBooksFragment : Fragment(), myFavouriteBooksContract.View, onBo
     }
 
     override fun onPlayClicked(book: Book) {
-        var mediaData = BookMediaDataConversion.convertBookToMediaMetaData(book)
-        mPlayCallback.OnItemPlayed(mediaData)
+        if (playBookSample(book) == R.drawable.ic_pause) {
+            handlePlayPause()
+        }
     }
 
     override fun getAppContext(): Context? {
@@ -66,12 +67,28 @@ class MyFavouriteBooksFragment : Fragment(), myFavouriteBooksContract.View, onBo
     }
 
     override fun setBookList(listMyBooks: List<Book>) {
+        this.listMyBooks = listMyBooks
         if (listMyBooks.isNotEmpty()) {
+            this.listMyBooks = listMyBooks
             recyclerBooks.layoutManager = LinearLayoutManager(context)
             recyclerBooks.setHasFixedSize(true)
             recyclerBooks.isNestedScrollingEnabled = false
-            adapter = BooksAdapter(listMyBooks, this, this)
+
+            adapter = BooksAdapter(
+                listMyBooks, this,
+                getPlaylistIdObserver().value!!, isPlaying
+            )
             recyclerBooks.adapter = adapter
+
+            getPlaylistIdObserver().observe(this, Observer {
+                if (adapter != null && !it.equals(""))
+                    adapter!!.updatePlaylistId(it, isPlaying)
+            })
+
+            getPlayingObserver().observe(this, Observer {
+                if (adapter != null)
+                    adapter!!.updatePlaylistId(getPlaylistIdObserver().value, it)
+            })
         } else {
             relativeEmptyBooks.visibility = View.VISIBLE
             emptyBooks.text = "You have no favorite books yet"
@@ -104,20 +121,13 @@ class MyFavouriteBooksFragment : Fragment(), myFavouriteBooksContract.View, onBo
             MyFavouriteBooksFragment()
     }
 
-    override fun onAttach(activity: Activity) {
-        super.onAttach(activity)
-        try {
-            mPlayCallback = activity as onItemPlayClickListener
-        } catch (e: ClassCastException) {
-            throw ClassCastException("$activity must implement MyInterface ")
-        }
-    }
-
     fun onEditCartClicked() {
-        adapter.showDeleteIcon()
+        adapter?.showDelete()
     }
 
-    private lateinit var adapter: BooksAdapter
-    private lateinit var mPlayCallback: onItemPlayClickListener
+    private lateinit var listMyBooks: List<Book>
+
+    private var adapter: BooksAdapter? = null
+
     lateinit var mPresenter: myFavouriteBooksContract.Presenter
 }

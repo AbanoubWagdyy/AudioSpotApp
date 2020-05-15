@@ -13,6 +13,7 @@
                      android:layout_height="wrap_content"
                      android:layout_centerInParent="true"/>
 
+
         <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recyclerHome"
                 android:layout_width="match_parent"

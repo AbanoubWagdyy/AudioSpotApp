@@ -12,21 +12,16 @@ import com.audiospotapplication.R
 import com.audiospotapplication.UI.books.Interface.onBookItemClickListener
 import com.audiospotapplication.utils.ImageUtils
 import com.willy.ratingbar.ScaleRatingBar
-import dm.audiostreamer.MediaMetaData
 
 
 class HorizontalBooksAdapter(
     private var books: List<Book>?,
     private var mOnItemClickListener: onBookItemClickListener,
-    currentSong: MediaMetaData?
+    private var mPlaylistId: String?,
+    private var playing: Boolean
 ) : RecyclerView.Adapter<HorizontalBooksAdapter.ViewHolder>() {
 
     private var context: Context? = null
-    private var currentSong: MediaMetaData? = null
-
-    init {
-        this.currentSong = currentSong
-    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context)
@@ -36,18 +31,24 @@ class HorizontalBooksAdapter(
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        var book = books!![position]
+        val book = books!![position]
         holder.ivBook.setBackgroundResource(R.mipmap.login_icon)
-        ImageUtils.setImageFromUrlIntoImageViewUsingPicasso(book.cover, context, holder.ivBook)
+        ImageUtils.setImageFromUrlIntoImageViewUsingGlide(book.cover, context, holder.ivBook)
         holder.tvBookName.text = book.title
+        holder.tvAuthor.text = book.author
         holder.rating.rating = book.rate.toFloat()
 
         holder.rating.setOnRatingChangeListener(null)
         holder.rating.setOnTouchListener { p0, p1 -> true }
 
-        if (currentSong != null) {
-            if (book.id == currentSong!!.mediaId.toInt()) {
-                holder.ivPlay.setBackgroundResource(R.mipmap.homepage_play)
+        if (!mPlaylistId.equals("")) {
+            val id = book.id.toString() + book.id.toString()
+            if (mPlaylistId.equals(id)) {
+                if (playing) {
+                    holder.ivPlay.setBackgroundResource(R.mipmap.homepage_play)
+                } else {
+                    holder.ivPlay.setBackgroundResource(R.mipmap.play)
+                }
             } else {
                 holder.ivPlay.setBackgroundResource(R.mipmap.play)
             }
@@ -70,6 +71,7 @@ class HorizontalBooksAdapter(
 
         val ivBook: ImageView = mView.findViewById(R.id.ivBook)
         val tvBookName: TextView = mView.findViewById(R.id.tvBookName)
+        val tvAuthor: TextView = mView.findViewById(R.id.tvAuthor)
         val ivPlay: ImageView = mView.findViewById(R.id.ivPlay)
         val rating: ScaleRatingBar = mView.findViewById(R.id.ratingBar)
 

@@ -32,7 +32,7 @@ class MyBookmarksAdapter(
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        var bookmark = bookmarks[position]
+        val bookmark = bookmarks[position]
 
         holder.bookmarkTime.text = TimeUtils.toTimeFormat(bookmark.time)
 
@@ -40,7 +40,7 @@ class MyBookmarksAdapter(
         holder.bookName.text = bookmark.book_name
         holder.chapterName.text = bookmark.chapter_name
 
-        ImageUtils.setImageFromUrlIntoImageViewUsingPicasso(
+        ImageUtils.setImageFromUrlIntoImageViewUsingGlide(
             bookmark.book_cover, context, holder.ivBook,
             false
         )

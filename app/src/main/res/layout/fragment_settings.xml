@@ -26,7 +26,7 @@
                     android:textColor="@color/white"
                     android:letterSpacing="0.07"
                     android:lineSpacingExtra="71.8sp"
-                    android:text="App Language"/>
+                    android:text="@string/app_language"/>
 
             <ImageView android:id="@+id/ivArrow"
                        android:layout_width="wrap_content"
@@ -40,7 +40,7 @@
                     android:layout_height="wrap_content"
                     android:textSize="15.3sp"
                     android:layout_centerVertical="true"
-                    android:layout_toLeftOf="@+id/ivArrow"
+                    android:layout_toStartOf="@+id/ivArrow"
                     android:layout_marginEnd="25dp"
                     android:textColor="@color/white"
                     android:letterSpacing="0.07"
@@ -64,7 +64,7 @@
                     android:textColor="@color/white"
                     android:letterSpacing="0.07"
                     android:lineSpacingExtra="71.8sp"
-                    android:text="Forward and backward duration"/>
+                    android:text="@string/forward_backward_duration"/>
 
             <ImageView android:id="@+id/ivArrow2"
                        android:layout_width="wrap_content"
@@ -78,7 +78,7 @@
                     android:layout_height="wrap_content"
                     android:textSize="15.3sp"
                     android:layout_centerVertical="true"
-                    android:layout_toLeftOf="@+id/ivArrow2"
+                    android:layout_toStartOf="@+id/ivArrow2"
                     android:layout_marginEnd="25dp"
                     android:textColor="@color/white"
                     android:letterSpacing="0.07"

@@ -1,6 +1,7 @@
 package com.audiospotapplication.UI.promoCode
 
 import android.content.Context
+import com.audiospotapplication.BaseView
 
 interface PromoCodeContract {
 
@@ -9,7 +10,7 @@ interface PromoCodeContract {
         fun applyPromoCode(promoCode: String)
     }
 
-    interface View {
+    interface View : BaseView {
         fun getAppContext(): Context?
         fun showLoadingDialog()
         fun dismissLoading()
@@ -17,5 +18,6 @@ interface PromoCodeContract {
         fun setDiscount(toString: String)
         fun setTotal(toString: String)
         fun showMessage(message: String)
+        fun showPayment(promoCode: String)
     }
 }

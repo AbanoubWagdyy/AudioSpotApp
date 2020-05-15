@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.audiospotapplication.BaseFragment
 
 import com.audiospotapplication.R
 import com.audiospotapplication.UI.authors.AuthorsActivity
@@ -14,7 +15,7 @@ import com.audiospotapplication.UI.categories.CategoriesActivity
 import com.audiospotapplication.UI.publishers.PublishersActivity
 import kotlinx.android.synthetic.main.fragment_my_library.*
 
-class LibraryFragment : Fragment() {
+class LibraryFragment : BaseFragment() {
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -31,14 +32,17 @@ class LibraryFragment : Fragment() {
             startActivity(intent)
 
         }
+
         relativeAuthors.setOnClickListener {
             val intent = Intent(activity, AuthorsActivity::class.java)
             startActivity(intent)
         }
+
         relativeCategories.setOnClickListener {
             val intent = Intent(activity, CategoriesActivity::class.java)
             startActivity(intent)
         }
+
         relativePublishers.setOnClickListener {
             val intent = Intent(activity, PublishersActivity::class.java)
             startActivity(intent)

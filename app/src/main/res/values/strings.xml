@@ -1,13 +1,7 @@
 <resources>
     <string name="app_name">AudioSpot</string>
-    <string name="title_activity_login">Sign in</string>
-    <string name="prompt_email">Email</string>
-    <string name="prompt_password">Password</string>
-    <string name="action_sign_in">Sign in or register</string>
-    <string name="action_sign_in_short">Sign in</string>
+    <string name="email">Email</string>
     <string name="welcome">"Welcome !"</string>
-    <string name="invalid_username">Not a valid username</string>
-    <string name="invalid_password">Password must be >5 characters</string>
     <string name="login_failed">"Login failed"</string>
     <string name="facebook_app_id">402190117171536</string>
     <string name="fb_login_protocol_scheme">fb402190117171536</string>
@@ -16,7 +10,7 @@
     <string name="login">Login</string>
     <string name="forget_password">Forgot password?</string>
     <string name="create_new_account">Create a new account? Sign up</string>
-    <string name="or_sign">Or Sign by</string>
+    <string name="or_sign">Create new account</string>
     <string name="default_notification_channel_id" translatable="false">audiospot_fcm_default_channel</string>
     <string name="skip">Skip</string>
     <string name="audio_spot">AudioSpot</string>
@@ -27,12 +21,10 @@
     <string name="cancel">Cancel</string>
     <string name="reset_password">Reset Password</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="newest_arrival">Newest arrival</string>
     <string name="a_z">A-Z</string>
     <string name="best_seller">Best seller</string>
-    <string name="length">Length</string>
+    <string name="length">Length:  </string>
     <string name="average_review">Average customer review</string>
     <string name="view_book_chapters">
         <u>View Book Chapters</u>
@@ -55,11 +47,108 @@
     <string name="try_again">Please try again later !.</string>
     <string name="you_should_own">You should own this book to listen to chapters</string>
     <string name="voucher">Voucher</string>
+    <string name="comment">Comment</string>
+    <string name="add_bookmark">Add Bookmark</string>
+    <string name="home">Home</string>
+    <string name="library">Library</string>
+    <string name="my_books">My Books</string>
+    <string name="menu">Menu</string>
+    <string name="book_chapters">Book chapters</string>
+    <string name="please_enter_your_mail">Please enter your email</string>
+    <string name="or_sign_up">Or Sing up</string>
+    <string name="create_new_account_sign_up">Create New Account</string>
+    <string name="author">Author:</string>
+    <string name="book">Book:</string>
+    <string name="narator">Narrator:</string>
+    <string name="rating">Rating:</string>
+    <string name="price">Price:</string>
+    <string name="about_author">About Author</string>
+    <string name="add_to_favorite">Add to Favorite</string>
+    <string name="give_as_gift">Give as a Gift</string>
+    <string name="category">Category:</string>
+    <string name="publisher">Publisher:</string>
+    <string name="about_book">About The Book</string>
+    <string name="add_to_cart">Add To Cart</string>
+    <string name="rate_book">Review the book</string>
+    <string name="pay_now">Pay Now</string>
+    <string name="promo_code">Promo code</string>
+    <string name="send_to_us">Send to us</string>
+    <string name="send">Send</string>
+    <string name="congratulations_for_receiving_book">Congratulations ! \n You received this Audiobook
+    </string>
+    <string name="send_to_audiospot_account">Send to an AudioSpot account</string>
+    <string name="will_present_as_voucher">I will present it as a voucher</string>
+    <string name="quantity">Quantity</string>
+    <string name="you_are_close_to_make">
+        You are close to making a difference in\nsomeones life</string>
+    <string name="please_enter_audiospot_account_email">Please enter the AudioSpot account email</string>
+    <string name="profile">Profile</string>
+    <string name="my_favorite">My favorite</string>
+    <string name="my_bookmarks">My bookmarks</string>
+    <string name="receive_a_book">Use a voucher</string>
+    <string name="about_us">About us</string>
+    <string name="contact_us">Contact us</string>
+    <string name="t_c">Terms and conditions</string>
+    <string name="sign_out">Sign out</string>
+    <string name="books">Books</string>
+    <string name="categories">Categories</string>
+    <string name="authors">Authors</string>
+    <string name="publishers">Publishers</string>
+    <string name="full_name">Full name</string>
+    <string name="use_promo_code">Use a Promo code</string>
+    <string name="enter_your_promo_code">Enter your Promo code</string>
+    <string name="apply">Apply</string>
+    <string name="sub_total">Subtotal:</string>
+    <string name="discount">Discount:</string>
+    <string name="total">Total:</string>
+    <string name="proceed_to_payment">PROCEED TO PAYMENT</string>
+    <string name="about_publisher">About Publisher</string>
+    <string name="submit">Submit</string>
+    <string name="app_language">App Language</string>
+    <string name="forward_backward_duration">Forward and backward duration</string>
+    <string name="change_data">Change Data</string>
+    <string name="please_enter_voucher">Please enter your voucher</string>
+    <string name="by">By</string>
+    <string name="on">on</string>
+    <string name="the_message">The message</string>
+    <string name="or_find_us_here">Or find us here</string>
+    <string name="customer_reviews">Customer reviews</string>
+    <string name="settings">Settings</string>
 
     <string-array name="gender_entries">
         <item>Gender</item>
         <item>Male</item>
         <item>Female</item>
     </string-array>
+
+    <string name="text_test" translatable="false">fadsfasdfadsf</string>
+    <string name="play_initial_time" translatable="false">00:00</string>
+    <string name="track_number" translatable="false">Track</string>
+    <string name="play_button_description" translatable="false">Play button</string>
+    <string name="next_button_description" translatable="false">Next button</string>
+    <string name="previous_button_description" translatable="false">Previous button</string>
+    <string name="play_chapters">Play Chapters</string>
+    <string name="chapters">Chapters</string>
+    <string name="paragraphs">Paragraphs</string>
+    <string name="select_language">Select Language:-</string>
+    <string name="menu_my_books">My Books</string>
+    <string name="loading">Loading …</string>
+
+    <string name="broadcast_seekbar_update" translatable="false">broadcast_seekbar_update</string>
+    <string name="broadcast_seekbar_value" translatable="false">broadcast_seekbar_value</string>
+    <string name="broadcast_update_ui" translatable="false">broadcast_update_ui</string>
+    <string name="broadcast_new_media_id" translatable="false">broadcast_new_media_id</string>
+
+    <string name="string_remove_from_playlist" translatable="false">Remove from playlist?</string>
+    <string name="string_yes" translatable="false">yes</string>
+    <string name="string_no" translatable="false">no</string>
+    <string name="label_stop" translatable="false">Stop</string>
+    <string name="label_pause" translatable="false">Pause</string>
+    <string name="label_play" translatable="false">Play</string>
+    <string name="label_play_pause" translatable="false">Play and pause toggle</string>
+    <string name="label_previous" translatable="false">Previous track</string>
+    <string name="label_next" translatable="false">Next track</string>
+    <string name="price_after_sale">Price After Sale:</string>
+    <string name="you_will_receive_voucher_as_email">( You will receive the vouchers on your email immediately )</string>
 
 </resources>

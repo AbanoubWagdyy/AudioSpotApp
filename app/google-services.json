@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "930836478084",
+    "firebase_url": "https://audiospotapp-dedd2.firebaseio.com",
+    "project_id": "audiospotapp-dedd2",
+    "storage_bucket": "audiospotapp-dedd2.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:930836478084:android:816e35e3971cd961",
+        "android_client_info": {
+          "package_name": "com.audiospotapplication"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "930836478084-shjeu99b9fchtdlsrfe2cbgac0jmqjek.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.audiospotapplication",
+            "certificate_hash": "29f29462b975e8c6af5692dcda82fd07fd5be17a"
+          }
+        },
+        {
+          "client_id": "930836478084-969l7vljmsl0l7n14jupsffp7shudt0g.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBRn7EBHZD95JQLmveUiJu4qE5C-I4ZJLE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "930836478084-969l7vljmsl0l7n14jupsffp7shudt0g.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

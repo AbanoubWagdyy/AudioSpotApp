@@ -13,21 +13,21 @@
         <LinearLayout
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
-                android:layout_weight="2.5">
+                android:layout_weight="3">
 
         </LinearLayout>
 
         <LinearLayout
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
-                android:orientation="vertical"
-                android:layout_weight="1">
+                android:layout_weight="1"
+                android:orientation="vertical">
 
             <LinearLayout
                     android:layout_width="fill_parent"
-                    android:layout_height="fill_parent"
-                    android:orientation="horizontal"
-                    android:layout_weight="1">
+                    android:layout_height="wrap_content"
+                    android:paddingBottom="@dimen/spacing_large"
+                    android:orientation="horizontal">
 
                 <RelativeLayout
                         android:id="@+id/relativeBooks"
@@ -60,7 +60,7 @@
                             android:lineSpacingExtra="77.8sp"
                             android:gravity="center_horizontal"
                             android:layout_below="@+id/relative1"
-                            android:text="Books"/>
+                            android:text="@string/books"/>
 
                 </RelativeLayout>
 
@@ -96,17 +96,17 @@
                             android:lineSpacingExtra="77.8sp"
                             android:gravity="center_horizontal"
                             android:layout_below="@+id/relative2"
-                            android:text="Categories"/>
+                            android:text="@string/categories"/>
 
                 </RelativeLayout>
             </LinearLayout>
 
             <LinearLayout
                     android:layout_width="fill_parent"
-                    android:layout_height="fill_parent"
+                    android:layout_height="wrap_content"
                     android:orientation="horizontal"
-                    android:layout_marginTop="15dp"
-                    android:layout_weight="1">
+                    android:paddingBottom="@dimen/spacing_large"
+                    android:layout_marginTop="15dp">
 
                 <RelativeLayout
                         android:id="@+id/relativeAuthors"
@@ -139,7 +139,7 @@
                             android:lineSpacingExtra="77.8sp"
                             android:gravity="center_horizontal"
                             android:layout_below="@+id/relative3"
-                            android:text="Authors"/>
+                            android:text="@string/authors"/>
 
                 </RelativeLayout>
 
@@ -160,7 +160,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_centerInParent="true"
-                                android:background="@mipmap/categories"
+                                android:background="@mipmap/publishers"
                                 android:id="@+id/imageView10"/>
                     </RelativeLayout>
 
@@ -174,7 +174,7 @@
                             android:lineSpacingExtra="77.8sp"
                             android:gravity="center_horizontal"
                             android:layout_below="@+id/relative4"
-                            android:text="Publishers"/>
+                            android:text="@string/publishers"/>
 
                 </RelativeLayout>
             </LinearLayout>
@@ -184,7 +184,7 @@
         <LinearLayout
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
-                android:layout_weight="2.5">
+                android:layout_weight="3">
 
         </LinearLayout>
 

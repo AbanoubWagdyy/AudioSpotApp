@@ -24,7 +24,7 @@
                     android:lineSpacingExtra="77.8sp"
                     android:textStyle="bold"
                     android:gravity="center_horizontal"
-                    android:text="Use a Promo code"/>
+                    android:text="@string/use_promo_code"/>
 
             <LinearLayout android:layout_width="match_parent"
                           android:layout_height="wrap_content"
@@ -42,11 +42,11 @@
                         android:gravity="center"
                         android:layout_marginStart="10dp"
                         android:textColorHint="@color/white"
-                        android:hint="Enter your Promo code"
+                        android:hint="@string/enter_your_promo_code"
                         android:background="@mipmap/promo_code_back"/>
 
                 <Button
-                        android:text="Apply"
+                        android:text="@string/apply"
                         android:layout_width="wrap_content"
                         android:layout_gravity="center_vertical"
                         android:layout_height="30dp"
@@ -75,7 +75,7 @@
                     android:textStyle="bold"
                     android:lineSpacingExtra="13.2sp"
                     android:gravity="end"
-                    android:text="Subtotal:"/>
+                    android:text="@string/sub_total"/>
 
             <TextView
                     android:id="@+id/discount"
@@ -88,7 +88,7 @@
                     android:letterSpacing="0.05"
                     android:lineSpacingExtra="13.2sp"
                     android:gravity="end"
-                    android:text="Discount:"/>
+                    android:text="@string/discount"/>
 
             <View android:layout_marginTop="15dp" android:layout_width="match_parent" android:layout_height="2dp"
                   android:background="@color/white"/>
@@ -104,7 +104,7 @@
                     android:letterSpacing="0.05"
                     android:lineSpacingExtra="13.2sp"
                     android:gravity="end"
-                    android:text="Total:"/>
+                    android:text="@string/total"/>
 
             <Button
                     android:id="@+id/proceedToPayment"
@@ -120,7 +120,7 @@
                     android:letterSpacing="0.05"
                     android:lineSpacingExtra="78.8sp"
                     android:padding="10dp"
-                    android:text="PROCEED TO PAYMENT"
+                    android:text="@string/proceed_to_payment"
                     android:background="@mipmap/green_back"/>
 
         </LinearLayout>

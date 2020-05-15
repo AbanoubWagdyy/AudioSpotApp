@@ -19,13 +19,13 @@
                 android:textStyle="bold"
                 android:letterSpacing="0.07"
                 android:lineSpacingExtra="10sp"
-                android:text="Congratulations ! \n
-You received this Audiobook as a gift"/>
+                android:text="@string/congratulations_for_receiving_book"/>
 
         <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="25dp"
+                android:id="@+id/linearBook"
                 android:orientation="horizontal">
 
             <LinearLayout
@@ -40,7 +40,6 @@ You received this Audiobook as a gift"/>
 
                     <ImageView android:id="@+id/ivBook"
                                android:layout_width="match_parent"
-                               android:src="@drawable/sample"
                                android:scaleType="fitXY"
                                android:layout_height="match_parent"/>
 

@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.audiospotapplication.BaseFragment
 
 import com.audiospotapplication.R
 import com.audiospotapplication.UI.promoCodeCongratulations.CongratulationsActivity
@@ -15,13 +16,15 @@ import com.audiospotapplication.utils.DialogUtils
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.fragment_voucher.*
 
-class VoucherFragment : Fragment(), VoucherContract.View {
+class VoucherFragment : BaseFragment(), VoucherContract.View {
+
     override fun showMessage(message: String) {
-        Snackbar.make(
-            activity!!.findViewById(android.R.id.content),
-            message,
-            Snackbar.LENGTH_SHORT
-        ).show()
+        if (activity != null)
+            Snackbar.make(
+                activity!!.findViewById(android.R.id.content),
+                message,
+                Snackbar.LENGTH_SHORT
+            ).show()
     }
 
     override fun showCongratulationScreen() {
@@ -51,6 +54,7 @@ class VoucherFragment : Fragment(), VoucherContract.View {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         mPresenter = VoucherPresenter(this)
         mPresenter.start()
 

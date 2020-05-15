@@ -31,7 +31,7 @@
                 android:layout_gravity="center_horizontal"
                 android:lineSpacingExtra="7sp"
                 android:gravity="center_horizontal"
-                android:text="Full name "/>
+                android:text="@string/full_name"/>
 
         <LinearLayout
                 android:layout_width="match_parent"
@@ -54,7 +54,7 @@
                         android:textColor="@color/white"
                         android:letterSpacing="0.07"
                         android:lineSpacingExtra="9.2sp"
-                        android:text="Mobile Phone"/>
+                        android:text="@string/mobile_phone"/>
 
                 <TextView
                         android:id="@+id/tvMobilePhone"
@@ -85,7 +85,7 @@
                         android:textColor="@color/white"
                         android:letterSpacing="0.07"
                         android:lineSpacingExtra="9.2sp"
-                        android:text="Email"/>
+                        android:text="@string/email"/>
 
                 <TextView
                         android:id="@+id/tvEmail"
@@ -267,8 +267,8 @@
                 android:layout_marginTop="20dp"
                 android:textColor="@color/white"
                 android:letterSpacing="0.07"
+                android:visibility="gone"
                 android:lineSpacingExtra="9.2sp"
                 android:text="@string/prefered_categories"/>
     </LinearLayout>
-
 </FrameLayout>

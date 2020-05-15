@@ -1,5 +1,7 @@
 package com.visionvalley.letuno.DataLayer
 
+import android.support.v4.media.MediaBrowserCompat
+import android.support.v4.media.MediaMetadataCompat
 import com.audiospot.DataLayer.Model.AuthResponse
 import com.audiospot.DataLayer.Model.Book
 import com.audiospot.DataLayer.Model.CategoriesListData
@@ -8,6 +10,7 @@ import com.audiospotapplication.DataLayer.Model.*
 import com.audiospotapplication.DataLayer.Retrofit.RetrofitCallbacks
 import com.audiospotapplication.UI.ActiveTab
 import com.audiospotapplication.UI.giftSelection.GiftSelection
+import java.util.*
 
 interface RepositorySource : CacheDataSource {
 
@@ -31,7 +34,7 @@ interface RepositorySource : CacheDataSource {
         callback: RetrofitCallbacks.AuthResponseCallback
     )
 
-    fun resetPassword(email: String, callback: RetrofitCallbacks.AuthResponseCallback)
+    fun resetPassword(email: String, callback: RetrofitCallbacks.ResponseCallback)
 
     fun getHomepage(callback: RetrofitCallbacks.HomepageResponseCallback)
 
@@ -57,25 +60,27 @@ interface RepositorySource : CacheDataSource {
 
     fun saveCategoryItem(categoryListData: CategoriesListData)
 
-    fun getCurrentCategoryItem(): CategoriesListData
+    fun getCurrentCategoryItem(): CategoriesListData?
 
     fun clearCategoryItem()
 
     fun saveAuthorItem(authorsData: AuthorsData)
 
-    fun getAuthorItem(): AuthorsData
+    fun getAuthorItem(): AuthorsData?
 
     fun clearAuthorItem()
 
     fun savePublisherItem(authorsData: PublishersResponseData)
 
-    fun getPublisherItem(): PublishersResponseData
+    fun getPublisherItem(): PublishersResponseData?
 
     fun clearPublisherItem()
 
-    fun saveBook(book: Book)
+    fun saveBook(book: Book?)
 
-    fun getSavedBook(): Book
+    fun getCurrentBookChapters(): List<ChaptersData>?
+
+    fun getSavedBook(): Book?
 
     fun clearSavedBook()
 
@@ -128,9 +133,11 @@ interface RepositorySource : CacheDataSource {
 
     fun isBookMine(): Boolean
 
-    fun getMyBooks(): List<Book>
+    fun isBookMine(id: Int): Boolean
 
-    fun getCurrentBookReviews(): List<Review>
+    fun getMyBooks(): List<Book>?
+
+    fun getCurrentBookReviews(): List<Review>?
 
     fun removeBookFromCart(book_id: Int, callback: RetrofitCallbacks.ResponseCallback)
 
@@ -140,9 +147,14 @@ interface RepositorySource : CacheDataSource {
 
     fun setBookmarkData(bookmarkBody: BookmarkBody)
 
-    fun getBookmarkData(): BookmarkBody
+    fun getBookmarkData(): BookmarkBody?
 
     fun addBookmark(bookmarkData: BookmarkBody, callback: RetrofitCallbacks.ResponseCallback)
+
+    fun createOrder(
+        orderBody: CreateOrderBody,
+        callback: RetrofitCallbacks.CreateOrderResponseCallback
+    )
 
     fun myBookmarks(callback: RetrofitCallbacks.MyBookmarkResponseCallback)
 
@@ -166,13 +178,38 @@ interface RepositorySource : CacheDataSource {
 
     fun getPromoCode(): String
 
-    fun addPromoCode(promoCode: String, responseCallback: RetrofitCallbacks.PromoCodeResponseCallback)
+    fun getPromoCodeResponse(): PromoCodeResponse?
+
+    fun addPromoCode(
+        promoCode: String,
+        responseCallback: RetrofitCallbacks.PromoCodeResponseCallback
+    )
 
     fun saveVoucherBook(data: Book?)
 
-    fun getVoucherBook(): Book
+    fun getVoucherBook(): Book?
 
     fun setActiveTab(tabActive: ActiveTab)
 
-    fun getActiveTab(): ActiveTab
+    fun getActiveTab(): ActiveTab?
+
+    fun setMyBooks(listMyBooks: ArrayList<Book>)
+
+    fun getCurrentLanguage(): String
+
+    fun setCurrentLanguage(lang: String)
+
+    fun setIsPlayFirstChapter(isToPlayFirstChapter: Boolean)
+
+    fun getIsPlayFirstChapter(): Boolean
+
+    fun getPaypalArguments(callback: RetrofitCallbacks.PaypalArgumentCallback)
+
+    fun setMediaItems(mediaItems: List<ChaptersData>)
+
+    fun getMediaItems(): List<MediaBrowserCompat.MediaItem>
+
+    fun getTreeMap(): TreeMap<String, MediaMetadataCompat>
+
+    fun reset()
 }

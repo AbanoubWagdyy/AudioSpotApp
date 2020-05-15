@@ -9,11 +9,22 @@ import com.audiospotapplication.DataLayer.Model.*
 class RetrofitResponseHandler {
 
     companion object {
+
+        val UNAUTHORIZED_MESSAGE = "Session Expired, Please Login Again!"
+
         fun validateAuthResponseStatus(result: AuthResponse?): Status {
             when (result!!.status) {
                 1 -> {
                     return Status.VALID
                 }
+
+                0 -> {
+                    if (result.message.equals(UNAUTHORIZED_MESSAGE))
+                        return Status.UNAUTHORIZED
+                    else
+                        return Status.INVALID
+                }
+
                 else -> {
                     return Status.INVALID
                 }
@@ -25,6 +36,14 @@ class RetrofitResponseHandler {
                 1 -> {
                     return Status.VALID
                 }
+
+                0 -> {
+                    if (result.message.equals(UNAUTHORIZED_MESSAGE))
+                        return Status.UNAUTHORIZED
+                    else
+                        return Status.INVALID
+                }
+
                 else -> {
                     return Status.INVALID
                 }
@@ -36,6 +55,14 @@ class RetrofitResponseHandler {
                 1 -> {
                     return Status.VALID
                 }
+
+                0 -> {
+                    if (result.message.equals(UNAUTHORIZED_MESSAGE))
+                        return Status.UNAUTHORIZED
+                    else
+                        return Status.INVALID
+                }
+
                 else -> {
                     return Status.INVALID
                 }
@@ -47,6 +74,14 @@ class RetrofitResponseHandler {
                 1 -> {
                     return Status.VALID
                 }
+
+                0 -> {
+                    if (result.message.equals(UNAUTHORIZED_MESSAGE))
+                        return Status.UNAUTHORIZED
+                    else
+                        return Status.INVALID
+                }
+
                 else -> {
                     return Status.INVALID
                 }
@@ -58,6 +93,14 @@ class RetrofitResponseHandler {
                 1 -> {
                     return Status.VALID
                 }
+
+                0 -> {
+                    if (result.message.equals(UNAUTHORIZED_MESSAGE))
+                        return Status.UNAUTHORIZED
+                    else
+                        return Status.INVALID
+                }
+
                 else -> {
                     return Status.INVALID
                 }
@@ -69,6 +112,14 @@ class RetrofitResponseHandler {
                 1 -> {
                     return Status.VALID
                 }
+
+                0 -> {
+                    if (result.message.equals(UNAUTHORIZED_MESSAGE))
+                        return Status.UNAUTHORIZED
+                    else
+                        return Status.INVALID
+                }
+
                 else -> {
                     return Status.INVALID
                 }
@@ -80,6 +131,14 @@ class RetrofitResponseHandler {
                 1 -> {
                     return Status.VALID
                 }
+
+                0 -> {
+                    if (result.message.equals(UNAUTHORIZED_MESSAGE))
+                        return Status.UNAUTHORIZED
+                    else
+                        return Status.INVALID
+                }
+
                 else -> {
                     return Status.INVALID
                 }
@@ -91,6 +150,14 @@ class RetrofitResponseHandler {
                 1 -> {
                     return Status.VALID
                 }
+
+                0 -> {
+                    if (result.message.equals(UNAUTHORIZED_MESSAGE))
+                        return Status.UNAUTHORIZED
+                    else
+                        return Status.INVALID
+                }
+
                 else -> {
                     return Status.INVALID
                 }
@@ -102,6 +169,14 @@ class RetrofitResponseHandler {
                 1 -> {
                     return Status.VALID
                 }
+
+                0 -> {
+                    if (result.message.equals(UNAUTHORIZED_MESSAGE))
+                        return Status.UNAUTHORIZED
+                    else
+                        return Status.INVALID
+                }
+
                 else -> {
                     return Status.INVALID
                 }
@@ -113,6 +188,14 @@ class RetrofitResponseHandler {
                 1 -> {
                     return Status.VALID
                 }
+
+                0 -> {
+                    if (result.message.equals(UNAUTHORIZED_MESSAGE))
+                        return Status.UNAUTHORIZED
+                    else
+                        return Status.INVALID
+                }
+
                 else -> {
                     return Status.INVALID
                 }
@@ -124,6 +207,14 @@ class RetrofitResponseHandler {
                 1 -> {
                     return Status.VALID
                 }
+
+                0 -> {
+                    if (result.message.equals(UNAUTHORIZED_MESSAGE))
+                        return Status.UNAUTHORIZED
+                    else
+                        return Status.INVALID
+                }
+
                 else -> {
                     return Status.INVALID
                 }
@@ -135,6 +226,11 @@ class RetrofitResponseHandler {
                 1 -> {
                     Status.VALID
                 }
+
+                0 -> {
+                    return Status.UNAUTHORIZED
+                }
+
                 else -> {
                     Status.INVALID
                 }
@@ -146,6 +242,7 @@ class RetrofitResponseHandler {
                 1 -> {
                     Status.VALID
                 }
+
                 else -> {
                     Status.INVALID
                 }
@@ -157,6 +254,33 @@ class RetrofitResponseHandler {
                 1 -> {
                     Status.VALID
                 }
+
+                0 -> {
+                    if (result.message.equals(UNAUTHORIZED_MESSAGE))
+                        return Status.UNAUTHORIZED
+                    else
+                        return Status.INVALID
+                }
+
+                else -> {
+                    Status.INVALID
+                }
+            }
+        }
+
+        fun validateAuthResponseStatus(result: CreateOrderResponse?): Status {
+            return when (result!!.status) {
+                1 -> {
+                    Status.VALID
+                }
+
+                0 -> {
+                    if (result.message.equals(UNAUTHORIZED_MESSAGE))
+                        return Status.UNAUTHORIZED
+                    else
+                        return Status.INVALID
+                }
+
                 else -> {
                     Status.INVALID
                 }
@@ -164,7 +288,7 @@ class RetrofitResponseHandler {
         }
 
         enum class Status {
-            VALID, INVALID
+            VALID, INVALID, UNAUTHORIZED
         }
     }
 }

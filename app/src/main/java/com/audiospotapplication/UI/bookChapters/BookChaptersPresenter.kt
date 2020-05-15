@@ -1,32 +1,80 @@
 package com.audiospotapplication.UI.bookChapters
 
+import android.os.Handler
 import android.util.Log
 import com.audiospotapplication.DataLayer.DataRepository
 import com.audiospotapplication.DataLayer.Model.BookmarkBody
-import com.audiospotapplication.DataLayer.Model.ChaptersResponse
-import com.audiospotapplication.DataLayer.Retrofit.RetrofitCallbacks
-import com.audiospotapplication.DataLayer.Retrofit.RetrofitResponseHandler
+import com.audiospotapplication.DataLayer.Model.ChaptersData
+import com.audiospotapplication.DataLayer.Model.Paragraph
 import com.snatik.storage.Storage
 import com.tonyodev.fetch2.*
 import com.tonyodev.fetch2core.DownloadBlock
 import com.visionvalley.letuno.DataLayer.RepositorySource
-import dm.audiostreamer.MediaMetaData
-import retrofit2.Call
 import java.io.File
 
+class BookChaptersPresenter(val mView: BookChaptersContract.View) : BookChaptersContract.Presenter,
+    FetchListener {
 
-class BookChaptersPresenter(val mView: BookChaptersContract.View) : BookChaptersContract.Presenter, FetchListener {
+    override fun setCurrentChapterTitle(title: String) {
+        currentChapterT = title
+    }
 
-    override fun validateChapterDownloaded(mediaData: MediaMetaData): String {
+    override fun getChapters(): List<ChaptersData>? {
+        return mRepoSource.getCurrentBookChapters()
+    }
+
+    override fun setCurrentChapterID(id: Int) {
+        this.currentChapterId = id
+    }
+
+    override fun getCurrentChapterParagraphs(): List<Paragraph>? {
+        return currentParagraphs
+    }
+
+    override fun setCurrentChapterParagraphs(paragraphs: List<Paragraph>) {
+        this.currentParagraphs = paragraphs
+    }
+
+    override fun getBookAuthor(): String {
+        return mRepoSource.getSavedBook()?.author!!
+    }
+
+    override fun getBookReleasedDate(): String {
+        return mRepoSource.getSavedBook()?.release_date!!
+    }
+
+    override fun getBookIcon(): String {
+        return mRepoSource.getSavedBook()?.cover!!
+    }
+
+    override fun getBookByID(mediaId: String?): ChaptersData? {
+        val items = chapters?.filter {
+            it.id == mediaId?.toInt()
+        }
+        if (items.isNullOrEmpty())
+            return null
+
+        return items[0]
+    }
+
+    override fun getSavedBookId(): String {
+        return mRepoSource.getSavedBook()?.id.toString()
+    }
+
+    override fun resetRepo() {
+        mRepoSource.clear()
+    }
+
+    override fun validateChapterDownloaded(data: ChaptersData): String {
         val storage = Storage(mView.getAppContext())
         val path = storage.internalCacheDirectory
 
         val newDir = path + File.separator + "AudioSpotDownloadsCache"
 
-        var fileNameStr = mediaData!!.mediaUrl.split("/")
+        val fileNameStr = data.id
 
-        if (storage.isFileExist(newDir + "/" + fileNameStr[fileNameStr.size - 1])) {
-            currentPath = newDir + "/" + fileNameStr[fileNameStr.size - 1]
+        if (storage.isFileExist("$newDir/$fileNameStr")) {
+            currentPath = "$newDir/$fileNameStr"
             return currentPath
         } else {
             return ""
@@ -39,27 +87,28 @@ class BookChaptersPresenter(val mView: BookChaptersContract.View) : BookChapters
 
     override fun onCancelled(download: Download) {
         mView.dismissLoading()
-
         mView.showDownloadComplete("Error in Item Downloading !.", currentPath)
         val storage = Storage(mView.getAppContext())
         val path = storage.internalCacheDirectory
-
         val newDir = path + File.separator + "AudioSpotDownloadsCache"
         currentPath = newDir + "/" + download.url
-
         storage.deleteFile(currentPath)
     }
 
     override fun onCompleted(download: Download) {
-        mView.dismissLoading()
+        mView.dismissDownloadingDialog()
         mView.showDownloadComplete("Item Downloaded !.", currentPath)
     }
 
     override fun onDeleted(download: Download) {
-        Log.d("onDEleted", "onDeleted")
+        Log.d("onDeleted", "onDeleted")
     }
 
-    override fun onDownloadBlockUpdated(download: Download, downloadBlock: DownloadBlock, totalBlocks: Int) {
+    override fun onDownloadBlockUpdated(
+        download: Download,
+        downloadBlock: DownloadBlock,
+        totalBlocks: Int
+    ) {
         Log.d("Blocked", "Blocked")
     }
 
@@ -80,8 +129,12 @@ class BookChaptersPresenter(val mView: BookChaptersContract.View) : BookChapters
         Log.d("onPaused", "onPaused")
     }
 
-    override fun onProgress(download: Download, etaInMilliSeconds: Long, downloadedBytesPerSecond: Long) {
-        Log.d("onProgress", "onProgress")
+    override fun onProgress(
+        download: Download,
+        etaInMilliSeconds: Long,
+        downloadedBytesPerSecond: Long
+    ) {
+        mView.updateProgress(download.progress)
     }
 
     override fun onQueued(download: Download, waitingOnNetwork: Boolean) {
@@ -96,97 +149,125 @@ class BookChaptersPresenter(val mView: BookChaptersContract.View) : BookChapters
         Log.d("onResumed", "onResumed")
     }
 
-    override fun onStarted(download: Download, downloadBlocks: List<DownloadBlock>, totalBlocks: Int) {
-        mView.showLoadingDialog()
+    override fun onStarted(
+        download: Download,
+        downloadBlocks: List<DownloadBlock>,
+        totalBlocks: Int
+    ) {
     }
 
     override fun onWaitingNetwork(download: Download) {
-
     }
 
-    override fun handleDownloadPressed(currentSong: MediaMetaData?) {
+    override fun handleDownloadPressed() {
 
         val storage = Storage(mView.getAppContext())
         val path = storage.internalCacheDirectory
 
-        val newDir = path + File.separator + "AudioSpotDownloadsCache"
-        var fileNameStr = currentSong!!.mediaUrl.split("/")
-        currentPath = newDir + "/" + fileNameStr[fileNameStr.size - 1]
+        if (chapters != null) {
+            val chapter = chapters!!.filter {
+                it.id == currentChapterId
+            }[0]
 
-        if (storage.isFileExist(currentPath)) {
-            mView.showMessage("Item Already Downloaded")
-            return
+            val newDir = path + File.separator + "AudioSpotDownloadsCache"
+            val fileNameStr = chapter.id
+
+            currentPath = "$newDir/$fileNameStr"
+
+            if (storage.isFileExist(currentPath)) {
+                mView.dismissLoading()
+                mView.showMessage("Already Downloaded")
+                return
+            }
+
+            mView.showDownloadingDialog()
+
+            val request = Request(chapter.sound_file, currentPath)
+            request.priority = Priority.HIGH
+            request.networkType = NetworkType.ALL
+            fetch.enqueue(request)
+            fetch.addListener(this)
         }
-        val request = Request(currentSong!!.mediaUrl, currentPath)
-        request.priority = Priority.HIGH
-        request.networkType = NetworkType.ALL
-        fetch.enqueue(request)
-        fetch.addListener(this)
+    }
+
+    override fun handleBookmarkClicked(timeString: String) {
+        val savedbook = mRepoSource.getSavedBook()
+
+        val bookmarkBody = BookmarkBody()
+        bookmarkBody.bookmarkTime = timeString
+        bookmarkBody.chapter_id = currentChapterId
+        if (savedbook != null) {
+            bookmarkBody.bookId = savedbook.id
+        }
+        if (savedbook != null) {
+            bookmarkBody.url = savedbook.cover
+        }
+        bookmarkBody.chapter_name = currentChapterT
+        if (savedbook != null) {
+            bookmarkBody.bookName = savedbook.title
+        }
+
+        mRepoSource.setBookmarkData(bookmarkBody)
+
+        mView.showAddBookmarkScreen()
     }
 
     override fun isBookMine(): Boolean {
         return mRepoSource.isBookMine()
     }
 
-    override fun handleBookmarkClicked(timeString: String, id: Int, title: String) {
-        var savedbook = mRepoSource.getSavedBook()
-
-        var bookmarkBody = BookmarkBody()
-        bookmarkBody.bookmarkTime = timeString
-        bookmarkBody.chapter_id = id
-        bookmarkBody.bookId = savedbook.id
-        bookmarkBody.url = savedbook.cover
-        bookmarkBody.chapter_name = title
-        bookmarkBody.bookName = savedbook.title
-
-        mRepoSource.setBookmarkData(bookmarkBody)
-        mView.showAddBookmarkScreen()
-    }
-
     override fun start() {
 
-        mRepoSource = DataRepository.getInstance(mView.getAppContext())
-        var book = mRepoSource.getSavedBook()
-        var bookmark = mRepoSource.getBookmark()
+        mRepoSource = DataRepository.getInstance(mView.getAppContext()!!)
 
-        mView.setBookName(book.title)
-        mView.setBookImage(book.cover)
-        mView.showLoadingDialog()
-        mRepoSource.getBookChapters(object : RetrofitCallbacks.ChaptersResponseCallback {
-            override fun onSuccess(result: ChaptersResponse?) {
-                mView.dismissLoading()
-                val status = RetrofitResponseHandler.validateResponseStatus(result)
-                if (status == RetrofitResponseHandler.Companion.Status.VALID) {
-                    mView.setChapters(result!!.data)
+        val book = mRepoSource.getSavedBook()
 
-                    if (bookmark != null) {
-//                        mView.setBookmark(bookmark)
-//                        mRepoSource.saveBookmark(null)
+        val bookmark = mRepoSource.getBookmark()
 
-                        var chapterData = result!!.data.filter {
-                            it.id == bookmark!!.chapter_id
-                        }[0]
+        val isToPlayFirstChapter = mRepoSource.getIsPlayFirstChapter()
 
-                        mView.setBookmark(bookmark)
+        chapters = mRepoSource.getCurrentBookChapters()
 
-                        mView.onChapterClicked(chapterData)
-                    }
+        if (chapters != null) {
+            if (book != null) {
+                mView.setBookName(book.title)
+                mView.setBookImage(book.cover)
+                mView.setChapters(chapters!!, book.id)
+            }
+
+            Handler().postDelayed({
+                if (isToPlayFirstChapter) {
+                    mView.playChapter(chapters!![0], 0)
+                    mRepoSource.setIsPlayFirstChapter(false)
                 }
-            }
 
-            override fun onFailure(call: Call<ChaptersResponse>?, t: Throwable?) {
-                mView.dismissLoading()
-            }
-        })
+                if (bookmark != null) {
+                    val chapterData = chapters!!.filter {
+                        it.id == bookmark.chapter_id
+                    }[0]
+                    val index = chapters!!.indexOfFirst {
+                        it.id == bookmark.chapter_id
+                    }
+                    mView.setBookmark(bookmark)
+                    mView.playChapter(chapterData, index)
+                }
+            }, 1500)
 
+            val fetchConfiguration = FetchConfiguration.Builder(mView.getAppContext()!!)
+                .setDownloadConcurrentLimit(1)
+                .build()
 
-        var fetchConfiguration = FetchConfiguration.Builder(mView.getAppContext()!!)
-            .setDownloadConcurrentLimit(1)
-            .build()
+            fetch = Fetch.Impl.getInstance(fetchConfiguration)
 
-        fetch = Fetch.Impl.getInstance(fetchConfiguration);
+        } else {
+            mView.showHomepageScreen()
+        }
     }
 
+    private var currentChapterId: Int = 0
+    private var currentChapterT: String = ""
+    private var currentParagraphs: List<Paragraph>? = null
+    private var chapters: List<ChaptersData>? = null
     private lateinit var currentPath: String
     lateinit var mRepoSource: RepositorySource
     lateinit var fetch: Fetch

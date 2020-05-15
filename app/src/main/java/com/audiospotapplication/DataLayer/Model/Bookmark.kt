@@ -10,5 +10,4 @@ data class Bookmark(
     val time: Int,
     val sound_file: String,
     val book_cover: String
-
 )

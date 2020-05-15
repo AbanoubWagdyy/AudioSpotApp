@@ -1,16 +1,14 @@
 package com.audiospotapplication.UI.rateBook
 
 import android.content.Context
-import android.content.Intent
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.audiospot.DataLayer.Model.Book
+import com.audiospotapplication.BaseFragment
 
 import com.audiospotapplication.R
-import com.audiospotapplication.UI.homepage.HomepageActivity
 import com.audiospotapplication.utils.DialogUtils
 import com.audiospotapplication.utils.ImageUtils
 import com.google.android.material.snackbar.Snackbar
@@ -18,17 +16,15 @@ import com.willy.ratingbar.BaseRatingBar
 import kotlinx.android.synthetic.main.fragment_rate_book.*
 
 
-class RateBookFragment : Fragment(), RateBookContract.View {
+class RateBookFragment : BaseFragment(), RateBookContract.View {
 
     override fun showHompageScreen() {
-        val intent = Intent(activity!!, HomepageActivity::class.java)
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
-        startActivity(intent)
         activity!!.finish()
     }
 
     override fun showMessage(message: String) {
-        Snackbar.make(activity!!.findViewById(android.R.id.content), message, Snackbar.LENGTH_LONG).show()
+        if (activity != null)
+            Snackbar.make(activity!!.findViewById(android.R.id.content), message, Snackbar.LENGTH_LONG).show()
     }
 
     override fun bindResponse(bookDetailsData: Book) {
@@ -44,7 +40,7 @@ class RateBookFragment : Fragment(), RateBookContract.View {
             }
             tvNarrator.text = builder.toString().substring(0, builder.toString().length - 1)
         }
-        ImageUtils.setImageFromUrlIntoImageViewUsingPicasso(
+        ImageUtils.setImageFromUrlIntoImageViewUsingGlide(
             bookDetailsData.cover,
             activity!!.applicationContext,
             ivBook
@@ -77,7 +73,7 @@ class RateBookFragment : Fragment(), RateBookContract.View {
 
         mPresenter.start()
 
-        ratingBarUser.setOnRatingChangeListener(object : BaseRatingBar.OnRatingChangeListener{
+        ratingBarUser.setOnRatingChangeListener(object : BaseRatingBar.OnRatingChangeListener {
             override fun onRatingChange(ratingBar: BaseRatingBar?, rating: Float, fromUser: Boolean) {
                 this@RateBookFragment.rating = ratingBar!!.rating
             }
@@ -95,5 +91,5 @@ class RateBookFragment : Fragment(), RateBookContract.View {
     }
 
     lateinit var mPresenter: RateBookContract.Presenter
-    var rating : Float = 0.0f
+    var rating: Float = 5.0f
 }

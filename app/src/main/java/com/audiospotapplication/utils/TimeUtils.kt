@@ -38,7 +38,6 @@ class TimeUtils {
             val df = SimpleDateFormat("HH:mm:ss") // HH for 0-23
             df.setTimeZone(TimeZone.getTimeZone("GMT"))
             val timeString = df.format(d)
-
             return timeString
         }
     }

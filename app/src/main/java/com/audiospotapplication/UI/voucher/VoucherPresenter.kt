@@ -10,9 +10,9 @@ import retrofit2.Call
 class VoucherPresenter(val mView: VoucherContract.View) : VoucherContract.Presenter {
 
     override fun applyVoucher(voucher: String) {
-        if(voucher.equals("")){
+        if (voucher.equals("")) {
             mView.showMessage("Please Enter Valid Voucher")
-        }else{
+        } else {
             mView.showLoadingDialog()
             mRepositorySource.receiveBook(voucher, object : RetrofitCallbacks.BookDetailsResponseCallback {
                 override fun onSuccess(result: BookDetailsResponse?) {
@@ -21,22 +21,23 @@ class VoucherPresenter(val mView: VoucherContract.View) : VoucherContract.Presen
                     if (status == RetrofitResponseHandler.Companion.Status.VALID) {
                         mRepositorySource.saveVoucherBook(result.data)
                         mView.showCongratulationScreen()
-                    }else{
+                    } else if (status == RetrofitResponseHandler.Companion.Status.UNAUTHORIZED) {
+                        mView!!.showLoginPage()
+                    } else {
                         mView.showMessage(result.message)
                     }
                 }
 
                 override fun onFailure(call: Call<BookDetailsResponse>?, t: Throwable?) {
                     mView.dismissLoading()
-                    mView.showMessage("Please Check your internet connection")
+                    mView.showMessage("Please try again")
                 }
             })
         }
-
     }
 
     override fun start() {
-        mRepositorySource = DataRepository.getInstance(mView.getAppContext())
+        mRepositorySource = DataRepository.getInstance(mView.getAppContext()!!)
     }
 
     lateinit var mRepositorySource: RepositorySource

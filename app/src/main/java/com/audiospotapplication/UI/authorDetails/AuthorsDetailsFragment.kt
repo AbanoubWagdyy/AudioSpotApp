@@ -3,12 +3,13 @@ package com.audiospotapplication.UI.authorDetails
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.audiospot.DataLayer.Model.Book
+import com.audiospotapplication.BaseFragment
 import com.audiospotapplication.DataLayer.Model.BookListResponse
 
 import com.audiospotapplication.R
@@ -20,7 +21,7 @@ import com.audiospotapplication.utils.ImageUtils
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.fragment_authors_details.*
 
-class AuthorsDetailsFragment : Fragment(), AuthorDetailsContract.View, onBookItemClickListener {
+class AuthorsDetailsFragment : BaseFragment(), AuthorDetailsContract.View, onBookItemClickListener {
 
     override fun showBookDetailsScreen() {
         val intent = Intent(activity!!, BookDetailsActivity::class.java)
@@ -32,6 +33,9 @@ class AuthorsDetailsFragment : Fragment(), AuthorDetailsContract.View, onBookIte
     }
 
     override fun onPlayClicked(book: Book) {
+        if (playBookSample(book) == R.drawable.ic_pause) {
+            handlePlayPause()
+        }
     }
 
     override fun setAuthorBio(bio: String) {
@@ -39,25 +43,45 @@ class AuthorsDetailsFragment : Fragment(), AuthorDetailsContract.View, onBookIte
     }
 
     override fun setAuthorName(name: String) {
-        tvAuthor.text = name
+        tvAuthor.text = "$name #"
     }
 
     override fun setAuthorImage(photo: String) {
-        ImageUtils.setImageFromUrlIntoImageViewUsingPicasso(
+        ImageUtils.setImageFromUrlIntoImageViewUsingGlide(
             photo, activity!!.applicationContext,
             ivAuthor, false
         )
     }
 
     override fun setBookList(result: BookListResponse?) {
-        recyclerBooks.layoutManager = LinearLayoutManager(context)
-        recyclerBooks.setHasFixedSize(true)
-        recyclerBooks.isNestedScrollingEnabled = false
-        recyclerBooks.adapter = BooksAdapter(result!!.data, this)
+        result?.let {
+            this.listMyBooks = it.data
+            recyclerBooks.layoutManager = LinearLayoutManager(context)
+            recyclerBooks.setHasFixedSize(true)
+            recyclerBooks.isNestedScrollingEnabled = false
+
+            adapter = BooksAdapter(
+                listMyBooks, this,
+                getPlaylistIdObserver().value!!, isPlaying
+            )
+
+            recyclerBooks.adapter = adapter
+
+            getPlaylistIdObserver().observe(this, Observer {
+                if (adapter != null && !it.equals(""))
+                    adapter!!.updatePlaylistId(it, isPlaying)
+            })
+
+            getPlayingObserver().observe(this, Observer {
+                if (adapter != null)
+                    adapter!!.updatePlaylistId(getPlaylistIdObserver().value, it)
+            })
+        }
     }
 
     override fun showErrorMessage(message: String) {
-        Snackbar.make(activity!!.findViewById(android.R.id.content), message, Snackbar.LENGTH_SHORT).show()
+        Snackbar.make(activity!!.findViewById(android.R.id.content), message, Snackbar.LENGTH_SHORT)
+            .show()
     }
 
 
@@ -96,4 +120,7 @@ class AuthorsDetailsFragment : Fragment(), AuthorDetailsContract.View, onBookIte
         fun newInstance() =
             AuthorsDetailsFragment()
     }
+
+    private lateinit var listMyBooks: List<Book>
+    private var adapter: BooksAdapter? = null
 }

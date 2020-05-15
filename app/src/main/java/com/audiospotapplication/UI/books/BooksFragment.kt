@@ -3,13 +3,14 @@ package com.audiospotapplication.UI.books
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.audiospot.DataLayer.Model.Book
+import com.audiospotapplication.BaseFragment
 import com.audiospotapplication.DataLayer.Model.BookListResponse
 import com.audiospotapplication.DataLayer.Retrofit.GlobalKeys
 import com.audiospotapplication.R
@@ -21,7 +22,8 @@ import com.github.zawadz88.materialpopupmenu.popupMenu
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.fragment_books.*
 
-class BooksFragment(var ivArrow: ImageView) : Fragment(), BooksContract.View, onBookItemClickListener {
+class BooksFragment(var ivArrow: ImageView) : BaseFragment(), BooksContract.View,
+    onBookItemClickListener {
 
     override fun showBookDetailsScreen() {
         val intent = Intent(activity!!, BookDetailsActivity::class.java)
@@ -41,29 +43,55 @@ class BooksFragment(var ivArrow: ImageView) : Fragment(), BooksContract.View, on
     }
 
     override fun onPlayClicked(book: Book) {
-
+        if (playBookSample(book) == R.drawable.ic_pause) {
+            handlePlayPause()
+        }
     }
 
     override fun setBooksList(result: BookListResponse?) {
-        if (result != null) {
+        result?.let {
+            this.listMyBooks = it.data
             recyclerBooks.layoutManager = LinearLayoutManager(context)
             recyclerBooks.setHasFixedSize(true)
             recyclerBooks.isNestedScrollingEnabled = false
-            recyclerBooks.adapter = BooksAdapter(result!!.data, this)
+
+            adapter = BooksAdapter(
+                listMyBooks, this,
+                getPlaylistIdObserver().value!!, isPlaying
+            )
+
+            recyclerBooks.adapter = adapter
+
+            getPlaylistIdObserver().observe(this, Observer {
+                if (adapter != null && !it.equals(""))
+                    adapter!!.updatePlaylistId(it, isPlaying)
+            })
+
+            getPlayingObserver().observe(this, Observer {
+                if (adapter != null)
+                    adapter!!.updatePlaylistId(getPlaylistIdObserver().value, it)
+            })
         }
     }
 
     override fun showErrorMessage(message: String) {
-        Snackbar.make(activity!!.findViewById(android.R.id.content), message, Snackbar.LENGTH_SHORT).show()
+        Snackbar.make(activity!!.findViewById(android.R.id.content), message, Snackbar.LENGTH_SHORT)
+            .show()
     }
 
     override fun getAppContext(): Context? {
         return activity!!.applicationContext
     }
 
+    private var adapter: BooksAdapter? = null
+
     lateinit var mPresenter: BooksContract.Presenter
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         val view = inflater.inflate(R.layout.fragment_books, container, false)
         return view
     }
@@ -132,4 +160,6 @@ class BooksFragment(var ivArrow: ImageView) : Fragment(), BooksContract.View, on
         fun newInstance(ivArrow: ImageView) =
             BooksFragment(ivArrow)
     }
+
+    private lateinit var listMyBooks: List<Book>
 }

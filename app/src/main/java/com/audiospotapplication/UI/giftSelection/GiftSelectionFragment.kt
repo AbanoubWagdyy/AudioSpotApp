@@ -4,24 +4,28 @@ package com.audiospotapplication.UI.giftSelection
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.audiospot.DataLayer.Model.Book
+import com.audiospotapplication.BaseFragment
 
 import com.audiospotapplication.R
-import com.audiospotapplication.UI.cart.CartActivity
 import com.audiospotapplication.UI.giveAgift.GiveGiftActivity
+import com.audiospotapplication.UI.payment.PaymentActivity
 import com.audiospotapplication.utils.DialogUtils
 import com.audiospotapplication.utils.ImageUtils
+import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.fragment_gift_selection.*
 
-class GiftSelectionFragment : Fragment(), GiftSelectionContract.View {
+class GiftSelectionFragment : BaseFragment(), GiftSelectionContract.View {
 
-    override fun showCartScreen() {
-        val intent = Intent(activity!!, CartActivity::class.java)
+    override fun showPayment(id: Int, quantity: Int) {
+        val intent = Intent(activity!!, PaymentActivity::class.java)
+        intent.putExtra("BOOKID", id.toString())
+        intent.putExtra("VOUCHER", quantity.toString())
         startActivity(intent)
+        activity!!.finish()
     }
 
     override fun showGiftSCreen() {
@@ -54,7 +58,7 @@ class GiftSelectionFragment : Fragment(), GiftSelectionContract.View {
             }
             tvNarrator.text = builder.toString().substring(0, builder.toString().length - 1)
         }
-        ImageUtils.setImageFromUrlIntoImageViewUsingPicasso(
+        ImageUtils.setImageFromUrlIntoImageViewUsingGlide(
             bookDetailsData.cover,
             activity!!.applicationContext,
             ivBook
@@ -62,7 +66,12 @@ class GiftSelectionFragment : Fragment(), GiftSelectionContract.View {
     }
 
     override fun showMessage(message: String) {
-
+        if (activity != null)
+            Snackbar.make(
+                activity!!.findViewById(android.R.id.content),
+                message,
+                Snackbar.LENGTH_SHORT
+            ).show()
     }
 
     override fun onCreateView(
@@ -76,8 +85,10 @@ class GiftSelectionFragment : Fragment(), GiftSelectionContract.View {
         super.onViewCreated(view, savedInstanceState)
         relativeAdd.setOnClickListener {
             var quantityStrAsInt = quantity.text.toString().toInt()
-            quantityStrAsInt += 1
-            quantity.text = quantityStrAsInt.toString()
+            if (quantityStrAsInt < 5) {
+                quantityStrAsInt += 1
+                quantity.text = quantityStrAsInt.toString()
+            }
         }
 
         relativeMinus.setOnClickListener {

@@ -8,7 +8,6 @@ import kotlinx.android.synthetic.main.back_header.*
 
 class CartActivity : BaseActivity() {
 
-
     private var fragment = CartFragment.newInstance()
 
     override fun getHeaderTitle(): String {

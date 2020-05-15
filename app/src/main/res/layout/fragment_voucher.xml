@@ -20,7 +20,7 @@
                android:letterSpacing="0.07"
                android:lineSpacingExtra="-3.5sp"
                android:gravity="center_horizontal"
-               android:text="Receive a book"/>
+               android:text="@string/receive_a_book"/>
 
        <TextView
                android:layout_width="wrap_content"
@@ -30,7 +30,7 @@
                android:letterSpacing="0.07"
                android:layout_marginTop="20dp"
                android:lineSpacingExtra="10sp"
-               android:text="Please enter your voucher"/>
+               android:text="@string/please_enter_voucher"/>
 
        <EditText
                android:id="@+id/voucher"
@@ -64,7 +64,7 @@
                    android:lineSpacingExtra="10sp"/>
 
            <Button
-                   android:text="Submit"
+                   android:text="@string/submit"
                    android:layout_width="200dp"
                    android:layout_height="40dp"
                    android:layout_weight="1"

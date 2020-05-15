@@ -1,16 +1,23 @@
 package com.audiospotapplication.UI.register
 
 import androidx.appcompat.app.AppCompatActivity
+import com.audiospotapplication.BaseView
 
 
 interface RegisterContract {
 
     interface Presenter {
-        fun register(first_name: String, last_name: String, email: String, mobile_phone: String, password: String, confirm_password: String)
+        fun register(
+            first_name: String,
+            last_name: String,
+            email: String,
+            mobile_phone: String,
+            password: String,
+            confirm_password: String
+        )
     }
 
-    interface View {
-
+    interface View{
         fun getActivity(): AppCompatActivity
         fun viewHomepageScreen()
         fun viewIncorrectDataMessage()

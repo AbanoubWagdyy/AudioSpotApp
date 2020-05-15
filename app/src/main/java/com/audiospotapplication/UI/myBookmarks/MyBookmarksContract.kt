@@ -1,6 +1,7 @@
 package com.audiospotapplication.UI.myBookmarks
 
 import android.content.Context
+import com.audiospotapplication.BaseView
 import com.audiospotapplication.DataLayer.Model.Bookmark
 
 interface MyBookmarksContract {
@@ -10,7 +11,7 @@ interface MyBookmarksContract {
         fun saveBookmark(bookmark: Bookmark)
     }
 
-    interface View {
+    interface View : BaseView {
         fun getAppContext(): Context?
         fun showLoading()
         fun dismissLoading()

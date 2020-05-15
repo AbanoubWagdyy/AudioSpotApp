@@ -18,7 +18,7 @@
                 android:textColor="@color/white"
                 android:layout_marginTop="10dp"
                 android:layout_marginStart="25dp"
-                android:text="New Releases"/>
+                android:text=""/>
 
         <ImageView android:layout_width="wrap_content"
                    android:layout_height="wrap_content"

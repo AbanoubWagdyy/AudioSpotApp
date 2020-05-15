@@ -55,7 +55,7 @@
                     android:textColor="#a4a4a4"
                     android:letterSpacing="0.07"
                     android:lineSpacingExtra="19.2sp"
-                    android:text="By   "/>
+                    android:text="@string/by"/>
 
             <TextView
                     android:id="@+id/username"
@@ -64,9 +64,10 @@
                     android:textSize="15.5sp"
                     android:textColor="@color/white"
                     android:textStyle="bold"
+                    android:layout_marginStart="5dp"
                     android:letterSpacing="0.07"
                     android:lineSpacingExtra="19.2sp"
-                    android:text="username"/>
+                    android:text=""/>
 
             <TextView
                     android:layout_width="wrap_content"
@@ -74,8 +75,9 @@
                     android:textSize="13.5sp"
                     android:textColor="#a4a4a4"
                     android:letterSpacing="0.07"
+                    android:layout_marginStart="5dp"
                     android:lineSpacingExtra="19.2sp"
-                    android:text="  on "/>
+                    android:text="@string/on"/>
 
             <TextView
                     android:id="@+id/date"
@@ -83,6 +85,7 @@
                     android:layout_height="wrap_content"
                     android:textSize="13.5sp"
                     android:textColor="#a4a4a4"
+                    android:layout_marginStart="5dp"
                     android:letterSpacing="0.07"
                     android:lineSpacingExtra="19.2sp"
                     android:text=""/>
@@ -98,7 +101,7 @@
                 android:textColor="@color/white"
                 android:letterSpacing="0.07"
                 android:lineSpacingExtra="19.2sp"
-                android:text="“ Review title ”"/>
+                android:text=""/>
 
         <TextView
                 android:id="@+id/tvReviewBody"
@@ -109,7 +112,7 @@
                 android:textColor="@color/white"
                 android:letterSpacing="0.07"
                 android:lineSpacingExtra="5.5sp"
-                android:text="Review body"/>
+                android:text=""/>
     </LinearLayout>
 
     <View

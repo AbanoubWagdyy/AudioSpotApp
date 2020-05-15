@@ -5,6 +5,7 @@ import com.audiospot.DataLayer.Model.BookDetailsResponse;
 import com.audiospot.DataLayer.Model.CategoriesListResponse;
 import com.audiospot.DataLayer.Model.HomepageRepsonse;
 import com.audiospotapplication.DataLayer.Model.*;
+
 import retrofit2.Call;
 import retrofit2.http.*;
 
@@ -51,7 +52,7 @@ public interface RetrofitService {
             "Content-type: application/json"
     })
     @POST("reset-password")
-    Call<AuthResponse> resetPassword(
+    Call<Response> resetPassword(
             @Query("email") String email);
 
     //Logout
@@ -218,13 +219,22 @@ public interface RetrofitService {
     Call<BookDetailsResponse> receiveBook(
             @Path("voucher") String voucher);
 
+//    @Headers({
+//            "Accept: application/json",
+//            "Content-type: application/json"
+//    })
+//    @POST("add-promo-code")
+//    Call<PromoCodeResponse> addPromoCode(
+//            @Query("promo_code") String promo_code);
+
+
     @Headers({
             "Accept: application/json",
             "Content-type: application/json"
     })
-    @POST("add-promo-code")
+    @GET("promo-code/{promo_code}")
     Call<PromoCodeResponse> addPromoCode(
-            @Query("promo_code") String promo_code);
+            @Path("promo_code") String promo_code);
 
     @Headers({
             "Accept: application/json",
@@ -331,4 +341,33 @@ public interface RetrofitService {
     })
     @GET("narrator/{narratorId}")
     Call<BookDetailsResponse> getNarratorsProfile(@Path("narratorId") int narratorId);
+
+    @Headers({
+            "Accept: application/json",
+            "Content-type: application/json"
+    })
+    @POST("create-order")
+    Call<CreateOrderResponse> createOrder(@Body CreateOrderBody body);
+
+    @Headers({
+            "Accept: application/json",
+            "Content-type: application/json"
+    })
+    @GET("variables/paypal_status")
+    Call<PaypalStatusResponse> getPaypalStatus();
+
+    @Headers({
+            "Accept: application/json",
+            "Content-type: application/json"
+    })
+    @GET("variables/paypal_key")
+    Call<PaypalStatusResponse> getPaypalKey();
+
+    @Headers({
+            "Accept: application/json",
+            "Content-type: application/json"
+    })
+    @GET("variables/paypal_amount")
+    Call<PaypalStatusResponse> getPaypalAmount();
+
 }

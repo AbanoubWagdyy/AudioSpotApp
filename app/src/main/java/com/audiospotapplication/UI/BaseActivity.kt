@@ -1,13 +1,14 @@
 package com.audiospotapplication.UI
 
-import android.app.PendingIntent
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import com.audiospotapplication.BaseView
 import com.audiospotapplication.DataLayer.DataRepository
 import com.audiospotapplication.DataLayer.Model.BookListResponse
 import com.audiospotapplication.DataLayer.Retrofit.RetrofitCallbacks
@@ -19,36 +20,42 @@ import com.audiospotapplication.UI.homepage.Library.LibraryFragment
 import com.audiospotapplication.UI.homepage.home.HomeFragment
 import com.audiospotapplication.UI.homepage.menu.MenuFragment
 import com.audiospotapplication.UI.homepage.myBooks.MyBooksFragment
+import com.audiospotapplication.UI.login.LoginActivity
 import com.audiospotapplication.UI.promoCodeCongratulations.CongratulationsActivity
 import com.audiospotapplication.UI.rateBook.RateBookActivity
-import com.audiospotapplication.UI.splash.SplashActivity
 import com.audiospotapplication.UI.voucher.VoucherActivity
 import com.visionvalley.letuno.DataLayer.RepositorySource
-import dm.audiostreamer.AudioStreamingManager
-import dm.audiostreamer.MediaMetaData
-import kotlinx.android.synthetic.main.activity_base.*
+import kotlinx.android.synthetic.main.audio_spot_activity_base.*
 import kotlinx.android.synthetic.main.back_header.*
 import kotlinx.android.synthetic.main.header.*
 import retrofit2.Call
 
-abstract class BaseActivity : AppCompatActivity(),
-    MyBooksFragment.onItemPlayClickListener,
-    HomeFragment.onItemPlayClickListener {
+abstract class BaseActivity : AppCompatActivity(), BaseView {
+
+    override fun showLoginPage() {
+        mRepositorySource.reset()
+        val intent = Intent(this, LoginActivity::class.java)
+        intent.addFlags(
+            Intent.FLAG_ACTIVITY_CLEAR_TOP or
+                    Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        )
+        startActivity(intent)
+        finish()
+    }
 
     lateinit var ivArrow: ImageView
     lateinit var tabShown: ActiveTab
     lateinit var mRepositorySource: RepositorySource
-    private var streamingManager: AudioStreamingManager? = null
-    private var listOfSongs: MutableList<MediaMetaData> = ArrayList()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_base)
+        setContentView(R.layout.audio_spot_activity_base)
+
+        if (supportActionBar != null)
+            supportActionBar!!.hide()
 
         mRepositorySource = DataRepository.getInstance(applicationContext)
-        tabShown = mRepositorySource.getActiveTab()
-
-        configAudioStreamer()
+        tabShown = mRepositorySource.getActiveTab()!!
 
         tvTitle.text = getHeaderTitle()
         ivArrow = findViewById(R.id.ivArrow)
@@ -65,7 +72,7 @@ abstract class BaseActivity : AppCompatActivity(),
 
         manageEditVisibility()
 
-        validateTabColorVisibility(mRepositorySource.getActiveTab())
+        validateTabColorVisibility(mRepositorySource.getActiveTab()!!)
 
         supportFragmentManager.beginTransaction()
             .replace(R.id.container, getFragment(ivArrow)).commitAllowingStateLoss()
@@ -79,15 +86,17 @@ abstract class BaseActivity : AppCompatActivity(),
                 tabShown = ActiveTab.HOME
                 if (mRepositorySource.getActiveTab() != ActiveTab.HOME) {
                     supportFragmentManager.beginTransaction()
-                        .replace(R.id.container, HomeFragment.newInstance()).commitAllowingStateLoss()
+                        .replace(R.id.container, HomeFragment.newInstance())
+                        .commitAllowingStateLoss()
+                    tvTitle.text = getString(R.string.app_name)
                     ivArrow.visibility = View.GONE
                 } else {
                     supportFragmentManager.beginTransaction()
                         .replace(R.id.container, getFragment(ivArrow)).commitAllowingStateLoss()
                     ivArrow.visibility = getArrowHeaderVisibility()
+                    tvTitle.text = getHeaderTitle()
                 }
                 validateTabColorVisibility(tabShown)
-
             }
         }
 
@@ -96,12 +105,15 @@ abstract class BaseActivity : AppCompatActivity(),
                 tabShown = ActiveTab.LIBRARY
                 if (mRepositorySource.getActiveTab() != ActiveTab.LIBRARY) {
                     supportFragmentManager.beginTransaction()
-                        .replace(R.id.container, LibraryFragment.newInstance()).commitAllowingStateLoss()
+                        .replace(R.id.container, LibraryFragment.newInstance())
+                        .commitAllowingStateLoss()
                     ivArrow.visibility = View.GONE
+                    tvTitle.text = getString(R.string.library)
                 } else {
                     supportFragmentManager.beginTransaction()
                         .replace(R.id.container, getFragment(ivArrow)).commitAllowingStateLoss()
                     ivArrow.visibility = getArrowHeaderVisibility()
+                    tvTitle.text = getHeaderTitle()
                 }
                 validateTabColorVisibility(tabShown)
             }
@@ -112,12 +124,15 @@ abstract class BaseActivity : AppCompatActivity(),
                 tabShown = ActiveTab.MYBOOKS
                 if (mRepositorySource.getActiveTab() != ActiveTab.MYBOOKS) {
                     supportFragmentManager.beginTransaction()
-                        .replace(R.id.container, MyBooksFragment.newInstance()).commitAllowingStateLoss()
+                        .replace(R.id.container, MyBooksFragment.newInstance())
+                        .commitAllowingStateLoss()
                     ivArrow.visibility = View.GONE
+                    tvTitle.text = getString(R.string.menu_my_books)
                 } else {
                     supportFragmentManager.beginTransaction()
                         .replace(R.id.container, getFragment(ivArrow)).commitAllowingStateLoss()
                     ivArrow.visibility = getArrowHeaderVisibility()
+                    tvTitle.text = getHeaderTitle()
                 }
                 validateTabColorVisibility(tabShown)
             }
@@ -128,12 +143,15 @@ abstract class BaseActivity : AppCompatActivity(),
                 tabShown = ActiveTab.MENU
                 if (mRepositorySource.getActiveTab() != ActiveTab.MENU) {
                     supportFragmentManager.beginTransaction()
-                        .replace(R.id.container, MenuFragment.newInstance()).commitAllowingStateLoss()
+                        .replace(R.id.container, MenuFragment.newInstance())
+                        .commitAllowingStateLoss()
                     ivArrow.visibility = View.GONE
+                    tvTitle.text = getString(R.string.menu)
                 } else {
                     supportFragmentManager.beginTransaction()
                         .replace(R.id.container, getFragment(ivArrow)).commitAllowingStateLoss()
                     ivArrow.visibility = getArrowHeaderVisibility()
+                    tvTitle.text = getHeaderTitle()
                 }
                 validateTabColorVisibility(tabShown)
             }
@@ -166,88 +184,52 @@ abstract class BaseActivity : AppCompatActivity(),
         super.onResume()
     }
 
-    private fun configAudioStreamer() {
-        streamingManager = AudioStreamingManager.getInstance(applicationContext)
-        //Set PlayMultiple 'true' if want to playing sequentially one by one songs
-        // and provide the list of songs else set it 'false'
-        streamingManager!!.isPlayMultiple = mRepositorySource.getAuthResponse() != null
-
-        streamingManager!!.setMediaList(listOfSongs)
-
-        //If you want to show the Player Notification then set ShowPlayerNotification as true
-        //and provide the pending intent so that after click on notification it will redirect to an activity
-
-        streamingManager!!.setShowPlayerNotification(true)
-        streamingManager!!.setPendingIntentAct(getNotificationPendingIntent())
-    }
-
-    private fun getNotificationPendingIntent(): PendingIntent {
-        val intent = Intent(applicationContext, SplashActivity::class.java)
-        intent.setAction("openplayer")
-        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
-        return PendingIntent.getActivity(applicationContext, 0, intent, 0)
-    }
-
-
-    protected fun playSong(media: MediaMetaData) {
-        if (streamingManager != null) {
-            streamingManager!!.onPlay(media)
-        }
-    }
-
     private fun validateTabColorVisibility(tabShown: ActiveTab) {
         when (tabShown) {
             ActiveTab.HOME -> {
                 ivHome.setImageResource(R.mipmap.tab_home)
-                tvHome.setTextColor(resources.getColor(R.color.white))
+                tvHome.setTextColor(ContextCompat.getColor(applicationContext, R.color.white))
                 ivMenu.setImageResource(R.mipmap.tab_menu_inactive)
-                tvMenu.setTextColor(resources.getColor(R.color.grey))
+                tvMenu.setTextColor(ContextCompat.getColor(applicationContext,R.color.grey))
                 ivMyBooks.setImageResource(R.mipmap.tab_mybooks_inactive)
-                tvMyBooks.setTextColor(resources.getColor(R.color.grey))
+                tvMyBooks.setTextColor(ContextCompat.getColor(applicationContext,R.color.grey))
                 ivLibrary.setImageResource(R.mipmap.tab_library_inactive)
-                tvLibrary.setTextColor(resources.getColor(R.color.grey))
+                tvLibrary.setTextColor(ContextCompat.getColor(applicationContext,R.color.grey))
             }
 
             ActiveTab.LIBRARY -> {
                 ivHome.setImageResource(R.mipmap.tab_home_inactive)
-                tvHome.setTextColor(resources.getColor(R.color.grey))
+                tvHome.setTextColor(ContextCompat.getColor(applicationContext,R.color.grey))
                 ivMenu.setImageResource(R.mipmap.tab_menu_inactive)
-                tvMenu.setTextColor(resources.getColor(R.color.grey))
+                tvMenu.setTextColor(ContextCompat.getColor(applicationContext,R.color.grey))
                 ivMyBooks.setImageResource(R.mipmap.tab_mybooks_inactive)
-                tvMyBooks.setTextColor(resources.getColor(R.color.grey))
+                tvMyBooks.setTextColor(ContextCompat.getColor(applicationContext,R.color.grey))
                 ivLibrary.setImageResource(R.mipmap.tab_library)
-                tvLibrary.setTextColor(resources.getColor(R.color.white))
+                tvLibrary.setTextColor(ContextCompat.getColor(applicationContext,R.color.white))
             }
 
             ActiveTab.MYBOOKS -> {
                 ivHome.setImageResource(R.mipmap.tab_home_inactive)
-                tvHome.setTextColor(resources.getColor(R.color.grey))
+                tvHome.setTextColor(ContextCompat.getColor(applicationContext,R.color.grey))
                 ivMenu.setImageResource(R.mipmap.tab_menu_inactive)
-                tvMenu.setTextColor(resources.getColor(R.color.grey))
+                tvMenu.setTextColor(ContextCompat.getColor(applicationContext,R.color.grey))
                 ivMyBooks.setImageResource(R.mipmap.tab_mybooks)
-                tvMyBooks.setTextColor(resources.getColor(R.color.white))
+                tvMyBooks.setTextColor(ContextCompat.getColor(applicationContext,R.color.white))
                 ivLibrary.setImageResource(R.mipmap.tab_library_inactive)
-                tvLibrary.setTextColor(resources.getColor(R.color.grey))
+                tvLibrary.setTextColor(ContextCompat.getColor(applicationContext,R.color.grey))
             }
 
             ActiveTab.MENU -> {
                 ivHome.setImageResource(R.mipmap.tab_home_inactive)
-                tvHome.setTextColor(resources.getColor(R.color.grey))
+                tvHome.setTextColor(ContextCompat.getColor(applicationContext,R.color.grey))
                 ivMenu.setImageResource(R.mipmap.tab_menu)
-                tvMenu.setTextColor(resources.getColor(R.color.white))
+                tvMenu.setTextColor(ContextCompat.getColor(applicationContext,R.color.white))
                 ivMyBooks.setImageResource(R.mipmap.tab_mybooks_inactive)
-                tvMyBooks.setTextColor(resources.getColor(R.color.grey))
+                tvMyBooks.setTextColor(ContextCompat.getColor(applicationContext,R.color.grey))
                 ivLibrary.setImageResource(R.mipmap.tab_library_inactive)
-                tvLibrary.setTextColor(resources.getColor(R.color.grey))
+                tvLibrary.setTextColor(ContextCompat.getColor(applicationContext,R.color.grey))
             }
         }
-    }
-
-    override fun OnItemPlayed(mediaData: MediaMetaData) {
-        listOfSongs = ArrayList()
-        listOfSongs.add(mediaData)
-        configAudioStreamer()
-        playSong(mediaData)
     }
 
     override fun onStop() {
@@ -258,4 +240,8 @@ abstract class BaseActivity : AppCompatActivity(),
     abstract fun getHeaderTitle(): String
     abstract fun getArrowHeaderVisibility(): Int
     abstract fun getFragment(ivArrow: ImageView): Fragment
+
+    fun setCartNumber(size: Int?) {
+        tvCartCount.text = "$size"
+    }
 }
