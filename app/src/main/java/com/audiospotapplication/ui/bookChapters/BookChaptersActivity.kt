@@ -52,8 +52,12 @@ class BookChaptersActivity : AppCompatActivity(), View.OnClickListener,
 
     override fun onPlayerMetadataChanged(pexoMediaMetadata: PexoMediaMetadata?) {
         val chapter = mPresenter?.getBookByID(pexoMediaMetadata?.mediaId)
-        if (chapter != null)
+        if (chapter != null){
             text_songName.text = chapter.title
+            mPresenter?.setCurrentChapterID(chapter.id)
+            mPresenter?.setCurrentChapterParagraphs(chapter.paragraphs)
+            mPresenter?.setCurrentChapterTitle(chapter.title)
+        }
     }
 
     override fun onPlayerPlaybackStateChanged(state: PlaybackStateCompat?) {
@@ -203,7 +207,9 @@ class BookChaptersActivity : AppCompatActivity(), View.OnClickListener,
         btnPlay.setOnClickListener {
             if (mPresenter?.isBookMine()!!) {
                 pexoPlayerManager.setToAppOpen(true)
-                if (mPresenter!!.getSavedBookId().equals(pexoPlayerManager.pexoInstance.playlistId)) {
+                if (mPresenter!!.getSavedBookId()
+                        .equals(pexoPlayerManager.pexoInstance.playlistId)
+                ) {
                     pexoPlayerManager.onTogglePlayPause()
                 } else {
                     val chapters = mPresenter!!.getChapters()
@@ -223,7 +229,9 @@ class BookChaptersActivity : AppCompatActivity(), View.OnClickListener,
         btn_play_bottom.setOnClickListener {
             if (mPresenter?.isBookMine()!!) {
                 pexoPlayerManager.setToAppOpen(true)
-                if (mPresenter!!.getSavedBookId().equals(pexoPlayerManager.pexoInstance.playlistId)) {
+                if (mPresenter!!.getSavedBookId()
+                        .equals(pexoPlayerManager.pexoInstance.playlistId)
+                ) {
                     pexoPlayerManager.onTogglePlayPause()
                 } else {
                     val chapters = mPresenter!!.getChapters()
@@ -298,7 +306,7 @@ class BookChaptersActivity : AppCompatActivity(), View.OnClickListener,
     }
 
     override fun refreshAdapter() {
-       adapter.notifyDataSetChanged()
+        adapter.notifyDataSetChanged()
     }
 
     override fun onChapterClicked(data: ChaptersData, position: Int) {
@@ -454,7 +462,7 @@ class BookChaptersActivity : AppCompatActivity(), View.OnClickListener,
                 } else {
                     Snackbar.make(
                         findViewById(android.R.id.content),
-                        "No Paragraphs Found !.", Snackbar.LENGTH_SHORT
+                        "No Text Found !.", Snackbar.LENGTH_SHORT
                     ).show()
                 }
             }

@@ -129,7 +129,7 @@
     <string name="previous_button_description" translatable="false">Previous button</string>
     <string name="play_chapters">Play Chapters</string>
     <string name="chapters">Chapters</string>
-    <string name="paragraphs">Paragraphs</string>
+    <string name="texts">Text</string>
     <string name="select_language">Select Language:-</string>
     <string name="menu_my_books">My Books</string>
     <string name="loading">Loading …</string>

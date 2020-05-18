@@ -25,7 +25,7 @@
     <string name="a_z">A-Z</string>
     <string name="best_seller">الأكثر مبيعا</string>
     <string name="length">الطول:  </string>
-    <string name="average_review">Average customer review</string>
+    <string name="average_review">متوسط مراجعة العملاء</string>
     <string name="view_book_chapters">
         <u>اعرض فصول الكتاب</u>
     </string>
@@ -116,7 +116,7 @@
     <string name="or_find_us_here">أو تجدنا هنا</string>
     <string name="customer_reviews">تقييم العميل</string>
     <string name="settings">الإعدادات</string>
-    <string name="paragraphs">Paragraphs</string>
+    <string name="texts">النص</string>
 
     <string-array name="gender_entries">
         <item>النوع</item>
@@ -124,12 +124,12 @@
         <item>انثي</item>
     </string-array>
 
-    <string name="play_chapters">Play Chapters</string>
-    <string name="chapters">Chapters</string>
+    <string name="play_chapters">تشغيل الفصول</string>
+    <string name="chapters">الفصول</string>
     <string name="select_language">اختر اللغه:-</string>
-    <string name="menu_my_books">My Books</string>
+    <string name="menu_my_books">كتبي</string>
     <string name="loading">تحميل ...</string>
-    <string name="price_after_sale">Price After Sale</string>
+    <string name="price_after_sale">السعر بعد البيع</string>
     <string name="you_will_receive_voucher_as_email">سيتم ارسال ال voucher من خلال البريد الالكتروني</string>
     <string name="retry">اعادة المحاولة</string>
 
