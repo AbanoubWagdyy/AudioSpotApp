@@ -162,10 +162,12 @@ class BookChaptersActivity : AppCompatActivity(), View.OnClickListener,
     private fun uiInitialization() {
 
         ivParagraphs.setOnClickListener(this)
+        tvParagraphs.setOnClickListener(this)
         back.setOnClickListener(this)
         tvClose.setOnClickListener(this)
         ivParagraphs.setOnClickListener(this)
         ivChapters.setOnClickListener(this)
+        tvChapters.setOnClickListener(this)
 
         tvTitle.text = applicationContext.getString(R.string.chapters)
 
@@ -467,7 +469,27 @@ class BookChaptersActivity : AppCompatActivity(), View.OnClickListener,
                 }
             }
 
+            R.id.tvParagraphs -> {
+                if (getParagraphListItems()!!.size > 0) {
+                    FilterableListDialog.create(
+                        this,
+                        getParagraphListItems()
+                    ) {
+                        validateParagraphClicked(it)
+                    }.show()
+                } else {
+                    Snackbar.make(
+                        findViewById(android.R.id.content),
+                        "No Text Found !.", Snackbar.LENGTH_SHORT
+                    ).show()
+                }
+            }
+
             R.id.ivChapters -> {
+                sliding_layout.panelState = SlidingUpPanelLayout.PanelState.COLLAPSED
+            }
+
+            R.id.tvChapters -> {
                 sliding_layout.panelState = SlidingUpPanelLayout.PanelState.COLLAPSED
             }
 

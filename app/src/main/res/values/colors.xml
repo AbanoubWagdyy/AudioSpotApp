@@ -9,7 +9,9 @@
     <color name="black">#1c1d1e</color>
     <color name="light_black">#181818</color>
     <color name="dark_grey">#212121</color>
+    <color name="dark_grey2">#8b212121</color>
     <color name="light_grey">#848484</color>
+    <color name="light_grey2">#8b848484</color>
     <color name="grey">#a4a4a4</color>
     <color name="design_snackbar_background_color" tools:override="true">@color/colorPrimaryDark</color>
 </resources>
