@@ -69,13 +69,14 @@ class ChaptersAdapter(
         }
     }
 
-    fun validateChapterDownloaded(data: ChaptersData): Boolean {
+    private fun validateChapterDownloaded(data: ChaptersData): Boolean {
         val storage = Storage(context)
-        val path = storage.internalCacheDirectory
+
+        val path = storage.internalFilesDirectory
 
         val newDir = path + File.separator + "AudioSpotDownloadsCache"
+        val fileNameStr = data.id.toString() + "-" + data.title
 
-        val fileNameStr = data.id
 
         return storage.isFileExist("$newDir/$fileNameStr")
     }

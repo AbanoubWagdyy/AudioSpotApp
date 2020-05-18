@@ -1,7 +1,8 @@
-package com.audiospotapplication.ui.login
+    package com.audiospotapplication.ui.login
 
 import androidx.appcompat.app.AppCompatActivity
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.util.Base64
 import android.util.Log
@@ -17,6 +18,8 @@ import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.activity_login.*
 import org.json.JSONException
+import java.security.MessageDigest
+import java.security.NoSuchAlgorithmException
 
 class LoginActivity : AppCompatActivity(), LoginContract.View, FacebookHelper.OnFbSignInListener,
     GoogleSignInHelper.OnGoogleSignInListener {
@@ -47,21 +50,21 @@ class LoginActivity : AppCompatActivity(), LoginContract.View, FacebookHelper.On
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-//        try {
-//            val info = packageManager.getPackageInfo(
-//                "com.audiospotapplication",
-//                PackageManager.GET_SIGNATURES
-//            )
-//            for (signature in info.signatures) {
-//                val md = MessageDigest.getInstance("SHA")
-//                md.update(signature.toByteArray())
-//                Log.d("KeyHash:", Base64.encodeToString(md.digest(), Base64.DEFAULT))
-//            }
-//        } catch (e: PackageManager.NameNotFoundException) {
-//
-//        } catch (e: NoSuchAlgorithmException) {
-//
-//        }
+        try {
+            val info = packageManager.getPackageInfo(
+                "com.audiospotapplication",
+                PackageManager.GET_SIGNATURES
+            )
+            for (signature in info.signatures) {
+                val md = MessageDigest.getInstance("SHA")
+                md.update(signature.toByteArray())
+                Log.d("KeyHash:", Base64.encodeToString(md.digest(), Base64.DEFAULT))
+            }
+        } catch (e: PackageManager.NameNotFoundException) {
+
+        } catch (e: NoSuchAlgorithmException) {
+
+        }
 
         hashFromSHA1("80:31:7E:EA:78:48:8C:B4:E0:4A:A7:87:56:7B:E6:A8:20:0A:E8:44")
 

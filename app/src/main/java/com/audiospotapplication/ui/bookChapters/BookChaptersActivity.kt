@@ -86,7 +86,7 @@ class BookChaptersActivity : AppCompatActivity(), View.OnClickListener,
     override fun updatePlayerSeekBar(progress: Int, max: Int) {
         this.seekBarProgress = progress
         this.seekBarProgressMax = progress
-        if (!seekBar.isTracking()) {
+        if (!seekBar.isTracking) {
             seekBar.progress = progress
             seekBar.max = max
             txtCurrentDuration.text = TimeUtils.toTimeFormat((progress / 1000))
@@ -297,6 +297,10 @@ class BookChaptersActivity : AppCompatActivity(), View.OnClickListener,
         onChapterClicked(chaptersData, position = index)
     }
 
+    override fun refreshAdapter() {
+       adapter.notifyDataSetChanged()
+    }
+
     override fun onChapterClicked(data: ChaptersData, position: Int) {
         if (mPresenter?.isBookMine()!!) {
             if (mPresenter!!.getChapters() != null) {
@@ -337,7 +341,8 @@ class BookChaptersActivity : AppCompatActivity(), View.OnClickListener,
             recyclerChapters.layoutManager = LinearLayoutManager(applicationContext)
             recyclerChapters.setHasFixedSize(true)
             recyclerChapters.isNestedScrollingEnabled = false
-            recyclerChapters.adapter = ChaptersAdapter(data, this, mPresenter?.isBookMine())
+            adapter = ChaptersAdapter(data, this, mPresenter?.isBookMine())
+            recyclerChapters.adapter = adapter
         } else {
             Snackbar.make(
                 findViewById(android.R.id.content), "Chapters not Found",
@@ -408,18 +413,18 @@ class BookChaptersActivity : AppCompatActivity(), View.OnClickListener,
         finish()
     }
 
-    override fun dismissDownloadingDialog() {
-        downloadProgressDialog!!.dismiss()
-    }
-
     override fun updateProgress(progress: Int) {
         runOnUiThread {
-            downloadProgressDialog!!.setMessage("Downloading($progress %) ....")
+            downloadProgressDialog!!.setMessage("Downloading(${progress} %) ....")
         }
     }
 
     override fun showDownloadingDialog() {
         downloadProgressDialog!!.show()
+    }
+
+    override fun dismissDownloadingDialog() {
+        downloadProgressDialog!!.dismiss()
     }
 
 //    override fun onBookmarkClicked() {
@@ -524,6 +529,7 @@ class BookChaptersActivity : AppCompatActivity(), View.OnClickListener,
         super.onPause()
     }
 
+    private lateinit var adapter: ChaptersAdapter
     private var seekBarProgress: Int = 0
     private var seekBarProgressMax: Int = 0
     private var mediaController: MediaControllerCompat? = null

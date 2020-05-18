@@ -5,6 +5,7 @@ import com.audiospotapplication.data.DataRepository
 import com.audiospotapplication.data.model.BaseViewModel
 import com.audiospotapplication.ui.homepage.HomepageViewModel
 import com.audiospotapplication.ui.homepage.home.HomeViewModel
+import com.downloader.PRDownloader
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.visionvalley.letuno.DataLayer.RepositorySource
 import org.koin.android.ext.koin.androidContext
@@ -34,5 +35,7 @@ class AudioSpotApp : Application() {
         }
 
         FirebaseAnalytics.getInstance(this).setAnalyticsCollectionEnabled(true)
+
+        PRDownloader.initialize(applicationContext)
     }
 }

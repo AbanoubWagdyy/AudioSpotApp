@@ -171,5 +171,7 @@
                 <action android:name="android.intent.action.MEDIA_BUTTON" />
             </intent-filter>
         </receiver>
+
+        <service android:name="com.downloadservice.filedownloadservice.service.DownloadService"/>
     </application>
 </manifest>

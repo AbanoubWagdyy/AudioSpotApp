@@ -1,19 +1,20 @@
 package com.audiospotapplication.ui.bookChapters
 
 import android.os.Handler
-import android.util.Log
 import com.audiospotapplication.data.DataRepository
 import com.audiospotapplication.data.model.BookmarkBody
 import com.audiospotapplication.data.model.ChaptersData
 import com.audiospotapplication.data.model.Paragraph
+import com.downloader.OnDownloadListener
+import com.downloader.PRDownloader
+import com.downloader.PRDownloaderConfig
+import com.facebook.FacebookSdk.getApplicationContext
 import com.snatik.storage.Storage
-import com.tonyodev.fetch2.*
-import com.tonyodev.fetch2core.DownloadBlock
 import com.visionvalley.letuno.DataLayer.RepositorySource
 import java.io.File
 
-class BookChaptersPresenter(val mView: BookChaptersContract.View) : BookChaptersContract.Presenter,
-    FetchListener {
+
+class BookChaptersPresenter(val mView: BookChaptersContract.View) : BookChaptersContract.Presenter {
 
     override fun setCurrentChapterTitle(title: String) {
         currentChapterT = title
@@ -65,128 +66,69 @@ class BookChaptersPresenter(val mView: BookChaptersContract.View) : BookChapters
         mRepoSource.clear()
     }
 
-    override fun validateChapterDownloaded(data: ChaptersData): String {
+    override fun validateChapterDownloaded(mediaData: ChaptersData): String {
         val storage = Storage(mView.getAppContext())
-        val path = storage.internalCacheDirectory
+        val path = storage.internalFilesDirectory
 
         val newDir = path + File.separator + "AudioSpotDownloadsCache"
 
-        val fileNameStr = data.id
+        val fileNameStr = mediaData.id.toString() + "-" + mediaData.title
 
-        if (storage.isFileExist("$newDir/$fileNameStr")) {
+        return if (storage.isFileExist("$newDir/$fileNameStr")) {
             currentPath = "$newDir/$fileNameStr"
-            return currentPath
+            currentPath
         } else {
-            return ""
+            ""
         }
-    }
-
-    override fun onAdded(download: Download) {
-        Log.d("onAdded", "onAdded")
-    }
-
-    override fun onCancelled(download: Download) {
-        mView.dismissLoading()
-        mView.showDownloadComplete("Error in Item Downloading !.", currentPath)
-        val storage = Storage(mView.getAppContext())
-        val path = storage.internalCacheDirectory
-        val newDir = path + File.separator + "AudioSpotDownloadsCache"
-        currentPath = newDir + "/" + download.url
-        storage.deleteFile(currentPath)
-    }
-
-    override fun onCompleted(download: Download) {
-        mView.dismissDownloadingDialog()
-        mView.showDownloadComplete("Item Downloaded !.", currentPath)
-    }
-
-    override fun onDeleted(download: Download) {
-        Log.d("onDeleted", "onDeleted")
-    }
-
-    override fun onDownloadBlockUpdated(
-        download: Download,
-        downloadBlock: DownloadBlock,
-        totalBlocks: Int
-    ) {
-        Log.d("Blocked", "Blocked")
-    }
-
-    override fun onError(download: Download, error: Error, throwable: Throwable?) {
-        mView.dismissLoading()
-
-        mView.showDownloadComplete("Error in Item Downloading !.", currentPath)
-        val storage = Storage(mView.getAppContext())
-        val path = storage.internalCacheDirectory
-
-        val newDir = path + File.separator + "AudioSpotDownloadsCache"
-        currentPath = newDir + "/" + download.url
-
-        storage.deleteFile(currentPath)
-    }
-
-    override fun onPaused(download: Download) {
-        Log.d("onPaused", "onPaused")
-    }
-
-    override fun onProgress(
-        download: Download,
-        etaInMilliSeconds: Long,
-        downloadedBytesPerSecond: Long
-    ) {
-        mView.updateProgress(download.progress)
-    }
-
-    override fun onQueued(download: Download, waitingOnNetwork: Boolean) {
-        Log.d("onQueued", "onQueued")
-    }
-
-    override fun onRemoved(download: Download) {
-        Log.d("onRemoved", "onRemoved")
-    }
-
-    override fun onResumed(download: Download) {
-        Log.d("onResumed", "onResumed")
-    }
-
-    override fun onStarted(
-        download: Download,
-        downloadBlocks: List<DownloadBlock>,
-        totalBlocks: Int
-    ) {
-    }
-
-    override fun onWaitingNetwork(download: Download) {
     }
 
     override fun handleDownloadPressed() {
 
-        val storage = Storage(mView.getAppContext())
-        val path = storage.internalCacheDirectory
-
+        storage = Storage(mView.getAppContext())
         if (chapters != null) {
             val chapter = chapters!!.filter {
                 it.id == currentChapterId
             }[0]
 
+            val path = storage.internalFilesDirectory
+
             val newDir = path + File.separator + "AudioSpotDownloadsCache"
-            val fileNameStr = chapter.id
+            val fileNameStr = chapter.id.toString() + "-" + chapter.title
 
             currentPath = "$newDir/$fileNameStr"
 
             if (storage.isFileExist(currentPath)) {
-                mView.dismissLoading()
                 mView.showMessage("Already Downloaded")
                 return
             }
 
-            mView.showDownloadingDialog()
+            mView.getAppContext()?.let {
+                mView.showDownloadingDialog()
+                PRDownloader.download(chapter.sound_file, newDir, fileNameStr)
+                    .build()
+                    .setOnStartOrResumeListener { }
+                    .setOnPauseListener { }
+                    .setOnCancelListener {
+                        storage.deleteFile(currentPath)
+                        mView.dismissDownloadingDialog()
+                    }
+                    .setOnProgressListener {
+                        mView.updateProgress((it.currentBytes * 100 / it.totalBytes).toInt())
+                    }
+                    .start(object : OnDownloadListener {
 
-            val request = Request(chapter.sound_file, currentPath)
-            request.priority = Priority.HIGH
-            request.networkType = NetworkType.ALL
-            fetch.enqueue(request)
-            fetch.addListener(this)
+                        override fun onDownloadComplete() {
+                            mView.dismissDownloadingDialog()
+                            mView.showMessage("Download Complete")
+                            mView.refreshAdapter()
+                        }
+
+                        override fun onError(error: com.downloader.Error?) {
+                            storage.deleteFile(currentPath)
+                            mView.dismissDownloadingDialog()
+                        }
+                    })
+            }
         }
     }
 
@@ -217,6 +159,14 @@ class BookChaptersPresenter(val mView: BookChaptersContract.View) : BookChapters
     }
 
     override fun start() {
+
+        val config = PRDownloaderConfig.newBuilder()
+            .setDatabaseEnabled(true)
+            .setReadTimeout(30000)
+            .setConnectTimeout(30000)
+            .build()
+
+        PRDownloader.initialize(getApplicationContext(), config)
 
         mRepoSource = DataRepository.getInstance(mView.getAppContext()!!)
 
@@ -252,23 +202,16 @@ class BookChaptersPresenter(val mView: BookChaptersContract.View) : BookChapters
                     mView.playChapter(chapterData, index)
                 }
             }, 1500)
-
-            val fetchConfiguration = FetchConfiguration.Builder(mView.getAppContext()!!)
-                .setDownloadConcurrentLimit(1)
-                .build()
-
-            fetch = Fetch.Impl.getInstance(fetchConfiguration)
-
         } else {
             mView.showHomepageScreen()
         }
     }
 
+    private lateinit var storage: Storage
     private var currentChapterId: Int = 0
     private var currentChapterT: String = ""
     private var currentParagraphs: List<Paragraph>? = null
     private var chapters: List<ChaptersData>? = null
     private lateinit var currentPath: String
-    lateinit var mRepoSource: RepositorySource
-    lateinit var fetch: Fetch
+    private lateinit var mRepoSource: RepositorySource
 }

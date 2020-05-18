@@ -27,7 +27,10 @@ class SplashActivity : AppCompatActivity(), SplashContract.View {
         setContentView(R.layout.activity_splash)
 
 //        forceUpdate()
-        startHomepageScreen()
+//        startHomepageScreen()
+
+        mPresenter = SplashPresenter(this@SplashActivity)
+        mPresenter.start()
     }
 
     override fun startHomepageScreen() {
@@ -59,7 +62,7 @@ class SplashActivity : AppCompatActivity(), SplashContract.View {
             grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED
         ) {
             val storage = Storage(applicationContext)
-            val path = storage.internalCacheDirectory
+            val path = storage.internalFilesDirectory
 
             val newDir = path + File.separator + "AudioSpotDownloadsCache"
             storage.createDirectory(newDir)
@@ -73,25 +76,25 @@ class SplashActivity : AppCompatActivity(), SplashContract.View {
         }
     }
 
-    fun forceUpdate() {
-        val appUpdateManager = AppUpdateManagerFactory.create(applicationContext)
-        val appUpdateInfoTask = appUpdateManager.appUpdateInfo
-        appUpdateInfoTask.addOnSuccessListener { appUpdateInfo ->
-            if (appUpdateInfo.updateAvailability() == UpdateAvailability.UPDATE_AVAILABLE
-                && appUpdateInfo.isUpdateTypeAllowed(AppUpdateType.FLEXIBLE)
-            ) {
-                appUpdateManager.startUpdateFlowForResult(
-                    appUpdateInfo,
-                    AppUpdateType.IMMEDIATE,
-                    this,
-                    REQUEST_CODE_UPDATE
-                )
-            } else {
-                mPresenter = SplashPresenter(this@SplashActivity)
-                mPresenter.start()
-            }
-        }
-    }
+//    fun forceUpdate() {
+//        val appUpdateManager = AppUpdateManagerFactory.create(applicationContext)
+//        val appUpdateInfoTask = appUpdateManager.appUpdateInfo
+//        appUpdateInfoTask.addOnSuccessListener { appUpdateInfo ->
+//            if (appUpdateInfo.updateAvailability() == UpdateAvailability.UPDATE_AVAILABLE
+//                && appUpdateInfo.isUpdateTypeAllowed(AppUpdateType.FLEXIBLE)
+//            ) {
+//                appUpdateManager.startUpdateFlowForResult(
+//                    appUpdateInfo,
+//                    AppUpdateType.IMMEDIATE,
+//                    this,
+//                    REQUEST_CODE_UPDATE
+//                )
+//            } else {
+//                mPresenter = SplashPresenter(this@SplashActivity)
+//                mPresenter.start()
+//            }
+//        }
+//    }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)

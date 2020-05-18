@@ -47,5 +47,6 @@ interface BookChaptersContract {
         fun dismissDownloadingDialog()
         fun showHomepageScreen()
         fun playChapter(chaptersData: ChaptersData, index: Int)
+        fun refreshAdapter()
     }
 }
