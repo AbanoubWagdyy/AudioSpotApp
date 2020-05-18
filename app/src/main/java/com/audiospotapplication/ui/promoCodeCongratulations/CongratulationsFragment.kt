@@ -14,7 +14,7 @@ import com.audiospotapplication.data.DataRepository
 import com.audiospotapplication.R
 import com.audiospotapplication.ui.bookDetails.BookDetailsActivity
 import com.audiospotapplication.utils.ImageUtils
-import com.visionvalley.letuno.DataLayer.RepositorySource
+import com.audiospotapplication.data.RepositorySource
 import kotlinx.android.synthetic.main.fragment_congratulations.*
 
 class CongratulationsFragment : BaseFragment() {

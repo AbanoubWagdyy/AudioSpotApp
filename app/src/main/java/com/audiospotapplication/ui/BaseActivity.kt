@@ -24,7 +24,7 @@ import com.audiospotapplication.ui.promoCodeCongratulations.CongratulationsActiv
 import com.audiospotapplication.ui.rateBook.RateBookActivity
 import com.audiospotapplication.ui.search.SearchActivity
 import com.audiospotapplication.ui.voucher.VoucherActivity
-import com.visionvalley.letuno.DataLayer.RepositorySource
+import com.audiospotapplication.data.RepositorySource
 import kotlinx.android.synthetic.main.audio_spot_activity_base.*
 import kotlinx.android.synthetic.main.back_header.*
 import kotlinx.android.synthetic.main.header.*

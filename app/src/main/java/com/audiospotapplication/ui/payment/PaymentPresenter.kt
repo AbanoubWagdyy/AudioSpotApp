@@ -7,7 +7,7 @@ import com.audiospotapplication.data.model.*
 import com.audiospotapplication.data.retrofit.RetrofitCallbacks
 import com.audiospotapplication.data.retrofit.RetrofitResponseHandler
 import com.emeint.android.fawryplugin.Plugininterfacing.PayableItem
-import com.visionvalley.letuno.DataLayer.RepositorySource
+import com.audiospotapplication.data.RepositorySource
 import retrofit2.Call
 import java.util.*
 

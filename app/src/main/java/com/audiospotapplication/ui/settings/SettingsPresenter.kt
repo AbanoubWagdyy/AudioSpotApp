@@ -2,7 +2,7 @@ package com.audiospotapplication.ui.settings
 
 import com.audiospotapplication.data.DataRepository
 import com.audiospotapplication.data.retrofit.GlobalKeys
-import com.visionvalley.letuno.DataLayer.RepositorySource
+import com.audiospotapplication.data.RepositorySource
 
 class SettingsPresenter(val mView: SettingsContract.View) : SettingsContract.Presenter {
 

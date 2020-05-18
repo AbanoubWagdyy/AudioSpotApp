@@ -5,7 +5,7 @@ import com.audiospotapplication.data.DataRepository
 import com.audiospotapplication.data.retrofit.RetrofitCallbacks
 import com.audiospotapplication.data.retrofit.RetrofitResponseHandler
 import com.audiospotapplication.utils.EmailUtils
-import com.visionvalley.letuno.DataLayer.RepositorySource
+import com.audiospotapplication.data.RepositorySource
 import retrofit2.Call
 
 class UpdateProfilePresenter(val mView: UpdateProfileContract.View) : UpdateProfileContract.Presenter {

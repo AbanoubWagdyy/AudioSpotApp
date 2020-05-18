@@ -3,7 +3,7 @@ package com.audiospotapplication.ui.profile
 import com.audiospotapplication.data.DataRepository
 import com.audiospotapplication.data.model.ProfileResponse
 import com.audiospotapplication.data.retrofit.RetrofitCallbacks
-import com.visionvalley.letuno.DataLayer.RepositorySource
+import com.audiospotapplication.data.RepositorySource
 import retrofit2.Call
 
 class ProfilePresenter(val mView: ProfileContract.View) : ProfileContract.Presenter {

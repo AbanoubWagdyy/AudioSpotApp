@@ -10,7 +10,7 @@ import com.downloader.PRDownloader
 import com.downloader.PRDownloaderConfig
 import com.facebook.FacebookSdk.getApplicationContext
 import com.snatik.storage.Storage
-import com.visionvalley.letuno.DataLayer.RepositorySource
+import com.audiospotapplication.data.RepositorySource
 import java.io.File
 
 
@@ -111,6 +111,7 @@ class BookChaptersPresenter(val mView: BookChaptersContract.View) : BookChapters
                     .setOnCancelListener {
                         storage.deleteFile(currentPath)
                         mView.dismissDownloadingDialog()
+                        mView.refreshAdapter()
                     }
                     .setOnProgressListener {
                         mView.updateProgress((it.currentBytes * 100 / it.totalBytes).toInt())
@@ -126,6 +127,7 @@ class BookChaptersPresenter(val mView: BookChaptersContract.View) : BookChapters
                         override fun onError(error: com.downloader.Error?) {
                             storage.deleteFile(currentPath)
                             mView.dismissDownloadingDialog()
+                            mView.refreshAdapter()
                         }
                     })
             }

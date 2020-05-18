@@ -2,7 +2,7 @@ package com.audiospotapplication.ui.splash
 
 import com.audiospotapplication.data.DataRepository
 import com.audiospotapplication.data.retrofit.GlobalKeys
-import com.visionvalley.letuno.DataLayer.RepositorySource
+import com.audiospotapplication.data.RepositorySource
 
 class SplashPresenter(val mView: SplashContract.View) : SplashContract.Presenter {
 

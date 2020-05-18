@@ -4,7 +4,7 @@ import android.content.Context
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.audiospotapplication.data.retrofit.RetrofitResponseHandler
-import com.visionvalley.letuno.DataLayer.RepositorySource
+import com.audiospotapplication.data.RepositorySource
 import io.reactivex.disposables.Disposable
 import org.koin.core.KoinComponent
 import org.koin.core.inject

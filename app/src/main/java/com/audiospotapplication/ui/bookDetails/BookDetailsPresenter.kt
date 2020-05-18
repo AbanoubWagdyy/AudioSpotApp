@@ -7,7 +7,7 @@ import com.audiospotapplication.data.model.*
 import com.audiospotapplication.data.retrofit.RetrofitCallbacks
 import com.audiospotapplication.data.retrofit.RetrofitResponseHandler
 import com.audiospotapplication.R
-import com.visionvalley.letuno.DataLayer.RepositorySource
+import com.audiospotapplication.data.RepositorySource
 import retrofit2.Call
 
 class BookDetailsPresenter(val mView: BookDetailsContract.View?) : BookDetailsContract.Presenter {

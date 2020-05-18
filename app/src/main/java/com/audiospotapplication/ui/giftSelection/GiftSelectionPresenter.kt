@@ -2,7 +2,7 @@ package com.audiospotapplication.ui.giftSelection
 
 import com.audiospot.DataLayer.Model.Book
 import com.audiospotapplication.data.DataRepository
-import com.visionvalley.letuno.DataLayer.RepositorySource
+import com.audiospotapplication.data.RepositorySource
 
 class GiftSelectionPresenter(val mView: GiftSelectionContract.View) : GiftSelectionContract.Presenter {
 

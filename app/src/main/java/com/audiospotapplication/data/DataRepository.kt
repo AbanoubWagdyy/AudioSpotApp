@@ -21,7 +21,6 @@ import com.audiospotapplication.data.retrofit.RemoteDataSourceUsingRetrofit
 import com.audiospotapplication.data.retrofit.RetrofitCallbacks
 import com.audiospotapplication.ui.ActiveTab
 import com.audiospotapplication.ui.giftSelection.GiftSelection
-import com.visionvalley.letuno.DataLayer.RepositorySource
 import retrofit2.Call
 import java.util.*
 import kotlin.collections.ArrayList
@@ -36,7 +35,6 @@ class DataRepository private constructor(context: Context) : RepositorySource {
     private val mTreeMap = TreeMap<String, MediaMetadataCompat>()
 
     private var isToPlayFirstChapter: Boolean = false
-    private val TAG = javaClass.simpleName
     private val mRetrofitService: RemoteDataSourceUsingRetrofit
     private val mCacheDataSource: CacheDataSource
     internal var lang = ""
@@ -152,8 +150,8 @@ class DataRepository private constructor(context: Context) : RepositorySource {
             username,
             password,
             object : RetrofitCallbacks.AuthResponseCallback {
-                override fun onSuccess(result: AuthResponse) {
-                    if (result.data != null) {
+                override fun onSuccess(result: AuthResponse?) {
+                    if (result?.data != null) {
                         result.data.Password = password
                         mCacheDataSource.setBooleanIntoCache(GlobalKeys.StoreData.IS_LOGGED, true)
                         mCacheDataSource.setLoggedInUser(result)
