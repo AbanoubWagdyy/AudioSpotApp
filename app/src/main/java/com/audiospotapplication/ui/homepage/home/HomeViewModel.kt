@@ -32,7 +32,7 @@ class HomeViewModel : BaseViewModel() {
 
             override fun onFailure(call: Call<HomepageRepsonse>?, t: Throwable?) {
                 loadingObserver.value = false
-                errorObserver.value = "Server Error,Please try again !."
+                errorObserver.value = "Please check the internet connection !."
             }
         })
     }
