@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.content.res.Configuration
 import android.os.Handler
 import com.audiospotapplication.ui.login.LoginActivity
 import com.audiospotapplication.R
@@ -14,6 +15,7 @@ import com.snatik.storage.Storage
 import com.google.android.play.core.appupdate.AppUpdateManagerFactory
 import com.google.android.play.core.install.model.AppUpdateType
 import com.google.android.play.core.install.model.UpdateAvailability
+import java.util.*
 
 
 class SplashActivity : AppCompatActivity(), SplashContract.View {
@@ -24,6 +26,7 @@ class SplashActivity : AppCompatActivity(), SplashContract.View {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         setContentView(R.layout.activity_splash)
 
 //        forceUpdate()
@@ -113,8 +116,6 @@ class SplashActivity : AppCompatActivity(), SplashContract.View {
 
     private val REQUEST_CODE_UPDATE: Int = 1000
     private val PERMISSION_CODE: Int = 10
-
     private val SPLASH_DISPLAY_LENGTH = 2000
-
     lateinit var mPresenter: SplashContract.Presenter
 }

@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment
 import com.audiospotapplication.ui.BaseActivity
 
 class PromoCodeActivity : BaseActivity() {
+
     override fun getHeaderTitle(): String {
         return "Promo Code"
     }
@@ -15,6 +16,6 @@ class PromoCodeActivity : BaseActivity() {
     }
 
     override fun getFragment(ivArrow: ImageView): Fragment {
-        return PromoCodeFragment.newInstance()
+        return PromoCodeFragment.newInstance(intent.extras!!.getInt("price_before_promo"))
     }
 }

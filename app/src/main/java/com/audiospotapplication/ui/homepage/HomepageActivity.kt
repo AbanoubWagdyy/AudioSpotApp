@@ -1,6 +1,7 @@
 package com.audiospotapplication.ui.homepage
 
 import android.content.Intent
+import android.content.res.Configuration
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
@@ -20,11 +21,28 @@ import kotlinx.android.synthetic.main.activity_homepage.*
 import kotlinx.android.synthetic.main.header.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.KoinComponent
+import java.util.*
 
 class HomepageActivity : AppCompatActivity(), KoinComponent {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        val locale = Locale(viewModel.getCurrentLanguage())
+        Locale.setDefault(locale)
+        // Create a new configuration object
+        // Create a new configuration object
+        val config = Configuration()
+        // Set the locale of the new configuration
+        // Set the locale of the new configuration
+        config.locale = locale
+        // Update the configuration of the Accplication context
+        // Update the configuration of the Accplication context
+        getResources().updateConfiguration(
+            config,
+            getResources().getDisplayMetrics()
+        )
+
         setContentView(R.layout.activity_homepage)
 
         showHomePageContent()

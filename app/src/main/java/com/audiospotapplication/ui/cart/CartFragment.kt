@@ -132,6 +132,7 @@ class CartFragment : BaseFragment(), CartContract.View, onBookItemClickListener,
 
         promoCode.setOnClickListener {
             val intent = Intent(requireActivity(), PromoCodeActivity::class.java)
+            intent.putExtra("price_before_promo", mPresenter.getBooksPrice())
             startActivity(intent)
         }
 

@@ -13,6 +13,7 @@ interface CartContract {
         fun getAuthResponse(): AuthResponse?
         fun saveBook(book: Book)
         fun handlePayNowPressed()
+        fun getBooksPrice(): Int?
     }
 
     interface View : BaseView {

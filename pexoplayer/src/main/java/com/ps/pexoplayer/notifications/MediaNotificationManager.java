@@ -152,7 +152,7 @@ public class MediaNotificationManager {
                 .setMediaSession(token)
                 .setShowActionsInCompactView(0, 1, 2))
                 .setColor(ContextCompat.getColor(mMediaService, R.color.notification_bg))
-                .setSmallIcon(R.drawable.ic_audiotrack_grey_24dp)
+                .setSmallIcon(R.drawable.ic_launcher)
                 // Pending intent that is fired when user clicks on notification.
                 .setContentIntent(createContentIntent())
                 // Title - Usually Song name.

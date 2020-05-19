@@ -17,6 +17,10 @@ class CartPresenter(val mView: CartContract.View) : CartContract.Presenter {
         mView.showPaymentScreen()
     }
 
+    override fun getBooksPrice(): Int? {
+        return priceTotal
+    }
+
     override fun saveBook(book: Book) {
         mRepositorySource.saveBook(book)
         mView.showBookDetailsScreen()
@@ -64,6 +68,9 @@ class CartPresenter(val mView: CartContract.View) : CartContract.Presenter {
                 when (RetrofitResponseHandler.validateAuthResponseStatus(result)) {
                     RetrofitResponseHandler.Companion.Status.VALID -> {
                         mView.setBookList(result!!.data)
+                        for (book in result!!.data) {
+                            priceTotal += book.price
+                        }
                         mView.setCartCount(result.data.size)
                     }
                     RetrofitResponseHandler.Companion.Status.UNAUTHORIZED -> {
@@ -83,4 +90,5 @@ class CartPresenter(val mView: CartContract.View) : CartContract.Presenter {
     }
 
     lateinit var mRepositorySource: RepositorySource
+    var priceTotal = 0
 }

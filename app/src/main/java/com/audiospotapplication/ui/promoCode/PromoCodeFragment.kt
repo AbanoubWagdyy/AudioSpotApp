@@ -24,19 +24,24 @@ class PromoCodeFragment : BaseFragment(), PromoCodeContract.View {
         requireActivity().finish()
     }
 
-    override fun setSubTotal(toString: String) {
+    override fun setSubTotal() {
         subTotal.visibility = View.VISIBLE
-        subTotal.text = "SubTotal: $toString"
+        subTotal.text = "SubTotal: ${requireArguments().getInt("price_before_promo")} L.E"
     }
+
+    var discountValue: Int = 0
 
     override fun setDiscount(toString: String) {
+        discountValue = toString.toInt()
         discount.visibility = View.VISIBLE
-        discount.text = "Discount: $toString"
+        discount.text = "Discount: $toString %"
     }
 
-    override fun setTotal(toString: String) {
+    override fun setTotal() {
+        val totalValue =
+            (requireArguments().getInt("price_before_promo")) - ((requireArguments().getInt("price_before_promo") * discountValue) / 100)
         total.visibility = View.VISIBLE
-        total.text = "Total: $toString"
+        total.text = "Total: $totalValue L.E"
     }
 
     override fun showMessage(message: String) {
@@ -69,20 +74,16 @@ class PromoCodeFragment : BaseFragment(), PromoCodeContract.View {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         mPresenter = PromoCodePresenter(this)
         mPresenter.start()
-
-        subTotal.visibility = View.GONE
-        discount.visibility = View.GONE
-        total.visibility = View.GONE
 
         btnApply.setOnClickListener {
             mPresenter.applyPromoCode(etPromoCode.text.toString())
         }
+
         proceedToPayment.setOnClickListener {
-            val intent = Intent(requireActivity(), PaymentActivity::class.java)
-            startActivity(intent)
-            requireActivity().finish()
+            mPresenter.handleProceedToPaymentClicked()
         }
     }
 
@@ -90,7 +91,12 @@ class PromoCodeFragment : BaseFragment(), PromoCodeContract.View {
 
     companion object {
         @JvmStatic
-        fun newInstance() =
-            PromoCodeFragment()
+        fun newInstance(price_before_promo: Int): PromoCodeFragment {
+            val bundle = Bundle()
+            bundle.putInt("price_before_promo", price_before_promo)
+            val fragment = PromoCodeFragment()
+            fragment.arguments = bundle
+            return fragment
+        }
     }
 }

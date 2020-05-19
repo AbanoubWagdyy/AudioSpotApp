@@ -51,5 +51,9 @@ class HomepageViewModel : BaseViewModel() {
         return cartObserver
     }
 
+    fun getCurrentLanguage(): String {
+        return mRepositorySource.getCurrentLanguage()
+    }
+
     var cartObserver = MutableLiveData<Int>()
 }
