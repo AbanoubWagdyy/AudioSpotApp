@@ -44,7 +44,7 @@ abstract class BaseActivity : AppCompatActivity(), BaseView {
     }
 
     lateinit var ivArrow: ImageView
-    lateinit var tabShown: ActiveTab
+    private var tabShown: ActiveTab? = null
     lateinit var mRepositorySource: RepositorySource
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -87,79 +87,87 @@ abstract class BaseActivity : AppCompatActivity(), BaseView {
 
     private fun initListeners() {
         linearHome.setOnClickListener {
-            if (tabShown != ActiveTab.HOME) {
-                tabShown = ActiveTab.HOME
-                if (mRepositorySource.getActiveTab() != ActiveTab.HOME) {
-                    supportFragmentManager.beginTransaction()
-                        .replace(R.id.container, HomeFragment.newInstance())
-                        .commitAllowingStateLoss()
-                    tvTitle.text = getString(R.string.app_name)
-                    ivArrow.visibility = View.GONE
-                } else {
-                    supportFragmentManager.beginTransaction()
-                        .replace(R.id.container, getFragment(ivArrow)).commitAllowingStateLoss()
-                    ivArrow.visibility = getArrowHeaderVisibility()
-                    tvTitle.text = getHeaderTitle()
+            tabShown?.let {
+                if (tabShown != ActiveTab.HOME) {
+                    tabShown = ActiveTab.HOME
+                    if (mRepositorySource.getActiveTab() != ActiveTab.HOME) {
+                        supportFragmentManager.beginTransaction()
+                            .replace(R.id.container, HomeFragment.newInstance())
+                            .commitAllowingStateLoss()
+                        tvTitle.text = getString(R.string.app_name)
+                        ivArrow.visibility = View.GONE
+                    } else {
+                        supportFragmentManager.beginTransaction()
+                            .replace(R.id.container, getFragment(ivArrow)).commitAllowingStateLoss()
+                        ivArrow.visibility = getArrowHeaderVisibility()
+                        tvTitle.text = getHeaderTitle()
+                    }
+                    validateTabColorVisibility(tabShown!!)
                 }
-                validateTabColorVisibility(tabShown)
             }
         }
 
         linearLibrary.setOnClickListener {
-            if (tabShown != ActiveTab.LIBRARY) {
-                tabShown = ActiveTab.LIBRARY
-                if (mRepositorySource.getActiveTab() != ActiveTab.LIBRARY) {
-                    supportFragmentManager.beginTransaction()
-                        .replace(R.id.container, LibraryFragment.newInstance())
-                        .commitAllowingStateLoss()
-                    ivArrow.visibility = View.GONE
-                    tvTitle.text = getString(R.string.library)
-                } else {
-                    supportFragmentManager.beginTransaction()
-                        .replace(R.id.container, getFragment(ivArrow)).commitAllowingStateLoss()
-                    ivArrow.visibility = getArrowHeaderVisibility()
-                    tvTitle.text = getHeaderTitle()
-                }
-                validateTabColorVisibility(tabShown)
-            }
+           tabShown?.let {
+               if (tabShown != ActiveTab.LIBRARY) {
+                   tabShown = ActiveTab.LIBRARY
+                   if (mRepositorySource.getActiveTab() != ActiveTab.LIBRARY) {
+                       supportFragmentManager.beginTransaction()
+                           .replace(R.id.container, LibraryFragment.newInstance())
+                           .commitAllowingStateLoss()
+                       ivArrow.visibility = View.GONE
+                       tvTitle.text = getString(R.string.library)
+                   } else {
+                       supportFragmentManager.beginTransaction()
+                           .replace(R.id.container, getFragment(ivArrow)).commitAllowingStateLoss()
+                       ivArrow.visibility = getArrowHeaderVisibility()
+                       tvTitle.text = getHeaderTitle()
+                   }
+                   validateTabColorVisibility(tabShown!!)
+               }
+           }
         }
 
         linearMyBooks.setOnClickListener {
-            if (tabShown != ActiveTab.MYBOOKS) {
-                tabShown = ActiveTab.MYBOOKS
-                if (mRepositorySource.getActiveTab() != ActiveTab.MYBOOKS) {
-                    supportFragmentManager.beginTransaction()
-                        .replace(R.id.container, MyBooksFragment.newInstance())
-                        .commitAllowingStateLoss()
-                    ivArrow.visibility = View.GONE
-                    tvTitle.text = getString(R.string.menu_my_books)
-                } else {
-                    supportFragmentManager.beginTransaction()
-                        .replace(R.id.container, getFragment(ivArrow)).commitAllowingStateLoss()
-                    ivArrow.visibility = getArrowHeaderVisibility()
-                    tvTitle.text = getHeaderTitle()
+            tabShown?.let {
+                if (tabShown != ActiveTab.MYBOOKS) {
+                    tabShown = ActiveTab.MYBOOKS
+                    if (mRepositorySource.getActiveTab() != ActiveTab.MYBOOKS) {
+                        supportFragmentManager.beginTransaction()
+                            .replace(R.id.container, MyBooksFragment.newInstance())
+                            .commitAllowingStateLoss()
+                        ivArrow.visibility = View.GONE
+                        tvTitle.text = getString(R.string.menu_my_books)
+                    } else {
+                        supportFragmentManager.beginTransaction()
+                            .replace(R.id.container, getFragment(ivArrow)).commitAllowingStateLoss()
+                        ivArrow.visibility = getArrowHeaderVisibility()
+                        tvTitle.text = getHeaderTitle()
+                    }
+                    validateTabColorVisibility(tabShown!!)
                 }
-                validateTabColorVisibility(tabShown)
             }
         }
 
         linearMenu.setOnClickListener {
-            if (tabShown != ActiveTab.MENU) {
-                tabShown = ActiveTab.MENU
-                if (mRepositorySource.getActiveTab() != ActiveTab.MENU) {
-                    supportFragmentManager.beginTransaction()
-                        .replace(R.id.container, MenuFragment.newInstance())
-                        .commitAllowingStateLoss()
-                    ivArrow.visibility = View.GONE
-                    tvTitle.text = getString(R.string.menu)
-                } else {
-                    supportFragmentManager.beginTransaction()
-                        .replace(R.id.container, getFragment(ivArrow)).commitAllowingStateLoss()
-                    ivArrow.visibility = getArrowHeaderVisibility()
-                    tvTitle.text = getHeaderTitle()
-                }
-                validateTabColorVisibility(tabShown)
-            }
+           tabShown?.let {
+               if (tabShown != ActiveTab.MENU) {
+                   tabShown = ActiveTab.MENU
+                   if (mRepositorySource.getActiveTab() != ActiveTab.MENU) {
+                       supportFragmentManager.beginTransaction()
+                           .replace(R.id.container, MenuFragment.newInstance())
+                           .commitAllowingStateLoss()
+                       ivArrow.visibility = View.GONE
+                       tvTitle.text = getString(R.string.menu)
+                   } else {
+                       supportFragmentManager.beginTransaction()
+                           .replace(R.id.container, getFragment(ivArrow)).commitAllowingStateLoss()
+                       ivArrow.visibility = getArrowHeaderVisibility()
+                       tvTitle.text = getHeaderTitle()
+                   }
+                   validateTabColorVisibility(tabShown!!)
+               }
+           }
         }
     }
 
@@ -195,50 +203,52 @@ abstract class BaseActivity : AppCompatActivity(), BaseView {
                 ivHome.setImageResource(R.mipmap.tab_home)
                 tvHome.setTextColor(ContextCompat.getColor(applicationContext, R.color.white))
                 ivMenu.setImageResource(R.mipmap.tab_menu_inactive)
-                tvMenu.setTextColor(ContextCompat.getColor(applicationContext,R.color.grey))
+                tvMenu.setTextColor(ContextCompat.getColor(applicationContext, R.color.grey))
                 ivMyBooks.setImageResource(R.mipmap.tab_mybooks_inactive)
-                tvMyBooks.setTextColor(ContextCompat.getColor(applicationContext,R.color.grey))
+                tvMyBooks.setTextColor(ContextCompat.getColor(applicationContext, R.color.grey))
                 ivLibrary.setImageResource(R.mipmap.tab_library_inactive)
-                tvLibrary.setTextColor(ContextCompat.getColor(applicationContext,R.color.grey))
+                tvLibrary.setTextColor(ContextCompat.getColor(applicationContext, R.color.grey))
             }
 
             ActiveTab.LIBRARY -> {
                 ivHome.setImageResource(R.mipmap.tab_home_inactive)
-                tvHome.setTextColor(ContextCompat.getColor(applicationContext,R.color.grey))
+                tvHome.setTextColor(ContextCompat.getColor(applicationContext, R.color.grey))
                 ivMenu.setImageResource(R.mipmap.tab_menu_inactive)
-                tvMenu.setTextColor(ContextCompat.getColor(applicationContext,R.color.grey))
+                tvMenu.setTextColor(ContextCompat.getColor(applicationContext, R.color.grey))
                 ivMyBooks.setImageResource(R.mipmap.tab_mybooks_inactive)
-                tvMyBooks.setTextColor(ContextCompat.getColor(applicationContext,R.color.grey))
+                tvMyBooks.setTextColor(ContextCompat.getColor(applicationContext, R.color.grey))
                 ivLibrary.setImageResource(R.mipmap.tab_library)
-                tvLibrary.setTextColor(ContextCompat.getColor(applicationContext,R.color.white))
+                tvLibrary.setTextColor(ContextCompat.getColor(applicationContext, R.color.white))
             }
 
             ActiveTab.MYBOOKS -> {
                 ivHome.setImageResource(R.mipmap.tab_home_inactive)
-                tvHome.setTextColor(ContextCompat.getColor(applicationContext,R.color.grey))
+                tvHome.setTextColor(ContextCompat.getColor(applicationContext, R.color.grey))
                 ivMenu.setImageResource(R.mipmap.tab_menu_inactive)
-                tvMenu.setTextColor(ContextCompat.getColor(applicationContext,R.color.grey))
+                tvMenu.setTextColor(ContextCompat.getColor(applicationContext, R.color.grey))
                 ivMyBooks.setImageResource(R.mipmap.tab_mybooks)
-                tvMyBooks.setTextColor(ContextCompat.getColor(applicationContext,R.color.white))
+                tvMyBooks.setTextColor(ContextCompat.getColor(applicationContext, R.color.white))
                 ivLibrary.setImageResource(R.mipmap.tab_library_inactive)
-                tvLibrary.setTextColor(ContextCompat.getColor(applicationContext,R.color.grey))
+                tvLibrary.setTextColor(ContextCompat.getColor(applicationContext, R.color.grey))
             }
 
             ActiveTab.MENU -> {
                 ivHome.setImageResource(R.mipmap.tab_home_inactive)
-                tvHome.setTextColor(ContextCompat.getColor(applicationContext,R.color.grey))
+                tvHome.setTextColor(ContextCompat.getColor(applicationContext, R.color.grey))
                 ivMenu.setImageResource(R.mipmap.tab_menu)
-                tvMenu.setTextColor(ContextCompat.getColor(applicationContext,R.color.white))
+                tvMenu.setTextColor(ContextCompat.getColor(applicationContext, R.color.white))
                 ivMyBooks.setImageResource(R.mipmap.tab_mybooks_inactive)
-                tvMyBooks.setTextColor(ContextCompat.getColor(applicationContext,R.color.grey))
+                tvMyBooks.setTextColor(ContextCompat.getColor(applicationContext, R.color.grey))
                 ivLibrary.setImageResource(R.mipmap.tab_library_inactive)
-                tvLibrary.setTextColor(ContextCompat.getColor(applicationContext,R.color.grey))
+                tvLibrary.setTextColor(ContextCompat.getColor(applicationContext, R.color.grey))
             }
         }
     }
 
     override fun onStop() {
-        mRepositorySource.setActiveTab(tabShown)
+        tabShown?.let {
+            mRepositorySource.setActiveTab(tabShown!!)
+        }
         super.onStop()
     }
 

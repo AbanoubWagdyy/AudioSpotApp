@@ -52,7 +52,7 @@ class BookChaptersActivity : AppCompatActivity(), View.OnClickListener,
 
     override fun onPlayerMetadataChanged(pexoMediaMetadata: PexoMediaMetadata?) {
         val chapter = mPresenter?.getBookByID(pexoMediaMetadata?.mediaId)
-        if (chapter != null){
+        if (chapter != null) {
             text_songName.text = chapter.title
             mPresenter?.setCurrentChapterID(chapter.id)
             mPresenter?.setCurrentChapterParagraphs(chapter.paragraphs)
@@ -64,16 +64,49 @@ class BookChaptersActivity : AppCompatActivity(), View.OnClickListener,
         if (state != null) {
             when (state.state) {
                 PlaybackStateCompat.STATE_BUFFERING -> {
+
+                    btnPrev.setOnClickListener {
+                        pexoPlayerManager.updateProgress(seekBarProgress - 30000)
+                    }
+
+                    btnNext.setOnClickListener {
+                        pexoPlayerManager.updateProgress(seekBarProgress + 30000)
+                    }
                 }
                 PlaybackStateCompat.STATE_PLAYING -> {
                     btnPlay.setImageDrawable(getDrawable(R.drawable.ic_pause))
                     btn_play_bottom.setImageResource(R.drawable.play_bottom)
+
+                    btnPrev.setOnClickListener {
+                        pexoPlayerManager.updateProgress(seekBarProgress - 30000)
+                    }
+
+                    btnNext.setOnClickListener {
+                        pexoPlayerManager.updateProgress(seekBarProgress + 30000)
+                    }
                 }
+
                 PlaybackStateCompat.STATE_PAUSED -> {
                     btnPlay.setImageDrawable(getDrawable(R.drawable.ic_play))
                     btn_play_bottom.setImageResource(R.drawable.pause_bottom)
+
+                    btnPrev.setOnClickListener {
+
+                    }
+
+                    btnNext.setOnClickListener {
+
+                    }
                 }
+
                 PlaybackStateCompat.STATE_ERROR -> {
+                    btnPrev.setOnClickListener {
+
+                    }
+
+                    btnNext.setOnClickListener {
+
+                    }
                 }
             }
         }
@@ -139,9 +172,10 @@ class BookChaptersActivity : AppCompatActivity(), View.OnClickListener,
     }
 
     override fun onDestroy() {
-        super.onDestroy()
         Log.i(TAG, "onDestroy()")
+        seekBar.disconnectController()
         pexoPlayerManager.unSubscribeCallBack()
+        super.onDestroy()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -216,8 +250,7 @@ class BookChaptersActivity : AppCompatActivity(), View.OnClickListener,
                 } else {
                     val chapters = mPresenter!!.getChapters()
                     if (chapters != null) {
-                        generateMediaItems(chapters)
-                        pexoPlayerManager.startPlayback()
+                        onChapterClicked(chapters[0], 0)
                     }
                 }
             } else {
@@ -552,11 +585,6 @@ class BookChaptersActivity : AppCompatActivity(), View.OnClickListener,
     override fun showAddBookmarkScreen() {
         val intent = Intent(this, AddBookmarkActivity::class.java)
         startActivityForResult(intent, 1)
-    }
-
-    override fun onPause() {
-        seekBar.disconnectController()
-        super.onPause()
     }
 
     private lateinit var adapter: ChaptersAdapter
