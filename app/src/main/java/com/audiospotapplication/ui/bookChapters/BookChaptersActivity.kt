@@ -129,6 +129,7 @@ class BookChaptersActivity : AppCompatActivity(), View.OnClickListener,
             txtCurrentDuration.text = TimeUtils.toTimeFormat((progress / 1000))
             txtDuration.text = TimeUtils.toTimeFormat((max / 1000))
         }
+
         txtCurrentMusic.text = getParagraph(progress)
     }
 
@@ -139,7 +140,7 @@ class BookChaptersActivity : AppCompatActivity(), View.OnClickListener,
                 val toTime = paragraph.to_time.toInt() * 1000
 
                 if (progress in fromTime..toTime) {
-                    return paragraph.title
+                    return paragraph.title.replace("\\s+", " ")
                 }
             }
 
