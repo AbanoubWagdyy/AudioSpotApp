@@ -673,20 +673,22 @@ class DataRepository private constructor(context: Context) : RepositorySource {
     }
 
     override fun getBookChapters(callback: RetrofitCallbacks.ChaptersResponseCallback) {
-        mRetrofitService.getBookChapters(authResponse!!.data.token,
-            GlobalKeys.API_KEY,
-            lang,
-            mCacheDataSource.getStringFromCache(GlobalKeys.StoreData.TOKEN, null),
-            mBookItemInterceptor.getSavedBook()!!.id,
-            object : RetrofitCallbacks.ChaptersResponseCallback {
-                override fun onSuccess(result: ChaptersResponse) {
-                    callback.onSuccess(result)
-                }
+        authResponse?.let {
+            mRetrofitService.getBookChapters(authResponse!!.data.token,
+                GlobalKeys.API_KEY,
+                lang,
+                mCacheDataSource.getStringFromCache(GlobalKeys.StoreData.TOKEN, null),
+                mBookItemInterceptor.getSavedBook()!!.id,
+                object : RetrofitCallbacks.ChaptersResponseCallback {
+                    override fun onSuccess(result: ChaptersResponse) {
+                        callback.onSuccess(result)
+                    }
 
-                override fun onFailure(call: Call<ChaptersResponse>, t: Throwable) {
-                    callback.onFailure(call, t)
-                }
-            })
+                    override fun onFailure(call: Call<ChaptersResponse>, t: Throwable) {
+                        callback.onFailure(call, t)
+                    }
+                })
+        }
     }
 
     override fun setBookmarkData(bookmarkBody: BookmarkBody) {
