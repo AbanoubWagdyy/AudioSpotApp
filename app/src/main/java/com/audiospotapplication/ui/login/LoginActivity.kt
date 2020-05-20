@@ -66,7 +66,8 @@ class LoginActivity : AppCompatActivity(), LoginContract.View, FacebookHelper.On
 
         }
 
-        hashFromSHA1("80:31:7E:EA:78:48:8C:B4:E0:4A:A7:87:56:7B:E6:A8:20:0A:E8:44")
+//        hashFromSHA1("80:31:7E:EA:78:48:8C:B4:E0:4A:A7:87:56:7B:E6:A8:20:0A:E8:44")
+        hashFromSHA1("27:49:ed:76:61:6b:83:ec:93:9a:7f:0b:2d:cb:c0:04:56:1a:a7:86")
 
         setContentView(R.layout.activity_login)
 

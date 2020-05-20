@@ -15,7 +15,7 @@ androidExtensions {
 android {
     signingConfigs {
         config {
-            storeFile file('/Users/vv/Desktop/audiospot')
+            storeFile file('C:\\Users\\admin\\AndroidStudioProjects\\Projects\\AudioSpot\\audiospotkeystore')
             keyAlias = 'audioSpot'
             storePassword '@udio4Aziz'
             keyPassword '@udio4Aziz'
