@@ -49,6 +49,7 @@
         </RelativeLayout>
 
         <com.ps.pexoplayer.widget.MediaSeekBar
+            style="@style/MySeekBar"
             android:id="@+id/seekBar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
