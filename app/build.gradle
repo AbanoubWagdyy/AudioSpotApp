@@ -13,14 +13,14 @@ androidExtensions {
 }
 
 android {
-    signingConfigs {
-        config {
-            storeFile file('C:\\Users\\admin\\AndroidStudioProjects\\Projects\\AudioSpot\\audiospotkeystore')
-            keyAlias = 'audioSpot'
-            storePassword '@udio4Aziz'
-            keyPassword '@udio4Aziz'
-        }
-    }
+//    signingConfigs {
+//        config {
+//            storeFile file('C:\\Users\\admin\\AndroidStudioProjects\\Projects\\AudioSpot\\audiospot')
+//            keyAlias = 'audioSpot'
+//            storePassword '@udio4Aziz'
+//            keyPassword '@udio4Aziz'
+//        }
+//    }
     useLibrary 'org.apache.http.legacy'
     compileSdkVersion 29
     defaultConfig {
@@ -30,7 +30,7 @@ android {
         versionCode 16
         versionName "1.16"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-        signingConfig signingConfigs.config
+//        signingConfig signingConfigs.config
         multiDexEnabled = true
     }
 

@@ -7,6 +7,7 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.content.res.Configuration
 import android.os.Handler
+import com.audiospotapplication.BuildConfig
 import com.audiospotapplication.ui.login.LoginActivity
 import com.audiospotapplication.R
 import com.audiospotapplication.ui.homepage.HomepageActivity
@@ -28,8 +29,12 @@ class SplashActivity : AppCompatActivity(), SplashContract.View {
         super.onCreate(savedInstanceState)
 
         setContentView(R.layout.activity_splash)
-
-        forceUpdate()
+        if (BuildConfig.DEBUG) {
+            mPresenter = SplashPresenter(this@SplashActivity)
+            mPresenter.start()
+        } else {
+            forceUpdate()
+        }
     }
 
     override fun startHomepageScreen() {
