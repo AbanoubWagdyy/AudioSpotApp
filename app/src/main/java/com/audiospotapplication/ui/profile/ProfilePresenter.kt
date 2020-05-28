@@ -12,10 +12,12 @@ class ProfilePresenter(val mView: ProfileContract.View) : ProfileContract.Presen
         mRepositorySource = mView.getAppContext()?.let { DataRepository.getInstance(it) }
         mRepositorySource?.getProfile(object : RetrofitCallbacks.ProfileResponseCallback {
             override fun onSuccess(result: ProfileResponse?) {
-                mView.setFullName(result!!.data.first_name + " " + result!!.data.last_name)
-                mView.setEmail(result!!.data.email)
-                mView.setMobilePhone(result!!.data.phone)
-                mView.setUserImage(result!!.data.profile_photo)
+                result?.let {
+                    mView.setFullName(result.data.first_name + " " + result.data.last_name)
+                    mView.setEmail(result.data.email)
+                    mView.setMobilePhone(result.data.phone)
+                    mView.setUserImage(result.data.profile_photo)
+                }
             }
 
             override fun onFailure(call: Call<ProfileResponse>?, t: Throwable?) {
@@ -23,6 +25,5 @@ class ProfilePresenter(val mView: ProfileContract.View) : ProfileContract.Presen
             }
         })
     }
-
     var mRepositorySource: RepositorySource? = null
 }

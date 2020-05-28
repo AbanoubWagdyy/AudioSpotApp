@@ -29,7 +29,7 @@ class ProfileFragment : BaseFragment(), ProfileContract.View {
         return requireActivity().applicationContext
     }
 
-    override fun setFullName(full_name: String) {
+    override fun setFullName(full_name: String?) {
         tvFullName?.let {
             if (full_name != null)
                 it.text = full_name

@@ -11,7 +11,7 @@ interface ProfileContract {
 
     interface View : BaseView {
         fun getAppContext(): Context?
-        fun setFullName(full_name: String)
+        fun setFullName(full_name: String?)
         fun setEmail(email: String?)
         fun setMobilePhone(phone: String?)
         fun showErrorMessage(s: String?)
