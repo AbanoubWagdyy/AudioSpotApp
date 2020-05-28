@@ -30,18 +30,24 @@ class ProfileFragment : BaseFragment(), ProfileContract.View {
     }
 
     override fun setFullName(full_name: String) {
-        if (full_name != null)
-            tvFullName.text = full_name
+        tvFullName?.let {
+            if (full_name != null)
+                it.text = full_name
+        }
     }
 
     override fun setEmail(email: String?) {
-        if (email != null)
-            tvEmail.text = email
+        tvEmail?.let {
+            if (email != null)
+                it.text = email
+        }
     }
 
     override fun setMobilePhone(phone: String?) {
-        if (phone != null)
-            tvMobilePhone.text = phone
+        tvMobilePhone?.let {
+            if (phone != null)
+                it.text = phone
+        }
     }
 
     override fun showErrorMessage(s: String?) {
