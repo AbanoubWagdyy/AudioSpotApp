@@ -64,8 +64,7 @@ public class cacheDataSourceUsingSharedPreferences implements CacheDataSource {
         String str = mPreferences.getString(GlobalKeys.StoreData.Logged_In_User, null);
         if (str == null || str.equals(""))
             return null;
-        AuthResponse obj = new Gson().fromJson(str, AuthResponse.class);
-        return obj;
+        return new Gson().fromJson(str, AuthResponse.class);
     }
 
     @Override

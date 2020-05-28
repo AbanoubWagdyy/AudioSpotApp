@@ -538,8 +538,10 @@ class DataRepository private constructor(context: Context) : RepositorySource {
                 mCacheDataSource.getStringFromCache(GlobalKeys.StoreData.TOKEN, null),
                 object : RetrofitCallbacks.BookListCallback {
                     override fun onSuccess(result: BookListResponse) {
-                        myBooks = ArrayList(result.data)
-                        callback.onSuccess(result)
+                        result.data?.let {
+                            myBooks = ArrayList(result.data)
+                            callback.onSuccess(result)
+                        }
                     }
 
                     override fun onFailure(call: Call<BookListResponse>, t: Throwable) {
@@ -848,10 +850,12 @@ class DataRepository private constructor(context: Context) : RepositorySource {
         voucher: String,
         callback: RetrofitCallbacks.BookDetailsResponseCallback
     ) {
-        mRetrofitService.receiveBook(
-            authResponse!!.data.token, GlobalKeys.API_KEY, lang,
-            mCacheDataSource.getStringFromCache(GlobalKeys.StoreData.TOKEN, null), voucher, callback
-        )
+        authResponse?.let {
+            mRetrofitService.receiveBook(
+                it.data.token, GlobalKeys.API_KEY, lang,
+                mCacheDataSource.getStringFromCache(GlobalKeys.StoreData.TOKEN, null), voucher, callback
+            )
+        }
     }
 
     override fun saveVoucherBook(data: Book?) {

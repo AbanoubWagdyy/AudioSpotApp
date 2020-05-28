@@ -67,11 +67,15 @@ class CartPresenter(val mView: CartContract.View) : CartContract.Presenter {
                 mView.dismissLoading()
                 when (RetrofitResponseHandler.validateAuthResponseStatus(result)) {
                     RetrofitResponseHandler.Companion.Status.VALID -> {
-                        mView.setBookList(result!!.data)
-                        for (book in result!!.data) {
-                            priceTotal += book.price
+                        result?.data?.let {
+                            for (book in it) {
+                                priceTotal += book.price
+                            }
+                            mView.run {
+                                setBookList(result.data)
+                                setCartCount(result.data.size)
+                            }
                         }
-                        mView.setCartCount(result.data.size)
                     }
                     RetrofitResponseHandler.Companion.Status.UNAUTHORIZED -> {
                         mView.showLoginPage()

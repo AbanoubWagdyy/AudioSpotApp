@@ -61,19 +61,22 @@ class PaymentPresenter(val mView: PaymentContract.View, val extras: Bundle?) : P
         if (extras == null) {
             mRepositorySource.getMyCart(object : RetrofitCallbacks.BookListCallback {
                 override fun onSuccess(result: BookListResponse?) {
-                    mView.dismissLoading()
-                    for (book in result?.data!!) {
-                        val item = Item()
-                        item.setPrice(book.price.toString())
-                        item.setDescription(book.title)
-                        item.qty = "1"
-                        item.sku = book.id.toString()
-                        items.add(item)
+                    result?.data?.let {
+                        for (book in it) {
+                            val item = Item()
+                            item.setPrice(book.price.toString())
+                            item.setDescription(book.title)
+                            item.qty = "1"
+                            item.sku = book.id.toString()
+                            items.add(item)
+                        }
+                        fawryCustomParams = FawryCustomParams("", "", "")
+                        mView.run {
+                            dismissLoading()
+                            setFawryCustomParams(fawryCustomParams)
+                            setPayableItems(items, mRepositorySource.getCurrentLanguage().equals("en"))
+                        }
                     }
-                    fawryCustomParams = FawryCustomParams("", "", "")
-                    mView.setFawryCustomParams(fawryCustomParams)
-
-                    mView.setPayableItems(items, mRepositorySource.getCurrentLanguage().equals("en"))
                 }
 
                 override fun onFailure(call: Call<BookListResponse>?, t: Throwable?) {

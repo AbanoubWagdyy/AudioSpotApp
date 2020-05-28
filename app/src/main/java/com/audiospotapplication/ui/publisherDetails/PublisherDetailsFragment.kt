@@ -96,8 +96,6 @@ class PublisherDetailsFragment : BaseFragment(), PublisherDetailsContract.View,
                         adapter!!.updatePlaylistId(getPlaylistIdObserver().value, it)
                 })
             }
-
-
         }
     }
 

@@ -49,8 +49,8 @@ class BooksFragment(var ivArrow: ImageView) : BaseFragment(), BooksContract.View
     }
 
     override fun setBooksList(result: BookListResponse?) {
-        result?.let {
-            this.listMyBooks = it.data
+        result?.data?.let {
+            this.listMyBooks = it
             recyclerBooks.layoutManager = LinearLayoutManager(context)
             recyclerBooks.setHasFixedSize(true)
             recyclerBooks.isNestedScrollingEnabled = false

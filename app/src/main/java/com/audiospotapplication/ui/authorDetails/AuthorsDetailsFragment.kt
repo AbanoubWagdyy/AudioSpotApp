@@ -54,14 +54,13 @@ class AuthorsDetailsFragment : BaseFragment(), AuthorDetailsContract.View, onBoo
     }
 
     override fun setBookList(result: BookListResponse?) {
-        result?.let {
-            this.listMyBooks = it.data
+        result?.data?.let {
+            this.listMyBooks = it
             recyclerBooks.layoutManager = LinearLayoutManager(context)
             recyclerBooks.setHasFixedSize(true)
             recyclerBooks.isNestedScrollingEnabled = false
-
             adapter = BooksAdapter(
-                listMyBooks, this,
+                listMyBooks!!, this,
                 getPlaylistIdObserver().value!!, isPlaying
             )
 
@@ -80,7 +79,11 @@ class AuthorsDetailsFragment : BaseFragment(), AuthorDetailsContract.View, onBoo
     }
 
     override fun showErrorMessage(message: String) {
-        Snackbar.make(requireActivity().findViewById(android.R.id.content), message, Snackbar.LENGTH_SHORT)
+        Snackbar.make(
+            requireActivity().findViewById(android.R.id.content),
+            message,
+            Snackbar.LENGTH_SHORT
+        )
             .show()
     }
 
@@ -121,6 +124,6 @@ class AuthorsDetailsFragment : BaseFragment(), AuthorDetailsContract.View, onBoo
             AuthorsDetailsFragment()
     }
 
-    private lateinit var listMyBooks: List<Book>
+    private var listMyBooks: List<Book>? = null
     private var adapter: BooksAdapter? = null
 }

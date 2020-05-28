@@ -10,7 +10,8 @@ import com.audiospotapplication.data.retrofit.RetrofitResponseHandler
 import com.audiospotapplication.data.RepositorySource
 import retrofit2.Call
 
-class myFavoriteBooksPresenter(val mView: myFavouriteBooksContract.View) : myFavouriteBooksContract.Presenter {
+class myFavoriteBooksPresenter(val mView: myFavouriteBooksContract.View) :
+    myFavouriteBooksContract.Presenter {
 
     override fun removeFromFavorites(book: Book) {
         mView.showLoading()
@@ -26,10 +27,15 @@ class myFavoriteBooksPresenter(val mView: myFavouriteBooksContract.View) : myFav
                     val status = RetrofitResponseHandler.validateAuthResponseStatus(result)
                     mView.showMessage(result!!.message)
                     if (status == RetrofitResponseHandler.Companion.Status.VALID) {
-                        mRepositorySource.getMyFavouriteBooks(object : RetrofitCallbacks.BookListCallback {
+                        mRepositorySource.getMyFavouriteBooks(object :
+                            RetrofitCallbacks.BookListCallback {
                             override fun onSuccess(result: BookListResponse?) {
-                                mView.dismissLoading()
-                                mView.setBookList(result!!.data)
+                                result?.data?.let {
+                                    mView.run {
+                                        dismissLoading()
+                                        setBookList(it)
+                                    }
+                                }
                             }
 
                             override fun onFailure(call: Call<BookListResponse>?, t: Throwable?) {
@@ -59,8 +65,12 @@ class myFavoriteBooksPresenter(val mView: myFavouriteBooksContract.View) : myFav
         mView.showLoading()
         mRepositorySource.getMyFavouriteBooks(object : RetrofitCallbacks.BookListCallback {
             override fun onSuccess(result: BookListResponse?) {
-                mView.dismissLoading()
-                mView.setBookList(result!!.data)
+                result?.data?.let {
+                    mView.run {
+                        dismissLoading()
+                        setBookList(it)
+                    }
+                }
             }
 
             override fun onFailure(call: Call<BookListResponse>?, t: Throwable?) {

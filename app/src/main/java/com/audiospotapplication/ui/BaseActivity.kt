@@ -108,24 +108,24 @@ abstract class BaseActivity : AppCompatActivity(), BaseView {
         }
 
         linearLibrary.setOnClickListener {
-           tabShown?.let {
-               if (tabShown != ActiveTab.LIBRARY) {
-                   tabShown = ActiveTab.LIBRARY
-                   if (mRepositorySource.getActiveTab() != ActiveTab.LIBRARY) {
-                       supportFragmentManager.beginTransaction()
-                           .replace(R.id.container, LibraryFragment.newInstance())
-                           .commitAllowingStateLoss()
-                       ivArrow.visibility = View.GONE
-                       tvTitle.text = getString(R.string.library)
-                   } else {
-                       supportFragmentManager.beginTransaction()
-                           .replace(R.id.container, getFragment(ivArrow)).commitAllowingStateLoss()
-                       ivArrow.visibility = getArrowHeaderVisibility()
-                       tvTitle.text = getHeaderTitle()
-                   }
-                   validateTabColorVisibility(tabShown!!)
-               }
-           }
+            tabShown?.let {
+                if (tabShown != ActiveTab.LIBRARY) {
+                    tabShown = ActiveTab.LIBRARY
+                    if (mRepositorySource.getActiveTab() != ActiveTab.LIBRARY) {
+                        supportFragmentManager.beginTransaction()
+                            .replace(R.id.container, LibraryFragment.newInstance())
+                            .commitAllowingStateLoss()
+                        ivArrow.visibility = View.GONE
+                        tvTitle.text = getString(R.string.library)
+                    } else {
+                        supportFragmentManager.beginTransaction()
+                            .replace(R.id.container, getFragment(ivArrow)).commitAllowingStateLoss()
+                        ivArrow.visibility = getArrowHeaderVisibility()
+                        tvTitle.text = getHeaderTitle()
+                    }
+                    validateTabColorVisibility(tabShown!!)
+                }
+            }
         }
 
         linearMyBooks.setOnClickListener {
@@ -150,24 +150,24 @@ abstract class BaseActivity : AppCompatActivity(), BaseView {
         }
 
         linearMenu.setOnClickListener {
-           tabShown?.let {
-               if (tabShown != ActiveTab.MENU) {
-                   tabShown = ActiveTab.MENU
-                   if (mRepositorySource.getActiveTab() != ActiveTab.MENU) {
-                       supportFragmentManager.beginTransaction()
-                           .replace(R.id.container, MenuFragment.newInstance())
-                           .commitAllowingStateLoss()
-                       ivArrow.visibility = View.GONE
-                       tvTitle.text = getString(R.string.menu)
-                   } else {
-                       supportFragmentManager.beginTransaction()
-                           .replace(R.id.container, getFragment(ivArrow)).commitAllowingStateLoss()
-                       ivArrow.visibility = getArrowHeaderVisibility()
-                       tvTitle.text = getHeaderTitle()
-                   }
-                   validateTabColorVisibility(tabShown!!)
-               }
-           }
+            tabShown?.let {
+                if (tabShown != ActiveTab.MENU) {
+                    tabShown = ActiveTab.MENU
+                    if (mRepositorySource.getActiveTab() != ActiveTab.MENU) {
+                        supportFragmentManager.beginTransaction()
+                            .replace(R.id.container, MenuFragment.newInstance())
+                            .commitAllowingStateLoss()
+                        ivArrow.visibility = View.GONE
+                        tvTitle.text = getString(R.string.menu)
+                    } else {
+                        supportFragmentManager.beginTransaction()
+                            .replace(R.id.container, getFragment(ivArrow)).commitAllowingStateLoss()
+                        ivArrow.visibility = getArrowHeaderVisibility()
+                        tvTitle.text = getHeaderTitle()
+                    }
+                    validateTabColorVisibility(tabShown!!)
+                }
+            }
         }
     }
 
@@ -186,8 +186,10 @@ abstract class BaseActivity : AppCompatActivity(), BaseView {
         tvCartCount.visibility = View.INVISIBLE
         mRepositorySource.getMyCart(object : RetrofitCallbacks.BookListCallback {
             override fun onSuccess(result: BookListResponse?) {
-                tvCartCount.visibility = View.VISIBLE
-                tvCartCount.text = result!!.data.size.toString()
+                result?.let {
+                    tvCartCount.visibility = View.VISIBLE
+                    tvCartCount.text = it.data?.size.toString()
+                }
             }
 
             override fun onFailure(call: Call<BookListResponse>?, t: Throwable?) {

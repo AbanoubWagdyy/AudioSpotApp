@@ -22,11 +22,10 @@ class MyBooksPresenter(val mView: MyBooksContract.View) : MyBooksContract.Presen
             mRepositorySource = mView.getAppContext()?.let { DataRepository.getInstance(it) }!!
             mRepositorySource.getMyBooks(object : RetrofitCallbacks.BookListCallback {
                 override fun onSuccess(result: BookListResponse?) {
-                    if (result != null) {
+                    result?.let {
                         mView.dismissLoading()
-                        var listMyBooks = result?.data
-                        if (listMyBooks != null && listMyBooks.isNotEmpty()) {
-                            mView.setBookList(listMyBooks)
+                        if (result.data != null && result.data.isNotEmpty()) {
+                            mView.setBookList(result.data)
                         } else {
                             if (mRepositorySource.getAuthResponse() != null) {
                                 mView.showEmptyBooksScreen("You have no books yet")
