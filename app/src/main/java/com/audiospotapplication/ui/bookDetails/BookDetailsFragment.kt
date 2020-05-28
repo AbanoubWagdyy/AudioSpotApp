@@ -98,11 +98,13 @@ class BookDetailsFragment : BaseFragment(), BookDetailsContract.View {
     }
 
     override fun setBookReviews(reviews: List<Review>) {
-        if (reviews.isNotEmpty()) {
-            recyclerReviews.layoutManager = LinearLayoutManager(context)
-            recyclerReviews.setHasFixedSize(true)
-            recyclerReviews.isNestedScrollingEnabled = false
-            recyclerReviews.adapter = ReviewListAdapter(reviews, ReviewListAdapter.Display.SEMI)
+        recyclerReviews?.let {
+            if (reviews.isNotEmpty()) {
+                it.layoutManager = LinearLayoutManager(context)
+                it.setHasFixedSize(true)
+                it.isNestedScrollingEnabled = false
+                it.adapter = ReviewListAdapter(reviews, ReviewListAdapter.Display.SEMI)
+            }
         }
     }
 
