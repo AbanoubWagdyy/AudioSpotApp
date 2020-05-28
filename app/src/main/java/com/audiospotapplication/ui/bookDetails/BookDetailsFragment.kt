@@ -163,7 +163,7 @@ class BookDetailsFragment : BaseFragment(), BookDetailsContract.View {
         mPresenter = BookDetailsPresenter(this)
         mPresenter.start()
 
-        getPlayingObserver().observe(this, Observer {
+        getPlayingObserver().observe(viewLifecycleOwner, Observer {
             val id =
                 mPresenter.getCurrentSampleBookPlaylistId()
             if (it && id.equals(getPlaylistIdObserver().value)) {
